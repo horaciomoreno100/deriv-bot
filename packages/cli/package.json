@@ -1,0 +1,26 @@
+{
+  "name": "@deriv-bot/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLI tools for Binary Options Trading Bot",
+  "bin": {
+    "deriv-repl": "./dist/repl.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/repl.ts",
+    "repl": "tsx src/repl.ts",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@deriv-bot/trader": "workspace:*",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

@@ -9,6 +9,7 @@ import type { CommandMessage } from '../ws/protocol.js';
 import type { DerivClient } from '../api/deriv-client.js';
 import type { MarketDataCache } from '../cache/market-data-cache.js';
 import type { GatewayServer } from '../ws/gateway-server.js';
+import type { StateManager } from '../state/state-manager.js';
 import { createEventMessage } from '../ws/protocol.js';
 import type { Tick, Candle } from '@deriv-bot/shared';
 import { EventBus } from '../events/event-bus.js';
@@ -21,6 +22,7 @@ export interface CommandHandlerContext {
   marketCache: MarketDataCache;
   gatewayServer: GatewayServer;
   eventBus: EventBus;
+  stateManager: StateManager;
 }
 
 /**
@@ -361,23 +363,28 @@ export async function handleGetCandlesCommand(
 
 /**
  * Handle 'trade' command
- * Execute a trade
+ * Execute a trade and persist to database
  */
 export async function handleTradeCommand(
   ws: WebSocket,
   command: CommandMessage,
   context: CommandHandlerContext
 ): Promise<void> {
-  const { derivClient, gatewayServer } = context;
-  const { asset, direction, amount, duration, durationUnit } = command.params as {
+  const { derivClient, gatewayServer, stateManager, marketCache } = context;
+  const { asset, direction, amount, duration, durationUnit, strategyName } = command.params as {
     asset: string;
     direction: 'CALL' | 'PUT';
     amount: number;
     duration: number;
     durationUnit: 's' | 'm' | 'h' | 'd';
+    strategyName?: string;
   };
 
   try {
+    // Get current price for entry price
+    const currentTick = marketCache.getTicks(asset, 1)[0];
+    const entryPrice = currentTick?.price || 0;
+
     // Execute trade
     const result = await derivClient.buyContract({
       symbol: asset,
@@ -386,6 +393,30 @@ export async function handleTradeCommand(
       duration,
       durationUnit,
     });
+
+    // Calculate duration in seconds
+    let durationSeconds = duration;
+    if (durationUnit === 'm') durationSeconds *= 60;
+    else if (durationUnit === 'h') durationSeconds *= 3600;
+    else if (durationUnit === 'd') durationSeconds *= 86400;
+
+    // Calculate expiry time
+    const expiryTime = new Date(result.purchaseTime * 1000);
+    expiryTime.setSeconds(expiryTime.getSeconds() + durationSeconds);
+
+    // Record trade in State Manager
+    await stateManager.recordTrade({
+      contractId: result.contractId,
+      type: direction,
+      asset,
+      timeframe: durationSeconds,
+      entryPrice,
+      stake: result.buyPrice,
+      expiryTime,
+      strategyName: strategyName || 'manual',
+    });
+
+    console.log(`[handleTradeCommand] Trade recorded: ${result.contractId}`);
 
     // Broadcast trade executed event
     gatewayServer.broadcast(
@@ -402,19 +433,33 @@ export async function handleTradeCommand(
     );
 
     // Subscribe to contract updates to get final result
-    await derivClient.subscribeToContract(result.contractId, (update: any) => {
+    await derivClient.subscribeToContract(result.contractId, async (update: any) => {
       if (update.proposal_open_contract?.is_sold) {
         const contract = update.proposal_open_contract;
-        const profit = parseFloat(contract.sell_price) - parseFloat(contract.buy_price);
+        const sellPrice = parseFloat(contract.sell_price);
+        const buyPrice = parseFloat(contract.buy_price);
+        const payout = parseFloat(contract.payout || '0');
+        const profit = sellPrice - buyPrice;
+        const result = profit > 0 ? 'WIN' : 'LOSS';
+
+        // Update trade in State Manager
+        await stateManager.updateTrade(contract.contract_id.toString(), {
+          exitPrice: parseFloat(contract.exit_tick_display_value || contract.current_spot_display_value),
+          payout,
+          result,
+          closedAt: new Date(contract.sell_time * 1000),
+        });
+
+        console.log(`[handleTradeCommand] Trade updated: ${contract.contract_id} - ${result}`);
 
         // Broadcast trade result event
         gatewayServer.broadcast(
           createEventMessage('trade:result', {
-            id: result.contractId,
+            id: contract.contract_id,
             asset,
-            result: profit > 0 ? 'won' : 'lost',
+            result: result === 'WIN' ? 'won' : 'lost',
             profit,
-            closePrice: parseFloat(contract.sell_price),
+            closePrice: sellPrice,
             timestamp: contract.sell_time,
           })
         );
@@ -431,9 +476,80 @@ export async function handleTradeCommand(
       message: `Trade executed: ${direction} ${asset} for ${amount}`,
     });
   } catch (error) {
+    console.error('[handleTradeCommand] Error:', error);
     gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
       code: 'TRADE_ERROR',
       message: error instanceof Error ? error.message : 'Failed to execute trade',
+    });
+  }
+}
+
+/**
+ * Handle 'get_stats' command
+ * Get trading statistics for a date
+ */
+export async function handleGetStatsCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer, stateManager } = context;
+  const { date } = command.params as { date?: string };
+
+  try {
+    const stats = await stateManager.getDailyStats(date);
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      stats,
+      date: stats.date,
+    });
+  } catch (error) {
+    console.error('[handleGetStatsCommand] Error:', error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'GET_STATS_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get statistics',
+    });
+  }
+}
+
+/**
+ * Handle 'get_trades' command
+ * Get trade history with optional filters
+ */
+export async function handleGetTradesCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer, stateManager } = context;
+  const { limit, asset, strategy, result, from, to } = command.params as {
+    limit?: number;
+    asset?: string;
+    strategy?: string;
+    result?: 'WIN' | 'LOSS' | 'PENDING';
+    from?: string;
+    to?: string;
+  };
+
+  try {
+    const trades = await stateManager.getTrades({
+      limit,
+      asset,
+      strategy,
+      result,
+      from: from ? new Date(from) : undefined,
+      to: to ? new Date(to) : undefined,
+    });
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      trades,
+      count: trades.length,
+    });
+  } catch (error) {
+    console.error('[handleGetTradesCommand] Error:', error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'GET_TRADES_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get trades',
     });
   }
 }
@@ -490,6 +606,12 @@ export async function handleCommand(
       break;
     case 'get_candles':
       await handleGetCandlesCommand(ws, command, context);
+      break;
+    case 'get_stats':
+      await handleGetStatsCommand(ws, command, context);
+      break;
+    case 'get_trades':
+      await handleGetTradesCommand(ws, command, context);
       break;
     case 'ping':
       await handlePingCommand(ws, command, context);

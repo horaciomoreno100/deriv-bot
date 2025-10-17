@@ -11,7 +11,7 @@
 // export { Trader, type TraderConfig } from './main.js';
 
 // Gateway Client
-// export { GatewayClient, type GatewayClientConfig, type GatewayClientEvents } from './client/gateway-client.js';
+export { GatewayClient, type GatewayClientConfig, type GatewayClientEvents } from './client/gateway-client.js';
 
 // Strategy (WORKING ✅)
 export { BaseStrategy, type StrategyContext, type StrategyEvents } from './strategy/base-strategy.js';

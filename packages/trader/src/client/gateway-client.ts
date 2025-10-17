@@ -251,6 +251,28 @@ export class GatewayClient extends EventEmitter {
   }
 
   /**
+   * Get daily statistics
+   */
+  async getStats(date?: string): Promise<any> {
+    return await this.sendCommand('get_stats', { date });
+  }
+
+  /**
+   * Get trades with optional filters
+   */
+  async getTrades(filters?: {
+    limit?: number;
+    asset?: string;
+    strategy?: string;
+    result?: 'WIN' | 'LOSS' | 'PENDING';
+    from?: string;
+    to?: string;
+  }): Promise<any[]> {
+    const result = await this.sendCommand('get_trades', filters);
+    return result.trades;
+  }
+
+  /**
    * Send command to Gateway and wait for response
    */
   private async sendCommand(command: string, params?: any): Promise<any> {

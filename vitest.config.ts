@@ -4,6 +4,14 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    // Run tests sequentially to ensure proper isolation
+    // especially for database tests with Prisma
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

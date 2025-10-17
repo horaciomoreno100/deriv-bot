@@ -237,7 +237,16 @@ async function main() {
       if (historicalCandles && historicalCandles.length > 0) {
         candleBuffer.push(...historicalCandles);
         console.log(`✅ Cargadas ${historicalCandles.length} candles históricas\n`);
-        console.log(`📈 Última candle: ${new Date(historicalCandles[historicalCandles.length - 1].timestamp).toISOString()}`);
+        const lastCandleTime = new Date(historicalCandles[historicalCandles.length - 1].timestamp).toLocaleString('es-AR', {
+          timeZone: 'America/Argentina/Buenos_Aires',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+        console.log(`📈 Última candle: ${lastCandleTime}`);
         console.log(`   Open: ${historicalCandles[historicalCandles.length - 1].open}`);
         console.log(`   High: ${historicalCandles[historicalCandles.length - 1].high}`);
         console.log(`   Low: ${historicalCandles[historicalCandles.length - 1].low}`);
@@ -284,7 +293,17 @@ async function main() {
           candleBuffer.shift();
         }
 
-        console.log(`📈 Candle #${candleBuffer.length} completada (${new Date(completedCandle.timestamp).toISOString()})`);
+        // Formato con hora local (Argentina UTC-3)
+        const localTime = new Date(completedCandle.timestamp).toLocaleString('es-AR', {
+          timeZone: 'America/Argentina/Buenos_Aires',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+        console.log(`📈 Candle #${candleBuffer.length} completada (${localTime})`);
 
         // Procesar con la estrategia (solo si tenemos suficientes candles)
         if (candleBuffer.length >= 30) {

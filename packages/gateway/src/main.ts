@@ -11,13 +11,14 @@
  */
 
 import dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
+import { createLogger, type Logger } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
 import { MarketDataCache } from './cache/market-data-cache.js';
 import { EventBus } from './events/event-bus.js';
+import { StateManager } from './state/state-manager.js';
 import { handleCommand, type CommandHandlerContext } from './handlers/command-handlers.js';
-import { parseMessage } from './ws/protocol.js';
-import type { CommandMessage } from './ws/protocol.js';
 
 // Load environment variables from root
 dotenv.config({ path: '../../.env' });
@@ -73,14 +74,26 @@ function loadConfig(): GatewayConfig {
  */
 class Gateway {
   private config: GatewayConfig;
+  private logger: Logger;
   private derivClient: DerivClient;
   private gatewayServer: GatewayServer;
   private marketCache: MarketDataCache;
   private eventBus: EventBus;
+  private prisma: PrismaClient;
+  private stateManager: StateManager;
   private handlerContext: CommandHandlerContext;
 
   constructor(config: GatewayConfig) {
     this.config = config;
+
+    // Initialize Logger
+    this.logger = createLogger({
+      service: 'gateway',
+      level: (process.env.LOG_LEVEL as any) || 'info',
+      telegramToken: process.env.TELEGRAM_BOT_TOKEN,
+      telegramChatId: process.env.TELEGRAM_CHAT_ID,
+      telegramLevels: process.env.TELEGRAM_ALERT_LEVELS?.split(',') as any || ['error', 'warn'],
+    });
 
     // Initialize DerivClient
     this.derivClient = new DerivClient({
@@ -105,12 +118,19 @@ class Gateway {
     // Get EventBus singleton
     this.eventBus = EventBus.getInstance();
 
+    // Initialize Prisma Client
+    this.prisma = new PrismaClient();
+
+    // Initialize State Manager
+    this.stateManager = new StateManager(this.prisma);
+
     // Create handler context
     this.handlerContext = {
       derivClient: this.derivClient,
       marketCache: this.marketCache,
       gatewayServer: this.gatewayServer,
       eventBus: this.eventBus,
+      stateManager: this.stateManager,
     };
 
     // Setup message handlers
@@ -124,22 +144,25 @@ class Gateway {
     // Handle incoming commands from Trader clients
     this.gatewayServer.on('command', async (data: any) => {
       try {
-        console.log('[Gateway] Handling command:', data.command.command);
+        this.logger.debug('Handling command', { command: data.command.command });
         await handleCommand(data.ws, data.command, this.handlerContext);
-        console.log('[Gateway] Command handled');
+        this.logger.debug('Command handled successfully', { command: data.command.command });
       } catch (error) {
-        console.error('Failed to handle command:', error);
+        this.logger.error('Failed to handle command', {
+          command: data.command.command,
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     });
 
     // Handle client connections
     this.gatewayServer.on('client:connected', () => {
-      console.log('✅ Trader client connected');
+      this.logger.info('Trader client connected');
     });
 
     // Handle client disconnections
     this.gatewayServer.on('client:disconnected', () => {
-      console.log('❌ Trader client disconnected');
+      this.logger.warn('Trader client disconnected');
     });
   }
 
@@ -147,48 +170,65 @@ class Gateway {
    * Start the Gateway
    */
   async start(): Promise<void> {
-    console.log('🚀 Starting Gateway...\n');
+    this.logger.info('🚀 Starting Gateway...');
 
-    // 1. Connect to Deriv API
-    console.log('📡 Connecting to Deriv API...');
+    // 1. Initialize State Manager
+    this.logger.info('Initializing State Manager...');
+    await this.stateManager.initialize();
+    this.logger.info('✅ State Manager initialized');
+
+    // 2. Connect to Deriv API
+    this.logger.info('Connecting to Deriv API...');
     await this.derivClient.connect();
-    console.log('✅ Connected to Deriv API\n');
+    this.logger.info('✅ Connected to Deriv API');
 
-    // 2. Start Gateway WebSocket server
-    console.log(`🌐 Starting Gateway WebSocket server on ${this.config.gatewayHost}:${this.config.gatewayPort}...`);
+    // 3. Start Gateway WebSocket server
+    this.logger.info('Starting Gateway WebSocket server', {
+      host: this.config.gatewayHost,
+      port: this.config.gatewayPort,
+    });
     await this.gatewayServer.start();
-    console.log(`✅ Gateway server listening on ws://${this.config.gatewayHost}:${this.config.gatewayPort}\n`);
+    this.logger.info('✅ Gateway server listening', {
+      url: `ws://${this.config.gatewayHost}:${this.config.gatewayPort}`,
+    });
 
-    // 3. Print configuration
+    // 4. Print configuration
     this.printConfig();
 
-    console.log('✨ Gateway is ready!\n');
+    this.logger.info('✨ Gateway is ready!');
   }
 
   /**
    * Stop the Gateway
    */
   async stop(): Promise<void> {
-    console.log('\n🛑 Stopping Gateway...\n');
+    this.logger.info('🛑 Stopping Gateway...');
 
-    // 1. Disconnect from Deriv API
-    console.log('📡 Disconnecting from Deriv API...');
+    // 1. Shutdown State Manager
+    this.logger.info('Shutting down State Manager...');
+    await this.stateManager.shutdown();
+    this.logger.info('✅ State Manager shutdown');
+
+    // 2. Disconnect from Deriv API
+    this.logger.info('Disconnecting from Deriv API...');
     await this.derivClient.disconnect();
-    console.log('✅ Disconnected from Deriv API\n');
+    this.logger.info('✅ Disconnected from Deriv API');
 
-    // 2. Stop Gateway server
-    console.log('🌐 Stopping Gateway server...');
+    // 3. Stop Gateway server
+    this.logger.info('Stopping Gateway server...');
     await this.gatewayServer.close();
-    console.log('✅ Gateway server stopped\n');
+    this.logger.info('✅ Gateway server stopped');
 
-    // 3. Disconnect from database
+    // 4. Disconnect from database
     if (this.config.enablePersistence) {
-      console.log('💾 Disconnecting from database...');
+      this.logger.info('Disconnecting from database...');
       await this.marketCache.disconnect();
-      console.log('✅ Database disconnected\n');
+      this.logger.info('✅ Database disconnected');
     }
 
-    console.log('👋 Gateway stopped gracefully\n');
+    // 5. Close logger
+    await this.logger.close();
+    console.log('👋 Gateway stopped gracefully');
   }
 
   /**
