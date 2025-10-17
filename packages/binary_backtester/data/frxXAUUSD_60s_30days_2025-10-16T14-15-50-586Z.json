@@ -1,0 +1,9010 @@
+{
+  "symbol": "frxXAUUSD",
+  "timeframe": 60,
+  "days": 30,
+  "candles": [
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560560,
+      "open": 4207.85,
+      "high": 4208.28,
+      "low": 4207.61,
+      "close": 4208.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560620,
+      "open": 4208.66,
+      "high": 4209.73,
+      "low": 4208.62,
+      "close": 4209.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560680,
+      "open": 4209.6,
+      "high": 4211.05,
+      "low": 4209.46,
+      "close": 4211.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560740,
+      "open": 4211.03,
+      "high": 4211.35,
+      "low": 4210.57,
+      "close": 4210.8
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560800,
+      "open": 4210.85,
+      "high": 4211.34,
+      "low": 4209.71,
+      "close": 4210.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560860,
+      "open": 4210.15,
+      "high": 4210.23,
+      "low": 4209.55,
+      "close": 4210.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560920,
+      "open": 4210.27,
+      "high": 4210.78,
+      "low": 4210.27,
+      "close": 4210.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760560980,
+      "open": 4210.73,
+      "high": 4210.98,
+      "low": 4210.6,
+      "close": 4210.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561040,
+      "open": 4210.65,
+      "high": 4210.71,
+      "low": 4210.3,
+      "close": 4210.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561100,
+      "open": 4210.6,
+      "high": 4210.69,
+      "low": 4210.26,
+      "close": 4210.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561160,
+      "open": 4210.32,
+      "high": 4210.38,
+      "low": 4209.97,
+      "close": 4209.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561220,
+      "open": 4210.03,
+      "high": 4210.63,
+      "low": 4210.03,
+      "close": 4210.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561280,
+      "open": 4210.47,
+      "high": 4210.6,
+      "low": 4210.15,
+      "close": 4210.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561340,
+      "open": 4210.22,
+      "high": 4210.6,
+      "low": 4209.86,
+      "close": 4209.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561400,
+      "open": 4209.94,
+      "high": 4210.43,
+      "low": 4209.28,
+      "close": 4209.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561460,
+      "open": 4209.41,
+      "high": 4210.04,
+      "low": 4209.41,
+      "close": 4210.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561520,
+      "open": 4210.04,
+      "high": 4210.44,
+      "low": 4207.93,
+      "close": 4208.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561580,
+      "open": 4208.45,
+      "high": 4209,
+      "low": 4207.35,
+      "close": 4207.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561640,
+      "open": 4207.6,
+      "high": 4207.76,
+      "low": 4207.22,
+      "close": 4207.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561700,
+      "open": 4207.29,
+      "high": 4207.45,
+      "low": 4207.17,
+      "close": 4207.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561760,
+      "open": 4207.32,
+      "high": 4207.69,
+      "low": 4207.32,
+      "close": 4207.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561820,
+      "open": 4207.54,
+      "high": 4208.31,
+      "low": 4207.54,
+      "close": 4208.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561880,
+      "open": 4208.27,
+      "high": 4208.55,
+      "low": 4208.09,
+      "close": 4208.09
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760561940,
+      "open": 4208.11,
+      "high": 4208.11,
+      "low": 4207.34,
+      "close": 4207.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565600,
+      "open": 4207.95,
+      "high": 4211.04,
+      "low": 4207.78,
+      "close": 4209.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565660,
+      "open": 4209.8,
+      "high": 4212.16,
+      "low": 4209.8,
+      "close": 4211.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565720,
+      "open": 4211.59,
+      "high": 4212.64,
+      "low": 4211.56,
+      "close": 4211.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565780,
+      "open": 4211.95,
+      "high": 4212.19,
+      "low": 4210.73,
+      "close": 4211.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565840,
+      "open": 4211.53,
+      "high": 4212.82,
+      "low": 4211.37,
+      "close": 4212.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565900,
+      "open": 4212.41,
+      "high": 4212.58,
+      "low": 4211.17,
+      "close": 4211.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760565960,
+      "open": 4211.28,
+      "high": 4212.42,
+      "low": 4210.99,
+      "close": 4212.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566020,
+      "open": 4212.25,
+      "high": 4212.45,
+      "low": 4211.15,
+      "close": 4211.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566080,
+      "open": 4211.24,
+      "high": 4211.24,
+      "low": 4206.93,
+      "close": 4207.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566140,
+      "open": 4207.21,
+      "high": 4207.56,
+      "low": 4206.52,
+      "close": 4206.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566200,
+      "open": 4206.6,
+      "high": 4206.72,
+      "low": 4206.43,
+      "close": 4206.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566260,
+      "open": 4206.54,
+      "high": 4208.41,
+      "low": 4204.1,
+      "close": 4207.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566320,
+      "open": 4207.7,
+      "high": 4208.15,
+      "low": 4207.57,
+      "close": 4208.11
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566380,
+      "open": 4208.11,
+      "high": 4209.3,
+      "low": 4207.79,
+      "close": 4207.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566440,
+      "open": 4207.81,
+      "high": 4207.81,
+      "low": 4204.69,
+      "close": 4205.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566500,
+      "open": 4205.31,
+      "high": 4205.31,
+      "low": 4200.1,
+      "close": 4200.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566560,
+      "open": 4201.25,
+      "high": 4203.17,
+      "low": 4201.25,
+      "close": 4202.79
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566620,
+      "open": 4202.8,
+      "high": 4204.75,
+      "low": 4202.76,
+      "close": 4203.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566680,
+      "open": 4203.69,
+      "high": 4208.41,
+      "low": 4203.69,
+      "close": 4208.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566740,
+      "open": 4207.89,
+      "high": 4208.04,
+      "low": 4206.77,
+      "close": 4207.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566800,
+      "open": 4207.63,
+      "high": 4208.97,
+      "low": 4207.11,
+      "close": 4208.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566860,
+      "open": 4208.85,
+      "high": 4212.15,
+      "low": 4208.85,
+      "close": 4211.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566920,
+      "open": 4211.92,
+      "high": 4212.99,
+      "low": 4210.63,
+      "close": 4211.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760566980,
+      "open": 4211.44,
+      "high": 4211.44,
+      "low": 4209.9,
+      "close": 4210.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567040,
+      "open": 4210.5,
+      "high": 4210.66,
+      "low": 4208.69,
+      "close": 4210.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567100,
+      "open": 4210.22,
+      "high": 4210.71,
+      "low": 4209.33,
+      "close": 4209.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567160,
+      "open": 4209.31,
+      "high": 4209.81,
+      "low": 4208.78,
+      "close": 4209.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567220,
+      "open": 4209.1,
+      "high": 4209.97,
+      "low": 4209.05,
+      "close": 4209.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567280,
+      "open": 4209.57,
+      "high": 4209.9,
+      "low": 4208.8,
+      "close": 4209.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567340,
+      "open": 4210.13,
+      "high": 4211.71,
+      "low": 4210.13,
+      "close": 4211.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567400,
+      "open": 4211.67,
+      "high": 4211.78,
+      "low": 4210.34,
+      "close": 4211.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567460,
+      "open": 4211.24,
+      "high": 4212.89,
+      "low": 4210.43,
+      "close": 4212.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567520,
+      "open": 4212.86,
+      "high": 4213.55,
+      "low": 4212.4,
+      "close": 4212.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567580,
+      "open": 4212.42,
+      "high": 4212.89,
+      "low": 4211.28,
+      "close": 4212.46
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567640,
+      "open": 4212.46,
+      "high": 4212.46,
+      "low": 4210.71,
+      "close": 4210.85
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567700,
+      "open": 4210.85,
+      "high": 4212.7,
+      "low": 4210.85,
+      "close": 4212.68
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567760,
+      "open": 4212.64,
+      "high": 4212.8,
+      "low": 4212.27,
+      "close": 4212.8
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567820,
+      "open": 4212.69,
+      "high": 4212.78,
+      "low": 4212.13,
+      "close": 4212.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567880,
+      "open": 4212.67,
+      "high": 4214.05,
+      "low": 4212.07,
+      "close": 4214.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760567940,
+      "open": 4214.11,
+      "high": 4215.24,
+      "low": 4213.21,
+      "close": 4214.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568000,
+      "open": 4214.86,
+      "high": 4215.23,
+      "low": 4214.38,
+      "close": 4214.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568060,
+      "open": 4215.09,
+      "high": 4215.27,
+      "low": 4214.71,
+      "close": 4214.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568120,
+      "open": 4214.89,
+      "high": 4215.09,
+      "low": 4213.66,
+      "close": 4214.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568180,
+      "open": 4214.52,
+      "high": 4214.96,
+      "low": 4214.19,
+      "close": 4214.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568240,
+      "open": 4214.96,
+      "high": 4215.48,
+      "low": 4214.96,
+      "close": 4215.46
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568300,
+      "open": 4215.46,
+      "high": 4215.62,
+      "low": 4215.11,
+      "close": 4215.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568360,
+      "open": 4215.53,
+      "high": 4215.54,
+      "low": 4214.64,
+      "close": 4215.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568420,
+      "open": 4215.06,
+      "high": 4215.17,
+      "low": 4214.01,
+      "close": 4214.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568480,
+      "open": 4214.13,
+      "high": 4214.13,
+      "low": 4212.89,
+      "close": 4213.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568540,
+      "open": 4213.36,
+      "high": 4213.42,
+      "low": 4212.61,
+      "close": 4212.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568600,
+      "open": 4212.92,
+      "high": 4213.55,
+      "low": 4212.64,
+      "close": 4213.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568660,
+      "open": 4213.53,
+      "high": 4214.72,
+      "low": 4213.52,
+      "close": 4214.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568720,
+      "open": 4214.66,
+      "high": 4214.66,
+      "low": 4213.65,
+      "close": 4214.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568780,
+      "open": 4214.21,
+      "high": 4214.29,
+      "low": 4213.84,
+      "close": 4214.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568840,
+      "open": 4214.22,
+      "high": 4214.66,
+      "low": 4214.04,
+      "close": 4214.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568900,
+      "open": 4214.57,
+      "high": 4214.57,
+      "low": 4214.16,
+      "close": 4214.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760568960,
+      "open": 4214.32,
+      "high": 4214.61,
+      "low": 4214.03,
+      "close": 4214.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569020,
+      "open": 4214.64,
+      "high": 4214.64,
+      "low": 4212.9,
+      "close": 4212.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569080,
+      "open": 4212.95,
+      "high": 4212.96,
+      "low": 4212.32,
+      "close": 4212.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569140,
+      "open": 4212.84,
+      "high": 4213.36,
+      "low": 4212.32,
+      "close": 4213.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569200,
+      "open": 4213.38,
+      "high": 4215.91,
+      "low": 4213.25,
+      "close": 4214.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569260,
+      "open": 4214.35,
+      "high": 4214.59,
+      "low": 4213.82,
+      "close": 4214.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569320,
+      "open": 4214.4,
+      "high": 4214.4,
+      "low": 4212.31,
+      "close": 4212.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569380,
+      "open": 4212.81,
+      "high": 4213.08,
+      "low": 4212.55,
+      "close": 4212.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569440,
+      "open": 4212.57,
+      "high": 4212.66,
+      "low": 4211.86,
+      "close": 4211.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569500,
+      "open": 4211.93,
+      "high": 4213.04,
+      "low": 4211.71,
+      "close": 4213.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569560,
+      "open": 4213.11,
+      "high": 4213.11,
+      "low": 4210.3,
+      "close": 4210.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569620,
+      "open": 4210.56,
+      "high": 4211.11,
+      "low": 4209.76,
+      "close": 4209.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569680,
+      "open": 4209.84,
+      "high": 4210.32,
+      "low": 4209.71,
+      "close": 4209.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569740,
+      "open": 4209.93,
+      "high": 4210.47,
+      "low": 4209.15,
+      "close": 4209.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569800,
+      "open": 4209.38,
+      "high": 4210.51,
+      "low": 4209.38,
+      "close": 4209.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569860,
+      "open": 4209.8,
+      "high": 4210.52,
+      "low": 4209.03,
+      "close": 4210.11
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569920,
+      "open": 4210.03,
+      "high": 4210.13,
+      "low": 4209.16,
+      "close": 4209.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760569980,
+      "open": 4209.48,
+      "high": 4212.95,
+      "low": 4208.93,
+      "close": 4212
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570040,
+      "open": 4211.97,
+      "high": 4212.38,
+      "low": 4210.04,
+      "close": 4210.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570100,
+      "open": 4210.92,
+      "high": 4212.77,
+      "low": 4210.73,
+      "close": 4211.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570160,
+      "open": 4211.98,
+      "high": 4212.25,
+      "low": 4210.66,
+      "close": 4212.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570220,
+      "open": 4212.18,
+      "high": 4212.18,
+      "low": 4210.77,
+      "close": 4211.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570280,
+      "open": 4211.2,
+      "high": 4211.2,
+      "low": 4209.12,
+      "close": 4210.03
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570340,
+      "open": 4210.12,
+      "high": 4211.17,
+      "low": 4209.33,
+      "close": 4210.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570400,
+      "open": 4210.47,
+      "high": 4212.45,
+      "low": 4210.24,
+      "close": 4212.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570460,
+      "open": 4212.3,
+      "high": 4212.71,
+      "low": 4212.28,
+      "close": 4212.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570520,
+      "open": 4212.39,
+      "high": 4212.39,
+      "low": 4210.89,
+      "close": 4212.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570580,
+      "open": 4212.12,
+      "high": 4212.22,
+      "low": 4211.8,
+      "close": 4211.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570640,
+      "open": 4211.65,
+      "high": 4211.94,
+      "low": 4210.67,
+      "close": 4211.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570700,
+      "open": 4211.18,
+      "high": 4212.32,
+      "low": 4210.87,
+      "close": 4211.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570760,
+      "open": 4211.73,
+      "high": 4212.07,
+      "low": 4211.73,
+      "close": 4211.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570820,
+      "open": 4211.85,
+      "high": 4212.75,
+      "low": 4211.84,
+      "close": 4211.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570880,
+      "open": 4211.96,
+      "high": 4212.39,
+      "low": 4211.87,
+      "close": 4212.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760570940,
+      "open": 4212.39,
+      "high": 4212.65,
+      "low": 4212.15,
+      "close": 4212.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571000,
+      "open": 4212.34,
+      "high": 4213.14,
+      "low": 4211.97,
+      "close": 4213.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571060,
+      "open": 4213.06,
+      "high": 4213.22,
+      "low": 4212.57,
+      "close": 4212.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571120,
+      "open": 4212.79,
+      "high": 4213,
+      "low": 4211.73,
+      "close": 4211.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571180,
+      "open": 4212.42,
+      "high": 4212.44,
+      "low": 4211,
+      "close": 4211.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571240,
+      "open": 4211.14,
+      "high": 4211.62,
+      "low": 4210.88,
+      "close": 4210.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571300,
+      "open": 4211.02,
+      "high": 4211.12,
+      "low": 4209.81,
+      "close": 4210.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571360,
+      "open": 4210.85,
+      "high": 4211.04,
+      "low": 4210.51,
+      "close": 4211.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571420,
+      "open": 4210.99,
+      "high": 4211.5,
+      "low": 4210.77,
+      "close": 4211.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571480,
+      "open": 4211.27,
+      "high": 4211.27,
+      "low": 4209.73,
+      "close": 4209.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571540,
+      "open": 4209.72,
+      "high": 4209.72,
+      "low": 4208.64,
+      "close": 4208.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571600,
+      "open": 4208.71,
+      "high": 4209.16,
+      "low": 4208.41,
+      "close": 4208.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571660,
+      "open": 4208.41,
+      "high": 4208.43,
+      "low": 4206.65,
+      "close": 4207.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571720,
+      "open": 4207.01,
+      "high": 4207.35,
+      "low": 4206.47,
+      "close": 4206.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571780,
+      "open": 4206.95,
+      "high": 4208.8,
+      "low": 4206.89,
+      "close": 4208.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571840,
+      "open": 4208.47,
+      "high": 4208.51,
+      "low": 4207.68,
+      "close": 4208.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571900,
+      "open": 4208.28,
+      "high": 4211.02,
+      "low": 4208.26,
+      "close": 4208.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760571960,
+      "open": 4208.65,
+      "high": 4209.6,
+      "low": 4207.45,
+      "close": 4209.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572020,
+      "open": 4209.6,
+      "high": 4210.44,
+      "low": 4209.15,
+      "close": 4210.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572080,
+      "open": 4210.44,
+      "high": 4210.74,
+      "low": 4208.51,
+      "close": 4208.8
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572140,
+      "open": 4208.8,
+      "high": 4209.8,
+      "low": 4208.52,
+      "close": 4209.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572200,
+      "open": 4209.13,
+      "high": 4209.13,
+      "low": 4208.14,
+      "close": 4208.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572260,
+      "open": 4208.47,
+      "high": 4209.95,
+      "low": 4208.45,
+      "close": 4209.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572320,
+      "open": 4209.28,
+      "high": 4209.61,
+      "low": 4207.22,
+      "close": 4207.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572380,
+      "open": 4207.61,
+      "high": 4209.62,
+      "low": 4207.46,
+      "close": 4209.62
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572440,
+      "open": 4209.62,
+      "high": 4210.08,
+      "low": 4209.07,
+      "close": 4209.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572500,
+      "open": 4209.33,
+      "high": 4210.92,
+      "low": 4209.01,
+      "close": 4210.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572560,
+      "open": 4210.7,
+      "high": 4211.66,
+      "low": 4210.61,
+      "close": 4211.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572620,
+      "open": 4211.35,
+      "high": 4211.35,
+      "low": 4208.31,
+      "close": 4208.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572680,
+      "open": 4208.6,
+      "high": 4208.73,
+      "low": 4207.8,
+      "close": 4208.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572740,
+      "open": 4208.71,
+      "high": 4209.62,
+      "low": 4208.44,
+      "close": 4209.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572800,
+      "open": 4209.52,
+      "high": 4210.14,
+      "low": 4208.51,
+      "close": 4209.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572860,
+      "open": 4209.07,
+      "high": 4209.84,
+      "low": 4208.63,
+      "close": 4209.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572920,
+      "open": 4209.19,
+      "high": 4209.28,
+      "low": 4206.84,
+      "close": 4206.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760572980,
+      "open": 4206.82,
+      "high": 4206.96,
+      "low": 4205.4,
+      "close": 4206.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573040,
+      "open": 4206.1,
+      "high": 4206.59,
+      "low": 4205.19,
+      "close": 4206.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573100,
+      "open": 4206.6,
+      "high": 4208.61,
+      "low": 4206.58,
+      "close": 4207.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573160,
+      "open": 4207.64,
+      "high": 4208.51,
+      "low": 4207.15,
+      "close": 4208
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573220,
+      "open": 4207.89,
+      "high": 4210.93,
+      "low": 4207.83,
+      "close": 4210.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573280,
+      "open": 4210.91,
+      "high": 4211.21,
+      "low": 4210.17,
+      "close": 4211.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573340,
+      "open": 4211.33,
+      "high": 4212.25,
+      "low": 4210.53,
+      "close": 4210.8
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573400,
+      "open": 4210.77,
+      "high": 4211.38,
+      "low": 4210.4,
+      "close": 4211.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573460,
+      "open": 4211.18,
+      "high": 4211.52,
+      "low": 4210.68,
+      "close": 4211.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573520,
+      "open": 4211.47,
+      "high": 4213.87,
+      "low": 4211.47,
+      "close": 4213.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573580,
+      "open": 4213.22,
+      "high": 4214.39,
+      "low": 4213.22,
+      "close": 4214.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573640,
+      "open": 4214.1,
+      "high": 4215.66,
+      "low": 4214.04,
+      "close": 4215.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573700,
+      "open": 4215.1,
+      "high": 4217.66,
+      "low": 4215.1,
+      "close": 4215.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573760,
+      "open": 4215.53,
+      "high": 4216.22,
+      "low": 4215.06,
+      "close": 4216.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573820,
+      "open": 4216,
+      "high": 4216.42,
+      "low": 4215.43,
+      "close": 4216.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573880,
+      "open": 4216.34,
+      "high": 4216.92,
+      "low": 4215.75,
+      "close": 4216.91
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760573940,
+      "open": 4216.9,
+      "high": 4217.86,
+      "low": 4216.49,
+      "close": 4217.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574000,
+      "open": 4217.81,
+      "high": 4217.87,
+      "low": 4216.32,
+      "close": 4217.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574060,
+      "open": 4217.34,
+      "high": 4218.77,
+      "low": 4217.34,
+      "close": 4218.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574120,
+      "open": 4218.34,
+      "high": 4219.96,
+      "low": 4218.01,
+      "close": 4219.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574180,
+      "open": 4220.16,
+      "high": 4220.25,
+      "low": 4218.77,
+      "close": 4220.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574240,
+      "open": 4220.14,
+      "high": 4220.14,
+      "low": 4218.64,
+      "close": 4219.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574300,
+      "open": 4219.43,
+      "high": 4220.42,
+      "low": 4218.96,
+      "close": 4220.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574360,
+      "open": 4220.45,
+      "high": 4220.69,
+      "low": 4219.92,
+      "close": 4220.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574420,
+      "open": 4221.38,
+      "high": 4223.96,
+      "low": 4221.38,
+      "close": 4223.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574480,
+      "open": 4223.34,
+      "high": 4225.17,
+      "low": 4223.29,
+      "close": 4224.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574540,
+      "open": 4224.58,
+      "high": 4224.65,
+      "low": 4223.19,
+      "close": 4223.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574600,
+      "open": 4223.26,
+      "high": 4226.1,
+      "low": 4222.77,
+      "close": 4225.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574660,
+      "open": 4225.13,
+      "high": 4226,
+      "low": 4223.98,
+      "close": 4225.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574720,
+      "open": 4225.81,
+      "high": 4226.04,
+      "low": 4225.16,
+      "close": 4225.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574780,
+      "open": 4225.68,
+      "high": 4225.9,
+      "low": 4224.82,
+      "close": 4225.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574840,
+      "open": 4225.69,
+      "high": 4226.45,
+      "low": 4225.29,
+      "close": 4225.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574900,
+      "open": 4225.19,
+      "high": 4226.32,
+      "low": 4225.19,
+      "close": 4225.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760574960,
+      "open": 4225.81,
+      "high": 4226.49,
+      "low": 4225.47,
+      "close": 4225.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575020,
+      "open": 4225.78,
+      "high": 4225.86,
+      "low": 4225.26,
+      "close": 4225.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575080,
+      "open": 4225.11,
+      "high": 4225.68,
+      "low": 4224.42,
+      "close": 4225.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575140,
+      "open": 4225.15,
+      "high": 4226.69,
+      "low": 4224.99,
+      "close": 4226.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575200,
+      "open": 4226.71,
+      "high": 4227.26,
+      "low": 4225.28,
+      "close": 4225.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575260,
+      "open": 4225.46,
+      "high": 4225.46,
+      "low": 4222.26,
+      "close": 4222.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575320,
+      "open": 4222.48,
+      "high": 4222.83,
+      "low": 4220.86,
+      "close": 4222.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575380,
+      "open": 4222.59,
+      "high": 4222.63,
+      "low": 4221.55,
+      "close": 4222
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575440,
+      "open": 4221.85,
+      "high": 4224.14,
+      "low": 4221.85,
+      "close": 4223.11
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575500,
+      "open": 4223.11,
+      "high": 4223.35,
+      "low": 4222.2,
+      "close": 4222.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575560,
+      "open": 4222.78,
+      "high": 4222.78,
+      "low": 4220.06,
+      "close": 4220.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575620,
+      "open": 4220.07,
+      "high": 4220.29,
+      "low": 4218.56,
+      "close": 4218.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575680,
+      "open": 4219.01,
+      "high": 4219.28,
+      "low": 4217.15,
+      "close": 4218.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575740,
+      "open": 4218.46,
+      "high": 4219.04,
+      "low": 4216.21,
+      "close": 4219.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575800,
+      "open": 4219.13,
+      "high": 4219.94,
+      "low": 4217.54,
+      "close": 4219.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575860,
+      "open": 4219.9,
+      "high": 4220.47,
+      "low": 4217.73,
+      "close": 4217.91
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575920,
+      "open": 4217.91,
+      "high": 4218.46,
+      "low": 4217.03,
+      "close": 4217.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760575980,
+      "open": 4217.58,
+      "high": 4218.33,
+      "low": 4217.39,
+      "close": 4218.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576040,
+      "open": 4218.12,
+      "high": 4219.18,
+      "low": 4217.31,
+      "close": 4217.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576100,
+      "open": 4217.22,
+      "high": 4217.65,
+      "low": 4216.37,
+      "close": 4216.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576160,
+      "open": 4216.47,
+      "high": 4217.82,
+      "low": 4216.45,
+      "close": 4217.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576220,
+      "open": 4217.52,
+      "high": 4217.55,
+      "low": 4216.63,
+      "close": 4216.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576280,
+      "open": 4216.77,
+      "high": 4217.1,
+      "low": 4215.67,
+      "close": 4216.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576340,
+      "open": 4216.32,
+      "high": 4216.62,
+      "low": 4210.59,
+      "close": 4210.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576400,
+      "open": 4210.62,
+      "high": 4214.54,
+      "low": 4210.62,
+      "close": 4211.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576460,
+      "open": 4212.56,
+      "high": 4216.07,
+      "low": 4212.3,
+      "close": 4215.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576520,
+      "open": 4215.5,
+      "high": 4216.99,
+      "low": 4214.17,
+      "close": 4215.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576580,
+      "open": 4215.72,
+      "high": 4216.12,
+      "low": 4212.02,
+      "close": 4212.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576640,
+      "open": 4212.47,
+      "high": 4214.44,
+      "low": 4211.66,
+      "close": 4213.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576700,
+      "open": 4213.96,
+      "high": 4216.33,
+      "low": 4213.85,
+      "close": 4216.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576760,
+      "open": 4216.24,
+      "high": 4220.12,
+      "low": 4216.24,
+      "close": 4219.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576820,
+      "open": 4219.44,
+      "high": 4220.04,
+      "low": 4218.55,
+      "close": 4219.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576880,
+      "open": 4219.03,
+      "high": 4219.07,
+      "low": 4217.26,
+      "close": 4218.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760576940,
+      "open": 4217.79,
+      "high": 4217.79,
+      "low": 4214.32,
+      "close": 4216.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577000,
+      "open": 4216.31,
+      "high": 4216.82,
+      "low": 4214.64,
+      "close": 4214.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577060,
+      "open": 4214.69,
+      "high": 4218.28,
+      "low": 4214.27,
+      "close": 4218.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577120,
+      "open": 4218.11,
+      "high": 4220.45,
+      "low": 4218.04,
+      "close": 4220.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577180,
+      "open": 4220.48,
+      "high": 4222.26,
+      "low": 4220.05,
+      "close": 4222.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577240,
+      "open": 4222.59,
+      "high": 4222.82,
+      "low": 4220.35,
+      "close": 4220.53
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577300,
+      "open": 4220.71,
+      "high": 4222.92,
+      "low": 4220.61,
+      "close": 4222.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577360,
+      "open": 4222.82,
+      "high": 4223.78,
+      "low": 4222.36,
+      "close": 4222.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577420,
+      "open": 4222.3,
+      "high": 4222.63,
+      "low": 4219.91,
+      "close": 4220.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577480,
+      "open": 4220.46,
+      "high": 4221.88,
+      "low": 4218.9,
+      "close": 4221.53
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577540,
+      "open": 4221.54,
+      "high": 4221.81,
+      "low": 4220.39,
+      "close": 4221
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577600,
+      "open": 4221.04,
+      "high": 4221.27,
+      "low": 4219.39,
+      "close": 4220.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577660,
+      "open": 4220.88,
+      "high": 4221.13,
+      "low": 4219.1,
+      "close": 4219.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577720,
+      "open": 4219.68,
+      "high": 4219.84,
+      "low": 4218.62,
+      "close": 4219.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577780,
+      "open": 4219.12,
+      "high": 4221.31,
+      "low": 4219.12,
+      "close": 4220.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577840,
+      "open": 4220.04,
+      "high": 4221.04,
+      "low": 4219.98,
+      "close": 4220.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577900,
+      "open": 4220.93,
+      "high": 4222.72,
+      "low": 4220.18,
+      "close": 4221.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760577960,
+      "open": 4221.58,
+      "high": 4222.7,
+      "low": 4221.38,
+      "close": 4222.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578020,
+      "open": 4222.38,
+      "high": 4224.85,
+      "low": 4222.3,
+      "close": 4224.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578080,
+      "open": 4224.56,
+      "high": 4227.93,
+      "low": 4224.56,
+      "close": 4226.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578140,
+      "open": 4226.69,
+      "high": 4227.11,
+      "low": 4224.84,
+      "close": 4224.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578200,
+      "open": 4224.88,
+      "high": 4225.84,
+      "low": 4224.08,
+      "close": 4225.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578260,
+      "open": 4225.73,
+      "high": 4226.7,
+      "low": 4225.15,
+      "close": 4226.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578320,
+      "open": 4226.41,
+      "high": 4226.73,
+      "low": 4224.64,
+      "close": 4225.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578380,
+      "open": 4225.31,
+      "high": 4226.7,
+      "low": 4225.31,
+      "close": 4226.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578440,
+      "open": 4226.65,
+      "high": 4226.68,
+      "low": 4224.96,
+      "close": 4225.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578500,
+      "open": 4225.33,
+      "high": 4226.99,
+      "low": 4225.1,
+      "close": 4226.03
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578560,
+      "open": 4225.84,
+      "high": 4228.38,
+      "low": 4225.84,
+      "close": 4228.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578620,
+      "open": 4228.34,
+      "high": 4229.84,
+      "low": 4228.13,
+      "close": 4228.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578680,
+      "open": 4228.7,
+      "high": 4229.22,
+      "low": 4227.59,
+      "close": 4227.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578740,
+      "open": 4227.84,
+      "high": 4229.03,
+      "low": 4227.34,
+      "close": 4227.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578800,
+      "open": 4227.64,
+      "high": 4229.5,
+      "low": 4227.64,
+      "close": 4229.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578860,
+      "open": 4229.46,
+      "high": 4230.87,
+      "low": 4229.05,
+      "close": 4230.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578920,
+      "open": 4230.48,
+      "high": 4233.01,
+      "low": 4230.22,
+      "close": 4232.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760578980,
+      "open": 4232.11,
+      "high": 4232.11,
+      "low": 4230.78,
+      "close": 4231.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579040,
+      "open": 4231.37,
+      "high": 4231.37,
+      "low": 4228.91,
+      "close": 4231.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579100,
+      "open": 4230.95,
+      "high": 4231.44,
+      "low": 4228.73,
+      "close": 4229.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579160,
+      "open": 4229.36,
+      "high": 4229.36,
+      "low": 4227.23,
+      "close": 4227.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579220,
+      "open": 4227.4,
+      "high": 4229.24,
+      "low": 4227.17,
+      "close": 4228.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579280,
+      "open": 4228.42,
+      "high": 4228.44,
+      "low": 4224.16,
+      "close": 4224.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579340,
+      "open": 4224.59,
+      "high": 4227.04,
+      "low": 4224.49,
+      "close": 4225.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579400,
+      "open": 4225.41,
+      "high": 4226.36,
+      "low": 4224.05,
+      "close": 4224.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579460,
+      "open": 4224.1,
+      "high": 4225.62,
+      "low": 4222.91,
+      "close": 4225.62
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579520,
+      "open": 4225.62,
+      "high": 4228.3,
+      "low": 4225.15,
+      "close": 4228.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579580,
+      "open": 4228.22,
+      "high": 4229.49,
+      "low": 4228.14,
+      "close": 4228.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579640,
+      "open": 4228.51,
+      "high": 4228.75,
+      "low": 4227.87,
+      "close": 4228.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579700,
+      "open": 4228.36,
+      "high": 4229.44,
+      "low": 4228.3,
+      "close": 4229.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579760,
+      "open": 4229.35,
+      "high": 4229.62,
+      "low": 4228.63,
+      "close": 4228.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579820,
+      "open": 4228.97,
+      "high": 4229.43,
+      "low": 4228.65,
+      "close": 4229.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579880,
+      "open": 4229.09,
+      "high": 4230.22,
+      "low": 4229.09,
+      "close": 4229.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760579940,
+      "open": 4229.49,
+      "high": 4230.26,
+      "low": 4229.11,
+      "close": 4230.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580000,
+      "open": 4230.26,
+      "high": 4231.15,
+      "low": 4229.75,
+      "close": 4230.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580060,
+      "open": 4230.82,
+      "high": 4232.36,
+      "low": 4230.7,
+      "close": 4232.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580120,
+      "open": 4232.23,
+      "high": 4232.74,
+      "low": 4231.39,
+      "close": 4232.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580180,
+      "open": 4232.29,
+      "high": 4232.33,
+      "low": 4231.32,
+      "close": 4231.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580240,
+      "open": 4232.02,
+      "high": 4232.94,
+      "low": 4231.44,
+      "close": 4231.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580300,
+      "open": 4231.98,
+      "high": 4233.05,
+      "low": 4231.03,
+      "close": 4231.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580360,
+      "open": 4231.52,
+      "high": 4233.93,
+      "low": 4231.49,
+      "close": 4233.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580420,
+      "open": 4233.94,
+      "high": 4233.96,
+      "low": 4233.37,
+      "close": 4233.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580480,
+      "open": 4233.87,
+      "high": 4234.13,
+      "low": 4233.06,
+      "close": 4233.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580540,
+      "open": 4233.11,
+      "high": 4234.09,
+      "low": 4233.11,
+      "close": 4233.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580600,
+      "open": 4233.97,
+      "high": 4234.09,
+      "low": 4233.49,
+      "close": 4233.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580660,
+      "open": 4233.66,
+      "high": 4233.81,
+      "low": 4232.97,
+      "close": 4233.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580720,
+      "open": 4233.64,
+      "high": 4234.03,
+      "low": 4233.08,
+      "close": 4233.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580780,
+      "open": 4233.44,
+      "high": 4234.3,
+      "low": 4233.23,
+      "close": 4234.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580840,
+      "open": 4234.29,
+      "high": 4234.68,
+      "low": 4233.72,
+      "close": 4234.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580900,
+      "open": 4234.64,
+      "high": 4234.65,
+      "low": 4233.51,
+      "close": 4234.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760580960,
+      "open": 4234.46,
+      "high": 4234.64,
+      "low": 4234.19,
+      "close": 4234.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581020,
+      "open": 4234.48,
+      "high": 4234.52,
+      "low": 4233.89,
+      "close": 4234.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581080,
+      "open": 4234.47,
+      "high": 4234.47,
+      "low": 4232.95,
+      "close": 4233.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581140,
+      "open": 4233.17,
+      "high": 4233.17,
+      "low": 4232.31,
+      "close": 4232.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581200,
+      "open": 4232.67,
+      "high": 4233.4,
+      "low": 4232.33,
+      "close": 4232.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581260,
+      "open": 4232.89,
+      "high": 4233.35,
+      "low": 4232.36,
+      "close": 4232.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581320,
+      "open": 4232.36,
+      "high": 4232.95,
+      "low": 4231.61,
+      "close": 4231.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581380,
+      "open": 4231.79,
+      "high": 4233.33,
+      "low": 4231.68,
+      "close": 4233.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581440,
+      "open": 4233.44,
+      "high": 4233.61,
+      "low": 4233.04,
+      "close": 4233.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581500,
+      "open": 4233.3,
+      "high": 4233.78,
+      "low": 4233.19,
+      "close": 4233.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581560,
+      "open": 4233.29,
+      "high": 4233.36,
+      "low": 4232.91,
+      "close": 4233.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581620,
+      "open": 4233.26,
+      "high": 4233.39,
+      "low": 4233.03,
+      "close": 4233.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581680,
+      "open": 4233.24,
+      "high": 4233.45,
+      "low": 4232.43,
+      "close": 4232.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581740,
+      "open": 4232.57,
+      "high": 4232.59,
+      "low": 4232.12,
+      "close": 4232.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581800,
+      "open": 4231.8,
+      "high": 4232.59,
+      "low": 4231.2,
+      "close": 4232
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581860,
+      "open": 4231.99,
+      "high": 4232.15,
+      "low": 4230.2,
+      "close": 4230.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581920,
+      "open": 4230.12,
+      "high": 4230.47,
+      "low": 4227.8,
+      "close": 4228.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760581980,
+      "open": 4228.24,
+      "high": 4228.58,
+      "low": 4226.32,
+      "close": 4227.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582040,
+      "open": 4227.22,
+      "high": 4230.08,
+      "low": 4226.31,
+      "close": 4229.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582100,
+      "open": 4230.02,
+      "high": 4230.56,
+      "low": 4228.85,
+      "close": 4230.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582160,
+      "open": 4230.47,
+      "high": 4231.11,
+      "low": 4230.15,
+      "close": 4230.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582220,
+      "open": 4230.52,
+      "high": 4230.52,
+      "low": 4229.22,
+      "close": 4230.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582280,
+      "open": 4230.25,
+      "high": 4231.26,
+      "low": 4230.14,
+      "close": 4231.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582340,
+      "open": 4231.13,
+      "high": 4232.91,
+      "low": 4231.13,
+      "close": 4232.85
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582400,
+      "open": 4232.81,
+      "high": 4234.35,
+      "low": 4232.66,
+      "close": 4234.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582460,
+      "open": 4234.41,
+      "high": 4235.86,
+      "low": 4233.97,
+      "close": 4235.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582520,
+      "open": 4235.42,
+      "high": 4235.83,
+      "low": 4233.95,
+      "close": 4235.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582580,
+      "open": 4235.83,
+      "high": 4235.91,
+      "low": 4235.51,
+      "close": 4235.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582640,
+      "open": 4235.67,
+      "high": 4236.17,
+      "low": 4235.67,
+      "close": 4235.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582700,
+      "open": 4236,
+      "high": 4236.13,
+      "low": 4235.19,
+      "close": 4235.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582760,
+      "open": 4235.57,
+      "high": 4236.04,
+      "low": 4235.47,
+      "close": 4236.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582820,
+      "open": 4236.03,
+      "high": 4236.15,
+      "low": 4234.68,
+      "close": 4234.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582880,
+      "open": 4234.92,
+      "high": 4234.93,
+      "low": 4234.22,
+      "close": 4234.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760582940,
+      "open": 4234.19,
+      "high": 4236.3,
+      "low": 4234.19,
+      "close": 4236.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583000,
+      "open": 4236.29,
+      "high": 4236.4,
+      "low": 4235.39,
+      "close": 4235.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583060,
+      "open": 4235.57,
+      "high": 4236.16,
+      "low": 4235.49,
+      "close": 4235.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583120,
+      "open": 4235.94,
+      "high": 4236.39,
+      "low": 4235.93,
+      "close": 4236.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583180,
+      "open": 4236.32,
+      "high": 4236.37,
+      "low": 4236.2,
+      "close": 4236.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583240,
+      "open": 4236.3,
+      "high": 4236.4,
+      "low": 4236.23,
+      "close": 4236.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583300,
+      "open": 4236.29,
+      "high": 4238.6,
+      "low": 4236.24,
+      "close": 4237.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583360,
+      "open": 4237.94,
+      "high": 4238.1,
+      "low": 4237.25,
+      "close": 4238.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583420,
+      "open": 4238.14,
+      "high": 4239.4,
+      "low": 4238.08,
+      "close": 4239.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583480,
+      "open": 4239.37,
+      "high": 4239.4,
+      "low": 4238.53,
+      "close": 4239
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583540,
+      "open": 4239.01,
+      "high": 4239.61,
+      "low": 4238.62,
+      "close": 4239.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583600,
+      "open": 4239.64,
+      "high": 4239.98,
+      "low": 4238.94,
+      "close": 4239.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583660,
+      "open": 4239.46,
+      "high": 4240.07,
+      "low": 4238.59,
+      "close": 4239.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583720,
+      "open": 4239.21,
+      "high": 4239.29,
+      "low": 4238.33,
+      "close": 4239.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583780,
+      "open": 4239.18,
+      "high": 4240.98,
+      "low": 4238.82,
+      "close": 4240.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583840,
+      "open": 4240.9,
+      "high": 4240.9,
+      "low": 4240.36,
+      "close": 4240.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583900,
+      "open": 4240.73,
+      "high": 4240.83,
+      "low": 4239.88,
+      "close": 4240.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760583960,
+      "open": 4240.73,
+      "high": 4241.29,
+      "low": 4240.73,
+      "close": 4241.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584020,
+      "open": 4241.32,
+      "high": 4241.74,
+      "low": 4241.07,
+      "close": 4241.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584080,
+      "open": 4241.47,
+      "high": 4241.47,
+      "low": 4240.68,
+      "close": 4241.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584140,
+      "open": 4241.27,
+      "high": 4241.62,
+      "low": 4241.24,
+      "close": 4241.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584200,
+      "open": 4241.48,
+      "high": 4241.86,
+      "low": 4241.28,
+      "close": 4241.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584260,
+      "open": 4241.81,
+      "high": 4242.12,
+      "low": 4239.93,
+      "close": 4239.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584320,
+      "open": 4240.05,
+      "high": 4241.18,
+      "low": 4239.71,
+      "close": 4241.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584380,
+      "open": 4241.2,
+      "high": 4241.32,
+      "low": 4236.75,
+      "close": 4237.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584440,
+      "open": 4237.07,
+      "high": 4238.49,
+      "low": 4235.56,
+      "close": 4238.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584500,
+      "open": 4238.47,
+      "high": 4240.76,
+      "low": 4238.22,
+      "close": 4240.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584560,
+      "open": 4240.36,
+      "high": 4240.36,
+      "low": 4238.8,
+      "close": 4239.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584620,
+      "open": 4239.13,
+      "high": 4240.81,
+      "low": 4238.94,
+      "close": 4240.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584680,
+      "open": 4240.43,
+      "high": 4241.19,
+      "low": 4239.83,
+      "close": 4240.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584740,
+      "open": 4240.02,
+      "high": 4240.13,
+      "low": 4238.12,
+      "close": 4238.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584800,
+      "open": 4239.25,
+      "high": 4240.25,
+      "low": 4238.52,
+      "close": 4240
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584860,
+      "open": 4239.75,
+      "high": 4239.76,
+      "low": 4238.82,
+      "close": 4239.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584920,
+      "open": 4239.29,
+      "high": 4239.52,
+      "low": 4237.47,
+      "close": 4237.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760584980,
+      "open": 4237.88,
+      "high": 4238.08,
+      "low": 4235.29,
+      "close": 4235.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585040,
+      "open": 4235.71,
+      "high": 4236.9,
+      "low": 4234.35,
+      "close": 4236.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585100,
+      "open": 4236.57,
+      "high": 4236.57,
+      "low": 4235.28,
+      "close": 4235.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585160,
+      "open": 4235.39,
+      "high": 4237,
+      "low": 4235.33,
+      "close": 4236.91
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585220,
+      "open": 4236.82,
+      "high": 4238.3,
+      "low": 4236.34,
+      "close": 4237.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585280,
+      "open": 4237.67,
+      "high": 4238.25,
+      "low": 4237.45,
+      "close": 4237.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585340,
+      "open": 4237.57,
+      "high": 4237.57,
+      "low": 4235.71,
+      "close": 4235.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585400,
+      "open": 4235.6,
+      "high": 4235.89,
+      "low": 4234.88,
+      "close": 4235.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585460,
+      "open": 4235.5,
+      "high": 4235.91,
+      "low": 4234.63,
+      "close": 4235.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585520,
+      "open": 4235.94,
+      "high": 4236.71,
+      "low": 4235.3,
+      "close": 4235.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585580,
+      "open": 4235.28,
+      "high": 4235.95,
+      "low": 4234.91,
+      "close": 4234.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585640,
+      "open": 4234.89,
+      "high": 4235.12,
+      "low": 4233.11,
+      "close": 4233.11
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585700,
+      "open": 4233.19,
+      "high": 4233.3,
+      "low": 4231.56,
+      "close": 4231.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585760,
+      "open": 4231.63,
+      "high": 4232.2,
+      "low": 4230.92,
+      "close": 4231.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585820,
+      "open": 4231.92,
+      "high": 4232.22,
+      "low": 4231.16,
+      "close": 4231.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585880,
+      "open": 4231.99,
+      "high": 4231.99,
+      "low": 4229.6,
+      "close": 4230.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760585940,
+      "open": 4230.88,
+      "high": 4232.74,
+      "low": 4230.52,
+      "close": 4231.12
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586000,
+      "open": 4231,
+      "high": 4231.49,
+      "low": 4229.38,
+      "close": 4231.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586060,
+      "open": 4231.51,
+      "high": 4233.03,
+      "low": 4231.02,
+      "close": 4233.03
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586120,
+      "open": 4233,
+      "high": 4234.91,
+      "low": 4233,
+      "close": 4234.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586180,
+      "open": 4234.26,
+      "high": 4234.82,
+      "low": 4232.73,
+      "close": 4234.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586240,
+      "open": 4234.62,
+      "high": 4234.62,
+      "low": 4233.06,
+      "close": 4233.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586300,
+      "open": 4233.39,
+      "high": 4233.99,
+      "low": 4233.25,
+      "close": 4233.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586360,
+      "open": 4233.88,
+      "high": 4233.88,
+      "low": 4232.39,
+      "close": 4232.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586420,
+      "open": 4232.7,
+      "high": 4233.86,
+      "low": 4232.21,
+      "close": 4233.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586480,
+      "open": 4233.58,
+      "high": 4233.58,
+      "low": 4232.02,
+      "close": 4232.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586540,
+      "open": 4232.25,
+      "high": 4233.3,
+      "low": 4232.12,
+      "close": 4233.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586600,
+      "open": 4233.17,
+      "high": 4234.33,
+      "low": 4233.17,
+      "close": 4234.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586660,
+      "open": 4234.34,
+      "high": 4234.47,
+      "low": 4233.8,
+      "close": 4234.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586720,
+      "open": 4234.3,
+      "high": 4234.58,
+      "low": 4233.82,
+      "close": 4234.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586780,
+      "open": 4234.41,
+      "high": 4234.54,
+      "low": 4233.95,
+      "close": 4234.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586840,
+      "open": 4234.25,
+      "high": 4235.38,
+      "low": 4234.07,
+      "close": 4234.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586900,
+      "open": 4235.01,
+      "high": 4235.49,
+      "low": 4234.83,
+      "close": 4234.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760586960,
+      "open": 4234.85,
+      "high": 4235.66,
+      "low": 4234.13,
+      "close": 4234.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587020,
+      "open": 4234.22,
+      "high": 4234.97,
+      "low": 4233.79,
+      "close": 4234.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587080,
+      "open": 4234.88,
+      "high": 4235.59,
+      "low": 4234.88,
+      "close": 4235.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587140,
+      "open": 4235.39,
+      "high": 4235.53,
+      "low": 4233.89,
+      "close": 4233.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587200,
+      "open": 4233.89,
+      "high": 4233.89,
+      "low": 4232.6,
+      "close": 4232.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587260,
+      "open": 4232.57,
+      "high": 4232.94,
+      "low": 4230.53,
+      "close": 4232.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587320,
+      "open": 4232.9,
+      "high": 4234.02,
+      "low": 4232.9,
+      "close": 4234.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587380,
+      "open": 4234,
+      "high": 4235.2,
+      "low": 4233.74,
+      "close": 4234.46
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587440,
+      "open": 4234.6,
+      "high": 4235.17,
+      "low": 4233.92,
+      "close": 4235.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587500,
+      "open": 4234.93,
+      "high": 4235.92,
+      "low": 4234.9,
+      "close": 4235.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587560,
+      "open": 4235.62,
+      "high": 4235.75,
+      "low": 4233.96,
+      "close": 4233.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587620,
+      "open": 4233.9,
+      "high": 4234.12,
+      "low": 4233.51,
+      "close": 4233.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587680,
+      "open": 4233.59,
+      "high": 4234.48,
+      "low": 4233.38,
+      "close": 4233.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587740,
+      "open": 4233.53,
+      "high": 4234.93,
+      "low": 4233.42,
+      "close": 4234.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587800,
+      "open": 4234.59,
+      "high": 4234.59,
+      "low": 4234.02,
+      "close": 4234.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587860,
+      "open": 4234.02,
+      "high": 4234.59,
+      "low": 4233.9,
+      "close": 4233.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587920,
+      "open": 4233.92,
+      "high": 4234.24,
+      "low": 4233.53,
+      "close": 4233.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760587980,
+      "open": 4233.99,
+      "high": 4234.76,
+      "low": 4233.99,
+      "close": 4234.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588040,
+      "open": 4234.75,
+      "high": 4235.47,
+      "low": 4234.75,
+      "close": 4235.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588100,
+      "open": 4235.19,
+      "high": 4235.3,
+      "low": 4234.52,
+      "close": 4234.62
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588160,
+      "open": 4234.51,
+      "high": 4235.47,
+      "low": 4234.51,
+      "close": 4235.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588220,
+      "open": 4235.39,
+      "high": 4235.82,
+      "low": 4235.25,
+      "close": 4235.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588280,
+      "open": 4235.34,
+      "high": 4236.52,
+      "low": 4235.27,
+      "close": 4236.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588340,
+      "open": 4236.49,
+      "high": 4236.64,
+      "low": 4235.71,
+      "close": 4236.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588400,
+      "open": 4236.64,
+      "high": 4237.76,
+      "low": 4236.55,
+      "close": 4236.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588460,
+      "open": 4236.93,
+      "high": 4238.72,
+      "low": 4236.93,
+      "close": 4238.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588520,
+      "open": 4238.74,
+      "high": 4238.74,
+      "low": 4237.05,
+      "close": 4237.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588580,
+      "open": 4237.6,
+      "high": 4238.48,
+      "low": 4237.6,
+      "close": 4238.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588640,
+      "open": 4238.34,
+      "high": 4238.84,
+      "low": 4238.29,
+      "close": 4238.79
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588700,
+      "open": 4238.79,
+      "high": 4238.79,
+      "low": 4237.87,
+      "close": 4238.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588760,
+      "open": 4238.24,
+      "high": 4239.02,
+      "low": 4238.21,
+      "close": 4239.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588820,
+      "open": 4239.02,
+      "high": 4239.13,
+      "low": 4238.49,
+      "close": 4238.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588880,
+      "open": 4238.52,
+      "high": 4238.52,
+      "low": 4237.41,
+      "close": 4237.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760588940,
+      "open": 4237.51,
+      "high": 4238.17,
+      "low": 4237.51,
+      "close": 4237.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589000,
+      "open": 4238.22,
+      "high": 4238.3,
+      "low": 4237.91,
+      "close": 4238.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589060,
+      "open": 4238.28,
+      "high": 4238.38,
+      "low": 4237.79,
+      "close": 4237.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589120,
+      "open": 4237.82,
+      "high": 4238.6,
+      "low": 4237.69,
+      "close": 4238.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589180,
+      "open": 4238.6,
+      "high": 4238.73,
+      "low": 4237.82,
+      "close": 4238.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589240,
+      "open": 4238.12,
+      "high": 4238.59,
+      "low": 4238.04,
+      "close": 4238.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589300,
+      "open": 4238.54,
+      "high": 4238.66,
+      "low": 4238.26,
+      "close": 4238.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589360,
+      "open": 4238.33,
+      "high": 4238.5,
+      "low": 4237.85,
+      "close": 4238.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589420,
+      "open": 4238.35,
+      "high": 4239.43,
+      "low": 4238.35,
+      "close": 4239.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589480,
+      "open": 4239.38,
+      "high": 4239.39,
+      "low": 4238.1,
+      "close": 4238.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589540,
+      "open": 4238.23,
+      "high": 4238.46,
+      "low": 4236.57,
+      "close": 4237.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589600,
+      "open": 4237.25,
+      "high": 4237.33,
+      "low": 4235.15,
+      "close": 4235.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589660,
+      "open": 4235.6,
+      "high": 4237.14,
+      "low": 4233.89,
+      "close": 4236.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589720,
+      "open": 4236.83,
+      "high": 4236.83,
+      "low": 4233.67,
+      "close": 4234.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589780,
+      "open": 4233.32,
+      "high": 4234.51,
+      "low": 4232.98,
+      "close": 4233.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589840,
+      "open": 4233.55,
+      "high": 4234.96,
+      "low": 4233.44,
+      "close": 4234.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589900,
+      "open": 4234.5,
+      "high": 4235.04,
+      "low": 4230.82,
+      "close": 4231.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760589960,
+      "open": 4231.45,
+      "high": 4233.13,
+      "low": 4231.45,
+      "close": 4233.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590020,
+      "open": 4233.38,
+      "high": 4233.38,
+      "low": 4231.83,
+      "close": 4232.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590080,
+      "open": 4232.22,
+      "high": 4233.59,
+      "low": 4232.17,
+      "close": 4233.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590140,
+      "open": 4233.55,
+      "high": 4233.55,
+      "low": 4231.33,
+      "close": 4232.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590200,
+      "open": 4232.53,
+      "high": 4232.61,
+      "low": 4231.1,
+      "close": 4232.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590260,
+      "open": 4231.19,
+      "high": 4231.19,
+      "low": 4229.42,
+      "close": 4229.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590320,
+      "open": 4229.18,
+      "high": 4231.36,
+      "low": 4228.35,
+      "close": 4231.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590380,
+      "open": 4231.08,
+      "high": 4231.42,
+      "low": 4230.52,
+      "close": 4230.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590440,
+      "open": 4230.98,
+      "high": 4232.15,
+      "low": 4230.7,
+      "close": 4231.91
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590500,
+      "open": 4231.79,
+      "high": 4233.95,
+      "low": 4231.53,
+      "close": 4233.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590560,
+      "open": 4233.78,
+      "high": 4233.78,
+      "low": 4232.78,
+      "close": 4233.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590620,
+      "open": 4233.26,
+      "high": 4233.48,
+      "low": 4232.22,
+      "close": 4232.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590680,
+      "open": 4232.26,
+      "high": 4232.57,
+      "low": 4231.95,
+      "close": 4232.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590740,
+      "open": 4232.52,
+      "high": 4233.35,
+      "low": 4232.48,
+      "close": 4233.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590800,
+      "open": 4233.5,
+      "high": 4234.2,
+      "low": 4232.9,
+      "close": 4234.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590860,
+      "open": 4234.16,
+      "high": 4234.53,
+      "low": 4233.74,
+      "close": 4234.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590920,
+      "open": 4234.21,
+      "high": 4234.64,
+      "low": 4233.34,
+      "close": 4233.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760590980,
+      "open": 4233.62,
+      "high": 4233.89,
+      "low": 4232,
+      "close": 4232
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591040,
+      "open": 4232.03,
+      "high": 4232.75,
+      "low": 4232.03,
+      "close": 4232.46
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591100,
+      "open": 4232.32,
+      "high": 4233.48,
+      "low": 4232.31,
+      "close": 4232.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591160,
+      "open": 4232.94,
+      "high": 4232.94,
+      "low": 4230.21,
+      "close": 4231.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591220,
+      "open": 4231.1,
+      "high": 4231.86,
+      "low": 4229.86,
+      "close": 4231.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591280,
+      "open": 4231.59,
+      "high": 4232.72,
+      "low": 4231.27,
+      "close": 4232.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591340,
+      "open": 4232.15,
+      "high": 4233.64,
+      "low": 4230.26,
+      "close": 4233.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591400,
+      "open": 4233.52,
+      "high": 4233.53,
+      "low": 4231.65,
+      "close": 4233.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591460,
+      "open": 4233.21,
+      "high": 4234.78,
+      "low": 4233.07,
+      "close": 4234.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591520,
+      "open": 4234.02,
+      "high": 4234.02,
+      "low": 4231.08,
+      "close": 4231.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591580,
+      "open": 4231.83,
+      "high": 4231.83,
+      "low": 4229.98,
+      "close": 4230.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591640,
+      "open": 4230.31,
+      "high": 4230.31,
+      "low": 4225.21,
+      "close": 4226.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591700,
+      "open": 4227.14,
+      "high": 4229.59,
+      "low": 4227.14,
+      "close": 4229.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591760,
+      "open": 4229.78,
+      "high": 4230.78,
+      "low": 4228.98,
+      "close": 4230.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591820,
+      "open": 4229.99,
+      "high": 4230.19,
+      "low": 4227.72,
+      "close": 4228.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591880,
+      "open": 4228.45,
+      "high": 4228.54,
+      "low": 4226.23,
+      "close": 4226.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760591940,
+      "open": 4226.72,
+      "high": 4227.53,
+      "low": 4224.91,
+      "close": 4225.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592000,
+      "open": 4225.4,
+      "high": 4225.93,
+      "low": 4222.72,
+      "close": 4222.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592060,
+      "open": 4222.97,
+      "high": 4225.18,
+      "low": 4222.83,
+      "close": 4224.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592120,
+      "open": 4224.75,
+      "high": 4225.46,
+      "low": 4222.3,
+      "close": 4222.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592180,
+      "open": 4222.31,
+      "high": 4225.88,
+      "low": 4221.83,
+      "close": 4225.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592240,
+      "open": 4225.9,
+      "high": 4226.73,
+      "low": 4224.17,
+      "close": 4224.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592300,
+      "open": 4224.38,
+      "high": 4225.28,
+      "low": 4223.57,
+      "close": 4223.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592360,
+      "open": 4224.04,
+      "high": 4224.65,
+      "low": 4222.76,
+      "close": 4224.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592420,
+      "open": 4224.6,
+      "high": 4225.41,
+      "low": 4223.62,
+      "close": 4224.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592480,
+      "open": 4224.47,
+      "high": 4225.49,
+      "low": 4224.42,
+      "close": 4225.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592540,
+      "open": 4225.15,
+      "high": 4225.15,
+      "low": 4223.73,
+      "close": 4224.11
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592600,
+      "open": 4224.12,
+      "high": 4224.12,
+      "low": 4215.87,
+      "close": 4216.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592660,
+      "open": 4216.14,
+      "high": 4217.9,
+      "low": 4212.94,
+      "close": 4213.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592720,
+      "open": 4212.84,
+      "high": 4216.96,
+      "low": 4212.41,
+      "close": 4215.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592780,
+      "open": 4214.5,
+      "high": 4214.5,
+      "low": 4204.86,
+      "close": 4205.68
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592840,
+      "open": 4206.11,
+      "high": 4212.3,
+      "low": 4206.11,
+      "close": 4210.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592900,
+      "open": 4210.69,
+      "high": 4212.57,
+      "low": 4209.32,
+      "close": 4211.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760592960,
+      "open": 4211.45,
+      "high": 4214.23,
+      "low": 4211.22,
+      "close": 4213.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593020,
+      "open": 4213.08,
+      "high": 4213.77,
+      "low": 4208.88,
+      "close": 4208.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593080,
+      "open": 4209.7,
+      "high": 4211.14,
+      "low": 4206.83,
+      "close": 4206.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593140,
+      "open": 4206.92,
+      "high": 4210.87,
+      "low": 4205.63,
+      "close": 4210.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593200,
+      "open": 4209.95,
+      "high": 4212.4,
+      "low": 4207.98,
+      "close": 4209.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593260,
+      "open": 4209.1,
+      "high": 4210.12,
+      "low": 4207.83,
+      "close": 4208.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593320,
+      "open": 4209.04,
+      "high": 4210.77,
+      "low": 4207.44,
+      "close": 4208.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593380,
+      "open": 4208.28,
+      "high": 4210.89,
+      "low": 4206.73,
+      "close": 4210.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593440,
+      "open": 4210.43,
+      "high": 4212.12,
+      "low": 4209.88,
+      "close": 4211.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593500,
+      "open": 4211.65,
+      "high": 4211.65,
+      "low": 4206.59,
+      "close": 4209.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593560,
+      "open": 4209.65,
+      "high": 4210.56,
+      "low": 4207.48,
+      "close": 4207.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593620,
+      "open": 4207.77,
+      "high": 4207.97,
+      "low": 4204.51,
+      "close": 4205.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593680,
+      "open": 4205.06,
+      "high": 4208.97,
+      "low": 4204.55,
+      "close": 4207.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593740,
+      "open": 4207.16,
+      "high": 4209.57,
+      "low": 4206.54,
+      "close": 4208.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593800,
+      "open": 4208.05,
+      "high": 4210.18,
+      "low": 4208.05,
+      "close": 4209.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593860,
+      "open": 4210.02,
+      "high": 4210.02,
+      "low": 4208.45,
+      "close": 4208.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593920,
+      "open": 4208.58,
+      "high": 4209.53,
+      "low": 4206.79,
+      "close": 4208.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760593980,
+      "open": 4208.14,
+      "high": 4208.62,
+      "low": 4206.64,
+      "close": 4207.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594040,
+      "open": 4207.89,
+      "high": 4208.37,
+      "low": 4205.48,
+      "close": 4206.09
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594100,
+      "open": 4206.27,
+      "high": 4206.51,
+      "low": 4204.46,
+      "close": 4205.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594160,
+      "open": 4205.92,
+      "high": 4209.1,
+      "low": 4205.43,
+      "close": 4208.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594220,
+      "open": 4208.57,
+      "high": 4210.14,
+      "low": 4207.76,
+      "close": 4207.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594280,
+      "open": 4208.1,
+      "high": 4208.1,
+      "low": 4203.86,
+      "close": 4206.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594340,
+      "open": 4206.12,
+      "high": 4206.48,
+      "low": 4203.8,
+      "close": 4205.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594400,
+      "open": 4205.03,
+      "high": 4210.18,
+      "low": 4204.28,
+      "close": 4209.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594460,
+      "open": 4209.74,
+      "high": 4210.14,
+      "low": 4206.91,
+      "close": 4208.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594520,
+      "open": 4209.06,
+      "high": 4211.99,
+      "low": 4209.06,
+      "close": 4210.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594580,
+      "open": 4210.29,
+      "high": 4212.44,
+      "low": 4210.05,
+      "close": 4212.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594640,
+      "open": 4212.15,
+      "high": 4216.69,
+      "low": 4212.15,
+      "close": 4216.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594700,
+      "open": 4216.79,
+      "high": 4218.3,
+      "low": 4215.94,
+      "close": 4218.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594760,
+      "open": 4218.7,
+      "high": 4219.05,
+      "low": 4217.18,
+      "close": 4217.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594820,
+      "open": 4217.67,
+      "high": 4218.59,
+      "low": 4215.76,
+      "close": 4218.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594880,
+      "open": 4218.65,
+      "high": 4220.94,
+      "low": 4218.65,
+      "close": 4220.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760594940,
+      "open": 4220.54,
+      "high": 4220.54,
+      "low": 4218.43,
+      "close": 4218.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595000,
+      "open": 4218.88,
+      "high": 4218.88,
+      "low": 4216.9,
+      "close": 4217.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595060,
+      "open": 4218.02,
+      "high": 4219.15,
+      "low": 4217.25,
+      "close": 4218.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595120,
+      "open": 4218.69,
+      "high": 4221.89,
+      "low": 4218.49,
+      "close": 4221.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595180,
+      "open": 4221.7,
+      "high": 4222.71,
+      "low": 4221.05,
+      "close": 4221.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595240,
+      "open": 4221.67,
+      "high": 4222.5,
+      "low": 4221.4,
+      "close": 4222.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595300,
+      "open": 4222.02,
+      "high": 4225.06,
+      "low": 4222.02,
+      "close": 4224.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595360,
+      "open": 4224.82,
+      "high": 4224.92,
+      "low": 4223.71,
+      "close": 4224.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595420,
+      "open": 4224.5,
+      "high": 4225.67,
+      "low": 4223.85,
+      "close": 4225.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595480,
+      "open": 4225.37,
+      "high": 4225.96,
+      "low": 4223.91,
+      "close": 4224.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595540,
+      "open": 4224.23,
+      "high": 4226.89,
+      "low": 4224.23,
+      "close": 4226.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595600,
+      "open": 4226.87,
+      "high": 4226.97,
+      "low": 4223.76,
+      "close": 4223.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595660,
+      "open": 4223.72,
+      "high": 4224.06,
+      "low": 4222.49,
+      "close": 4223.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595720,
+      "open": 4223.56,
+      "high": 4226.42,
+      "low": 4223.27,
+      "close": 4225.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595780,
+      "open": 4225.51,
+      "high": 4227.27,
+      "low": 4224.37,
+      "close": 4227.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595840,
+      "open": 4227.24,
+      "high": 4227.24,
+      "low": 4225.84,
+      "close": 4226.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595900,
+      "open": 4226.37,
+      "high": 4227.18,
+      "low": 4225.07,
+      "close": 4225.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760595960,
+      "open": 4225.3,
+      "high": 4225.64,
+      "low": 4223.55,
+      "close": 4224.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596020,
+      "open": 4224.19,
+      "high": 4224.94,
+      "low": 4223.41,
+      "close": 4223.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596080,
+      "open": 4223.59,
+      "high": 4224.65,
+      "low": 4223.59,
+      "close": 4223.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596140,
+      "open": 4223.99,
+      "high": 4224.66,
+      "low": 4223.52,
+      "close": 4224.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596200,
+      "open": 4224.62,
+      "high": 4225.74,
+      "low": 4224.32,
+      "close": 4224.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596260,
+      "open": 4224.43,
+      "high": 4226.22,
+      "low": 4224.33,
+      "close": 4224.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596320,
+      "open": 4224.77,
+      "high": 4225.48,
+      "low": 4223.55,
+      "close": 4223.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596380,
+      "open": 4223.58,
+      "high": 4224.06,
+      "low": 4220.73,
+      "close": 4221.85
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596440,
+      "open": 4222.06,
+      "high": 4222.8,
+      "low": 4220.97,
+      "close": 4221.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596500,
+      "open": 4221.49,
+      "high": 4225,
+      "low": 4221.49,
+      "close": 4224.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596560,
+      "open": 4224.39,
+      "high": 4224.94,
+      "low": 4223.26,
+      "close": 4223.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596620,
+      "open": 4223.56,
+      "high": 4223.68,
+      "low": 4222.27,
+      "close": 4222.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596680,
+      "open": 4222.48,
+      "high": 4223.85,
+      "low": 4221.77,
+      "close": 4222.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596740,
+      "open": 4222.77,
+      "high": 4224.81,
+      "low": 4222.23,
+      "close": 4222.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596800,
+      "open": 4222.56,
+      "high": 4222.56,
+      "low": 4221.24,
+      "close": 4221.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596860,
+      "open": 4221.24,
+      "high": 4222.23,
+      "low": 4220.7,
+      "close": 4220.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596920,
+      "open": 4220.76,
+      "high": 4221.57,
+      "low": 4219.78,
+      "close": 4220.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760596980,
+      "open": 4221.04,
+      "high": 4221.17,
+      "low": 4219.49,
+      "close": 4220.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597040,
+      "open": 4220.45,
+      "high": 4220.86,
+      "low": 4218.75,
+      "close": 4218.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597100,
+      "open": 4218.76,
+      "high": 4220.29,
+      "low": 4218.43,
+      "close": 4218.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597160,
+      "open": 4218.52,
+      "high": 4218.82,
+      "low": 4215.87,
+      "close": 4216.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597220,
+      "open": 4216.46,
+      "high": 4217.61,
+      "low": 4215.85,
+      "close": 4216.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597280,
+      "open": 4217.06,
+      "high": 4217.94,
+      "low": 4216.1,
+      "close": 4217.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597340,
+      "open": 4217.81,
+      "high": 4218.42,
+      "low": 4217.16,
+      "close": 4217.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597400,
+      "open": 4217.06,
+      "high": 4219.26,
+      "low": 4216.1,
+      "close": 4217.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597460,
+      "open": 4217.74,
+      "high": 4219.01,
+      "low": 4217.02,
+      "close": 4218.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597520,
+      "open": 4218.55,
+      "high": 4219.84,
+      "low": 4217.65,
+      "close": 4219.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597580,
+      "open": 4219.46,
+      "high": 4222.59,
+      "low": 4219.21,
+      "close": 4222.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597640,
+      "open": 4222.7,
+      "high": 4222.7,
+      "low": 4219.78,
+      "close": 4220.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597700,
+      "open": 4220.84,
+      "high": 4221.29,
+      "low": 4219.47,
+      "close": 4219.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597760,
+      "open": 4219.44,
+      "high": 4219.85,
+      "low": 4218.04,
+      "close": 4219.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597820,
+      "open": 4220.1,
+      "high": 4220.46,
+      "low": 4219.98,
+      "close": 4220.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597880,
+      "open": 4220.07,
+      "high": 4221.89,
+      "low": 4219.81,
+      "close": 4221.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760597940,
+      "open": 4221.81,
+      "high": 4222.6,
+      "low": 4221.56,
+      "close": 4222.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598000,
+      "open": 4222.76,
+      "high": 4225.17,
+      "low": 4222.41,
+      "close": 4225.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598060,
+      "open": 4225.18,
+      "high": 4227.1,
+      "low": 4224.81,
+      "close": 4225.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598120,
+      "open": 4225.35,
+      "high": 4227.06,
+      "low": 4225.21,
+      "close": 4225.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598180,
+      "open": 4225.21,
+      "high": 4225.21,
+      "low": 4223.49,
+      "close": 4224.53
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598240,
+      "open": 4224.91,
+      "high": 4226.18,
+      "low": 4224.34,
+      "close": 4224.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598300,
+      "open": 4225.03,
+      "high": 4226.25,
+      "low": 4225.03,
+      "close": 4226.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598360,
+      "open": 4226.47,
+      "high": 4227,
+      "low": 4226.34,
+      "close": 4226.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598420,
+      "open": 4226.54,
+      "high": 4227.08,
+      "low": 4225.61,
+      "close": 4226.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598480,
+      "open": 4226.27,
+      "high": 4227.03,
+      "low": 4225.61,
+      "close": 4226.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598540,
+      "open": 4226.37,
+      "high": 4229.2,
+      "low": 4226.31,
+      "close": 4228.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598600,
+      "open": 4229.06,
+      "high": 4229.52,
+      "low": 4228.45,
+      "close": 4228.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598660,
+      "open": 4228.63,
+      "high": 4230.08,
+      "low": 4228.42,
+      "close": 4229.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598720,
+      "open": 4229.93,
+      "high": 4230.57,
+      "low": 4229.21,
+      "close": 4230.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598780,
+      "open": 4230.17,
+      "high": 4230.57,
+      "low": 4230.05,
+      "close": 4230.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598840,
+      "open": 4230.56,
+      "high": 4231.8,
+      "low": 4230.48,
+      "close": 4231.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598900,
+      "open": 4231.73,
+      "high": 4231.92,
+      "low": 4229.96,
+      "close": 4230.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760598960,
+      "open": 4229.97,
+      "high": 4231.28,
+      "low": 4229.55,
+      "close": 4231.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599020,
+      "open": 4231.27,
+      "high": 4233.27,
+      "low": 4231.24,
+      "close": 4232.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599080,
+      "open": 4232.88,
+      "high": 4233.84,
+      "low": 4232.84,
+      "close": 4233.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599140,
+      "open": 4233.63,
+      "high": 4233.63,
+      "low": 4232.25,
+      "close": 4232.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599200,
+      "open": 4232.81,
+      "high": 4232.93,
+      "low": 4231.13,
+      "close": 4232.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599260,
+      "open": 4232.01,
+      "high": 4233.46,
+      "low": 4231.83,
+      "close": 4232.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599320,
+      "open": 4232.19,
+      "high": 4233.2,
+      "low": 4232.11,
+      "close": 4233.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599380,
+      "open": 4233.15,
+      "high": 4233.15,
+      "low": 4232.04,
+      "close": 4232.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599440,
+      "open": 4232.19,
+      "high": 4232.19,
+      "low": 4230.07,
+      "close": 4230.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599500,
+      "open": 4230.09,
+      "high": 4230.93,
+      "low": 4229.27,
+      "close": 4230.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599560,
+      "open": 4230.51,
+      "high": 4231.79,
+      "low": 4230.51,
+      "close": 4230.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599620,
+      "open": 4230.73,
+      "high": 4231.04,
+      "low": 4230.29,
+      "close": 4230.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599680,
+      "open": 4230.87,
+      "high": 4234.08,
+      "low": 4230.87,
+      "close": 4233.53
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599740,
+      "open": 4233.49,
+      "high": 4233.99,
+      "low": 4232.4,
+      "close": 4233.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599800,
+      "open": 4233.73,
+      "high": 4233.73,
+      "low": 4229.82,
+      "close": 4229.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599860,
+      "open": 4229.76,
+      "high": 4230.93,
+      "low": 4229.64,
+      "close": 4230.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599920,
+      "open": 4230.7,
+      "high": 4230.7,
+      "low": 4229.62,
+      "close": 4230.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760599980,
+      "open": 4230.2,
+      "high": 4230.6,
+      "low": 4229.69,
+      "close": 4229.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600040,
+      "open": 4229.69,
+      "high": 4230.8,
+      "low": 4229.57,
+      "close": 4230.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600100,
+      "open": 4230.49,
+      "high": 4231.4,
+      "low": 4230.45,
+      "close": 4231.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600160,
+      "open": 4230.98,
+      "high": 4231.22,
+      "low": 4230.61,
+      "close": 4230.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600220,
+      "open": 4230.7,
+      "high": 4230.84,
+      "low": 4228.84,
+      "close": 4229.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600280,
+      "open": 4229.51,
+      "high": 4229.53,
+      "low": 4227.78,
+      "close": 4227.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600340,
+      "open": 4227.98,
+      "high": 4229.3,
+      "low": 4227.12,
+      "close": 4227.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600400,
+      "open": 4227.19,
+      "high": 4228.22,
+      "low": 4226.93,
+      "close": 4228.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600460,
+      "open": 4228.17,
+      "high": 4229.1,
+      "low": 4227.81,
+      "close": 4229.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600520,
+      "open": 4229.05,
+      "high": 4229.82,
+      "low": 4228.57,
+      "close": 4228.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600580,
+      "open": 4229.17,
+      "high": 4230.24,
+      "low": 4228.73,
+      "close": 4229.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600640,
+      "open": 4229.89,
+      "high": 4230.94,
+      "low": 4229.59,
+      "close": 4230.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600700,
+      "open": 4230.59,
+      "high": 4231.25,
+      "low": 4230.36,
+      "close": 4230.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600760,
+      "open": 4230.55,
+      "high": 4231.73,
+      "low": 4230.42,
+      "close": 4230.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600820,
+      "open": 4230.29,
+      "high": 4230.29,
+      "low": 4229.5,
+      "close": 4229.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600880,
+      "open": 4229.96,
+      "high": 4231.26,
+      "low": 4229.81,
+      "close": 4229.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760600940,
+      "open": 4229.82,
+      "high": 4230.83,
+      "low": 4229.81,
+      "close": 4230.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601000,
+      "open": 4230.45,
+      "high": 4230.54,
+      "low": 4229.32,
+      "close": 4229.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601060,
+      "open": 4229.41,
+      "high": 4230.67,
+      "low": 4229.37,
+      "close": 4230.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601120,
+      "open": 4230.63,
+      "high": 4230.63,
+      "low": 4229.37,
+      "close": 4229.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601180,
+      "open": 4229.35,
+      "high": 4230.24,
+      "low": 4228.54,
+      "close": 4229.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601240,
+      "open": 4229.24,
+      "high": 4230.45,
+      "low": 4229.24,
+      "close": 4229.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601300,
+      "open": 4229.83,
+      "high": 4230.04,
+      "low": 4228.66,
+      "close": 4228.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601360,
+      "open": 4228.76,
+      "high": 4229.67,
+      "low": 4227.79,
+      "close": 4228.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601420,
+      "open": 4228.44,
+      "high": 4229.12,
+      "low": 4226.21,
+      "close": 4229.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601480,
+      "open": 4229.33,
+      "high": 4229.85,
+      "low": 4228.45,
+      "close": 4229.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601540,
+      "open": 4229.43,
+      "high": 4230.91,
+      "low": 4229.42,
+      "close": 4230.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601600,
+      "open": 4230.7,
+      "high": 4232.11,
+      "low": 4230.28,
+      "close": 4231.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601660,
+      "open": 4231.58,
+      "high": 4234.87,
+      "low": 4231.31,
+      "close": 4234.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601720,
+      "open": 4234.47,
+      "high": 4236.06,
+      "low": 4233.49,
+      "close": 4233.68
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601780,
+      "open": 4233.68,
+      "high": 4235.33,
+      "low": 4233.3,
+      "close": 4234.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601840,
+      "open": 4233.84,
+      "high": 4234.77,
+      "low": 4233.28,
+      "close": 4233.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601900,
+      "open": 4233.33,
+      "high": 4233.92,
+      "low": 4231.92,
+      "close": 4231.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760601960,
+      "open": 4231.88,
+      "high": 4232.31,
+      "low": 4231.26,
+      "close": 4231.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602020,
+      "open": 4231.9,
+      "high": 4233.46,
+      "low": 4231.9,
+      "close": 4233.46
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602080,
+      "open": 4233.15,
+      "high": 4233.91,
+      "low": 4232.35,
+      "close": 4233.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602140,
+      "open": 4233.83,
+      "high": 4233.97,
+      "low": 4233.03,
+      "close": 4233.8
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602200,
+      "open": 4233.62,
+      "high": 4234,
+      "low": 4232.74,
+      "close": 4233.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602260,
+      "open": 4233.95,
+      "high": 4234.3,
+      "low": 4233.78,
+      "close": 4233.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602320,
+      "open": 4234.08,
+      "high": 4234.42,
+      "low": 4233.23,
+      "close": 4233.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602380,
+      "open": 4233.37,
+      "high": 4233.41,
+      "low": 4231.67,
+      "close": 4232.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602440,
+      "open": 4232.4,
+      "high": 4232.4,
+      "low": 4231.87,
+      "close": 4232.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602500,
+      "open": 4232.14,
+      "high": 4233.38,
+      "low": 4231.96,
+      "close": 4232.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602560,
+      "open": 4232.78,
+      "high": 4233.18,
+      "low": 4232.35,
+      "close": 4233.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602620,
+      "open": 4232.82,
+      "high": 4233.35,
+      "low": 4232.42,
+      "close": 4233.03
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602680,
+      "open": 4233.05,
+      "high": 4233.41,
+      "low": 4232.54,
+      "close": 4232.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602740,
+      "open": 4232.54,
+      "high": 4233.27,
+      "low": 4232.29,
+      "close": 4233.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602800,
+      "open": 4233.28,
+      "high": 4233.33,
+      "low": 4232.69,
+      "close": 4232.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602860,
+      "open": 4232.86,
+      "high": 4233.14,
+      "low": 4232.5,
+      "close": 4232.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602920,
+      "open": 4232.61,
+      "high": 4233.48,
+      "low": 4232.5,
+      "close": 4233.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760602980,
+      "open": 4234.29,
+      "high": 4235.68,
+      "low": 4233.52,
+      "close": 4235.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603040,
+      "open": 4235.1,
+      "high": 4235.37,
+      "low": 4234.64,
+      "close": 4235.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603100,
+      "open": 4235.37,
+      "high": 4235.37,
+      "low": 4233.92,
+      "close": 4234.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603160,
+      "open": 4234.32,
+      "high": 4235,
+      "low": 4234.24,
+      "close": 4234.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603220,
+      "open": 4234.52,
+      "high": 4234.65,
+      "low": 4231.86,
+      "close": 4231.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603280,
+      "open": 4231.88,
+      "high": 4233.01,
+      "low": 4231.03,
+      "close": 4231.56
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603340,
+      "open": 4231.77,
+      "high": 4232.04,
+      "low": 4231.33,
+      "close": 4231.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603400,
+      "open": 4231.54,
+      "high": 4231.98,
+      "low": 4230.8,
+      "close": 4231.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603460,
+      "open": 4231.01,
+      "high": 4232.19,
+      "low": 4230.26,
+      "close": 4232.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603520,
+      "open": 4232.13,
+      "high": 4232.16,
+      "low": 4231.32,
+      "close": 4231.91
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603580,
+      "open": 4231.99,
+      "high": 4232.32,
+      "low": 4231.3,
+      "close": 4231.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603640,
+      "open": 4231.52,
+      "high": 4232.14,
+      "low": 4231.22,
+      "close": 4231.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603700,
+      "open": 4231.7,
+      "high": 4232.03,
+      "low": 4230.5,
+      "close": 4230.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603760,
+      "open": 4230.38,
+      "high": 4230.49,
+      "low": 4228.77,
+      "close": 4229.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603820,
+      "open": 4229.86,
+      "high": 4231.31,
+      "low": 4229.81,
+      "close": 4230.62
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603880,
+      "open": 4230.64,
+      "high": 4231.02,
+      "low": 4229.91,
+      "close": 4230.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760603940,
+      "open": 4230.21,
+      "high": 4230.53,
+      "low": 4229.71,
+      "close": 4230.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604000,
+      "open": 4230.47,
+      "high": 4232.17,
+      "low": 4230.47,
+      "close": 4231.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604060,
+      "open": 4231.38,
+      "high": 4232.25,
+      "low": 4231.25,
+      "close": 4231.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604120,
+      "open": 4231.9,
+      "high": 4232.57,
+      "low": 4231.58,
+      "close": 4232.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604180,
+      "open": 4232.16,
+      "high": 4232.83,
+      "low": 4232.1,
+      "close": 4232.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604240,
+      "open": 4232.88,
+      "high": 4233.1,
+      "low": 4232.38,
+      "close": 4232.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604300,
+      "open": 4232.43,
+      "high": 4233.91,
+      "low": 4232.43,
+      "close": 4233.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604360,
+      "open": 4233.83,
+      "high": 4234.36,
+      "low": 4233.47,
+      "close": 4233.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604420,
+      "open": 4233.41,
+      "high": 4233.68,
+      "low": 4232.71,
+      "close": 4232.85
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604480,
+      "open": 4232.92,
+      "high": 4233.26,
+      "low": 4231.96,
+      "close": 4232.09
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604540,
+      "open": 4232.09,
+      "high": 4232.1,
+      "low": 4230.33,
+      "close": 4230.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604600,
+      "open": 4230.48,
+      "high": 4230.48,
+      "low": 4229.42,
+      "close": 4229.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604660,
+      "open": 4229.83,
+      "high": 4230.56,
+      "low": 4229.83,
+      "close": 4230.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604720,
+      "open": 4230.27,
+      "high": 4231.25,
+      "low": 4230.27,
+      "close": 4231.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604780,
+      "open": 4231.06,
+      "high": 4231.37,
+      "low": 4230.41,
+      "close": 4230.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604840,
+      "open": 4230.99,
+      "high": 4232.23,
+      "low": 4230.98,
+      "close": 4232.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604900,
+      "open": 4232.1,
+      "high": 4232.31,
+      "low": 4231.92,
+      "close": 4232.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760604960,
+      "open": 4232.34,
+      "high": 4232.37,
+      "low": 4231.56,
+      "close": 4231.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605020,
+      "open": 4231.87,
+      "high": 4232.66,
+      "low": 4231.85,
+      "close": 4232.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605080,
+      "open": 4232.63,
+      "high": 4233.24,
+      "low": 4232.36,
+      "close": 4232.62
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605140,
+      "open": 4232.52,
+      "high": 4233.01,
+      "low": 4232.52,
+      "close": 4232.99
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605200,
+      "open": 4232.99,
+      "high": 4233.66,
+      "low": 4232.52,
+      "close": 4233
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605260,
+      "open": 4232.97,
+      "high": 4234.18,
+      "low": 4232.83,
+      "close": 4234.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605320,
+      "open": 4234.19,
+      "high": 4234.52,
+      "low": 4234.01,
+      "close": 4234.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605380,
+      "open": 4234.38,
+      "high": 4234.98,
+      "low": 4233.93,
+      "close": 4234.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605440,
+      "open": 4234.61,
+      "high": 4234.92,
+      "low": 4233.93,
+      "close": 4234.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605500,
+      "open": 4234.17,
+      "high": 4234.17,
+      "low": 4233.51,
+      "close": 4233.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605560,
+      "open": 4233.87,
+      "high": 4234.54,
+      "low": 4233.79,
+      "close": 4234.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605620,
+      "open": 4234.37,
+      "high": 4234.64,
+      "low": 4232.04,
+      "close": 4232.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605680,
+      "open": 4232.04,
+      "high": 4232.4,
+      "low": 4231.22,
+      "close": 4231.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605740,
+      "open": 4231.64,
+      "high": 4232.22,
+      "low": 4231.64,
+      "close": 4232.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605800,
+      "open": 4232.14,
+      "high": 4232.92,
+      "low": 4232.14,
+      "close": 4232.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605860,
+      "open": 4232.62,
+      "high": 4232.75,
+      "low": 4231.33,
+      "close": 4231.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605920,
+      "open": 4230.94,
+      "high": 4231.15,
+      "low": 4230.04,
+      "close": 4231.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760605980,
+      "open": 4231.22,
+      "high": 4231.22,
+      "low": 4229.49,
+      "close": 4230.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606040,
+      "open": 4230.06,
+      "high": 4230.24,
+      "low": 4229.63,
+      "close": 4230.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606100,
+      "open": 4230.19,
+      "high": 4230.24,
+      "low": 4228.33,
+      "close": 4228.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606160,
+      "open": 4228.44,
+      "high": 4229.5,
+      "low": 4228.44,
+      "close": 4229.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606220,
+      "open": 4229.44,
+      "high": 4231.35,
+      "low": 4228.98,
+      "close": 4231.04
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606280,
+      "open": 4230.91,
+      "high": 4231.06,
+      "low": 4229.71,
+      "close": 4230.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606340,
+      "open": 4230.19,
+      "high": 4231.59,
+      "low": 4230.01,
+      "close": 4230.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606400,
+      "open": 4230.84,
+      "high": 4231.13,
+      "low": 4230.12,
+      "close": 4230.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606460,
+      "open": 4230.13,
+      "high": 4230.65,
+      "low": 4229.97,
+      "close": 4230.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606520,
+      "open": 4230.1,
+      "high": 4230.43,
+      "low": 4229.81,
+      "close": 4229.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606580,
+      "open": 4229.82,
+      "high": 4230.26,
+      "low": 4228.96,
+      "close": 4229.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606640,
+      "open": 4229.57,
+      "high": 4229.99,
+      "low": 4229.26,
+      "close": 4229.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606700,
+      "open": 4229.96,
+      "high": 4230.46,
+      "low": 4227.89,
+      "close": 4227.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606760,
+      "open": 4227.38,
+      "high": 4227.95,
+      "low": 4224.15,
+      "close": 4224.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606820,
+      "open": 4225.04,
+      "high": 4227.24,
+      "low": 4225.04,
+      "close": 4226.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606880,
+      "open": 4226.35,
+      "high": 4227.22,
+      "low": 4224.04,
+      "close": 4224.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760606940,
+      "open": 4224.27,
+      "high": 4224.81,
+      "low": 4223.1,
+      "close": 4223.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607000,
+      "open": 4223.27,
+      "high": 4224.89,
+      "low": 4222.31,
+      "close": 4224.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607060,
+      "open": 4224.86,
+      "high": 4226.15,
+      "low": 4223.9,
+      "close": 4225.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607120,
+      "open": 4225.13,
+      "high": 4226.14,
+      "low": 4224.53,
+      "close": 4225.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607180,
+      "open": 4225.47,
+      "high": 4225.47,
+      "low": 4224.26,
+      "close": 4224.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607240,
+      "open": 4224.24,
+      "high": 4225.35,
+      "low": 4224.16,
+      "close": 4225.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607300,
+      "open": 4225.37,
+      "high": 4225.37,
+      "low": 4224.21,
+      "close": 4224.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607360,
+      "open": 4224.47,
+      "high": 4224.83,
+      "low": 4222.87,
+      "close": 4224.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607420,
+      "open": 4224.8,
+      "high": 4226.31,
+      "low": 4224.11,
+      "close": 4224.3
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607480,
+      "open": 4224.39,
+      "high": 4225.95,
+      "low": 4224.31,
+      "close": 4225.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607540,
+      "open": 4225.69,
+      "high": 4227.62,
+      "low": 4225.69,
+      "close": 4227.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607600,
+      "open": 4227.29,
+      "high": 4227.54,
+      "low": 4223.49,
+      "close": 4223.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607660,
+      "open": 4223.84,
+      "high": 4226.75,
+      "low": 4223.84,
+      "close": 4225.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607720,
+      "open": 4225.52,
+      "high": 4226.68,
+      "low": 4225.36,
+      "close": 4226.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607780,
+      "open": 4226.05,
+      "high": 4226.68,
+      "low": 4225.95,
+      "close": 4226.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607840,
+      "open": 4226.46,
+      "high": 4228.02,
+      "low": 4226.46,
+      "close": 4227.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607900,
+      "open": 4227.47,
+      "high": 4228.13,
+      "low": 4227.34,
+      "close": 4228.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760607960,
+      "open": 4228.13,
+      "high": 4229,
+      "low": 4227.89,
+      "close": 4228.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608020,
+      "open": 4228.87,
+      "high": 4230.4,
+      "low": 4228.86,
+      "close": 4230.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608080,
+      "open": 4230.06,
+      "high": 4230.8,
+      "low": 4229.77,
+      "close": 4230.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608140,
+      "open": 4230.4,
+      "high": 4230.4,
+      "low": 4229.82,
+      "close": 4229.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608200,
+      "open": 4229.98,
+      "high": 4230.5,
+      "low": 4229.98,
+      "close": 4230.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608260,
+      "open": 4230.51,
+      "high": 4231.77,
+      "low": 4230.51,
+      "close": 4231.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608320,
+      "open": 4231.55,
+      "high": 4231.82,
+      "low": 4230.37,
+      "close": 4231.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608380,
+      "open": 4231.46,
+      "high": 4232.89,
+      "low": 4231.44,
+      "close": 4232.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608440,
+      "open": 4232.86,
+      "high": 4234.06,
+      "low": 4232.86,
+      "close": 4234.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608500,
+      "open": 4234,
+      "high": 4236.79,
+      "low": 4233.99,
+      "close": 4236.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608560,
+      "open": 4236.36,
+      "high": 4236.36,
+      "low": 4235.63,
+      "close": 4236.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608620,
+      "open": 4235.95,
+      "high": 4238.58,
+      "low": 4235.81,
+      "close": 4238.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608680,
+      "open": 4238.49,
+      "high": 4241.86,
+      "low": 4238.4,
+      "close": 4240.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608740,
+      "open": 4240.73,
+      "high": 4240.98,
+      "low": 4238.75,
+      "close": 4239.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608800,
+      "open": 4239.57,
+      "high": 4241.72,
+      "low": 4239.18,
+      "close": 4241.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608860,
+      "open": 4240.9,
+      "high": 4242.93,
+      "low": 4240.44,
+      "close": 4242.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608920,
+      "open": 4242.77,
+      "high": 4243.08,
+      "low": 4242.02,
+      "close": 4243
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760608980,
+      "open": 4243.09,
+      "high": 4243.23,
+      "low": 4241.32,
+      "close": 4241.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609040,
+      "open": 4241.58,
+      "high": 4241.58,
+      "low": 4240.08,
+      "close": 4240.25
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609100,
+      "open": 4240.06,
+      "high": 4240.75,
+      "low": 4238.91,
+      "close": 4240.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609160,
+      "open": 4240.51,
+      "high": 4242.49,
+      "low": 4240.39,
+      "close": 4241.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609220,
+      "open": 4241.33,
+      "high": 4241.33,
+      "low": 4239.44,
+      "close": 4239.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609280,
+      "open": 4239.56,
+      "high": 4240.53,
+      "low": 4239.27,
+      "close": 4239.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609340,
+      "open": 4239.38,
+      "high": 4240.51,
+      "low": 4238.43,
+      "close": 4238.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609400,
+      "open": 4238.13,
+      "high": 4238.72,
+      "low": 4237.84,
+      "close": 4237.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609460,
+      "open": 4238.66,
+      "high": 4239.38,
+      "low": 4237.73,
+      "close": 4238
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609520,
+      "open": 4237.98,
+      "high": 4237.98,
+      "low": 4235.26,
+      "close": 4236.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609580,
+      "open": 4236.52,
+      "high": 4237.38,
+      "low": 4235.85,
+      "close": 4237.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609640,
+      "open": 4237.02,
+      "high": 4238.99,
+      "low": 4237.02,
+      "close": 4238.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609700,
+      "open": 4238.92,
+      "high": 4242.2,
+      "low": 4238.81,
+      "close": 4242.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609760,
+      "open": 4242.02,
+      "high": 4242.02,
+      "low": 4239.5,
+      "close": 4239.53
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609820,
+      "open": 4239.37,
+      "high": 4239.82,
+      "low": 4238.06,
+      "close": 4239.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609880,
+      "open": 4239.93,
+      "high": 4240.18,
+      "low": 4239.42,
+      "close": 4239.73
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760609940,
+      "open": 4239.79,
+      "high": 4240.29,
+      "low": 4239.57,
+      "close": 4239.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610000,
+      "open": 4239.71,
+      "high": 4240.45,
+      "low": 4239.64,
+      "close": 4240.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610060,
+      "open": 4240.03,
+      "high": 4240.43,
+      "low": 4239.87,
+      "close": 4239.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610120,
+      "open": 4239.74,
+      "high": 4239.91,
+      "low": 4239.54,
+      "close": 4239.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610180,
+      "open": 4239.76,
+      "high": 4239.83,
+      "low": 4237.29,
+      "close": 4237.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610240,
+      "open": 4237.31,
+      "high": 4238.23,
+      "low": 4237.31,
+      "close": 4237.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610300,
+      "open": 4237.49,
+      "high": 4237.81,
+      "low": 4236.83,
+      "close": 4236.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610360,
+      "open": 4236.83,
+      "high": 4238.07,
+      "low": 4236.67,
+      "close": 4238.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610420,
+      "open": 4239.22,
+      "high": 4240.04,
+      "low": 4237.87,
+      "close": 4237.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610480,
+      "open": 4237.93,
+      "high": 4238.63,
+      "low": 4237.17,
+      "close": 4238.12
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610540,
+      "open": 4238.12,
+      "high": 4238.12,
+      "low": 4237.28,
+      "close": 4237.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610600,
+      "open": 4237.8,
+      "high": 4238.1,
+      "low": 4234.45,
+      "close": 4236.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610660,
+      "open": 4236.45,
+      "high": 4236.91,
+      "low": 4235.2,
+      "close": 4236.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610720,
+      "open": 4236.41,
+      "high": 4237.06,
+      "low": 4236.13,
+      "close": 4237.06
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610780,
+      "open": 4237.09,
+      "high": 4238.63,
+      "low": 4236.28,
+      "close": 4238.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610840,
+      "open": 4238.1,
+      "high": 4238.1,
+      "low": 4236.67,
+      "close": 4237.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610900,
+      "open": 4237.43,
+      "high": 4237.43,
+      "low": 4236.44,
+      "close": 4236.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760610960,
+      "open": 4236.5,
+      "high": 4236.91,
+      "low": 4235.89,
+      "close": 4236.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611020,
+      "open": 4236.57,
+      "high": 4237.48,
+      "low": 4236.47,
+      "close": 4237.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611080,
+      "open": 4237.45,
+      "high": 4238.61,
+      "low": 4237.45,
+      "close": 4237.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611140,
+      "open": 4237.92,
+      "high": 4238.25,
+      "low": 4237.74,
+      "close": 4237.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611200,
+      "open": 4237.98,
+      "high": 4238.01,
+      "low": 4237.16,
+      "close": 4237.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611260,
+      "open": 4237.39,
+      "high": 4237.56,
+      "low": 4236.97,
+      "close": 4237.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611320,
+      "open": 4237.17,
+      "high": 4237.76,
+      "low": 4236.88,
+      "close": 4236.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611380,
+      "open": 4236.93,
+      "high": 4238.42,
+      "low": 4236.89,
+      "close": 4238.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611440,
+      "open": 4238.43,
+      "high": 4240.27,
+      "low": 4238.43,
+      "close": 4239.37
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611500,
+      "open": 4239.37,
+      "high": 4241.13,
+      "low": 4239.14,
+      "close": 4240.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611560,
+      "open": 4240.85,
+      "high": 4241.09,
+      "low": 4240.3,
+      "close": 4240.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611620,
+      "open": 4240.38,
+      "high": 4240.5,
+      "low": 4238.19,
+      "close": 4239.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611680,
+      "open": 4239.26,
+      "high": 4240.9,
+      "low": 4239.26,
+      "close": 4240.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611740,
+      "open": 4240.83,
+      "high": 4241.5,
+      "low": 4240.6,
+      "close": 4240.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611800,
+      "open": 4240.82,
+      "high": 4241.27,
+      "low": 4240.27,
+      "close": 4241.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611860,
+      "open": 4241.18,
+      "high": 4241.21,
+      "low": 4240.42,
+      "close": 4240.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611920,
+      "open": 4240.48,
+      "high": 4241.31,
+      "low": 4240.34,
+      "close": 4240.8
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760611980,
+      "open": 4240.78,
+      "high": 4242.72,
+      "low": 4240.54,
+      "close": 4242.38
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612040,
+      "open": 4242.47,
+      "high": 4242.61,
+      "low": 4241.6,
+      "close": 4241.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612100,
+      "open": 4242.03,
+      "high": 4242.47,
+      "low": 4241.42,
+      "close": 4241.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612160,
+      "open": 4241.94,
+      "high": 4242.73,
+      "low": 4241.29,
+      "close": 4242.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612220,
+      "open": 4242.67,
+      "high": 4244.23,
+      "low": 4242.67,
+      "close": 4244.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612280,
+      "open": 4244.23,
+      "high": 4246.2,
+      "low": 4244.23,
+      "close": 4244.94
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612340,
+      "open": 4244.92,
+      "high": 4244.92,
+      "low": 4242.81,
+      "close": 4242.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612400,
+      "open": 4242.85,
+      "high": 4243.34,
+      "low": 4242.11,
+      "close": 4242.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612460,
+      "open": 4241.71,
+      "high": 4242.58,
+      "low": 4241,
+      "close": 4241.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612520,
+      "open": 4241.2,
+      "high": 4241.47,
+      "low": 4240.62,
+      "close": 4241.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612580,
+      "open": 4241.2,
+      "high": 4241.57,
+      "low": 4240.99,
+      "close": 4241.44
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612640,
+      "open": 4241.44,
+      "high": 4241.56,
+      "low": 4239.76,
+      "close": 4240
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612700,
+      "open": 4239.99,
+      "high": 4242.84,
+      "low": 4239.85,
+      "close": 4242.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612760,
+      "open": 4242.71,
+      "high": 4243.35,
+      "low": 4242.67,
+      "close": 4243.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612820,
+      "open": 4243.15,
+      "high": 4244.29,
+      "low": 4243.15,
+      "close": 4243.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612880,
+      "open": 4243.86,
+      "high": 4244.96,
+      "low": 4243.64,
+      "close": 4244.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760612940,
+      "open": 4244.61,
+      "high": 4244.61,
+      "low": 4243.56,
+      "close": 4244.02
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613000,
+      "open": 4244.1,
+      "high": 4244.65,
+      "low": 4243.65,
+      "close": 4243.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613060,
+      "open": 4243.81,
+      "high": 4244.06,
+      "low": 4243.58,
+      "close": 4243.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613120,
+      "open": 4243.95,
+      "high": 4243.96,
+      "low": 4242.86,
+      "close": 4243.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613180,
+      "open": 4243.36,
+      "high": 4243.89,
+      "low": 4242.93,
+      "close": 4243.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613240,
+      "open": 4243.29,
+      "high": 4243.41,
+      "low": 4242.65,
+      "close": 4243.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613300,
+      "open": 4243.15,
+      "high": 4243.25,
+      "low": 4242.55,
+      "close": 4242.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613360,
+      "open": 4242.73,
+      "high": 4242.94,
+      "low": 4242.33,
+      "close": 4242.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613420,
+      "open": 4242.55,
+      "high": 4244.27,
+      "low": 4242.43,
+      "close": 4243.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613480,
+      "open": 4243.71,
+      "high": 4244.4,
+      "low": 4243.71,
+      "close": 4244.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613540,
+      "open": 4244.22,
+      "high": 4245.1,
+      "low": 4244.14,
+      "close": 4244.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613600,
+      "open": 4244.37,
+      "high": 4244.52,
+      "low": 4243.74,
+      "close": 4244.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613660,
+      "open": 4244.42,
+      "high": 4244.89,
+      "low": 4244.33,
+      "close": 4244.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613720,
+      "open": 4244.78,
+      "high": 4245.27,
+      "low": 4244.29,
+      "close": 4244.59
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613780,
+      "open": 4244.59,
+      "high": 4244.98,
+      "low": 4244.08,
+      "close": 4244.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613840,
+      "open": 4244.44,
+      "high": 4245.28,
+      "low": 4244.39,
+      "close": 4245.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613900,
+      "open": 4245.16,
+      "high": 4245.57,
+      "low": 4244.76,
+      "close": 4245.17
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760613960,
+      "open": 4245.26,
+      "high": 4246.68,
+      "low": 4245.26,
+      "close": 4245.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614020,
+      "open": 4245.78,
+      "high": 4245.85,
+      "low": 4244.71,
+      "close": 4244.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614080,
+      "open": 4244.73,
+      "high": 4245.02,
+      "low": 4243.86,
+      "close": 4243.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614140,
+      "open": 4243.75,
+      "high": 4244.64,
+      "low": 4243.4,
+      "close": 4244.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614200,
+      "open": 4244.57,
+      "high": 4245.99,
+      "low": 4244.57,
+      "close": 4245.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614260,
+      "open": 4245.94,
+      "high": 4245.94,
+      "low": 4244.53,
+      "close": 4245.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614320,
+      "open": 4245.51,
+      "high": 4245.87,
+      "low": 4244.65,
+      "close": 4244.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614380,
+      "open": 4244.95,
+      "high": 4244.95,
+      "low": 4243.76,
+      "close": 4244.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614440,
+      "open": 4244.04,
+      "high": 4245.41,
+      "low": 4244.04,
+      "close": 4245.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614500,
+      "open": 4245.13,
+      "high": 4245.24,
+      "low": 4242.69,
+      "close": 4242.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614560,
+      "open": 4242.76,
+      "high": 4244.31,
+      "low": 4242.62,
+      "close": 4244.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614620,
+      "open": 4244.19,
+      "high": 4244.42,
+      "low": 4243.58,
+      "close": 4243.62
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614680,
+      "open": 4243.56,
+      "high": 4243.83,
+      "low": 4243.56,
+      "close": 4243.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614740,
+      "open": 4243.7,
+      "high": 4244.83,
+      "low": 4243.68,
+      "close": 4243.79
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614800,
+      "open": 4243.8,
+      "high": 4244.61,
+      "low": 4243.71,
+      "close": 4244.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614860,
+      "open": 4244.39,
+      "high": 4245.58,
+      "low": 4244.36,
+      "close": 4245.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614920,
+      "open": 4245.65,
+      "high": 4245.88,
+      "low": 4245.11,
+      "close": 4245.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760614980,
+      "open": 4245.71,
+      "high": 4246.44,
+      "low": 4245.27,
+      "close": 4246.36
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615040,
+      "open": 4246.28,
+      "high": 4247.51,
+      "low": 4245.95,
+      "close": 4246.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615100,
+      "open": 4246.64,
+      "high": 4247.43,
+      "low": 4245.92,
+      "close": 4246.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615160,
+      "open": 4246.23,
+      "high": 4246.63,
+      "low": 4245.82,
+      "close": 4246.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615220,
+      "open": 4246.59,
+      "high": 4246.66,
+      "low": 4245.77,
+      "close": 4245.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615280,
+      "open": 4245.77,
+      "high": 4246.19,
+      "low": 4244.41,
+      "close": 4244.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615340,
+      "open": 4244.4,
+      "high": 4244.51,
+      "low": 4242.09,
+      "close": 4242.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615400,
+      "open": 4242.47,
+      "high": 4243.29,
+      "low": 4241.38,
+      "close": 4241.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615460,
+      "open": 4241.81,
+      "high": 4242.27,
+      "low": 4240.72,
+      "close": 4240.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615520,
+      "open": 4240.89,
+      "high": 4242.04,
+      "low": 4240.27,
+      "close": 4241.33
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615580,
+      "open": 4241.37,
+      "high": 4241.65,
+      "low": 4241.13,
+      "close": 4241.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615640,
+      "open": 4241.95,
+      "high": 4242.97,
+      "low": 4241.77,
+      "close": 4242.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615700,
+      "open": 4242.27,
+      "high": 4242.64,
+      "low": 4241.59,
+      "close": 4242.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615760,
+      "open": 4242.62,
+      "high": 4243.83,
+      "low": 4242.62,
+      "close": 4243.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615820,
+      "open": 4243.78,
+      "high": 4243.85,
+      "low": 4242.67,
+      "close": 4243.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615880,
+      "open": 4243.3,
+      "high": 4243.3,
+      "low": 4241.44,
+      "close": 4241.77
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760615940,
+      "open": 4241.85,
+      "high": 4242.22,
+      "low": 4240.69,
+      "close": 4240.69
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616000,
+      "open": 4240.69,
+      "high": 4241.16,
+      "low": 4240.13,
+      "close": 4241.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616060,
+      "open": 4241.11,
+      "high": 4241.96,
+      "low": 4240.48,
+      "close": 4240.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616120,
+      "open": 4240.75,
+      "high": 4242.92,
+      "low": 4240.75,
+      "close": 4242.67
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616180,
+      "open": 4242.36,
+      "high": 4242.36,
+      "low": 4240.89,
+      "close": 4241.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616240,
+      "open": 4241.75,
+      "high": 4242.92,
+      "low": 4241.54,
+      "close": 4241.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616300,
+      "open": 4241.55,
+      "high": 4242.17,
+      "low": 4241.4,
+      "close": 4241.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616360,
+      "open": 4241.72,
+      "high": 4242,
+      "low": 4241.02,
+      "close": 4241.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616420,
+      "open": 4241.68,
+      "high": 4243.18,
+      "low": 4241.51,
+      "close": 4243.09
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616480,
+      "open": 4243.09,
+      "high": 4243.44,
+      "low": 4241.9,
+      "close": 4241.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616540,
+      "open": 4242.43,
+      "high": 4244.46,
+      "low": 4242.42,
+      "close": 4243.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616600,
+      "open": 4243.14,
+      "high": 4244.21,
+      "low": 4242.54,
+      "close": 4243.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616660,
+      "open": 4243.79,
+      "high": 4244.04,
+      "low": 4242.91,
+      "close": 4243.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616720,
+      "open": 4243.87,
+      "high": 4244.87,
+      "low": 4243.71,
+      "close": 4244.79
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616780,
+      "open": 4244.73,
+      "high": 4245.12,
+      "low": 4244.35,
+      "close": 4244.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616840,
+      "open": 4244.33,
+      "high": 4245.04,
+      "low": 4243.95,
+      "close": 4244.71
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616900,
+      "open": 4244.98,
+      "high": 4245.36,
+      "low": 4244.25,
+      "close": 4244.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760616960,
+      "open": 4244.58,
+      "high": 4245.2,
+      "low": 4244.39,
+      "close": 4244.87
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617020,
+      "open": 4244.82,
+      "high": 4245.01,
+      "low": 4243.71,
+      "close": 4243.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617080,
+      "open": 4243.93,
+      "high": 4243.97,
+      "low": 4242.4,
+      "close": 4242.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617140,
+      "open": 4242.48,
+      "high": 4242.48,
+      "low": 4240.74,
+      "close": 4241.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617200,
+      "open": 4241.6,
+      "high": 4242.64,
+      "low": 4241.25,
+      "close": 4241.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617260,
+      "open": 4241.71,
+      "high": 4242.01,
+      "low": 4240.35,
+      "close": 4240.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617320,
+      "open": 4240.52,
+      "high": 4241.41,
+      "low": 4239.81,
+      "close": 4240.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617380,
+      "open": 4240.83,
+      "high": 4240.92,
+      "low": 4238.3,
+      "close": 4238.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617440,
+      "open": 4238.53,
+      "high": 4239.58,
+      "low": 4238.37,
+      "close": 4239.24
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617500,
+      "open": 4239.03,
+      "high": 4239.03,
+      "low": 4237.79,
+      "close": 4238.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617560,
+      "open": 4238.07,
+      "high": 4238.28,
+      "low": 4236.69,
+      "close": 4238.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617620,
+      "open": 4238.2,
+      "high": 4240.27,
+      "low": 4238.16,
+      "close": 4238.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617680,
+      "open": 4238.78,
+      "high": 4239.59,
+      "low": 4238.74,
+      "close": 4239.31
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617740,
+      "open": 4239.3,
+      "high": 4239.36,
+      "low": 4239.1,
+      "close": 4239.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617800,
+      "open": 4239.3,
+      "high": 4241.15,
+      "low": 4239.17,
+      "close": 4241.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617860,
+      "open": 4240.99,
+      "high": 4244.65,
+      "low": 4240.88,
+      "close": 4244.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617920,
+      "open": 4244.64,
+      "high": 4244.64,
+      "low": 4242.76,
+      "close": 4243.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760617980,
+      "open": 4244,
+      "high": 4245.98,
+      "low": 4244,
+      "close": 4245.28
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618040,
+      "open": 4245.34,
+      "high": 4247.98,
+      "low": 4245.27,
+      "close": 4246.7
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618100,
+      "open": 4246.56,
+      "high": 4249.64,
+      "low": 4246.25,
+      "close": 4248.83
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618160,
+      "open": 4248.84,
+      "high": 4250.05,
+      "low": 4248.5,
+      "close": 4249.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618220,
+      "open": 4249.65,
+      "high": 4251,
+      "low": 4249.63,
+      "close": 4250.19
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618280,
+      "open": 4250.19,
+      "high": 4250.19,
+      "low": 4244.67,
+      "close": 4245.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618340,
+      "open": 4245.09,
+      "high": 4245.09,
+      "low": 4232.53,
+      "close": 4238.01
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618400,
+      "open": 4237.79,
+      "high": 4238.47,
+      "low": 4228.7,
+      "close": 4235.13
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618460,
+      "open": 4234.81,
+      "high": 4236.27,
+      "low": 4231.83,
+      "close": 4236.27
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618520,
+      "open": 4236.16,
+      "high": 4239.19,
+      "low": 4236.06,
+      "close": 4236.41
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618580,
+      "open": 4236.43,
+      "high": 4238.54,
+      "low": 4234.59,
+      "close": 4237.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618640,
+      "open": 4236.92,
+      "high": 4238.13,
+      "low": 4236.1,
+      "close": 4237.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618700,
+      "open": 4237.42,
+      "high": 4237.42,
+      "low": 4233.7,
+      "close": 4235.66
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618760,
+      "open": 4236.63,
+      "high": 4239.7,
+      "low": 4236.63,
+      "close": 4239.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618820,
+      "open": 4239.05,
+      "high": 4239.35,
+      "low": 4237.24,
+      "close": 4238.16
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618880,
+      "open": 4238.11,
+      "high": 4240.08,
+      "low": 4237.68,
+      "close": 4238.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760618940,
+      "open": 4239.41,
+      "high": 4240.07,
+      "low": 4238.4,
+      "close": 4239.6
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619000,
+      "open": 4239.69,
+      "high": 4240.24,
+      "low": 4237.43,
+      "close": 4238.23
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619060,
+      "open": 4238.22,
+      "high": 4238.41,
+      "low": 4236.57,
+      "close": 4236.98
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619120,
+      "open": 4237.15,
+      "high": 4237.94,
+      "low": 4235.63,
+      "close": 4236.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619180,
+      "open": 4236.54,
+      "high": 4238.7,
+      "low": 4236.54,
+      "close": 4238.22
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619240,
+      "open": 4238.38,
+      "high": 4239.22,
+      "low": 4238.03,
+      "close": 4238.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619300,
+      "open": 4238.48,
+      "high": 4239.97,
+      "low": 4236.73,
+      "close": 4236.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619360,
+      "open": 4236.99,
+      "high": 4236.99,
+      "low": 4234.26,
+      "close": 4235.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619420,
+      "open": 4235.97,
+      "high": 4236.31,
+      "low": 4234.12,
+      "close": 4234.42
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619480,
+      "open": 4234.47,
+      "high": 4235.85,
+      "low": 4234.33,
+      "close": 4235.75
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619540,
+      "open": 4235,
+      "high": 4236.37,
+      "low": 4233.84,
+      "close": 4236.07
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619600,
+      "open": 4236.09,
+      "high": 4240.28,
+      "low": 4235.04,
+      "close": 4239.21
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619660,
+      "open": 4239.15,
+      "high": 4244.33,
+      "low": 4239.15,
+      "close": 4244.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619720,
+      "open": 4244.04,
+      "high": 4245.35,
+      "low": 4241.89,
+      "close": 4243.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619780,
+      "open": 4243.45,
+      "high": 4244.36,
+      "low": 4241.79,
+      "close": 4241.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619840,
+      "open": 4241.87,
+      "high": 4243.02,
+      "low": 4239.1,
+      "close": 4242.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619900,
+      "open": 4243.05,
+      "high": 4245.56,
+      "low": 4242.15,
+      "close": 4242.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760619960,
+      "open": 4242.54,
+      "high": 4243.07,
+      "low": 4240.66,
+      "close": 4241.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620020,
+      "open": 4241.43,
+      "high": 4244.53,
+      "low": 4241.28,
+      "close": 4243.14
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620080,
+      "open": 4243.09,
+      "high": 4244.21,
+      "low": 4243.09,
+      "close": 4243.74
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620140,
+      "open": 4243.84,
+      "high": 4244.03,
+      "low": 4242.62,
+      "close": 4242.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620200,
+      "open": 4242.66,
+      "high": 4244.15,
+      "low": 4242.29,
+      "close": 4242.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620260,
+      "open": 4242,
+      "high": 4247.25,
+      "low": 4241.72,
+      "close": 4244.48
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620320,
+      "open": 4244.64,
+      "high": 4245.61,
+      "low": 4243.97,
+      "close": 4244.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620380,
+      "open": 4244.92,
+      "high": 4245.32,
+      "low": 4243.73,
+      "close": 4245.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620440,
+      "open": 4245.17,
+      "high": 4245.86,
+      "low": 4245.03,
+      "close": 4245.86
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620500,
+      "open": 4245.92,
+      "high": 4246.93,
+      "low": 4245.39,
+      "close": 4245.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620560,
+      "open": 4245.52,
+      "high": 4246.9,
+      "low": 4244.56,
+      "close": 4246.9
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620620,
+      "open": 4246.63,
+      "high": 4248.12,
+      "low": 4246.46,
+      "close": 4246.85
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620680,
+      "open": 4246.75,
+      "high": 4247.4,
+      "low": 4246.3,
+      "close": 4247.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620740,
+      "open": 4247.57,
+      "high": 4249.68,
+      "low": 4247.57,
+      "close": 4248.93
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620800,
+      "open": 4248.9,
+      "high": 4249.64,
+      "low": 4248.31,
+      "close": 4248.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620860,
+      "open": 4248.79,
+      "high": 4250.24,
+      "low": 4247.09,
+      "close": 4250.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620920,
+      "open": 4250.27,
+      "high": 4252.4,
+      "low": 4250.27,
+      "close": 4252.18
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760620980,
+      "open": 4252.22,
+      "high": 4252.63,
+      "low": 4250.43,
+      "close": 4252.63
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621040,
+      "open": 4252.74,
+      "high": 4254.65,
+      "low": 4252.14,
+      "close": 4254.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621100,
+      "open": 4254.51,
+      "high": 4254.86,
+      "low": 4252.28,
+      "close": 4253.55
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621160,
+      "open": 4252.58,
+      "high": 4252.58,
+      "low": 4249.13,
+      "close": 4249.49
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621220,
+      "open": 4249.47,
+      "high": 4249.47,
+      "low": 4246.91,
+      "close": 4247.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621280,
+      "open": 4247.7,
+      "high": 4251.23,
+      "low": 4247.62,
+      "close": 4249.97
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621340,
+      "open": 4249.98,
+      "high": 4251.84,
+      "low": 4249.98,
+      "close": 4251.5
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621400,
+      "open": 4251.67,
+      "high": 4252.44,
+      "low": 4249.04,
+      "close": 4249.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621460,
+      "open": 4249.13,
+      "high": 4249.23,
+      "low": 4246.57,
+      "close": 4248.32
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621520,
+      "open": 4247.53,
+      "high": 4248.81,
+      "low": 4246.78,
+      "close": 4248.64
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621580,
+      "open": 4248.45,
+      "high": 4250.58,
+      "low": 4246.86,
+      "close": 4247.08
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621640,
+      "open": 4247.18,
+      "high": 4250.72,
+      "low": 4245.7,
+      "close": 4248.51
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621700,
+      "open": 4248.28,
+      "high": 4248.56,
+      "low": 4246.74,
+      "close": 4247.54
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621760,
+      "open": 4247.22,
+      "high": 4251.25,
+      "low": 4246.29,
+      "close": 4250.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621820,
+      "open": 4251.11,
+      "high": 4254.24,
+      "low": 4251.08,
+      "close": 4253.11
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621880,
+      "open": 4253.15,
+      "high": 4254.38,
+      "low": 4252.13,
+      "close": 4254.34
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760621940,
+      "open": 4254.59,
+      "high": 4256.12,
+      "low": 4252.5,
+      "close": 4253.52
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622000,
+      "open": 4252.93,
+      "high": 4253.29,
+      "low": 4250.13,
+      "close": 4252.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622060,
+      "open": 4253.01,
+      "high": 4256.61,
+      "low": 4253.01,
+      "close": 4256.61
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622120,
+      "open": 4256.58,
+      "high": 4258.45,
+      "low": 4255.91,
+      "close": 4258.12
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622180,
+      "open": 4257.9,
+      "high": 4258.74,
+      "low": 4256.68,
+      "close": 4256.68
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622240,
+      "open": 4256.27,
+      "high": 4257,
+      "low": 4255.48,
+      "close": 4255.82
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622300,
+      "open": 4255.7,
+      "high": 4256.1,
+      "low": 4253.1,
+      "close": 4253.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622360,
+      "open": 4253.22,
+      "high": 4255.51,
+      "low": 4252.27,
+      "close": 4253.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622420,
+      "open": 4254.14,
+      "high": 4255.71,
+      "low": 4254.03,
+      "close": 4254.88
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622480,
+      "open": 4255.23,
+      "high": 4256.55,
+      "low": 4253.04,
+      "close": 4253.05
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622540,
+      "open": 4253.17,
+      "high": 4254.11,
+      "low": 4252.54,
+      "close": 4253.15
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622600,
+      "open": 4253.13,
+      "high": 4253.61,
+      "low": 4251.87,
+      "close": 4253.2
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622660,
+      "open": 4253.17,
+      "high": 4256.86,
+      "low": 4252.39,
+      "close": 4254.4
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622720,
+      "open": 4254.38,
+      "high": 4254.46,
+      "low": 4252.72,
+      "close": 4253.45
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622780,
+      "open": 4253.4,
+      "high": 4253.68,
+      "low": 4252.36,
+      "close": 4252.43
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622840,
+      "open": 4252.46,
+      "high": 4253.25,
+      "low": 4251.94,
+      "close": 4253.1
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622900,
+      "open": 4253.06,
+      "high": 4253.06,
+      "low": 4248.14,
+      "close": 4248.26
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760622960,
+      "open": 4248.18,
+      "high": 4248.18,
+      "low": 4244.15,
+      "close": 4245.81
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623020,
+      "open": 4245.28,
+      "high": 4247.92,
+      "low": 4245.28,
+      "close": 4245.96
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623080,
+      "open": 4246.06,
+      "high": 4246.89,
+      "low": 4244.83,
+      "close": 4246.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623140,
+      "open": 4246.87,
+      "high": 4247.58,
+      "low": 4246.39,
+      "close": 4246.79
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623200,
+      "open": 4246.52,
+      "high": 4253.89,
+      "low": 4245.73,
+      "close": 4253.89
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623260,
+      "open": 4253.89,
+      "high": 4255.81,
+      "low": 4253.56,
+      "close": 4255.72
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623320,
+      "open": 4255.75,
+      "high": 4255.75,
+      "low": 4254.14,
+      "close": 4254.47
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623380,
+      "open": 4254.33,
+      "high": 4257.72,
+      "low": 4254.15,
+      "close": 4256.58
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623440,
+      "open": 4256.53,
+      "high": 4256.85,
+      "low": 4254.9,
+      "close": 4256.29
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623500,
+      "open": 4256.29,
+      "high": 4259.75,
+      "low": 4255.23,
+      "close": 4259.39
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623560,
+      "open": 4259.43,
+      "high": 4261.95,
+      "low": 4259.18,
+      "close": 4261.95
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623620,
+      "open": 4262.24,
+      "high": 4262.52,
+      "low": 4259.21,
+      "close": 4259.84
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623680,
+      "open": 4260.24,
+      "high": 4261.17,
+      "low": 4259.01,
+      "close": 4260.92
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623740,
+      "open": 4261.14,
+      "high": 4261.57,
+      "low": 4259.78,
+      "close": 4260.65
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623800,
+      "open": 4260.81,
+      "high": 4262.93,
+      "low": 4259.39,
+      "close": 4262.35
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623860,
+      "open": 4262.29,
+      "high": 4264.13,
+      "low": 4261.73,
+      "close": 4262.78
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623920,
+      "open": 4262.73,
+      "high": 4264.17,
+      "low": 4261.62,
+      "close": 4262.57
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760623980,
+      "open": 4262.86,
+      "high": 4264.44,
+      "low": 4262.76,
+      "close": 4263.76
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760624040,
+      "open": 4263.6,
+      "high": 4265.48,
+      "low": 4263.31,
+      "close": 4265.46
+    },
+    {
+      "asset": "frxXAUUSD",
+      "timeframe": 60,
+      "timestamp": 1760624100,
+      "open": 4265.4,
+      "high": 4265.4,
+      "low": 4263.59,
+      "close": 4264.82
+    }
+  ],
+  "startDate": "2025-09-16T14:15:49.932Z",
+  "endDate": "2025-10-16T14:15:49.932Z",
+  "totalCandles": 1000
+}

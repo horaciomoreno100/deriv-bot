@@ -1,0 +1,56 @@
+// Gateway Database Schema
+// Stores market data overflow from memory cache
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL_GATEWAY")
+}
+
+// Candles (OHLC data)
+model Candle {
+  id        Int      @id @default(autoincrement())
+  asset     String
+  timeframe Int      // seconds (60, 300, 900, 3600, etc)
+  timestamp Int      // Unix timestamp (candle start time)
+  open      Float
+  high      Float
+  low       Float
+  close     Float
+  volume    Float?
+  createdAt DateTime @default(now())
+
+  @@unique([asset, timeframe, timestamp])
+  @@index([asset, timeframe])
+  @@index([timestamp])
+  @@map("candles")
+}
+
+// Ticks (raw price data)
+model Tick {
+  id        Int      @id @default(autoincrement())
+  asset     String
+  price     Float
+  timestamp BigInt   // Milliseconds
+  direction Int?     // 1 up, -1 down, 0 neutral
+  createdAt DateTime @default(now())
+
+  @@index([asset, timestamp])
+  @@map("ticks")
+}
+
+// Symbols (cached active symbols)
+model Symbol {
+  symbol        String   @id
+  displayName   String
+  market        String
+  submarket     String
+  isOpen        Boolean
+  pipSize       Float
+  lastUpdated   DateTime @default(now())
+
+  @@map("symbols")
+}

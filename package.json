@@ -1,0 +1,53 @@
+{
+  "name": "deriv-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Binary options trading bot for Deriv with backtesting and strategy management",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --stream run dev",
+    "build": "pnpm --recursive run build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "clean": "pnpm --recursive run clean && rm -rf node_modules",
+    "docs": "typedoc --out docs packages/*/src",
+    "docs:serve": "pnpm docs && npx serve docs",
+    "typecheck": "tsc --noEmit",
+    "gateway": "pnpm --filter gateway dev",
+    "trader": "pnpm --filter trader dev",
+    "cli": "pnpm --filter cli dev"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vitest/ui": "^1.0.4",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0",
+    "typedoc": "^0.25.4",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  },
+  "keywords": [
+    "trading",
+    "binary-options",
+    "deriv",
+    "bot",
+    "backtesting",
+    "typescript"
+  ],
+  "author": "Horacio Moreno",
+  "license": "MIT",
+  "dependencies": {
+    "@deriv/deriv-api": "^1.0.15",
+    "ml-matrix": "^6.12.1",
+    "ml-random-forest": "^2.1.0"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "@deriv-bot/trader",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./strategy": {
+      "import": "./dist/strategy/index.js",
+      "types": "./dist/strategy/index.d.ts"
+    },
+    "./strategies": {
+      "import": "./dist/strategies/index.js",
+      "types": "./dist/strategies/index.d.ts"
+    },
+    "./indicators": {
+      "import": "./dist/indicators/index.js",
+      "types": "./dist/indicators/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "clean": "rm -rf dist",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit",
+    "demo": "tsx src/scripts/run-mean-reversion-demo-v2.ts"
+  },
+  "dependencies": {
+    "@deriv-bot/gateway": "workspace:*",
+    "@deriv-bot/shared": "workspace:*",
+    "@deriv/deriv-api": "^1.0.15",
+    "dotenv": "^16.6.1",
+    "technicalindicators": "^3.1.0",
+    "ws": "^8.18.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.18.1",
+    "@vitest/ui": "^1.0.4",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  }
+}
