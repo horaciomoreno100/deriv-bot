@@ -252,4 +252,34 @@ export class GatewayBridge extends EventEmitter {
     const result = await this.sendCommand('get_trades', { limit });
     return result.trades || [];
   }
+
+  /**
+   * Get bot info (traders, strategies, uptime)
+   */
+  async getBotInfo(): Promise<{
+    traders: Array<{
+      id: string;
+      name: string;
+      strategy: string;
+      symbols: string[];
+      uptime: number;
+      uptimeFormatted: string;
+      isActive: boolean;
+    }>;
+    system: {
+      connectedTraders: number;
+      activeStrategies: string[];
+      gatewayUptime: number;
+      gatewayUptimeFormatted: string;
+    };
+    todayStats: {
+      totalTrades: number;
+      wins: number;
+      losses: number;
+      winRate: number;
+      netPnL: number;
+    } | null;
+  }> {
+    return await this.sendCommand('get_bot_info');
+  }
 }

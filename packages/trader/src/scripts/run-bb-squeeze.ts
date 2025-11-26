@@ -175,6 +175,27 @@ async function main() {
   await gatewayClient.connect();
   console.log('✅ Connected to Gateway\n');
 
+  // Register trader with Gateway for monitoring
+  try {
+    const registration = await gatewayClient.registerTrader({
+      name: 'BB-Squeeze Trader',
+      strategy: 'BB-Squeeze',
+      symbols: SYMBOLS,
+    });
+    console.log(`📝 Registered with Gateway: ${registration.traderId}\n`);
+  } catch (error) {
+    console.log('⚠️  Could not register with Gateway (older version?)\n');
+  }
+
+  // Start heartbeat interval (every 30 seconds)
+  setInterval(async () => {
+    try {
+      await gatewayClient.heartbeat();
+    } catch {
+      // Ignore heartbeat errors
+    }
+  }, 30000);
+
   // Initialize strategy with config
   const strategy = new BBSqueezeStrategy({
     name: 'bb-squeeze',

@@ -7,7 +7,7 @@
 
 import TelegramBot from 'node-telegram-bot-api';
 import type { GatewayBridge } from './gateway-bridge.js';
-import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade } from './formatters.js';
+import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo } from './formatters.js';
 
 export interface TelegramBotConfig {
   token: string;
@@ -45,6 +45,7 @@ export class TelegramBotService {
       this.sendMessage(
         `*Deriv Trading Bot*\n\n` +
         `Available commands:\n` +
+        `/info - Bot info & strategies\n` +
         `/balance - Account balance\n` +
         `/status - Open positions\n` +
         `/profit - Today's P/L\n` +
@@ -59,14 +60,15 @@ export class TelegramBotService {
       if (!this.isAuthorized(msg.from?.id)) return;
       this.sendMessage(
         `*Commands:*\n\n` +
+        `*Bot Info:*\n` +
+        `/info - Bot status, strategies & uptime\n` +
+        `/ping - Check gateway connection\n\n` +
         `*Monitoring:*\n` +
         `/balance - Current account balance\n` +
         `/status - Open positions & P/L\n` +
         `/profit - Last 24h performance\n` +
         `/stats - Daily statistics\n` +
         `/assets - Assets being monitored\n\n` +
-        `*Info:*\n` +
-        `/ping - Check bot status\n` +
         `/help - This message`
       );
     });
@@ -81,6 +83,17 @@ export class TelegramBotService {
         this.sendMessage(`*Pong!*\nGateway latency: ${latency}ms`);
       } catch (error) {
         this.sendMessage(`Gateway offline`);
+      }
+    });
+
+    // /info - Bot information (strategies, uptime, status)
+    this.bot.onText(/\/info/, async (msg) => {
+      if (!this.isAuthorized(msg.from?.id)) return;
+      try {
+        const info = await this.gateway.getBotInfo();
+        this.sendMessage(formatBotInfo(info));
+      } catch (error: any) {
+        this.sendMessage(`Error: ${error.message}`);
       }
     });
 

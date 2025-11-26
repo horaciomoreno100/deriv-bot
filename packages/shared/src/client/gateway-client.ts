@@ -495,6 +495,27 @@ export class GatewayClient extends EventEmitter {
   }
 
   /**
+   * Register this trader with the Gateway
+   * Allows monitoring via Telegram /info command
+   */
+  async registerTrader(info: {
+    name: string;
+    strategy: string;
+    symbols: string[];
+    id?: string;
+  }): Promise<{ registered: boolean; traderId: string }> {
+    const result = await this.sendCommand('register_trader', info);
+    return result;
+  }
+
+  /**
+   * Send heartbeat to Gateway to indicate this trader is still active
+   */
+  async heartbeat(): Promise<void> {
+    await this.sendCommand('heartbeat');
+  }
+
+  /**
    * Send command to Gateway and wait for response
    */
   private async sendCommand(command: string, params?: any): Promise<any> {

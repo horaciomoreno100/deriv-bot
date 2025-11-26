@@ -275,6 +275,32 @@ export interface CandleClosedEvent {
   };
 }
 
+/**
+ * Trader connected event
+ */
+export interface TraderConnectedEvent {
+  type: 'trader:connected';
+  data: {
+    id: string;
+    name: string;
+    strategy: string;
+    symbols: string[];
+  };
+  timestamp: number;
+}
+
+/**
+ * Trader disconnected event
+ */
+export interface TraderDisconnectedEvent {
+  type: 'trader:disconnected';
+  data: {
+    id: string;
+    name: string;
+  };
+  timestamp: number;
+}
+
 // ============================================
 // Helper Functions
 // ============================================

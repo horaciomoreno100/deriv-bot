@@ -40,7 +40,7 @@ export interface ResponseMessage extends BaseMessage {
  * Event message from Gateway to Trader (broadcast)
  */
 export interface EventMessage extends BaseMessage {
-  type: 'tick' | 'balance' | 'trade:executed' | 'trade:result' | 'instruments' | 'historical_data' | 'candle_update' | 'candle_closed' | 'indicators' | 'signal:proximity';
+  type: 'tick' | 'balance' | 'trade:executed' | 'trade:result' | 'instruments' | 'historical_data' | 'candle_update' | 'candle_closed' | 'indicators' | 'signal:proximity' | 'trader:connected' | 'trader:disconnected';
   data: any;
 }
 

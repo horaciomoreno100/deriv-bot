@@ -205,3 +205,73 @@ export function formatAssets(assets: string[]): string {
     assets.map((a) => `• \`${a}\``).join('\n')
   );
 }
+
+/**
+ * Format bot info (strategies, uptime, status)
+ */
+export function formatBotInfo(info: {
+  traders: Array<{
+    id: string;
+    name: string;
+    strategy: string;
+    symbols: string[];
+    uptime: number;
+    uptimeFormatted: string;
+    isActive: boolean;
+  }>;
+  system: {
+    connectedTraders: number;
+    activeStrategies: string[];
+    gatewayUptime: number;
+    gatewayUptimeFormatted: string;
+  };
+  todayStats: {
+    totalTrades: number;
+    wins: number;
+    losses: number;
+    winRate: number;
+    netPnL: number;
+  } | null;
+}): string {
+  let message = `🤖 *Bot Information*\n\n`;
+
+  // System info
+  message += `*System:*\n`;
+  message += `├ Gateway Uptime: \`${info.system.gatewayUptimeFormatted}\`\n`;
+  message += `└ Connected Traders: \`${info.system.connectedTraders}\`\n\n`;
+
+  // Active traders
+  if (info.traders.length > 0) {
+    message += `*Active Traders:*\n`;
+    for (const trader of info.traders) {
+      const statusEmoji = trader.isActive ? '🟢' : '🔴';
+      message += `${statusEmoji} *${trader.name}*\n`;
+      message += `├ Strategy: \`${trader.strategy}\`\n`;
+      message += `├ Symbols: \`${trader.symbols.join(', ')}\`\n`;
+      message += `└ Uptime: \`${trader.uptimeFormatted}\`\n\n`;
+    }
+  } else {
+    // Show strategies from trades if no traders registered
+    if (info.system.activeStrategies.length > 0) {
+      message += `*Strategies (from trades):*\n`;
+      for (const strategy of info.system.activeStrategies) {
+        message += `• \`${strategy}\`\n`;
+      }
+      message += '\n';
+    } else {
+      message += `_No active traders connected_\n\n`;
+    }
+  }
+
+  // Today's stats summary
+  if (info.todayStats) {
+    const pnlEmoji = info.todayStats.netPnL >= 0 ? '🟢' : '🔴';
+    const pnlSign = info.todayStats.netPnL >= 0 ? '+' : '';
+    message += `*Today's Summary:*\n`;
+    message += `├ Trades: \`${info.todayStats.totalTrades}\` (W:${info.todayStats.wins}/L:${info.todayStats.losses})\n`;
+    message += `├ Win Rate: \`${info.todayStats.winRate.toFixed(1)}%\`\n`;
+    message += `└ P/L: ${pnlEmoji} \`${pnlSign}${info.todayStats.netPnL.toFixed(2)}\``;
+  }
+
+  return message;
+}

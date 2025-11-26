@@ -42,6 +42,63 @@ const portfolioCache = new Map<string, PortfolioCacheEntry>(); // account -> cac
 const PORTFOLIO_CACHE_TTL = 5000; // 5 seconds cache
 
 /**
+ * Registered Traders tracking
+ */
+interface RegisteredTrader {
+  id: string;
+  name: string;
+  strategy: string;
+  symbols: string[];
+  startedAt: number;
+  ws: WebSocket;
+  lastHeartbeat: number;
+}
+
+const registeredTraders = new Map<WebSocket, RegisteredTrader>();
+
+/**
+ * Trader info returned by getRegisteredTraders
+ */
+interface TraderInfo {
+  id: string;
+  name: string;
+  strategy: string;
+  symbols: string[];
+  startedAt: number;
+  lastHeartbeat: number;
+  uptime: number;
+  isActive: boolean;
+}
+
+/**
+ * Get registered traders info (for external use)
+ */
+export function getRegisteredTraders(): TraderInfo[] {
+  const now = Date.now();
+  return Array.from(registeredTraders.values()).map(t => ({
+    id: t.id,
+    name: t.name,
+    strategy: t.strategy,
+    symbols: t.symbols,
+    startedAt: t.startedAt,
+    lastHeartbeat: t.lastHeartbeat,
+    uptime: now - t.startedAt,
+    isActive: (now - t.lastHeartbeat) < 60000, // Active if heartbeat within 60s
+  }));
+}
+
+/**
+ * Remove trader on disconnect
+ */
+export function unregisterTrader(ws: WebSocket): void {
+  if (registeredTraders.has(ws)) {
+    const trader = registeredTraders.get(ws)!;
+    console.log(`[unregisterTrader] Trader disconnected: ${trader.name} (${trader.strategy})`);
+    registeredTraders.delete(ws);
+  }
+}
+
+/**
  * Handle 'follow' command
  * Subscribe to real-time ticks for assets
  */
@@ -989,6 +1046,15 @@ export async function handleCommand(
     case 'update_trade':
       await handleUpdateTradeCommand(ws, command, context);
       break;
+    case 'register_trader':
+      await handleRegisterTraderCommand(ws, command, context);
+      break;
+    case 'get_bot_info':
+      await handleGetBotInfoCommand(ws, command, context);
+      break;
+    case 'heartbeat':
+      await handleHeartbeatCommand(ws, command, context);
+      break;
     default:
       context.gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
         code: 'UNKNOWN_COMMAND',
@@ -1229,4 +1295,166 @@ export async function handleUpdateTradeCommand(
       error: error.message
     });
   }
+}
+
+/**
+ * Handle 'register_trader' command
+ * Registers a trader with its strategy info for monitoring
+ */
+export async function handleRegisterTraderCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+  const params = command.params as {
+    id?: string;
+    name: string;
+    strategy: string;
+    symbols: string[];
+  };
+
+  if (!params.name || !params.strategy) {
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'INVALID_PARAMS',
+      message: 'Missing required params: name, strategy',
+    });
+    return;
+  }
+
+  const trader: RegisteredTrader = {
+    id: params.id || `trader-${Date.now()}`,
+    name: params.name,
+    strategy: params.strategy,
+    symbols: params.symbols || [],
+    startedAt: Date.now(),
+    ws,
+    lastHeartbeat: Date.now(),
+  };
+
+  registeredTraders.set(ws, trader);
+
+  console.log(`[handleRegisterTraderCommand] ✅ Trader registered: ${trader.name} (${trader.strategy}) - symbols: ${trader.symbols.join(', ')}`);
+
+  // Broadcast trader connected event
+  gatewayServer.broadcast({
+    type: 'trader:connected',
+    data: {
+      id: trader.id,
+      name: trader.name,
+      strategy: trader.strategy,
+      symbols: trader.symbols,
+    },
+    timestamp: Date.now(),
+  });
+
+  gatewayServer.respondToCommand(ws, command.requestId!, true, {
+    registered: true,
+    traderId: trader.id,
+  });
+}
+
+/**
+ * Handle 'get_bot_info' command
+ * Returns info about connected traders and system status
+ */
+export async function handleGetBotInfoCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer, stateManager } = context;
+
+  try {
+    // Get registered traders
+    const traders = getRegisteredTraders();
+
+    // Get today's stats for summary
+    const today = new Date().toISOString().split('T')[0];
+    const stats = await stateManager.getDailyStats(today);
+
+    // Get unique strategies from trades if no traders registered
+    let strategies: string[] = traders.map(t => t.strategy);
+    if (strategies.length === 0) {
+      const recentTrades = await stateManager.getTrades({ limit: 100 });
+      strategies = [...new Set(recentTrades.map(t => t.strategyName))];
+    }
+
+    const info = {
+      traders: traders.map(t => ({
+        id: t.id,
+        name: t.name,
+        strategy: t.strategy,
+        symbols: t.symbols,
+        uptime: t.uptime,
+        uptimeFormatted: formatUptime(t.uptime as number),
+        isActive: t.isActive,
+      })),
+      system: {
+        connectedTraders: traders.length,
+        activeStrategies: strategies,
+        gatewayUptime: process.uptime() * 1000,
+        gatewayUptimeFormatted: formatUptime(process.uptime() * 1000),
+      },
+      todayStats: stats ? {
+        totalTrades: stats.totalTrades,
+        wins: stats.wins,
+        losses: stats.losses,
+        winRate: stats.winRate,
+        netPnL: stats.netPnL,
+      } : null,
+    };
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, info);
+
+  } catch (error: any) {
+    console.error('[handleGetBotInfoCommand] Error:', error.message);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'ERROR',
+      message: error.message,
+    });
+  }
+}
+
+/**
+ * Handle 'heartbeat' command
+ * Updates trader's last heartbeat time
+ */
+export async function handleHeartbeatCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+
+  const trader = registeredTraders.get(ws);
+  if (trader) {
+    trader.lastHeartbeat = Date.now();
+  }
+
+  gatewayServer.respondToCommand(ws, command.requestId!, true, {
+    acknowledged: true,
+    timestamp: Date.now(),
+  });
+}
+
+/**
+ * Format uptime in human readable format
+ */
+function formatUptime(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return `${days}d ${hours % 24}h ${minutes % 60}m`;
+  }
+  if (hours > 0) {
+    return `${hours}h ${minutes % 60}m`;
+  }
+  if (minutes > 0) {
+    return `${minutes}m ${seconds % 60}s`;
+  }
+  return `${seconds}s`;
 }
