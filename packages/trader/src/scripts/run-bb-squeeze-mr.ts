@@ -12,7 +12,7 @@
  */
 
 import dotenv from 'dotenv';
-import { GatewayClient } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger } from '@deriv-bot/shared';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { BBSqueezeMRStrategy } from '../strategies/bb-squeeze-mr.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
@@ -57,6 +57,9 @@ let tradeManager: TradeManager;
 
 // Trade Execution Service
 let tradeExecutionService: TradeExecutionService;
+
+// OpenObserve Logger
+const ooLogger = getOpenObserveLogger();
 
 /**
  * Process tick and build candle (per asset)
@@ -180,6 +183,12 @@ async function main() {
   console.log('🔌 Connecting to Gateway...');
   await gatewayClient.connect();
   console.log('✅ Connected to Gateway\n');
+  ooLogger.info('trader', 'Trader started', {
+    strategy: 'BB-Squeeze-MR',
+    symbols: SYMBOLS,
+    tradeMode: TRADE_MODE,
+    balance: INITIAL_BALANCE
+  });
 
   // Register trader with Gateway for monitoring
   try {
@@ -309,6 +318,13 @@ async function main() {
     }
     console.log(`${'='.repeat(80)}\n`);
 
+    ooLogger.info('trader', 'Signal detected', {
+      asset,
+      direction: signal.direction,
+      confidence: signal.confidence,
+      metadata: signal.metadata
+    });
+
     // Execute trade using TradeExecutionService
     const result = await tradeExecutionService.executeTrade(signal, asset);
     if (result.success) {
@@ -316,6 +332,18 @@ async function main() {
       if (result.stake) {
         balance -= result.stake;
       }
+      ooLogger.info('trader', 'Trade executed', {
+        asset,
+        direction: signal.direction,
+        stake: result.stake,
+        contractId: result.contractId
+      });
+    } else {
+      ooLogger.warn('trader', 'Trade failed', {
+        asset,
+        direction: signal.direction,
+        error: result.error
+      });
     }
   });
 
@@ -555,6 +583,17 @@ async function main() {
       console.log(`   ❌ TRADE LOST`);
     }
 
+    ooLogger.info('trader', 'Trade closed', {
+      contractId,
+      result: won ? 'WIN' : 'LOSS',
+      profit,
+      asset: trade.asset,
+      direction: trade.direction,
+      totalTrades,
+      wonTrades,
+      lostTrades
+    });
+
     // Get real balance from API (most accurate)
     try {
       const balanceInfo = await gatewayClient.getBalance();
@@ -631,6 +670,17 @@ async function main() {
     console.log(`   Total P&L: $${totalPnL.toFixed(2)}`);
     console.log(`   ROI: ${roi.toFixed(2)}%`);
     console.log('='.repeat(80));
+
+    ooLogger.warn('trader', 'Trader shutting down', {
+      totalTrades,
+      wonTrades,
+      lostTrades,
+      winRate,
+      totalPnL,
+      roi,
+      finalBalance: balance
+    });
+    await ooLogger.close();
 
     await gatewayClient.disconnect();
     console.log('✅ Shutdown complete');

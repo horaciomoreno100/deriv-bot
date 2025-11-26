@@ -12,7 +12,7 @@
 
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
-import { createLogger, type Logger, initSlackAlerts, type SlackAlerter } from '@deriv-bot/shared';
+import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, getOpenObserveLogger, type OpenObserveLogger } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
 import { MarketDataCache } from './cache/market-data-cache.js';
@@ -78,6 +78,7 @@ function loadConfig(): GatewayConfig {
 class Gateway {
   private config: GatewayConfig;
   private logger: Logger;
+  private ooLogger: OpenObserveLogger;
   private slackAlerter: SlackAlerter | null;
   private derivClient: DerivClient;
   private gatewayServer: GatewayServer;
@@ -92,6 +93,9 @@ class Gateway {
 
     // Initialize Slack Alerts (with global error handlers)
     this.slackAlerter = initSlackAlerts('gateway');
+
+    // Initialize OpenObserve Logger
+    this.ooLogger = getOpenObserveLogger();
 
     // Initialize Logger
     this.logger = createLogger({
@@ -167,11 +171,13 @@ class Gateway {
     // Handle client connections
     this.gatewayServer.on('client:connected', () => {
       this.logger.info('Trader client connected');
+      this.ooLogger.info('gateway', 'Client connected', { event: 'client:connected' });
     });
 
     // Handle client disconnections
     this.gatewayServer.on('client:disconnected', () => {
       this.logger.warn('Trader client disconnected');
+      this.ooLogger.warn('gateway', 'Client disconnected', { event: 'client:disconnected' });
     });
   }
 
@@ -180,6 +186,7 @@ class Gateway {
    */
   async start(): Promise<void> {
     this.logger.info('🚀 Starting Gateway...');
+    this.ooLogger.info('gateway', 'Starting Gateway', { version: '0.3.0' });
 
     // 1. Initialize State Manager
     this.logger.info('Initializing State Manager...');
@@ -190,6 +197,7 @@ class Gateway {
     this.logger.info('Connecting to Deriv API...');
     await this.derivClient.connect();
     this.logger.info('✅ Connected to Deriv API');
+    this.ooLogger.info('gateway', 'Connected to Deriv API', { endpoint: this.config.derivEndpoint });
 
     // 3. Start Gateway WebSocket server
     this.logger.info('Starting Gateway WebSocket server', {
@@ -200,11 +208,19 @@ class Gateway {
     this.logger.info('✅ Gateway server listening', {
       url: `ws://${this.config.gatewayHost}:${this.config.gatewayPort}`,
     });
+    this.ooLogger.info('gateway', 'Gateway server started', {
+      host: this.config.gatewayHost,
+      port: this.config.gatewayPort
+    });
 
     // 4. Print configuration
     this.printConfig();
 
     this.logger.info('✨ Gateway is ready!');
+    this.ooLogger.info('gateway', 'Gateway ready', {
+      persistence: this.config.enablePersistence,
+      slackAlerts: !!this.slackAlerter
+    });
   }
 
   /**
@@ -212,6 +228,7 @@ class Gateway {
    */
   async stop(): Promise<void> {
     this.logger.info('🛑 Stopping Gateway...');
+    this.ooLogger.warn('gateway', 'Gateway shutting down');
 
     // 1. Shutdown State Manager
     this.logger.info('Shutting down State Manager...');
@@ -235,7 +252,8 @@ class Gateway {
       this.logger.info('✅ Database disconnected');
     }
 
-    // 5. Close logger
+    // 5. Close loggers
+    await this.ooLogger.close();
     await this.logger.close();
     console.log('👋 Gateway stopped gracefully');
   }

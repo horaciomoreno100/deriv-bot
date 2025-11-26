@@ -7,6 +7,10 @@
 
 import { GatewayBridge } from './gateway-bridge.js';
 import { TelegramBotService } from './telegram-bot.js';
+import { getOpenObserveLogger } from '@deriv-bot/shared';
+
+// Initialize OpenObserve Logger
+const ooLogger = getOpenObserveLogger();
 
 // Load configuration from environment
 const config = {
@@ -53,6 +57,8 @@ const bot = new TelegramBotService(config.telegram, gateway);
 // Handle shutdown gracefully
 async function shutdown() {
   console.log('\nShutting down...');
+  ooLogger.warn('telegram', 'Telegram bot shutting down');
+  await ooLogger.close();
   await bot.stop();
   process.exit(0);
 }
@@ -61,7 +67,15 @@ process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
 // Start the bot
-bot.start().catch((error) => {
-  console.error('Failed to start bot:', error);
-  process.exit(1);
-});
+bot.start()
+  .then(() => {
+    ooLogger.info('telegram', 'Telegram bot started', {
+      chatId: config.telegram.chatId,
+      gatewayUrl: config.gateway.url
+    });
+  })
+  .catch((error) => {
+    ooLogger.error('telegram', 'Failed to start bot', { error: error.message });
+    console.error('Failed to start bot:', error);
+    process.exit(1);
+  });

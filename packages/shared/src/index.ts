@@ -9,3 +9,4 @@ export * from './schemas/index.js';
 export * from './logger.js';
 export * from './client/gateway-client.js';
 export * from './slack-alerts.js';
+export * from './logging/openobserve.js';
