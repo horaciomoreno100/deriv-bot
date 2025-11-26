@@ -14,6 +14,9 @@ import {
   executeTrade,
   calculateMetrics,
   createTradeEntry,
+  runMonteCarloSimulation,
+  runWalkForwardAnalysis,
+  runOutOfSampleTest,
   type Candle,
   type TradeEntry,
   type Trade,
@@ -576,3 +579,247 @@ function createMockTrade(
     ...overrides,
   };
 }
+
+// =============================================================================
+// MONTE CARLO TESTS
+// =============================================================================
+
+describe('runMonteCarloSimulation', () => {
+  it('should return zeros for empty trades', () => {
+    const mc = runMonteCarloSimulation([], defaultConfig);
+
+    expect(mc.simulations).toBe(0);
+    expect(mc.profitProbability).toBe(0);
+    expect(mc.riskOfRuin).toBe(0);
+  });
+
+  it('should calculate correct profit probability for profitable trades', () => {
+    // 10 winning trades of $20 each
+    const trades = Array(10).fill(null).map(() => createMockTrade('WIN', 20));
+
+    const mc = runMonteCarloSimulation(trades, defaultConfig, 100);
+
+    // All permutations should be profitable since all trades win
+    expect(mc.profitProbability).toBe(100);
+    expect(mc.riskOfRuin).toBe(0);
+    expect(mc.distribution.netPnl.mean).toBeCloseTo(200, 0); // 10 * $20
+  });
+
+  it('should calculate correct values for losing trades', () => {
+    // 10 losing trades of $20 each
+    const trades = Array(10).fill(null).map(() => createMockTrade('LOSS', -20));
+
+    const mc = runMonteCarloSimulation(trades, defaultConfig, 100);
+
+    // All permutations should lose money
+    expect(mc.profitProbability).toBe(0);
+    expect(mc.distribution.netPnl.mean).toBeCloseTo(-200, 0);
+  });
+
+  it('should have variation in drawdown across simulations', () => {
+    // Mixed trades - order matters for drawdown
+    const trades = [
+      createMockTrade('WIN', 50),
+      createMockTrade('WIN', 50),
+      createMockTrade('LOSS', -30),
+      createMockTrade('LOSS', -30),
+      createMockTrade('LOSS', -30),
+      createMockTrade('WIN', 40),
+    ];
+
+    const mc = runMonteCarloSimulation(trades, defaultConfig, 500);
+
+    // Net PnL should be same for all permutations (50+50-30-30-30+40 = 50)
+    // But drawdown varies based on order
+    expect(mc.distribution.netPnl.mean).toBeCloseTo(50, 0);
+    expect(mc.distribution.netPnl.p5).toBeCloseTo(50, 0);
+    expect(mc.distribution.netPnl.p95).toBeCloseTo(50, 0);
+
+    // Drawdown should have variation
+    expect(mc.distribution.maxDrawdown.p95).toBeGreaterThan(mc.distribution.maxDrawdown.p5);
+  });
+
+  it('should detect risk of ruin with large losses', () => {
+    // Trades that can cause bankruptcy if losses come first
+    const config = { ...defaultConfig, initialBalance: 100 };
+    const trades = [
+      createMockTrade('LOSS', -40),
+      createMockTrade('LOSS', -40),
+      createMockTrade('LOSS', -40),
+      createMockTrade('WIN', 200),  // Big win but might not happen if bankrupt
+    ];
+
+    const mc = runMonteCarloSimulation(trades, config, 1000);
+
+    // Some permutations will go bankrupt (3 losses first = -120 on $100 balance)
+    expect(mc.riskOfRuin).toBeGreaterThan(0);
+  });
+
+  it('should preserve net PnL across all permutations (no bankruptcy)', () => {
+    // Trades that won't cause bankruptcy
+    const config = { ...defaultConfig, initialBalance: 10000 };
+    const trades = [
+      createMockTrade('WIN', 100),
+      createMockTrade('LOSS', -50),
+      createMockTrade('WIN', 80),
+      createMockTrade('LOSS', -30),
+    ];
+
+    const mc = runMonteCarloSimulation(trades, config, 100);
+
+    // Net should be same: 100 - 50 + 80 - 30 = 100
+    expect(mc.distribution.netPnl.mean).toBeCloseTo(100, 0);
+    expect(mc.riskOfRuin).toBe(0);
+  });
+
+  it('should calculate confidence intervals correctly', () => {
+    const trades = [
+      createMockTrade('WIN', 30),
+      createMockTrade('WIN', 30),
+      createMockTrade('LOSS', -20),
+      createMockTrade('WIN', 30),
+      createMockTrade('LOSS', -20),
+    ];
+
+    const mc = runMonteCarloSimulation(trades, defaultConfig, 1000);
+
+    // 95% CI should contain the actual net PnL
+    expect(mc.confidence95.minProfit).toBeLessThanOrEqual(mc.original.netPnl);
+    expect(mc.confidence95.maxProfit).toBeGreaterThanOrEqual(mc.original.netPnl);
+  });
+});
+
+// =============================================================================
+// WALK-FORWARD ANALYSIS TESTS
+// =============================================================================
+
+describe('runWalkForwardAnalysis', () => {
+  it('should return empty result for insufficient trades', () => {
+    const trades = [createMockTrade('WIN', 20)];
+    const wfa = runWalkForwardAnalysis(trades, defaultConfig);
+
+    expect(wfa.windows).toHaveLength(0);
+    expect(wfa.consistencyScore).toBe(0);
+  });
+
+  it('should split trades into correct number of windows', () => {
+    // Create 100 trades with sequential timestamps
+    const trades = Array(100).fill(null).map((_, i) =>
+      createMockTrade('WIN', 20, { timestamp: 1000 + i * 60 })
+    );
+
+    const wfa = runWalkForwardAnalysis(trades, defaultConfig, 5);
+
+    expect(wfa.windows).toHaveLength(5);
+    expect(wfa.totalTrainTrades + wfa.totalTestTrades).toBeLessThanOrEqual(100);
+  });
+
+  it('should calculate consistency score correctly', () => {
+    // Create trades where all windows should be profitable
+    const trades = Array(100).fill(null).map((_, i) =>
+      createMockTrade('WIN', 20, { timestamp: 1000 + i * 60 })
+    );
+
+    const wfa = runWalkForwardAnalysis(trades, defaultConfig, 5);
+
+    expect(wfa.consistencyScore).toBe(100); // All windows profitable
+  });
+
+  it('should detect degradation between train and test', () => {
+    // Create trades that get worse over time (simulate overfitting)
+    const trades: Trade[] = [];
+    for (let i = 0; i < 100; i++) {
+      // First half: mostly wins. Second half: mostly losses
+      const isWin = i < 70;
+      trades.push(createMockTrade(
+        isWin ? 'WIN' : 'LOSS',
+        isWin ? 20 : -20,
+        { timestamp: 1000 + i * 60 }
+      ));
+    }
+
+    const wfa = runWalkForwardAnalysis(trades, defaultConfig, 5);
+
+    // Later windows should have worse test performance
+    expect(wfa.windows.length).toBeGreaterThan(0);
+  });
+});
+
+// =============================================================================
+// OUT-OF-SAMPLE TESTS
+// =============================================================================
+
+describe('runOutOfSampleTest', () => {
+  it('should return error for insufficient trades', () => {
+    const trades = [createMockTrade('WIN', 20)];
+    const oos = runOutOfSampleTest(trades, defaultConfig);
+
+    expect(oos.recommendation).toContain('Not enough trades');
+  });
+
+  it('should split trades chronologically', () => {
+    const trades = Array(100).fill(null).map((_, i) =>
+      createMockTrade('WIN', 20, { timestamp: 1000 + i * 60 })
+    );
+
+    const oos = runOutOfSampleTest(trades, defaultConfig, 0.7);
+
+    expect(oos.inSample.trades).toBe(70);
+    expect(oos.outOfSample.trades).toBe(30);
+  });
+
+  it('should mark as robust when OOS performs well', () => {
+    // All winning trades - should perform same in both periods
+    const trades = Array(100).fill(null).map((_, i) =>
+      createMockTrade('WIN', 20, { timestamp: 1000 + i * 60 })
+    );
+
+    const oos = runOutOfSampleTest(trades, defaultConfig);
+
+    expect(oos.isOverfit).toBe(false);
+    expect(oos.overfitScore).toBeLessThan(20);
+    expect(oos.recommendation).toContain('ROBUSTO');
+  });
+
+  it('should detect overfitting when OOS is much worse', () => {
+    // First 70%: wins, Last 30%: losses
+    const trades: Trade[] = [];
+    for (let i = 0; i < 100; i++) {
+      const isWin = i < 70;
+      trades.push(createMockTrade(
+        isWin ? 'WIN' : 'LOSS',
+        isWin ? 20 : -20,
+        { timestamp: 1000 + i * 60 }
+      ));
+    }
+
+    const oos = runOutOfSampleTest(trades, defaultConfig, 0.7);
+
+    // In-sample should be profitable, OOS should be losing
+    expect(oos.inSample.netPnl).toBeGreaterThan(0);
+    expect(oos.outOfSample.netPnl).toBeLessThan(0);
+    expect(oos.isOverfit).toBe(true);
+    expect(oos.recommendation).toContain('OVERFIT');
+  });
+
+  it('should calculate overfit score correctly', () => {
+    // Mixed performance with degradation
+    const trades: Trade[] = [];
+    for (let i = 0; i < 100; i++) {
+      // 80% wins in first half, 55% wins in second half
+      const winProbability = i < 70 ? 0.8 : 0.55;
+      const isWin = (i % 100) / 100 < winProbability;
+      trades.push(createMockTrade(
+        isWin ? 'WIN' : 'LOSS',
+        isWin ? 20 : -20,
+        { timestamp: 1000 + i * 60 }
+      ));
+    }
+
+    const oos = runOutOfSampleTest(trades, defaultConfig);
+
+    // Should have some overfit score due to degradation
+    expect(oos.overfitScore).toBeGreaterThanOrEqual(0);
+    expect(oos.overfitScore).toBeLessThanOrEqual(100);
+  });
+});

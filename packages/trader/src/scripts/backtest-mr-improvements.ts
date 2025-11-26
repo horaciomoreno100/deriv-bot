@@ -13,6 +13,9 @@ import {
   executeTrade,
   calculateMetrics,
   createTradeEntry,
+  runMonteCarloSimulation,
+  runOutOfSampleTest,
+  runWalkForwardAnalysis,
   type Candle,
   type Trade,
   type BacktestConfig,
@@ -379,11 +382,13 @@ async function main() {
   // Run all tests
   console.log('\n🧪 Running A/B tests...\n');
   const results: Array<{ strategy: StrategyConfig; metrics: BacktestMetrics }> = [];
+  const allResults: Array<{ strategy: StrategyConfig; trades: Trade[]; metrics: BacktestMetrics }> = [];
 
   for (const strategy of strategyVariants) {
     process.stdout.write(`   Testing ${strategy.name.padEnd(20)}...`);
-    const { metrics } = runBacktest(strategy, candles1m, candles15m || undefined);
+    const { trades, metrics } = runBacktest(strategy, candles1m, candles15m || undefined);
     results.push({ strategy, metrics });
+    allResults.push({ strategy, trades, metrics });
     console.log(` ${metrics.totalTrades} trades | WR: ${metrics.winRate.toFixed(1)}% | Net: $${metrics.netPnl.toFixed(2)}`);
   }
 
@@ -493,6 +498,116 @@ async function main() {
     );
   }
   console.log('└────────────────────┴─────────────┴───────────┴───────────┴───────────┘');
+
+  // Monte Carlo for top strategies
+  console.log('\n' + '='.repeat(80));
+  console.log('🎲 SIMULACIÓN MONTE CARLO (1000 permutaciones)');
+  console.log('='.repeat(80));
+
+  const topStrategies = ['POST_CONFIRM_1', 'POST_CONFIRM_2', 'MTF_FILTER'];
+
+  for (const strategyName of topStrategies) {
+    const result = allResults.find(r => r.strategy.name === strategyName);
+    if (!result || result.trades.length === 0) continue;
+
+    console.log(`\n📊 ${strategyName}:`);
+    console.log('─'.repeat(50));
+
+    const mc = runMonteCarloSimulation(result.trades, baseConfig, 1000);
+
+    console.log(`  Original Net P&L:     $${mc.original.netPnl.toFixed(2)}`);
+    console.log(`  Original Max DD:      $${mc.original.maxDrawdown.toFixed(2)} (${mc.original.maxDrawdownPct.toFixed(1)}%)`);
+    console.log('');
+    console.log('  Net P&L Distribution:');
+    console.log(`    5th percentile:     $${mc.distribution.netPnl.p5.toFixed(2)}`);
+    console.log(`    Median (50th):      $${mc.distribution.netPnl.p50.toFixed(2)}`);
+    console.log(`    95th percentile:    $${mc.distribution.netPnl.p95.toFixed(2)}`);
+    console.log('');
+    console.log('  Max Drawdown Distribution:');
+    console.log(`    5th percentile:     $${mc.distribution.maxDrawdown.p5.toFixed(2)} (${mc.distribution.maxDrawdownPct.p5.toFixed(1)}%)`);
+    console.log(`    Median (50th):      $${mc.distribution.maxDrawdown.p50.toFixed(2)} (${mc.distribution.maxDrawdownPct.p50.toFixed(1)}%)`);
+    console.log(`    95th percentile:    $${mc.distribution.maxDrawdown.p95.toFixed(2)} (${mc.distribution.maxDrawdownPct.p95.toFixed(1)}%)`);
+    console.log('');
+    console.log('  Risk Metrics:');
+    console.log(`    Probability of Profit: ${mc.profitProbability.toFixed(1)}%`);
+    console.log(`    Risk of Ruin:          ${mc.riskOfRuin.toFixed(2)}%`);
+    console.log(`    95% CI:                $${mc.confidence95.minProfit.toFixed(2)} to $${mc.confidence95.maxProfit.toFixed(2)}`);
+  }
+
+  // Out-of-Sample Testing
+  console.log('\n' + '='.repeat(80));
+  console.log('🔬 OUT-OF-SAMPLE TEST (70% IS / 30% OOS)');
+  console.log('='.repeat(80));
+
+  for (const strategyName of topStrategies) {
+    const result = allResults.find(r => r.strategy.name === strategyName);
+    if (!result || result.trades.length < 50) continue;
+
+    console.log(`\n📊 ${strategyName}:`);
+    console.log('─'.repeat(50));
+
+    const oos = runOutOfSampleTest(result.trades, baseConfig, 0.7);
+
+    console.log('  In-Sample (70%):');
+    console.log(`    Trades: ${oos.inSample.trades} | WR: ${oos.inSample.winRate.toFixed(1)}% | Net: $${oos.inSample.netPnl.toFixed(2)}`);
+    console.log(`    PF: ${oos.inSample.profitFactor.toFixed(2)} | Max DD: ${oos.inSample.maxDrawdownPct.toFixed(1)}%`);
+    console.log('');
+    console.log('  Out-of-Sample (30%):');
+    console.log(`    Trades: ${oos.outOfSample.trades} | WR: ${oos.outOfSample.winRate.toFixed(1)}% | Net: $${oos.outOfSample.netPnl.toFixed(2)}`);
+    console.log(`    PF: ${oos.outOfSample.profitFactor.toFixed(2)} | Max DD: ${oos.outOfSample.maxDrawdownPct.toFixed(1)}%`);
+    console.log('');
+    console.log('  Overfitting Analysis:');
+    console.log(`    Win Rate Delta: ${oos.winRateDelta > 0 ? '+' : ''}${oos.winRateDelta.toFixed(1)}%`);
+    console.log(`    Overfit Score: ${oos.overfitScore.toFixed(0)}/100`);
+    console.log(`    ${oos.recommendation}`);
+  }
+
+  // Walk-Forward Analysis
+  console.log('\n' + '='.repeat(80));
+  console.log('📈 WALK-FORWARD ANALYSIS (5 ventanas, 70/30 split)');
+  console.log('='.repeat(80));
+
+  for (const strategyName of topStrategies) {
+    const result = allResults.find(r => r.strategy.name === strategyName);
+    if (!result || result.trades.length < 100) continue;
+
+    console.log(`\n📊 ${strategyName}:`);
+    console.log('─'.repeat(50));
+
+    const wfa = runWalkForwardAnalysis(result.trades, baseConfig, 5, 0.7);
+
+    console.log('  Ventanas:');
+    console.log('  ┌─────────┬──────────────────┬──────────────────┐');
+    console.log('  │ Window  │ Train (70%)      │ Test (30%)       │');
+    console.log('  ├─────────┼──────────────────┼──────────────────┤');
+    for (const w of wfa.windows) {
+      const trainStr = `WR:${w.trainWinRate.toFixed(0)}% $${w.trainNetPnl.toFixed(0)}`;
+      const testStr = `WR:${w.testWinRate.toFixed(0)}% $${w.testNetPnl.toFixed(0)}`;
+      console.log(`  │    ${w.windowNumber}    │ ${trainStr.padEnd(16)} │ ${testStr.padEnd(16)} │`);
+    }
+    console.log('  └─────────┴──────────────────┴──────────────────┘');
+    console.log('');
+    console.log('  Aggregated Results:');
+    console.log(`    Avg Train WR: ${wfa.avgTrainWinRate.toFixed(1)}% → Avg Test WR: ${wfa.avgTestWinRate.toFixed(1)}%`);
+    console.log(`    Total Train PnL: $${wfa.totalTrainPnl.toFixed(2)} → Total Test PnL: $${wfa.totalTestPnl.toFixed(2)}`);
+    console.log(`    Consistency Score: ${wfa.consistencyScore.toFixed(0)}% (ventanas rentables en test)`);
+    console.log(`    Robustness Ratio: ${wfa.robustnessRatio.toFixed(2)} (Test/Train PnL, ideal ~1.0)`);
+
+    // Verdict
+    let verdict = '';
+    if (wfa.consistencyScore >= 80 && wfa.robustnessRatio >= 0.5) {
+      verdict = '✅ ROBUSTO: Funciona consistentemente en todas las ventanas';
+    } else if (wfa.consistencyScore >= 60 && wfa.robustnessRatio >= 0.3) {
+      verdict = '⚠️ ACEPTABLE: Algo de degradación pero mayormente rentable';
+    } else if (wfa.totalTestPnl > 0) {
+      verdict = '⚠️ PRECAUCIÓN: Alta variabilidad entre ventanas';
+    } else {
+      verdict = '❌ NO ROBUSTO: No pasa la prueba walk-forward';
+    }
+    console.log(`    ${verdict}`);
+  }
+
+  console.log('\n' + '='.repeat(80));
 }
 
 main().catch(console.error);

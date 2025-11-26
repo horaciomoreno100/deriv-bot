@@ -1,6 +1,6 @@
 {
   "name": "deriv-bot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Binary options trading bot for Deriv with backtesting and strategy management",
   "type": "module",
@@ -24,10 +24,17 @@
     "gateway": "pnpm --filter gateway dev",
     "trader": "pnpm --filter trader dev",
     "cli": "pnpm --filter cli dev",
-    "web-ui": "pnpm --filter web-ui dev"
+    "web-ui": "pnpm --filter web-ui dev",
+    "release": "release-it",
+    "release:minor": "release-it minor",
+    "release:major": "release-it major",
+    "release:dry": "release-it --dry-run",
+    "deploy": "./scripts/deploy.sh",
+    "deploy:restart-all": "./scripts/deploy.sh --restart-all"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
+    "@release-it/conventional-changelog": "^10.0.2",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
@@ -35,6 +42,7 @@
     "eslint": "^8.55.0",
     "prettier": "^3.1.0",
     "prisma": "^5.22.0",
+    "release-it": "^19.0.6",
     "typedoc": "^0.25.4",
     "typescript": "^5.3.3",
     "vitest": "^1.0.4"
