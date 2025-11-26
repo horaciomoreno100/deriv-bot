@@ -5,7 +5,7 @@
  * Handles persistence, stats calculation, and event emission.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Trade } from '@prisma/client';
 import { EventEmitter } from 'events';
 
 export interface TradeInput {
@@ -304,15 +304,15 @@ export class StateManager extends EventEmitter {
 
     // Calculate stats
     const totalTrades = trades.length;
-    const wins = trades.filter(t => t.result === 'WIN').length;
-    const losses = trades.filter(t => t.result === 'LOSS').length;
-    const pending = trades.filter(t => t.result === 'PENDING').length;
+    const wins = trades.filter((t: Trade) => t.result === 'WIN').length;
+    const losses = trades.filter((t: Trade) => t.result === 'LOSS').length;
+    const pending = trades.filter((t: Trade) => t.result === 'PENDING').length;
     const completedTrades = wins + losses;
     const winRate = completedTrades > 0 ? (wins / completedTrades) * 100 : 0;
 
-    const totalStake = trades.reduce((sum, t) => sum + t.stake, 0);
-    const totalPayout = trades.reduce((sum, t) => sum + (t.payout || 0), 0);
-    const netPnL = trades.reduce((sum, t) => sum + (t.profit || 0), 0);
+    const totalStake = trades.reduce((sum: number, t: Trade) => sum + t.stake, 0);
+    const totalPayout = trades.reduce((sum: number, t: Trade) => sum + (t.payout || 0), 0);
+    const netPnL = trades.reduce((sum: number, t: Trade) => sum + (t.profit || 0), 0);
 
     // Ensure stats record exists, then update
     await this.ensureDailyStats(date);
