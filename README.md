@@ -117,6 +117,46 @@ Estrategia de breakout basada en Bollinger Bands y Keltner Channels:
 - Stop Loss: 0.2%
 - Cooldown: 60 segundos
 
+## Monitoreo con PM2.io
+
+Dashboard cloud para monitorear servicios en producción:
+
+### Setup
+
+```bash
+# En el servidor
+pm2 link <SECRET_KEY> <PUBLIC_KEY> deriv-bot
+```
+
+### Alertas Configuradas
+
+| Alerta | Trigger |
+|--------|---------|
+| CPU | > 80% |
+| Memory | > 300MB |
+| Errors | Cualquier excepción |
+| Process | Crash/Restart |
+
+### Dashboard
+
+- URL: [PM2.io Dashboard](https://app.pm2.io)
+- Métricas en tiempo real: CPU, memoria, event loop
+- Logs centralizados
+- Notificaciones por email en errores
+
+### Comandos Útiles
+
+```bash
+# Ver status
+pm2 status
+
+# Ver logs en vivo
+pm2 logs
+
+# Métricas detalladas
+pm2 monit
+```
+
 ## Deploy a Producción
 
 ### Setup Inicial del Servidor
