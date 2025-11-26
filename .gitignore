@@ -51,3 +51,4 @@ tmp/
 # Backtest data (local only)
 packages/trader/data/
 packages/trader/backtest-data/
+packages/trader/backtest_*.json
