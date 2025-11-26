@@ -163,6 +163,37 @@ importers:
         specifier: ^1.0.4
         version: 1.6.1(@types/node@20.19.21)(@vitest/ui@1.6.1)
 
+  packages/telegram:
+    dependencies:
+      '@deriv-bot/shared':
+        specifier: workspace:*
+        version: link:../shared
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
+      node-telegram-bot-api:
+        specifier: ^0.66.0
+        version: 0.66.0(request@2.88.2)
+      ws:
+        specifier: ^8.18.3
+        version: 8.18.3
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.21
+      '@types/node-telegram-bot-api':
+        specifier: ^0.64.7
+        version: 0.64.11
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
+      tsx:
+        specifier: ^4.7.0
+        version: 4.20.6
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/trader:
     dependencies:
       '@deriv-bot/gateway':
