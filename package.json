@@ -10,7 +10,8 @@
   },
   "scripts": {
     "dev": "pnpm --parallel --stream run dev",
-    "build": "pnpm --recursive run build",
+    "build": "pnpm --filter @deriv-bot/shared --filter @deriv-bot/gateway --filter @deriv-bot/trader run build",
+    "build:all": "pnpm --recursive run build",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",

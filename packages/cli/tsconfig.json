@@ -2,9 +2,14 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "jsx": "react"
   },
   "include": ["src/**/*"],
+  "exclude": [
+    "src/dashboard.tsx",
+    "src/test-*.ts"
+  ],
   "references": [
     { "path": "../trader" }
   ]
