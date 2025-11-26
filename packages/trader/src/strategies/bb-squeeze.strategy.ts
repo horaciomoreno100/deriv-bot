@@ -1,29 +1,31 @@
 /**
- * Bollinger Band Squeeze Strategy (Multi-Asset Optimized)
+ * Bollinger Band Squeeze Strategy (Mean Reversion Optimized)
  *
- * Strategy: Scalping based on volatility compression and breakouts
+ * Strategy: Mean Reversion based on volatility compression (BB Squeeze)
+ *
+ * IMPORTANT: Uses MEAN REVERSION logic, NOT momentum!
+ * - CALL when RSI < 45 (oversold, expect bounce UP)
+ * - PUT when RSI > 55 (overbought, expect drop DOWN)
+ *
  * Logic:
  * - Detects "Squeeze" phases (low volatility) when BB is inside Keltner Channels
- * - Trades breakouts from the squeeze with momentum confirmation
- * - CALL when price breaks above BB_Upper AND RSI > 55 (bullish momentum)
- * - PUT when price breaks below BB_Lower AND RSI < 45 (bearish momentum)
+ * - After squeeze release, enters trades based on RSI extremes
+ * - Expects price to revert to mean (BB middle)
  *
- * Multi-Asset Configuration (30-day Grid Search Optimization):
- * ⭐ R_75: BEST PERFORMER - 47.11% return, PF 1.91, WR 48.2%
- *    KC=2.0, RSI=14, TP=0.4%, SL=0.2%
+ * Backtest Results (90 days R_100, 2025-11-25):
+ * ┌─────────────────────┬────────┬──────────┬──────────┐
+ * │ Configuration       │ Trades │ Win Rate │ Avg P&L  │
+ * ├─────────────────────┼────────┼──────────┼──────────┤
+ * │ MR_45_WidestSL      │    316 │   55.7%  │ +0.10%   │  ⭐ BEST
+ * │ MR_40_WiderSL       │    239 │   54.8%  │ +0.05%   │
+ * │ Momentum (old)      │    337 │   25.8%  │ -0.05%   │  ❌ OLD
+ * └─────────────────────┴────────┴──────────┴──────────┘
  *
- * ✅ R_100: PROFITABLE - 0.97% return, PF 1.67, WR 45.6%
- *    KC=2.0, RSI=14, TP=0.6%, SL=0.3%
- *
- * ⚠️  R_50: MARGINAL - 0.09% return, PF 1.46, WR 41.9%
- *    KC=2.0, RSI=14, TP=0.6%, SL=0.3%
- *
- * ❌ R_10/R_25: NOT VIABLE - Strategy doesn't work on low volatility indices
- *    Best PF < 1.2 (minimum threshold)
- *
- * Improvement (Deep Loss Analysis - 2025-11-25):
- * - skipSaturday: true (default) - Saturdays have 70% loss rate vs 63.5% Monday
- *   Backtest results: NO_SATURDAY = +$837 profit vs baseline -$1,639 (PF 1.01)
+ * Key Changes from Previous Version:
+ * - Switched from Momentum to Mean Reversion logic
+ * - RSI thresholds: CALL < 45 (oversold), PUT > 55 (overbought)
+ * - TP/SL: 0.5%/0.5% (1:1 ratio) - gives more room for trades to develop
+ * - Win rate improved from 25.8% to 55.7%
  */
 
 import { BaseStrategy, type StrategyContext } from '../strategy/base-strategy.js';

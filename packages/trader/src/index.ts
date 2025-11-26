@@ -34,7 +34,8 @@ export * from './indicators/index.js';
 // export { SMACrossoverStrategy, type SMACrossoverConfig } from './strategies/sma-crossover-strategy.js';
 // export { RSIStrategy, type RSIStrategyConfig } from './strategies/rsi-strategy.js';
 export { MeanReversionStrategy, type MeanReversionParams } from './strategies/mean-reversion.strategy.js';
-export { VdubusBinaryProStrategy, type VdubusConfig } from './strategies/vdubus-binary-pro.strategy.js';
+export { SupportResistanceStrategy, type SupportResistanceParams } from './strategies/support-resistance.strategy.js';
+export { BBSqueezeStrategy, type BBSqueezeParams } from './strategies/bb-squeeze.strategy.js';
 
 // Trade Adapters (WORKING ✅)
 export {
