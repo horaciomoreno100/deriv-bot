@@ -10,7 +10,7 @@
  */
 
 import dotenv from 'dotenv';
-import { GatewayClient } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger, type OpenObserveLogger } from '@deriv-bot/shared';
 import { StrategyEngine } from './strategy/strategy-engine.js';
 import { RiskManager } from './risk/risk-manager.js';
 import { PositionManager } from './position/position-manager.js';
@@ -69,11 +69,15 @@ export class Trader {
   private strategyEngine: StrategyEngine;
   private riskManager: RiskManager;
   private positionManager: PositionManager;
+  private ooLogger: OpenObserveLogger;
   private running = false;
   private balance: number = 0;
 
   constructor(config: TraderConfig) {
     this.config = config;
+
+    // Initialize OpenObserve Logger (with service name for per-service streams)
+    this.ooLogger = getOpenObserveLogger({ service: 'trader' });
 
     // Initialize Gateway Client
     this.gatewayClient = new GatewayClient({
@@ -108,15 +112,18 @@ export class Trader {
     // Gateway connection events
     this.gatewayClient.on('connected', () => {
       this.log('✅ Connected to Gateway');
+      this.ooLogger.info('trader', 'Connected to Gateway', { url: this.config.gatewayUrl });
       this.onConnected();
     });
 
     this.gatewayClient.on('disconnected', () => {
       this.log('❌ Disconnected from Gateway');
+      this.ooLogger.warn('trader', 'Disconnected from Gateway');
     });
 
     this.gatewayClient.on('error', (error) => {
       this.log('⚠️  Gateway error:', error.message);
+      this.ooLogger.error('trader', 'Gateway error', { error: error.message });
     });
 
     // Market data events
@@ -130,16 +137,32 @@ export class Trader {
 
     // Strategy events
     this.strategyEngine.on('signal', async (signal, strategy) => {
+      this.ooLogger.info('trader', 'Signal received', {
+        strategy: strategy.getName(),
+        symbol: signal.symbol,
+        direction: signal.direction,
+        confidence: signal.confidence
+      });
       await this.handleSignal(signal, strategy);
     });
 
     this.strategyEngine.on('strategy:error', (error, strategy) => {
       this.log(`⚠️  Strategy error [${strategy.getName()}]:`, error.message);
+      this.ooLogger.error('trader', 'Strategy error', {
+        strategy: strategy.getName(),
+        error: error.message
+      });
     });
 
     // Position events
     this.positionManager.on('position:opened', (position) => {
       this.log(`📈 Position opened: ${position.direction} ${position.symbol} @ ${position.entryPrice}`);
+      this.ooLogger.info('trader', 'Position opened', {
+        symbol: position.symbol,
+        direction: position.direction,
+        entryPrice: position.entryPrice,
+        stake: position.stake
+      });
     });
 
     this.positionManager.on('position:closed', (_position, result) => {
@@ -149,6 +172,12 @@ export class Trader {
       // Print daily stats
       const stats = this.positionManager.getDailyStats();
       this.log(`📊 Daily Stats: ${stats.wins}W / ${stats.losses}L | Win Rate: ${(stats.winRate * 100).toFixed(1)}% | P/L: ${stats.pnl.toFixed(2)}`);
+      
+      this.ooLogger.info('trader', 'Position closed', {
+        status: result.status,
+        profit: result.profit,
+        dailyStats: stats
+      });
     });
 
     // Trade result events from Gateway
@@ -173,6 +202,7 @@ export class Trader {
     }
 
     this.log('🚀 Starting Trader...\n');
+    this.ooLogger.info('trader', 'Starting Trader service');
 
     // 1. Connect to Gateway
     this.log('📡 Connecting to Gateway...');
@@ -208,6 +238,11 @@ export class Trader {
 
     this.running = true;
     this.log('✨ Trader is running!\n');
+    this.ooLogger.info('trader', 'Trader is running', {
+      balance: this.balance,
+      strategies: strategies.map(s => s.getName()),
+      assets: Array.from(assets)
+    });
 
     // Print configuration
     this.printConfig();
@@ -222,6 +257,7 @@ export class Trader {
     }
 
     this.log('\n🛑 Stopping Trader...\n');
+    this.ooLogger.warn('trader', 'Stopping Trader service');
 
     // 1. Stop all strategies
     this.log('🎯 Stopping strategies...');
@@ -242,6 +278,15 @@ export class Trader {
     this.log(`   Win Rate: ${(stats.winRate * 100).toFixed(1)}%`);
     this.log(`   P/L: ${stats.pnl.toFixed(2)}`);
     this.log();
+
+    // Log final stats to OpenObserve
+    this.ooLogger.info('trader', 'Trader stopped', {
+      finalStats: stats,
+      finalBalance: this.balance
+    });
+
+    // Close OpenObserve logger
+    await this.ooLogger.close();
   }
 
   /**
@@ -259,10 +304,22 @@ export class Trader {
 
     if (!decision.approved) {
       this.log(`❌ Signal rejected: ${decision.reason}`);
+      this.ooLogger.warn('trader', 'Signal rejected', {
+        strategy: strategy.getName(),
+        symbol: signal.symbol,
+        direction: signal.direction,
+        reason: decision.reason
+      });
       return;
     }
 
     this.log(`✅ Signal approved | Stake: ${decision.stakeAmount}`);
+    this.ooLogger.info('trader', 'Signal approved', {
+      strategy: strategy.getName(),
+      symbol: signal.symbol,
+      direction: signal.direction,
+      stake: decision.stakeAmount
+    });
 
     try {
       // Execute trade via Gateway
@@ -293,8 +350,21 @@ export class Trader {
       this.balance -= decision.stakeAmount!;
       this.strategyEngine.updateBalance(this.balance);
 
+      this.ooLogger.info('trader', 'Trade executed', {
+        contractId: result.contractId,
+        symbol: signal.symbol,
+        direction: signal.direction,
+        stake: decision.stakeAmount,
+        payout: result.payout
+      });
+
     } catch (error) {
       this.log(`❌ Trade execution failed:`, error);
+      this.ooLogger.error('trader', 'Trade execution failed', {
+        symbol: signal.symbol,
+        direction: signal.direction,
+        error: error instanceof Error ? error.message : String(error)
+      });
     }
   }
 

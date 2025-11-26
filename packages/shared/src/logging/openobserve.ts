@@ -38,7 +38,7 @@ export class OpenObserveLogger {
     const usePerServiceStreams = process.env.OPENOBSERVE_STREAM_PER_SERVICE === 'true';
     const baseStream = config.stream || process.env.OPENOBSERVE_STREAM || 'deriv-bot';
     const serviceName = config.service || 'unknown';
-    
+
     // If per-service streams enabled and service name provided, append service to stream name
     const streamName = usePerServiceStreams && serviceName !== 'unknown'
       ? `${baseStream}-${serviceName}`
@@ -204,15 +204,15 @@ export function createOpenObserveLogger(config?: Partial<OpenObserveConfig>): Op
  */
 export async function closeAllLoggers(): Promise<void> {
   const promises: Promise<void>[] = [];
-  
+
   if (instance) {
     promises.push(instance.close());
   }
-  
+
   for (const logger of serviceInstances.values()) {
     promises.push(logger.close());
   }
-  
+
   await Promise.all(promises);
   serviceInstances.clear();
   instance = null;
@@ -232,7 +232,7 @@ export function getOpenObserveDiagnostics(): {
   const hasCredentials = !!(process.env.OPENOBSERVE_USER && process.env.OPENOBSERVE_PASSWORD);
   const baseStream = process.env.OPENOBSERVE_STREAM || 'deriv-bot';
   const usePerServiceStreams = process.env.OPENOBSERVE_STREAM_PER_SERVICE === 'true';
-  
+
   return {
     enabled: hasCredentials,
     url: process.env.OPENOBSERVE_URL || 'http://localhost:5080',

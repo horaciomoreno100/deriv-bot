@@ -13,7 +13,7 @@
  */
 
 import dotenv from 'dotenv';
-import { GatewayClient } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger } from '@deriv-bot/shared';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { MeanReversionStrategy } from '../strategies/mean-reversion.strategy.js';
@@ -24,6 +24,9 @@ import { RSI } from 'technicalindicators';
 
 // Load environment variables
 dotenv.config();
+
+// OpenObserve Logger (with service name for per-service streams)
+const ooLogger = getOpenObserveLogger({ service: 'trader' });
 
 // Configuration
 const GATEWAY_URL = process.env.GATEWAY_URL || 'ws://localhost:3000';
@@ -181,6 +184,14 @@ async function main() {
   console.log(`   Balance: $${INITIAL_BALANCE.toFixed(2)}`);
   console.log(`   Warm-up: ${WARM_UP_CANDLES_REQUIRED} velas requeridas para estabilizar indicadores`);
   console.log();
+
+  ooLogger.info('trader', 'RSI-BB-Scalping demo started', {
+    symbols: SYMBOLS,
+    timeframe: TIMEFRAME,
+    tradeMode: TRADE_MODE,
+    balance: INITIAL_BALANCE,
+    gatewayUrl: GATEWAY_URL
+  });
   console.log(`🆕 MEJORAS ACTIVAS:`);
   console.log(`   ⏰ Timer Periódico: Cada 30s (getPortfolio)`);
   console.log(`   📈 Trailing Stop: Configurado vía TradeManager`);
@@ -326,12 +337,25 @@ async function main() {
       if (result.stake) {
         balance -= result.stake;
       }
+      ooLogger.info('trader', 'Trade executed', {
+        asset: signal.symbol || SYMBOLS[0],
+        direction: signal.direction,
+        stake: result.stake,
+        contractId: result.contractId
+      });
+    } else {
+      ooLogger.warn('trader', 'Trade failed', {
+        asset: signal.symbol || SYMBOLS[0],
+        direction: signal.direction,
+        error: result.error
+      });
     }
   });
 
   // Listen for errors
   engine.on('strategy:error', (error: Error) => {
     console.error(`❌ Strategy error:`, error);
+    ooLogger.error('trader', 'Strategy error', { error: error.message });
   });
 
   // Connect to Gateway
@@ -644,11 +668,23 @@ async function main() {
     if (won) {
       wonTrades++;
       balance += (trade.stake || 0) + profit;
+      ooLogger.info('trader', 'Trade closed - WIN', {
+        contractId: data.id,
+        profit,
+        asset: trade.asset,
+        direction: trade.direction
+      });
       console.log(`\n✅ TRADE WON: ${data.id}`);
     } else {
       lostTrades++;
       balance += (trade.stake || 0) + profit; // profit is negative for losses
       console.log(`\n❌ TRADE LOST: ${data.id}`);
+      ooLogger.info('trader', 'Trade closed - LOSS', {
+        contractId: data.id,
+        profit,
+        asset: trade.asset,
+        direction: trade.direction
+      });
     }
 
     console.log(`   P&L: $${profit.toFixed(2)}`);
@@ -711,8 +747,9 @@ async function main() {
   }, 60000); // Every 60 seconds
 
   // Keep running
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     console.log('\n\n🛑 Stopping...');
+    ooLogger.warn('trader', 'RSI-BB-Scalping demo shutting down');
 
     // Clear intervals
     clearInterval(proximityCheckInterval);
@@ -736,6 +773,17 @@ async function main() {
     console.log(`   ROI: ${roi.toFixed(2)}%`);
     console.log('='.repeat(80));
 
+    ooLogger.info('trader', 'RSI-BB-Scalping demo stopped', {
+      totalTrades,
+      wonTrades,
+      lostTrades,
+      winRate,
+      totalPnL,
+      roi,
+      finalBalance: balance
+    });
+
+    await ooLogger.close();
     process.exit(0);
   });
 }
