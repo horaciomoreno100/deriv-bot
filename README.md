@@ -1,330 +1,258 @@
 # Deriv Bot
 
-Bot de trading automatizado para opciones binarias en Deriv con arquitectura modular y ejecución en tiempo real (TypeScript).
+Bot de trading automatizado para Deriv con arquitectura modular, bot de Telegram y deployment automatizado.
 
-## ✨ Estrategia Mean Reversion - Optimizada
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](./CHANGELOG.md)
 
-**Performance (90 días de backtest en R_75):**
-- ✅ **Win Rate: 63.87%**
-- ✅ **ROI: 54.09%**
-- ✅ **Ganancia Total: $540.92**
-- ✅ **Trades: 119** (1.3/día)
-- ✅ **Progressive Anti-Martingale**
-
-**Status:** ✅ Sistema funcionando en Demo - Listo para Forward Testing
-
-## 🤖 NUEVO: AI-Enhanced Signal Analysis
-
-Sistema de análisis basado en IA que mejora la calidad de señales mediante:
-
-- **Detección de Régimen de Mercado** (trending, ranging, reversal, volatility)
-- **Signal Quality Scoring** (0-100) con 6 componentes
-- **Ajustes Dinámicos** de TP/SL según volatilidad
-- **Filtrado Inteligente** rechaza señales de baja calidad
-
-**Resultado esperado**: Win rate +10-15%, Profit factor +30-50%
-
-### 🔍 AI Observer (Recomendado - NO interfiere con tu sistema)
-
-Corre en **paralelo** con tu trader actual, analiza señales sin modificar nada:
-
-```bash
-# Terminal 1: Tu trader actual (corriendo normalmente)
-# Terminal 2: AI Observer (nuevo - solo observa y reporta)
-cd packages/trader
-SYMBOL=R_10,R_25,R_50,R_75,R_100 npx tsx src/scripts/run-ai-observer.ts
-```
-
-Al terminar, genera reporte completo:
-
-- Threshold óptimo para tu estrategia
-- Regímenes problemáticos (cuándo NO tradear)
-- Distribución de calidad de señales
-- Top 5 mejores/peores señales
-
-📖 Ver: [AI_OBSERVER_GUIDE.md](./AI_OBSERVER_GUIDE.md) | [AI_ANALYSIS_SUMMARY.md](./AI_ANALYSIS_SUMMARY.md) | [AI_ANALYSIS_GUIDE.md](./AI_ANALYSIS_GUIDE.md)
-
-## 🏗️ Arquitectura
-
-Sistema modular con Gateway centralizado:
+## Arquitectura
 
 ```
-┌─────────┐      ┌─────────┐      ┌──────────┐
-│ Web UI  │─────▶│ Gateway │─────▶│  Deriv   │
-│(Charts) │      │  (WS)   │      │   API    │
-└─────────┘      └─────────┘      └──────────┘
-     │                │
-┌─────────┐           ▼
-│  REPL   │      ┌─────────┐
-│ (CLI)   │      │ Trader  │
-└─────────┘      │Strategy │
-                 └─────────┘
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Telegram   │────▶│   Gateway   │────▶│  Deriv API  │
+│    Bot      │     │   (WS:3000) │     │             │
+└─────────────┘     └─────────────┘     └─────────────┘
+                          │
+                    ┌─────┴─────┐
+                    ▼           ▼
+              ┌─────────┐ ┌─────────┐
+              │ Trader  │ │ Web UI  │
+              │BB-Squeeze│ │(Charts) │
+              └─────────┘ └─────────┘
 ```
 
-**Nuevo**: 🎨 **Web UI Dashboard** con gráfico de velas en tiempo real, indicadores técnicos y marcadores de trades.
+## Packages
 
-## 🚀 Quick Start
+| Package | Descripción |
+|---------|-------------|
+| `@deriv-bot/gateway` | WebSocket server, conexión Deriv API, state manager |
+| `@deriv-bot/trader` | Estrategias de trading (BB-Squeeze, Mean Reversion) |
+| `@deriv-bot/telegram` | Bot de Telegram para monitoreo y comandos |
+| `@deriv-bot/shared` | Tipos compartidos, GatewayClient |
+| `@deriv-bot/web-ui` | Dashboard web con gráficos |
+| `@deriv-bot/cli` | REPL para terminal |
+
+## Quick Start
 
 ### Prerrequisitos
 - Node.js >= 18
 - pnpm >= 8
 
-
 ### Instalación
 
 ```bash
-# Instalar pnpm
-npm install -g pnpm
-
-# Instalar dependencias
+# Clonar e instalar
+git clone https://github.com/horaciomoreno100/deriv-bot.git
+cd deriv-bot
 pnpm install
 
-# Build shared package
-pnpm --filter @deriv-bot/shared build
+# Configurar
+cp .env.example .env
+# Editar .env con tus credenciales
+
+# Build
+pnpm build
 ```
 
-### Configuración
-
-El archivo `.env` ya está configurado en el root:
+### Ejecutar Localmente
 
 ```bash
-DERIV_APP_ID=106646
-DERIV_TOKEN=7He7yWbKh3vgmEY
-DERIV_API_TOKEN=7He7yWbKh3vgmEY
-DERIV_ENDPOINT=wss://ws.derivws.com/websockets/v3
-GATEWAY_PORT=3000
-GATEWAY_HOST=0.0.0.0
-GATEWAY_URL=ws://localhost:3000
-```
-
-### Ejecutar el Sistema
-
-#### 🎨 Opción 1: Web UI Dashboard (Recomendado)
-
-Dashboard web con gráfico de velas en tiempo real:
-
-```bash
-# Script automático que inicia Gateway + Web UI
-./start-dashboard.sh
-
-# O manualmente:
 # Terminal 1: Gateway
 pnpm gateway
 
-# Terminal 2: Web UI
-pnpm web-ui
+# Terminal 2: Trader (BB-Squeeze strategy)
+TRADE_MODE=cfd SYMBOL="R_75,R_100" pnpm --filter @deriv-bot/trader demo:squeeze
+
+# Terminal 3: Telegram Bot (opcional)
+pnpm --filter @deriv-bot/telegram dev
 ```
 
-Abre tu navegador en: **http://localhost:5173**
+## Bot de Telegram
 
-Ver: [QUICKSTART_WEB_UI.md](./QUICKSTART_WEB_UI.md) para guía completa.
+Bot estilo FreqTrade para monitorear el trading:
 
-#### 🖥️ Opción 2: CLI/REPL (Terminal)
+### Comandos Disponibles
 
-**Terminal 1 - Gateway:**
+| Comando | Descripción |
+|---------|-------------|
+| `/info` | Info del bot: estrategias, uptime, traders conectados |
+| `/balance` | Balance actual de la cuenta |
+| `/status` | Posiciones abiertas y P/L |
+| `/profit` | Performance últimas 24h |
+| `/stats` | Estadísticas del día |
+| `/assets` | Assets monitoreados |
+| `/ping` | Verificar conexión con Gateway |
+| `/help` | Lista de comandos |
+
+### Notificaciones Automáticas
+
+El bot envía notificaciones cuando:
+
+- Se abre una posición (símbolo, dirección, stake)
+- Se cierra una posición (resultado, P/L)
+
+### Configuración
+
 ```bash
-pnpm --filter @deriv-bot/gateway dev
+# En .env
+TELEGRAM_BOT_TOKEN=tu_token_de_botfather
+TELEGRAM_CHAT_ID=tu_chat_id
 ```
 
-**Terminal 2 - REPL:**
+## Estrategia BB-Squeeze
+
+Estrategia de breakout basada en Bollinger Bands y Keltner Channels:
+
+### Lógica
+
+1. **Detectar Squeeze**: BB dentro de KC (baja volatilidad)
+2. **CALL**: Precio rompe BB superior después del squeeze
+3. **PUT**: Precio rompe BB inferior después del squeeze
+4. **Smart Exit**: Cierre en BB middle (mean reversion)
+
+### Parámetros
+
+- Bollinger Bands: 20 períodos, 2 StdDev
+- Keltner Channels: 20 períodos, 1.5 ATR
+- Take Profit: 0.4%
+- Stop Loss: 0.2%
+- Cooldown: 60 segundos
+
+## Deploy a Producción
+
+### Setup Inicial del Servidor
+
 ```bash
-pnpm --filter @deriv-bot/cli dev
+# En el servidor (Hetzner/VPS)
+cd /opt/apps
+git clone https://github.com/horaciomoreno100/deriv-bot.git
+cd deriv-bot
+pnpm install
+pnpm build
+
+# Configurar PM2
+pm2 start ecosystem.config.cjs
+pm2 save
+pm2 startup
 ```
 
-#### 🤖 Ejecutar Estrategia de Trading
+### Deploy Automatizado
 
-Para ver trades automáticos (funciona con ambas opciones):
-
-**Terminal 3:**
 ```bash
-pnpm --filter @deriv-bot/trader demo
+# Deploy rápido
+pnpm deploy
+
+# Deploy con restart de todos los servicios
+pnpm deploy:restart-all
 ```
 
-El sistema se conectará y comenzará a:
-1. ✅ Obtener balance de cuenta demo
-2. ✅ Cargar 100 candles históricas de R_75
-3. ✅ Monitorear mercado en tiempo real
-4. ✅ Generar señales con Mean Reversion strategy
+### Configuración de Deploy
 
-## 📁 Estructura del Proyecto
+```bash
+# En .env
+DEPLOY_SERVER=root@tu-servidor-ip
+DEPLOY_PATH=/opt/apps/deriv-bot
+```
+
+## Releases
+
+Usamos [release-it](https://github.com/release-it/release-it) con conventional changelog:
+
+```bash
+# Preview del release
+pnpm release:dry
+
+# Crear release (patch: 0.2.0 → 0.2.1)
+pnpm release
+
+# Release minor (0.2.0 → 0.3.0)
+pnpm release:minor
+
+# Release major (0.2.0 → 1.0.0)
+pnpm release:major
+```
+
+Esto automáticamente:
+- Bump de versión
+- Genera CHANGELOG.md
+- Commit + tag
+- Push a GitHub
+- Crea GitHub Release
+
+## Scripts Útiles
+
+```bash
+# Development
+pnpm dev              # Todos los packages en watch mode
+pnpm gateway          # Solo gateway
+pnpm trader           # Solo trader
+
+# Build
+pnpm build            # Build core packages
+pnpm build:all        # Build todos los packages
+
+# Testing
+pnpm test             # Run tests
+pnpm test:ui          # Tests con UI
+pnpm test:coverage    # Coverage report
+
+# Linting
+pnpm lint             # ESLint
+pnpm format           # Prettier
+
+# Deploy
+pnpm deploy           # Deploy a producción
+pnpm release          # Crear release
+```
+
+## Estructura del Proyecto
 
 ```
 deriv-bot/
-├── docs/                    # 📚 Documentación completa (35 archivos)
 ├── packages/
-│   ├── gateway/            # 🌐 Gateway - Conexión con Deriv API
-│   │   ├── src/
-│   │   │   ├── api/           # DerivClient (WebSocket)
-│   │   │   ├── cache/         # Market data cache + candle builder
-│   │   │   ├── events/        # Event bus
-│   │   │   ├── handlers/      # Command handlers
-│   │   │   └── ws/            # Gateway WebSocket server
-│   │   └── prisma/         # Database schema (candles, ticks)
-│   │
-│   ├── trader/             # 🤖 Trading Bot + Strategies
-│   │   └── src/
-│   │       ├── client/        # GatewayClient
-│   │       ├── indicators/    # RSI, Bollinger Bands, ATR
-│   │       ├── strategies/    # Mean Reversion Strategy
-│   │       ├── position/      # Position manager
-│   │       ├── risk/          # Risk manager
-│   │       └── scripts/       # run-mean-reversion-demo-v2.ts
-│   │
-│   ├── web-ui/             # 🎨 Web Dashboard (Nuevo!)
-│   │   └── src/
-│   │       ├── components/    # CandlestickChart, TradingDashboard
-│   │       ├── hooks/         # useGatewayConnection
-│   │       └── types/         # Type definitions
-│   │
-│   ├── cli/                # 🖥️  Terminal REPL Dashboard
-│   │
-│   └── shared/             # 📦 Shared types (Candle, Tick, Trade)
-│
-├── .env                    # ⚙️  Configuración (tokens, endpoints)
-├── start-dashboard.sh      # 🚀 Script de inicio Web UI
-└── README.md              # 📖 Este archivo
+│   ├── gateway/          # WebSocket server + Deriv API
+│   ├── trader/           # Trading strategies
+│   ├── telegram/         # Telegram bot
+│   ├── shared/           # Shared types
+│   ├── web-ui/           # Web dashboard
+│   └── cli/              # Terminal REPL
+├── scripts/
+│   └── deploy.sh         # Deploy script
+├── .env                  # Configuración local
+├── .env.example          # Template de configuración
+├── .release-it.json      # Config de releases
+├── CHANGELOG.md          # Historial de cambios
+└── deploys.log           # Log de deploys
 ```
 
-## 📚 Documentación
-
-Toda la documentación está en [`/docs`](./docs):
-
-- **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - Arquitectura completa del sistema
-- **[RUN_DEMO.md](./docs/RUN_DEMO.md)** - Guía para ejecutar el demo
-- **[FINAL_STATUS.md](./docs/FINAL_STATUS.md)** - Estado actual del proyecto
-- [DERIV_API_ANALYSIS.md](./docs/DERIV_API_ANALYSIS.md) - Análisis del API de Deriv
-
-
-Ver todos los docs: [docs/INDEX.md](./docs/INDEX.md)
-
-## 🧪 Testing
+## Variables de Entorno
 
 ```bash
-# Tests de todo el proyecto
-pnpm test
+# Deriv API
+DERIV_APP_ID=tu_app_id
+DERIV_API_TOKEN=tu_token
+DERIV_ENDPOINT=wss://ws.derivws.com/websockets/v3
 
-# Tests con UI
-pnpm test:ui
+# Gateway
+GATEWAY_PORT=3000
+GATEWAY_HOST=0.0.0.0
 
-# Coverage
-pnpm test:coverage
+# Telegram
+TELEGRAM_BOT_TOKEN=tu_bot_token
+TELEGRAM_CHAT_ID=tu_chat_id
 
-# Tests de un package específico
-pnpm --filter @deriv-bot/gateway test
-pnpm --filter @deriv-bot/trader test
+# Deploy
+DEPLOY_SERVER=user@server-ip
+DEPLOY_PATH=/opt/apps/deriv-bot
+
+# GitHub (para releases)
+GITHUB_TOKEN=ghp_xxx
 ```
 
-## 🏗️ Build
+## Documentación
 
-```bash
-# Build todo
-pnpm build
+- [CHANGELOG.md](./CHANGELOG.md) - Historial de cambios
+- [docs/](./docs/) - Documentación técnica
 
-# Build de un package específico
-pnpm --filter @deriv-bot/gateway build
-pnpm --filter @deriv-bot/trader build
-```
-
-## 📖 Scripts Útiles
-
-### Gateway
-```bash
-pnpm --filter @deriv-bot/gateway dev      # Modo desarrollo (hot-reload)
-pnpm --filter @deriv-bot/gateway build    # Build para producción
-pnpm --filter @deriv-bot/gateway test     # Ejecutar tests
-```
-
-### Trader
-```bash
-pnpm --filter @deriv-bot/trader demo      # Demo Mean Reversion
-pnpm --filter @deriv-bot/trader dev       # Modo desarrollo
-pnpm --filter @deriv-bot/trader build     # Build para producción
-```
-
-
-## 🎯 Mean Reversion Strategy
-
-### Parámetros Optimizados
-
-- **RSI:** 14 períodos, thresholds 17/83
-- **Bollinger Bands:** 20 períodos, 2.0 desviaciones estándar
-- **ATR:** 14 períodos, multiplicador 1.0x para stop loss
-- **Timeframe:** 1 minuto
-- **Expiry:** 3 minutos
-- **Money Management:** Progressive Anti-Martingale
-
-### Condiciones de Señal
-
-**CALL:**
-- RSI < 17 (sobreventa extrema) O
-- Precio < Banda Inferior de Bollinger
-
-**PUT:**
-- RSI > 83 (sobrecompra extrema) O
-- Precio > Banda Superior de Bollinger
-
-## 🔧 Desarrollo
-
-### Agregar dependencia
-
-```bash
-# A gateway
-pnpm --filter @deriv-bot/gateway add <package-name>
-
-# A trader
-pnpm --filter @deriv-bot/trader add <package-name>
-
-# Dev dependency
-pnpm --filter @deriv-bot/gateway add -D <package-name>
-```
-
-### Trabajar en shared package
-
-```bash
-# Rebuild después de cambios
-pnpm --filter @deriv-bot/shared build
-
-# Watch mode
-pnpm --filter @deriv-bot/shared dev
-```
-
-## 🎯 Roadmap
-
-### ✅ Completado
-- [x] Arquitectura Gateway + Trader
-- [x] Conexión con Deriv API (WebSocket)
-
-- [x] Optimización Mean Reversion (63.87% WR, 54.09% ROI)
-- [x] Implementación TypeScript de estrategia
-- [x] Market data cache + candle builder
-- [x] Historical candles loading (fix 100 candles)
-- [x] Real-time tick streaming
-- [x] Limpieza completa de código legacy
-
-### 🔄 En Progreso
-- [ ] State Manager (persistencia de trades/stats)
-- [ ] Prisma models (Trade, DailyStats, Session)
-- [ ] REPL con Ink (interfaz visual)
-
-### 📋 Próximo
-- [ ] Forward testing en demo (validación)
-- [ ] Dashboard visual con stats
-- [ ] Alertas y notificaciones
-- [ ] Multi-asset support
-- [ ] Web UI (opcional)
-
-## 📝 Notas
-
-- **Ambiente:** Demo (sin riesgo real)
-- **Token configurado:** Con permisos de lectura + trading
-- **App ID:** 106646
-- **Gateway:** Puerto 3000 (WebSocket)
-- **Código limpio:** ~20 archivos legacy eliminados
-
-## 🤝 Contribuir
-
-Este es un proyecto privado de desarrollo.
-
-## 📄 Licencia
+## Licencia
 
 MIT
