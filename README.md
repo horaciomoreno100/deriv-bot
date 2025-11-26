@@ -156,6 +156,34 @@ OPENOBSERVE_STREAM_PER_SERVICE=false
 
 **Nota:** Todos los logs incluyen el campo `service` (gateway, telegram, trader) para filtrar por servicio, incluso si se usa un solo stream.
 
+### Filtrar Logs por Servicio en OpenObserve
+
+Para ver logs de un servicio específico en OpenObserve:
+
+1. **Usando la barra de búsqueda:**
+   - Escribe: `service:gateway` para ver solo logs del gateway
+   - Escribe: `service:trader` para ver solo logs del trader
+   - Escribe: `service:telegram` para ver solo logs de telegram
+
+2. **Usando el panel de campos (lado izquierdo):**
+   - Busca el campo `service` en la lista
+   - Haz clic en el campo para agregarlo como filtro
+   - Selecciona el valor: `gateway`, `trader`, o `telegram`
+
+3. **Usando SQL Query:**
+   ```sql
+   SELECT * FROM "deriv_bot" WHERE service = 'gateway'
+   ```
+
+4. **Ver múltiples servicios:**
+   ```
+   service:gateway OR service:trader
+   ```
+
+5. **Ver TODOS los logs (todos los servicios):**
+   - En la query SQL, usa: `SELECT * FROM "deriv_bot"` (sin WHERE)
+   - O simplemente borra cualquier filtro de la barra de búsqueda
+
 ### PM2 (Process Manager)
 
 ```bash
