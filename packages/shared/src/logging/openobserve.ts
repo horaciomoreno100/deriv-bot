@@ -60,6 +60,10 @@ export class OpenObserveLogger {
 
     if (this.enabled) {
       this.startFlushTimer();
+      console.log(`[OpenObserve] Logger enabled for service "${serviceName}" -> stream "${streamName}"`);
+    } else {
+      console.warn(`[OpenObserve] Logger disabled - missing credentials. Set OPENOBSERVE_USER and OPENOBSERVE_PASSWORD to enable.`);
+      console.warn(`[OpenObserve] URL: ${this.config.url}, Org: ${this.config.org}, Stream: ${streamName}`);
     }
   }
 
@@ -89,12 +93,18 @@ export class OpenObserveLogger {
       });
 
       if (!response.ok) {
-        console.error(`[OpenObserve] Failed to send logs: ${response.status}`);
+        const errorText = await response.text().catch(() => 'Unknown error');
+        console.error(`[OpenObserve] Failed to send ${logs.length} logs: ${response.status} ${response.statusText}`);
+        console.error(`[OpenObserve] Endpoint: ${endpoint}`);
+        console.error(`[OpenObserve] Error: ${errorText}`);
         // Re-add logs to buffer on failure
         this.buffer.unshift(...logs);
+      } else {
+        console.debug(`[OpenObserve] Successfully sent ${logs.length} logs to stream "${this.config.stream}"`);
       }
     } catch (error) {
       console.error('[OpenObserve] Error sending logs:', error);
+      console.error(`[OpenObserve] Endpoint: ${this.config.url}/api/${this.config.org}/${this.config.stream}/_json`);
       // Re-add logs to buffer on error
       this.buffer.unshift(...logs);
     }
@@ -206,4 +216,29 @@ export async function closeAllLoggers(): Promise<void> {
   await Promise.all(promises);
   serviceInstances.clear();
   instance = null;
+}
+
+/**
+ * Get diagnostic information about OpenObserve logger status
+ */
+export function getOpenObserveDiagnostics(): {
+  enabled: boolean;
+  url: string;
+  org: string;
+  stream: string;
+  hasCredentials: boolean;
+  serviceInstances: string[];
+} {
+  const hasCredentials = !!(process.env.OPENOBSERVE_USER && process.env.OPENOBSERVE_PASSWORD);
+  const baseStream = process.env.OPENOBSERVE_STREAM || 'deriv-bot';
+  const usePerServiceStreams = process.env.OPENOBSERVE_STREAM_PER_SERVICE === 'true';
+  
+  return {
+    enabled: hasCredentials,
+    url: process.env.OPENOBSERVE_URL || 'http://localhost:5080',
+    org: process.env.OPENOBSERVE_ORG || 'default',
+    stream: baseStream,
+    hasCredentials,
+    serviceInstances: Array.from(serviceInstances.keys()),
+  };
 }
