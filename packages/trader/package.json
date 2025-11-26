@@ -38,6 +38,7 @@
     "demo:pivot": "tsx src/scripts/run-pivot-reversal-demo.ts",
     "demo:sr": "tsx src/scripts/run-support-resistance-demo.ts",
     "demo:squeeze": "tsx src/scripts/run-bb-squeeze.ts",
+    "demo:squeeze-mr": "tsx src/scripts/run-bb-squeeze-mr.ts",
     "data:fetch": "tsx src/scripts/fetch-historical-data.ts",
     "optimize:r75": "tsx src/scripts/optimize-r75.ts",
     "optimize:all": "tsx src/scripts/optimize-all-assets.ts",
