@@ -12,7 +12,7 @@
 
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
-import { createLogger, type Logger } from '@deriv-bot/shared';
+import { createLogger, type Logger, initSlackAlerts, type SlackAlerter } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
 import { MarketDataCache } from './cache/market-data-cache.js';
@@ -78,6 +78,7 @@ function loadConfig(): GatewayConfig {
 class Gateway {
   private config: GatewayConfig;
   private logger: Logger;
+  private slackAlerter: SlackAlerter | null;
   private derivClient: DerivClient;
   private gatewayServer: GatewayServer;
   private marketCache: MarketDataCache;
@@ -88,6 +89,9 @@ class Gateway {
 
   constructor(config: GatewayConfig) {
     this.config = config;
+
+    // Initialize Slack Alerts (with global error handlers)
+    this.slackAlerter = initSlackAlerts('gateway');
 
     // Initialize Logger
     this.logger = createLogger({
@@ -248,6 +252,7 @@ class Gateway {
     console.log(`   Max Ticks/Asset: ${this.config.maxTicksPerAsset}`);
     console.log(`   Max Candles/Asset: ${this.config.maxCandlesPerAsset}`);
     console.log(`   Persistence: ${this.config.enablePersistence ? 'enabled' : 'disabled'}`);
+    console.log(`   Slack Alerts: ${this.slackAlerter ? 'enabled' : 'disabled'}`);
     console.log();
   }
 }

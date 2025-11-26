@@ -6,7 +6,7 @@
  */
 
 import dotenv from 'dotenv';
-import { GatewayClient } from '@deriv-bot/shared';
+import { GatewayClient, initSlackAlerts, type SlackAlerter } from '@deriv-bot/shared';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { BBSqueezeStrategy } from '../strategies/bb-squeeze.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
@@ -51,6 +51,9 @@ let tradeManager: TradeManager;
 
 // Trade Execution Service
 let tradeExecutionService: TradeExecutionService;
+
+// Slack Alerter
+let slackAlerter: SlackAlerter | null = null;
 
 /**
  * Process tick and build candle (per asset)
@@ -97,6 +100,9 @@ function processTick(tick: Tick): Candle | null {
 }
 
 async function main() {
+  // Initialize Slack Alerts (with global error handlers for crash detection)
+  slackAlerter = initSlackAlerts('trader-bb-squeeze');
+
   console.log('='.repeat(80));
   console.log('🚀 BOLLINGER BAND SQUEEZE STRATEGY - DEMO');
   console.log('='.repeat(80));
@@ -107,6 +113,7 @@ async function main() {
   console.log(`   Trade Mode: ${TRADE_MODE.toUpperCase()}`);
   console.log(`   Balance: $${INITIAL_BALANCE.toFixed(2)}`);
   console.log(`   Warm-up: ${WARM_UP_CANDLES_REQUIRED} candles required`);
+  console.log(`   Slack Alerts: ${slackAlerter ? 'Enabled' : 'Disabled'}`);
   console.log();
 
   // Initialize Gateway Client
@@ -295,6 +302,18 @@ async function main() {
       if (result.stake) {
         balance -= result.stake;
       }
+
+      // Send Slack alert for trade opened
+      if (slackAlerter) {
+        slackAlerter.tradeOpened({
+          symbol: asset,
+          direction: signal.direction,
+          stake: result.stake || 0,
+          entryPrice: (signal.metadata as any)?.currentPrice,
+          confidence: signal.confidence,
+          strategy: 'BB-Squeeze',
+        });
+      }
     }
   });
 
@@ -455,6 +474,18 @@ async function main() {
         console.log(`   P&L: $${profit.toFixed(2)}`);
         console.log(`   Balance: $${balance.toFixed(2)}`);
 
+        // Send Slack alert for trade closed
+        if (slackAlerter) {
+          slackAlerter.tradeClosed({
+            symbol: trade.symbol,
+            direction: trade.direction as 'CALL' | 'PUT',
+            stake: trade.stake || 0,
+            profit,
+            entryPrice: trade.entryPrice,
+            exitPrice,
+          });
+        }
+
         // Show updated stats
         const winRate = totalTrades > 0 ? (wonTrades / totalTrades) * 100 : 0;
         console.log(`   📊 Stats: ${totalTrades} trades | W:${wonTrades} L:${lostTrades} | WR: ${winRate.toFixed(1)}%`);
@@ -572,6 +603,18 @@ async function main() {
     console.log(`   Total: ${totalTrades} | Wins: ${wonTrades} | Losses: ${lostTrades}`);
     console.log(`   Win Rate: ${winRate.toFixed(2)}%`);
     console.log(`   Total P&L: $${totalPnL.toFixed(2)} | ROI: ${roi.toFixed(2)}%\n`);
+
+    // Send Slack alert for trade closed (if not already sent via trade:closed)
+    if (slackAlerter && trade) {
+      slackAlerter.tradeClosed({
+        symbol: trade.symbol,
+        direction: trade.direction as 'CALL' | 'PUT',
+        stake: trade.stake || 0,
+        profit,
+        entryPrice: trade.entryPrice,
+        exitPrice: data.closePrice || trade.entryPrice,
+      });
+    }
   });
 
   console.log('✅ Ready. Waiting for signals...\n');
