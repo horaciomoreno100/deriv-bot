@@ -687,7 +687,7 @@ async function main() {
   });
 
   // Keep process alive
-  await new Promise(() => {});
+  await new Promise(() => { });
 }
 
 main().catch((error) => {
