@@ -11,8 +11,7 @@
  * - RSI Zone Filter: Avoid 30-40 indecision zone
  */
 
-import dotenv from 'dotenv';
-import { GatewayClient, getOpenObserveLogger } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { BBSqueezeMRStrategy } from '../strategies/bb-squeeze-mr.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
@@ -20,8 +19,8 @@ import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+loadEnvFromRoot();
 
 // Configuration
 const TRADE_MODE: TradeMode = (process.env.TRADE_MODE as TradeMode) || 'cfd';

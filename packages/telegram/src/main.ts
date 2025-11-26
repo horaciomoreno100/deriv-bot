@@ -7,7 +7,10 @@
 
 import { GatewayBridge } from './gateway-bridge.js';
 import { TelegramBotService } from './telegram-bot.js';
-import { getOpenObserveLogger } from '@deriv-bot/shared';
+import { getOpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
+
+// Load environment variables from project root
+loadEnvFromRoot();
 
 // Initialize OpenObserve Logger (with service name for per-service streams)
 const ooLogger = getOpenObserveLogger({ service: 'telegram' });

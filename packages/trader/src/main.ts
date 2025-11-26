@@ -9,16 +9,15 @@
  * - PositionManager: Tracks positions
  */
 
-import dotenv from 'dotenv';
-import { GatewayClient, getOpenObserveLogger, type OpenObserveLogger } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger, type OpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
 import { StrategyEngine } from './strategy/strategy-engine.js';
 import { RiskManager } from './risk/risk-manager.js';
 import { PositionManager } from './position/position-manager.js';
 import type { BaseStrategy } from './strategy/base-strategy.js';
 import type { Signal, Contract } from '@deriv-bot/shared';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+loadEnvFromRoot();
 
 /**
  * Trader configuration from environment
@@ -172,7 +171,7 @@ export class Trader {
       // Print daily stats
       const stats = this.positionManager.getDailyStats();
       this.log(`📊 Daily Stats: ${stats.wins}W / ${stats.losses}L | Win Rate: ${(stats.winRate * 100).toFixed(1)}% | P/L: ${stats.pnl.toFixed(2)}`);
-      
+
       this.ooLogger.info('trader', 'Position closed', {
         status: result.status,
         profit: result.profit,

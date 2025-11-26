@@ -10,9 +10,8 @@
  * - Command Handlers: Process Trader commands
  */
 
-import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
-import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, getOpenObserveLogger, type OpenObserveLogger } from '@deriv-bot/shared';
+import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, getOpenObserveLogger, type OpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
 import { MarketDataCache } from './cache/market-data-cache.js';
@@ -20,8 +19,8 @@ import { EventBus } from './events/event-bus.js';
 import { StateManager } from './state/state-manager.js';
 import { handleCommand, type CommandHandlerContext } from './handlers/command-handlers.js';
 
-// Load environment variables from root
-dotenv.config({ path: '../../.env' });
+// Load environment variables from project root
+loadEnvFromRoot();
 
 /**
  * Gateway configuration from environment

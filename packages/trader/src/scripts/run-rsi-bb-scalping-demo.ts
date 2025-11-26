@@ -12,8 +12,7 @@
  * 5. 💰 Riesgo Dinámico - 1-2% del capital por trade
  */
 
-import dotenv from 'dotenv';
-import { GatewayClient, getOpenObserveLogger } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { MeanReversionStrategy } from '../strategies/mean-reversion.strategy.js';
@@ -22,8 +21,8 @@ import { TradeExecutionService } from '../services/trade-execution.service.js';
 import type { Candle, Tick, StrategyConfig, Signal } from '@deriv-bot/shared';
 import { RSI } from 'technicalindicators';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+loadEnvFromRoot();
 
 // OpenObserve Logger (with service name for per-service streams)
 const ooLogger = getOpenObserveLogger({ service: 'trader' });
