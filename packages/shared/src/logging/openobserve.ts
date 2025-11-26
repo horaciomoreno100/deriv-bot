@@ -231,8 +231,7 @@ export function getOpenObserveDiagnostics(): {
 } {
   const hasCredentials = !!(process.env.OPENOBSERVE_USER && process.env.OPENOBSERVE_PASSWORD);
   const baseStream = process.env.OPENOBSERVE_STREAM || 'deriv-bot';
-  const usePerServiceStreams = process.env.OPENOBSERVE_STREAM_PER_SERVICE === 'true';
-
+  
   return {
     enabled: hasCredentials,
     url: process.env.OPENOBSERVE_URL || 'http://localhost:5080',

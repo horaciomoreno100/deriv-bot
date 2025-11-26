@@ -137,6 +137,9 @@ importers:
       '@slack/webhook':
         specifier: ^7.0.6
         version: 7.0.6
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.6.1
       node-telegram-bot-api:
         specifier: ^0.66.0
         version: 0.66.0(request@2.88.2)
