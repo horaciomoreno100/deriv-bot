@@ -10,7 +10,7 @@ import type { GatewayBridge } from './gateway-bridge.js';
 import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo } from './formatters.js';
 import { getOpenObserveLogger } from '@deriv-bot/shared';
 
-const ooLogger = getOpenObserveLogger();
+const ooLogger = getOpenObserveLogger({ service: 'telegram' });
 
 export interface TelegramBotConfig {
   token: string;

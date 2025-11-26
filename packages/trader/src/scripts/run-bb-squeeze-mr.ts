@@ -58,8 +58,8 @@ let tradeManager: TradeManager;
 // Trade Execution Service
 let tradeExecutionService: TradeExecutionService;
 
-// OpenObserve Logger
-const ooLogger = getOpenObserveLogger();
+// OpenObserve Logger (with service name for per-service streams)
+const ooLogger = getOpenObserveLogger({ service: 'trader' });
 
 /**
  * Process tick and build candle (per asset)

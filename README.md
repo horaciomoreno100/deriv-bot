@@ -2,7 +2,7 @@
 
 Bot de trading automatizado para Deriv con arquitectura modular, bot de Telegram y deployment automatizado.
 
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](./CHANGELOG.md)
 
 ## Arquitectura
 
@@ -145,7 +145,16 @@ OPENOBSERVE_ORG=your-org
 OPENOBSERVE_STREAM=deriv-bot
 OPENOBSERVE_USER=your-user
 OPENOBSERVE_PASSWORD=your-password
+
+# Opcional: Separar logs por servicio en streams diferentes
+# Si se establece en 'true', cada servicio usará su propio stream:
+# - deriv-bot-gateway
+# - deriv-bot-telegram
+# - deriv-bot-trader
+OPENOBSERVE_STREAM_PER_SERVICE=false
 ```
+
+**Nota:** Todos los logs incluyen el campo `service` (gateway, telegram, trader) para filtrar por servicio, incluso si se usa un solo stream.
 
 ### PM2 (Process Manager)
 

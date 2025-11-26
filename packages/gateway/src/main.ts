@@ -94,8 +94,8 @@ class Gateway {
     // Initialize Slack Alerts (with global error handlers)
     this.slackAlerter = initSlackAlerts('gateway');
 
-    // Initialize OpenObserve Logger
-    this.ooLogger = getOpenObserveLogger();
+    // Initialize OpenObserve Logger (with service name for per-service streams)
+    this.ooLogger = getOpenObserveLogger({ service: 'gateway' });
 
     // Initialize Logger
     this.logger = createLogger({
