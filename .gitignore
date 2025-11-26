@@ -48,3 +48,6 @@ coverage/
 temp/
 tmp/
 
+# Backtest data (local only)
+packages/trader/data/
+packages/trader/backtest-data/
