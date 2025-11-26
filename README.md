@@ -117,34 +117,37 @@ Estrategia de breakout basada en Bollinger Bands y Keltner Channels:
 - Stop Loss: 0.2%
 - Cooldown: 60 segundos
 
-## Monitoreo con PM2.io
+## Monitoreo
 
-Dashboard cloud para monitorear servicios en producción:
+### Alertas (Slack + Telegram)
 
-### Setup
+El bot envía alertas automáticas a Slack y Telegram:
+
+- **Startup/Shutdown**: Cuando un servicio inicia o se detiene
+- **Crashes**: Excepciones no capturadas, promesas rechazadas
+- **Trades**: Apertura y cierre de posiciones con P/L
 
 ```bash
-# En el servidor
-pm2 link <SECRET_KEY> <PUBLIC_KEY> deriv-bot
+# En .env
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_CHAT_ID=...
 ```
 
-### Alertas Configuradas
+### OpenObserve (Logs y Métricas)
 
-| Alerta | Trigger |
-|--------|---------|
-| CPU | > 80% |
-| Memory | > 300MB |
-| Errors | Cualquier excepción |
-| Process | Crash/Restart |
+Para logging centralizado y métricas, usamos OpenObserve:
 
-### Dashboard
+```bash
+# En .env
+OPENOBSERVE_URL=https://api.openobserve.ai
+OPENOBSERVE_ORG=your-org
+OPENOBSERVE_STREAM=deriv-bot
+OPENOBSERVE_USER=your-user
+OPENOBSERVE_PASSWORD=your-password
+```
 
-- URL: [PM2.io Dashboard](https://app.pm2.io)
-- Métricas en tiempo real: CPU, memoria, event loop
-- Logs centralizados
-- Notificaciones por email en errores
-
-### Comandos Útiles
+### PM2 (Process Manager)
 
 ```bash
 # Ver status
