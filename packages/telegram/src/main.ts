@@ -9,10 +9,12 @@ import { GatewayBridge } from './gateway-bridge.js';
 import { TelegramBotService } from './telegram-bot.js';
 import { getOpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
 
-// Load environment variables from project root
+// Load environment variables from project root FIRST
+// This must be done before initializing the logger
 loadEnvFromRoot();
 
 // Initialize OpenObserve Logger (with service name for per-service streams)
+// This is done AFTER loadEnvFromRoot() so environment variables are available
 const ooLogger = getOpenObserveLogger({ service: 'telegram' });
 
 // Load configuration from environment
