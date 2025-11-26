@@ -31,6 +31,17 @@ export interface CommandHandlerContext {
 const activeSubscriptions = new Map<string, string>(); // asset -> subscriptionId
 
 /**
+ * Portfolio cache to avoid rate limits
+ */
+interface PortfolioCacheEntry {
+  positions: any[];
+  timestamp: number;
+}
+
+const portfolioCache = new Map<string, PortfolioCacheEntry>(); // account -> cache entry
+const PORTFOLIO_CACHE_TTL = 5000; // 5 seconds cache
+
+/**
  * Handle 'follow' command
  * Subscribe to real-time ticks for assets
  */
@@ -56,6 +67,8 @@ export async function handleFollowCommand(
 
       // Subscribe to ticks from Deriv API
       const subscription = await derivClient.subscribeTicks(asset, (tick: Tick) => {
+        console.log(`[Tick] ${asset}: ${tick.price}`);
+
         // Add to cache (automatically builds candles)
         marketCache.addTick(tick);
 
@@ -156,6 +169,175 @@ export async function handleBalanceCommand(
     gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
       code: 'BALANCE_ERROR',
       message: error instanceof Error ? error.message : 'Failed to get balance',
+    });
+  }
+}
+
+/**
+ * Handle 'portfolio' command
+ * Get all open positions (with caching to avoid rate limits)
+ */
+export async function handlePortfolioCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { derivClient, gatewayServer } = context;
+  const { account } = (command.params || {}) as { account?: string };
+  const accountKey = account || 'current';
+
+  // Check cache first
+  const cached = portfolioCache.get(accountKey);
+  const now = Date.now();
+  
+  if (cached && (now - cached.timestamp) < PORTFOLIO_CACHE_TTL) {
+    // Return cached data
+    console.log(`[handlePortfolioCommand] Returning cached portfolio for ${accountKey} (age: ${now - cached.timestamp}ms)`);
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      positions: cached.positions,
+      count: cached.positions.length,
+      totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + pos.profit, 0),
+      cached: true,
+    });
+    return;
+  }
+
+  console.log(`[handlePortfolioCommand] Getting portfolio${account ? ` for account ${account}` : ''}...`);
+
+  try {
+    const positions = await derivClient.getPortfolio(account);
+
+    console.log(`[handlePortfolioCommand] Found ${positions.length} open position(s)`);
+
+    // Update cache
+    portfolioCache.set(accountKey, {
+      positions,
+      timestamp: now,
+    });
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      positions,
+      count: positions.length,
+      totalProfit: positions.reduce((sum, pos) => sum + pos.profit, 0),
+      cached: false,
+    });
+
+    console.log(`[handlePortfolioCommand] Response sent`);
+  } catch (error) {
+    console.error(`[handlePortfolioCommand] Error:`, error);
+    
+    // If rate limit error and we have cached data, return cached data
+    if (error instanceof Error && error.message.includes('rate limit') && cached) {
+      console.log(`[handlePortfolioCommand] Rate limit hit, returning stale cache`);
+      gatewayServer.respondToCommand(ws, command.requestId!, true, {
+        positions: cached.positions,
+        count: cached.positions.length,
+        totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + pos.profit, 0),
+        cached: true,
+        stale: true,
+      });
+      return;
+    }
+
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'PORTFOLIO_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get portfolio',
+    });
+  }
+}
+
+/**
+ * Handle 'multiplier_positions' command
+ * Get Multiplier positions by Contract IDs using proposal_open_contract API
+ *
+ * This is necessary because the portfolio API does NOT return Multiplier contracts (MULTUP/MULTDOWN).
+ */
+export async function handleMultiplierPositionsCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { derivClient, gatewayServer } = context;
+  const { contractIds } = (command.params || {}) as { contractIds: string[] };
+
+  if (!contractIds || contractIds.length === 0) {
+    console.log(`[handleMultiplierPositionsCommand] No contract IDs provided`);
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      positions: [],
+      count: 0,
+      totalProfit: 0,
+    });
+    return;
+  }
+
+  console.log(`[handleMultiplierPositionsCommand] Getting ${contractIds.length} Multiplier position(s)...`);
+
+  try {
+    const positions = await derivClient.getMultiplierPositions(contractIds);
+
+    console.log(`[handleMultiplierPositionsCommand] Found ${positions.length} open Multiplier position(s)`);
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      positions,
+      count: positions.length,
+      totalProfit: positions.reduce((sum, pos) => sum + pos.profit, 0),
+    });
+
+    console.log(`[handleMultiplierPositionsCommand] Response sent`);
+  } catch (error) {
+    console.error(`[handleMultiplierPositionsCommand] Error:`, error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'MULTIPLIER_POSITIONS_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get Multiplier positions',
+    });
+  }
+}
+
+/**
+ * Handle 'profit_table' command
+ * Get closed contracts history
+ */
+export async function handleProfitTableCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { derivClient, gatewayServer } = context;
+  const params = (command.params || {}) as {
+    limit?: number;
+    offset?: number;
+    dateFrom?: number;
+    dateTo?: number;
+    sort?: 'ASC' | 'DESC';
+    contractType?: string[];
+  };
+
+  console.log(`[handleProfitTableCommand] Getting profit table with options:`, params);
+
+  try {
+    const contracts = await derivClient.getProfitTable(params);
+
+    console.log(`[handleProfitTableCommand] Found ${contracts.length} closed contract(s)`);
+
+    const totalProfit = contracts.reduce((sum, contract) => sum + contract.profit, 0);
+    const totalWins = contracts.filter(c => c.profit > 0).length;
+    const totalLosses = contracts.filter(c => c.profit < 0).length;
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      contracts,
+      count: contracts.length,
+      totalProfit,
+      wins: totalWins,
+      losses: totalLosses,
+      winRate: contracts.length > 0 ? (totalWins / contracts.length) * 100 : 0,
+    });
+
+    console.log(`[handleProfitTableCommand] Response sent (${contracts.length} contracts, profit: ${totalProfit.toFixed(2)})`);
+  } catch (error) {
+    console.error(`[handleProfitTableCommand] Error:`, error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'PROFIT_TABLE_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get profit table',
     });
   }
 }
@@ -309,38 +491,55 @@ export async function handleGetCandlesCommand(
   context: CommandHandlerContext
 ): Promise<void> {
   const { marketCache, gatewayServer, derivClient } = context;
-  const { asset, timeframe, count } = command.params as {
+  const { asset, timeframe, count, end } = command.params as {
     asset: string;
     timeframe: number;
     count?: number;
+    end?: number; // Unix timestamp in seconds - get candles BEFORE this time
   };
 
-  console.log(`[handleGetCandlesCommand] Getting candles for ${asset}, timeframe: ${timeframe}, count: ${count || 'all'}`);
+  console.log(`[handleGetCandlesCommand] Getting candles for ${asset}, timeframe: ${timeframe}, count: ${count || 'all'}, end: ${end || 'latest'}`);
 
   try {
-    // Primero intentar obtener del cache
-    let candles = marketCache.getCandles(asset, timeframe, count);
+    // Si se especifica 'end', siempre ir al API (no al cache)
+    // porque el cache solo tiene datos recientes
+    let candles: Candle[];
 
-    console.log(`[handleGetCandlesCommand] Cache returned ${candles.length} candles`);
-
-    // Si el cache está vacío o tiene muy pocas candles, obtener del API
-    if (candles.length < 30 && count && count > candles.length) {
-      console.log(`[handleGetCandlesCommand] Cache insufficient, fetching from Deriv API...`);
-
+    if (end) {
+      console.log(`[handleGetCandlesCommand] Fetching historical data from Deriv API before timestamp ${end}...`);
       try {
         const historicalCandles = await derivClient.getCandles(asset, {
           count: count || 100,
           granularity: timeframe,
+          end: end, // Pedir datos ANTES de este timestamp
         });
 
         console.log(`[handleGetCandlesCommand] Deriv API returned ${historicalCandles.length} candles`);
-
-        // Usar las candles del API directamente
-        // El cache se irá llenando con los ticks en tiempo real
         candles = historicalCandles;
       } catch (apiError) {
         console.error(`[handleGetCandlesCommand] Error fetching from API:`, apiError);
-        // Continuar con lo que hay en cache
+        candles = [];
+      }
+    } else {
+      // Sin 'end', usar cache o datos más recientes
+      candles = marketCache.getCandles(asset, timeframe, count);
+      console.log(`[handleGetCandlesCommand] Cache returned ${candles.length} candles`);
+
+      // Si el cache está vacío o tiene muy pocas candles, obtener del API
+      if (candles.length < 30 && count && count > candles.length) {
+        console.log(`[handleGetCandlesCommand] Cache insufficient, fetching from Deriv API...`);
+
+        try {
+          const historicalCandles = await derivClient.getCandles(asset, {
+            count: count || 100,
+            granularity: timeframe,
+          });
+
+          console.log(`[handleGetCandlesCommand] Deriv API returned ${historicalCandles.length} candles`);
+          candles = historicalCandles;
+        } catch (apiError) {
+          console.error(`[handleGetCandlesCommand] Error fetching from API:`, apiError);
+        }
       }
     }
 
@@ -408,6 +607,7 @@ export async function handleTradeCommand(
     await stateManager.recordTrade({
       contractId: result.contractId,
       type: direction,
+      tradeMode: 'binary',
       asset,
       timeframe: durationSeconds,
       entryPrice,
@@ -485,6 +685,155 @@ export async function handleTradeCommand(
 }
 
 /**
+ * Handle 'trade_cfd' command
+ * Execute CFD/Multiplier trade
+ */
+export async function handleCFDTradeCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { derivClient, gatewayServer, stateManager, marketCache } = context;
+  const { asset, direction, amount, multiplier, duration, durationUnit, takeProfit, stopLoss, strategyName, account } = command.params as {
+    asset: string;
+    direction: 'MULTUP' | 'MULTDOWN';
+    amount: number;
+    multiplier: number;
+    duration?: number;
+    durationUnit?: 's' | 'm' | 'h' | 'd';
+    takeProfit?: number;
+    stopLoss?: number;
+    strategyName?: string;
+    account?: string; // Optional: specific loginid or 'current'
+  };
+
+  console.log(`[handleCFDTradeCommand] Executing CFD trade: ${direction} ${asset}, amount: ${amount}, multiplier: ${multiplier}`);
+
+  try {
+    // Get current price for entry price
+    const currentTick = marketCache.getTicks(asset, 1)[0];
+    const entryPrice = currentTick?.price || 0;
+
+    // Execute CFD trade
+    // If account is specified, use it; otherwise DerivClient will use its defaultAccount
+    const result = await derivClient.buyCFD({
+      symbol: asset,
+      contractType: direction,
+      amount,
+      multiplier,
+      duration,
+      durationUnit,
+      takeProfit,
+      stopLoss,
+      account: account, // Optional: if not specified, DerivClient uses defaultAccount from config
+    });
+
+    console.log(`[handleCFDTradeCommand] CFD trade executed: ${result.contractId}`);
+
+    // Calculate duration in seconds (if provided, otherwise CFDs can be closed manually)
+    let durationSeconds = duration || 0;
+    if (duration && durationUnit) {
+      if (durationUnit === 'm') durationSeconds *= 60;
+      else if (durationUnit === 'h') durationSeconds *= 3600;
+      else if (durationUnit === 'd') durationSeconds *= 86400;
+    }
+
+    // Calculate expiry time (if duration provided, otherwise use a default for tracking)
+    const expiryTime = new Date(result.purchaseTime * 1000);
+    if (durationSeconds > 0) {
+      expiryTime.setSeconds(expiryTime.getSeconds() + durationSeconds);
+    } else {
+      // Default to 24 hours for CFDs without explicit duration (for tracking purposes)
+      expiryTime.setHours(expiryTime.getHours() + 24);
+    }
+
+    // Record trade in State Manager
+    await stateManager.recordTrade({
+      contractId: result.contractId,
+      type: direction === 'MULTUP' ? 'BUY' : 'SELL',
+      tradeMode: 'cfd',
+      asset,
+      timeframe: durationSeconds || null, // CFDs don't use timeframes
+      entryPrice,
+      stake: result.buyPrice,
+      expiryTime,
+      strategyName: strategyName || 'manual',
+    });
+
+    console.log(`[handleCFDTradeCommand] Trade recorded: ${result.contractId}`);
+
+    // Broadcast trade executed event
+    gatewayServer.broadcast(
+      createEventMessage('trade:executed', {
+        id: result.contractId,
+        asset,
+        direction: direction === 'MULTUP' ? 'BUY' : 'SELL',
+        amount,
+        multiplier,
+        duration,
+        openPrice: result.buyPrice,
+        timestamp: result.purchaseTime,
+        status: 'open',
+        takeProfit,
+        stopLoss,
+      })
+    );
+
+    // Subscribe to contract updates to get final result
+    await derivClient.subscribeToContract(result.contractId, async (update: any) => {
+      if (update.proposal_open_contract?.is_sold) {
+        const contract = update.proposal_open_contract;
+        const sellPrice = parseFloat(contract.sell_price);
+        // Use profit directly from API - it's already calculated correctly by Deriv
+        const profit = parseFloat(contract.profit) || (sellPrice - parseFloat(contract.buy_price));
+        const tradeResult = profit >= 0 ? 'WIN' : 'LOSS';
+
+        console.log(`[handleCFDTradeCommand] Contract ${contract.contract_id} closed:`)
+        console.log(`   Sell Price: ${sellPrice}, Profit: ${profit}, Result: ${tradeResult}`);
+
+        // Update trade in State Manager
+        await stateManager.updateTrade(contract.contract_id.toString(), {
+          exitPrice: parseFloat(contract.exit_tick_display_value || contract.current_spot_display_value),
+          payout: profit,
+          result: tradeResult,
+          closedAt: new Date(contract.sell_time * 1000),
+        });
+
+        console.log(`[handleCFDTradeCommand] Trade updated: ${contract.contract_id} - ${tradeResult}`);
+
+        // Broadcast trade result event
+        // Note: contract_id is sent as string to match tradeHistory storage
+        gatewayServer.broadcast(
+          createEventMessage('trade:result', {
+            id: contract.contract_id.toString(),
+            asset,
+            result: tradeResult === 'WIN' ? 'won' : 'lost',
+            profit,
+            closePrice: sellPrice,
+            timestamp: contract.sell_time,
+          })
+        );
+      }
+    });
+
+    // Send success response
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      contractId: result.contractId,
+      buyPrice: result.buyPrice,
+      startTime: result.startTime,
+      purchaseTime: result.purchaseTime,
+      message: `CFD trade executed: ${direction} ${asset} for ${amount} with multiplier ${multiplier}`,
+    });
+  } catch (error) {
+    console.error('[handleCFDTradeCommand] Error:', error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'CFD_TRADE_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to execute CFD trade',
+    });
+  }
+}
+
+/**
  * Handle 'get_stats' command
  * Get trading statistics for a date
  */
@@ -494,7 +843,7 @@ export async function handleGetStatsCommand(
   context: CommandHandlerContext
 ): Promise<void> {
   const { gatewayServer, stateManager } = context;
-  const { date } = command.params as { date?: string };
+  const { date } = (command.params || {}) as { date?: string };
 
   try {
     const stats = await stateManager.getDailyStats(date);
@@ -589,6 +938,15 @@ export async function handleCommand(
     case 'balance':
       await handleBalanceCommand(ws, command, context);
       break;
+    case 'portfolio':
+      await handlePortfolioCommand(ws, command, context);
+      break;
+    case 'multiplier_positions':
+      await handleMultiplierPositionsCommand(ws, command, context);
+      break;
+    case 'profit_table':
+      await handleProfitTableCommand(ws, command, context);
+      break;
     case 'instruments':
       await handleInstrumentsCommand(ws, command, context);
       break;
@@ -597,6 +955,9 @@ export async function handleCommand(
       break;
     case 'trade':
       await handleTradeCommand(ws, command, context);
+      break;
+    case 'trade_cfd':
+      await handleCFDTradeCommand(ws, command, context);
       break;
     case 'get_assets':
       await handleGetAssetsCommand(ws, command, context);
@@ -616,10 +977,256 @@ export async function handleCommand(
     case 'ping':
       await handlePingCommand(ws, command, context);
       break;
+    case 'update_indicators':
+      await handleUpdateIndicatorsCommand(ws, command, context);
+      break;
+    case 'publish_signal_proximity':
+      await handlePublishSignalProximityCommand(ws, command, context);
+      break;
+    case 'record_trade':
+      await handleRecordTradeCommand(ws, command, context);
+      break;
+    case 'update_trade':
+      await handleUpdateTradeCommand(ws, command, context);
+      break;
     default:
       context.gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
         code: 'UNKNOWN_COMMAND',
         message: `Unknown command: ${command.command}`,
       });
+  }
+}
+
+/**
+ * Handle 'update_indicators' command
+ * Receives indicators from Trader and broadcasts to all clients
+ */
+export async function handleUpdateIndicatorsCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+  const indicators = command.params;
+
+  console.log('[handleUpdateIndicatorsCommand] Received indicators:', indicators);
+
+  // Broadcast indicators to all connected clients
+  gatewayServer.broadcast({
+    type: 'indicators',
+    data: indicators,
+    timestamp: Date.now(),
+  });
+
+  console.log('[handleUpdateIndicatorsCommand] Broadcasted to clients');
+
+  // Acknowledge receipt
+  gatewayServer.respondToCommand(ws, command.requestId!, true, { received: true });
+}
+
+/**
+ * Handle 'publish_signal_proximity' command
+ * Broadcast signal proximity to all connected clients
+ */
+export async function handlePublishSignalProximityCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+  const proximity = command.params;
+
+  console.log('[handlePublishSignalProximityCommand] Received signal proximity:', {
+    asset: proximity?.asset,
+    proximity: proximity?.overallProximity,
+    direction: proximity?.direction,
+  });
+
+  // Broadcast signal proximity to all connected clients
+  gatewayServer.broadcast({
+    type: 'signal:proximity',
+    data: proximity,
+    timestamp: Date.now(),
+  });
+
+  console.log('[handlePublishSignalProximityCommand] Broadcasted to clients');
+
+  // Acknowledge receipt
+  gatewayServer.respondToCommand(ws, command.requestId!, true, { received: true });
+}
+
+/**
+ * Handle 'record_trade' command
+ * Saves trade information to database for analysis
+ */
+export async function handleRecordTradeCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { stateManager, gatewayServer } = context;
+
+  // Validate that params exists
+  if (!command.params) {
+    console.error('[handleRecordTradeCommand] ❌ Missing params');
+    gatewayServer.respondToCommand(ws, command.requestId!, false, {
+      error: 'Missing trade data in command params'
+    });
+    return;
+  }
+
+  const tradeData = command.params as any;
+
+  // Validate required fields
+  if (!tradeData.contractId || !tradeData.type || !tradeData.asset ||
+      !tradeData.entryPrice || !tradeData.stake || !tradeData.strategyName) {
+    console.error('[handleRecordTradeCommand] ❌ Missing required fields');
+    gatewayServer.respondToCommand(ws, command.requestId!, false, {
+      error: 'Missing required trade fields (contractId, type, asset, entryPrice, stake, strategyName)'
+    });
+    return;
+  }
+
+  console.log('[handleRecordTradeCommand] Recording trade:', {
+    contractId: tradeData.contractId,
+    asset: tradeData.asset,
+    type: tradeData.type,
+    tradeMode: tradeData.tradeMode,
+  });
+
+  try {
+    // Calculate expiryTime if not provided
+    // For CFDs without duration, set to 24 hours from now
+    // For binary options with timeframe, calculate from timeframe
+    let expiryTime: Date;
+    if (tradeData.expiryTime) {
+      expiryTime = new Date(tradeData.expiryTime);
+    } else if (tradeData.timeframe) {
+      // Binary option with timeframe in seconds
+      expiryTime = new Date(Date.now() + tradeData.timeframe * 1000);
+    } else {
+      // Default to 24 hours for CFDs
+      expiryTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    }
+
+    // Record the trade in database
+    await stateManager.recordTrade({
+      contractId: tradeData.contractId,
+      type: tradeData.type,
+      tradeMode: tradeData.tradeMode || 'binary',
+      asset: tradeData.asset,
+      timeframe: tradeData.timeframe || null,
+      entryPrice: tradeData.entryPrice,
+      stake: tradeData.stake,
+      strategyName: tradeData.strategyName,
+      expiryTime,
+
+      // CFD-specific
+      multiplier: tradeData.multiplier || null,
+      takeProfit: tradeData.takeProfit || null,
+      stopLoss: tradeData.stopLoss || null,
+      takeProfitAmount: tradeData.takeProfitAmount || null,
+      stopLossAmount: tradeData.stopLossAmount || null,
+
+      // Signal context
+      signalType: tradeData.signalType || null,
+      confidence: tradeData.confidence || null,
+
+      // Indicators
+      rsi: tradeData.rsi || null,
+      bbUpper: tradeData.bbUpper || null,
+      bbMiddle: tradeData.bbMiddle || null,
+      bbLower: tradeData.bbLower || null,
+      atr: tradeData.atr || null,
+
+      // Additional context
+      bbDistancePct: tradeData.bbDistancePct || null,
+      priceVsMiddle: tradeData.priceVsMiddle || null,
+
+      // Balance tracking
+      balanceBefore: tradeData.balanceBefore || null,
+
+      // Metadata (store extra context as JSON string)
+      // Note: metadata is already JSON.stringify'd by the client
+      metadata: tradeData.metadata || null,
+    });
+
+    console.log('[handleRecordTradeCommand] ✅ Trade recorded successfully');
+
+    // Acknowledge success
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      recorded: true,
+      contractId: tradeData.contractId
+    });
+
+  } catch (error: any) {
+    console.error('[handleRecordTradeCommand] ❌ Error recording trade:', error.message);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, {
+      error: error.message
+    });
+  }
+}
+
+/**
+ * Handle 'update_trade' command
+ * Updates trade information when it closes (result, profit, exit price)
+ */
+export async function handleUpdateTradeCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { stateManager, gatewayServer } = context;
+
+  // Validate that params exists
+  if (!command.params) {
+    console.error('[handleUpdateTradeCommand] ❌ Missing params');
+    gatewayServer.respondToCommand(ws, command.requestId!, false, {
+      error: 'Missing trade update data in command params'
+    });
+    return;
+  }
+
+  const updateData = command.params as any;
+
+  // Validate required fields
+  if (!updateData.contractId) {
+    console.error('[handleUpdateTradeCommand] ❌ Missing contractId');
+    gatewayServer.respondToCommand(ws, command.requestId!, false, {
+      error: 'Missing required field: contractId'
+    });
+    return;
+  }
+
+  console.log('[handleUpdateTradeCommand] Updating trade:', {
+    contractId: updateData.contractId,
+    result: updateData.result,
+    exitPrice: updateData.exitPrice,
+    payout: updateData.payout,
+  });
+
+  try {
+    // Update the trade in database
+    await stateManager.updateTrade(updateData.contractId, {
+      exitPrice: updateData.exitPrice,
+      payout: updateData.payout,
+      result: updateData.result,
+      closedAt: updateData.closedAt ? new Date(updateData.closedAt) : new Date(),
+      metadata: updateData.metadata,
+    });
+
+    console.log('[handleUpdateTradeCommand] ✅ Trade updated successfully');
+
+    // Acknowledge success
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      updated: true,
+      contractId: updateData.contractId
+    });
+
+  } catch (error: any) {
+    console.error('[handleUpdateTradeCommand] ❌ Error updating trade:', error.message);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, {
+      error: error.message
+    });
   }
 }

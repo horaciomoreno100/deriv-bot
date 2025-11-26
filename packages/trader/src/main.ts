@@ -10,7 +10,7 @@
  */
 
 import dotenv from 'dotenv';
-import { GatewayClient } from './client/gateway-client.js';
+import { GatewayClient } from '@deriv-bot/shared';
 import { StrategyEngine } from './strategy/strategy-engine.js';
 import { RiskManager } from './risk/risk-manager.js';
 import { PositionManager } from './position/position-manager.js';

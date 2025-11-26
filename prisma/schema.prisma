@@ -1,0 +1,48 @@
+// Root Prisma Schema for BacktestJS
+// This is required by @backtest/framework
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// BacktestJS Historical Data Model
+model HistoricalData {
+  id        String   @id @default(uuid())
+  symbol    String
+  timestamp BigInt
+  open      Float
+  high      Float
+  low       Float
+  close     Float
+  volume    Float?
+  createdAt DateTime @default(now())
+
+  @@unique([symbol, timestamp])
+  @@index([symbol])
+  @@map("historical_data")
+}
+
+// Candles from Gateway (for compatibility)
+model Candle {
+  id        Int      @id @default(autoincrement())
+  asset     String
+  timeframe Int
+  timestamp Int
+  open      Float
+  high      Float
+  low       Float
+  close     Float
+  volume    Float?
+  createdAt DateTime @default(now())
+
+  @@unique([asset, timeframe, timestamp])
+  @@index([asset, timeframe])
+  @@index([timestamp])
+  @@map("candles")
+}

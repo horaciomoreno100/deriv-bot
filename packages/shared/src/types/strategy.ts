@@ -10,6 +10,8 @@ import type { ContractDirection } from './trade.js';
 export interface Signal {
   /** Asset symbol */
   symbol: string;
+  /** Asset (alias for symbol, for compatibility) */
+  asset?: string;
   /** Direction */
   direction: ContractDirection;
   /** Confidence level (0-100) */
@@ -78,4 +80,29 @@ export interface StrategyMetrics {
   maxDrawdown: number;
   /** Active trades count */
   activeTrades: number;
+}
+
+/**
+ * Signal proximity information - how close a strategy is to generating a signal
+ */
+export interface SignalProximity {
+  /** Asset symbol */
+  asset: string;
+  /** Direction the signal would be for */
+  direction: 'call' | 'put' | 'neutral';
+  /** Overall proximity percentage (0-100) */
+  overallProximity: number;
+  /** Criteria that need to be met */
+  criteria: Array<{
+    name: string;
+    current: number;
+    target: number;
+    unit: string;
+    passed: boolean;
+    distance: number;
+  }>;
+  /** Whether the signal is ready to be generated */
+  readyToSignal: boolean;
+  /** Missing criteria names */
+  missingCriteria: string[];
 }

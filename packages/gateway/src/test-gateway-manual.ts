@@ -68,6 +68,7 @@ async function main() {
     derivAppId: parseInt(process.env.DERIV_APP_ID || '1089', 10),
     derivApiToken: process.env.DERIV_API_TOKEN || '',
     derivEndpoint: process.env.DERIV_ENDPOINT || 'wss://ws.derivws.com/websockets/v3',
+    derivAccount: process.env.DERIV_ACCOUNT || 'current',
     gatewayPort: 3001, // Use different port for testing
     gatewayHost: 'localhost',
     maxTicksPerAsset: 100,

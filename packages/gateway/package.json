@@ -7,13 +7,15 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/main.ts",
-    "start": "node dist/main.js",
+    "start": "tsx src/main.ts",
+    "start:compiled": "node dist/main.js",
     "clean": "rm -rf dist",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "list-accounts": "tsx src/scripts/list-accounts.ts"
   },
   "dependencies": {
     "@deriv-bot/shared": "workspace:*",

@@ -11,7 +11,7 @@
 // export { Trader, type TraderConfig } from './main.js';
 
 // Gateway Client
-export { GatewayClient, type GatewayClientConfig, type GatewayClientEvents } from './client/gateway-client.js';
+export { GatewayClient, type GatewayClientConfig, type GatewayClientEvents } from '@deriv-bot/shared';
 
 // Strategy (WORKING ✅)
 export { BaseStrategy, type StrategyContext, type StrategyEvents } from './strategy/base-strategy.js';
@@ -34,6 +34,20 @@ export * from './indicators/index.js';
 // export { SMACrossoverStrategy, type SMACrossoverConfig } from './strategies/sma-crossover-strategy.js';
 // export { RSIStrategy, type RSIStrategyConfig } from './strategies/rsi-strategy.js';
 export { MeanReversionStrategy, type MeanReversionParams } from './strategies/mean-reversion.strategy.js';
+export { VdubusBinaryProStrategy, type VdubusConfig } from './strategies/vdubus-binary-pro.strategy.js';
+
+// Trade Adapters (WORKING ✅)
+export {
+  UnifiedTradeAdapter,
+  BinaryOptionsAdapter,
+  CFDAdapter,
+  type TradeMode,
+  type TradeDirection,
+  type TradeParams,
+  type TradeResult,
+  type BinaryTradeParams,
+  type CFDTradeParams,
+} from './adapters/trade-adapter.js';
 
 // Backtesting
 // export * from './backtest/index.js';

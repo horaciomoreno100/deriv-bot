@@ -1,0 +1,24 @@
+// Prisma schema for BacktestJS
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model HistoricalData {
+  id        String   @id @default(uuid())
+  symbol    String
+  timestamp BigInt
+  open      Float
+  high      Float
+  low       Float
+  close     Float
+  volume    Float?
+  createdAt DateTime @default(now())
+
+  @@unique([symbol, timestamp])
+  @@index([symbol])
+}

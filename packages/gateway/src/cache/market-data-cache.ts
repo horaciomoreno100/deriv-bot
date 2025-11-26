@@ -1,6 +1,7 @@
 import type { Tick, Candle } from '@deriv-bot/shared';
 import { CandleBuilder } from './candle-builder.js';
 import { PrismaClient } from '@prisma/client';
+import type { EventBus } from '../events/event-bus.js';
 
 /**
  * Configuration for MarketDataCache
@@ -12,6 +13,8 @@ export interface MarketDataCacheConfig {
   maxCandlesPerAsset: number;
   /** Enable persistence to database */
   enablePersistence?: boolean;
+  /** EventBus for emitting candle events */
+  eventBus?: EventBus;
 }
 
 /**
@@ -43,10 +46,11 @@ export interface MarketDataCacheConfig {
  * ```
  */
 export class MarketDataCache {
-  private config: Required<MarketDataCacheConfig>;
+  private config: Required<Omit<MarketDataCacheConfig, 'eventBus'>>;
   private ticks = new Map<string, Tick[]>(); // asset -> ticks[]
   private candleBuilders = new Map<string, Map<number, CandleBuilder>>(); // asset -> timeframe -> builder
   private prisma: PrismaClient | null = null;
+  private eventBus: EventBus | null = null;
 
   constructor(config: MarketDataCacheConfig) {
     this.config = {
@@ -54,6 +58,8 @@ export class MarketDataCache {
       maxCandlesPerAsset: config.maxCandlesPerAsset,
       enablePersistence: config.enablePersistence ?? false,
     };
+
+    this.eventBus = config.eventBus || null;
 
     if (this.config.enablePersistence) {
       this.prisma = new PrismaClient();
@@ -137,6 +143,17 @@ export class MarketDataCache {
         timeframe,
         maxClosedCandles: this.config.maxCandlesPerAsset,
       });
+
+      // Forward candle events to EventBus
+      if (this.eventBus) {
+        builder.on('candle:update', (candle: Candle) => {
+          this.eventBus!.emitTyped('candle:update', { asset, timeframe, candle });
+        });
+
+        builder.on('candle:closed', (candle: Candle) => {
+          this.eventBus!.emitTyped('candle:closed', { asset, timeframe, candle });
+        });
+      }
 
       // Persist closed candles if enabled
       if (this.config.enablePersistence) {

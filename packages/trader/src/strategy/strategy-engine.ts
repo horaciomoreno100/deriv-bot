@@ -17,6 +17,7 @@ export interface StrategyEngineEvents {
   'strategy:started': (strategy: BaseStrategy) => void;
   'strategy:stopped': (strategy: BaseStrategy) => void;
   'strategy:error': (error: Error, strategy: BaseStrategy) => void;
+  'indicators': (indicators: any) => void;
 }
 
 /**
@@ -52,6 +53,7 @@ export interface StrategyEngineEvents {
 export class StrategyEngine extends EventEmitter {
   private strategies = new Map<string, BaseStrategy>();
   private candleData = new Map<string, Candle[]>(); // Per-strategy candle buffers
+  private candleDataByAsset = new Map<string, Map<string, Candle[]>>(); // Per-strategy, per-asset candle buffers
   private latestTicks = new Map<string, Tick>(); // Per-strategy latest tick
   private balance: number = 0;
   private openPositions: number = 0;
@@ -68,6 +70,7 @@ export class StrategyEngine extends EventEmitter {
 
     this.strategies.set(name, strategy);
     this.candleData.set(name, []);
+    this.candleDataByAsset.set(name, new Map<string, Candle[]>());
     this.latestTicks.set(name, null as any);
 
     // Forward strategy events
@@ -77,6 +80,10 @@ export class StrategyEngine extends EventEmitter {
 
     strategy.on('error', (error) => {
       this.emit('strategy:error', error, strategy);
+    });
+
+    strategy.on('indicators', (indicators) => {
+      this.emit('indicators', indicators);
     });
   }
 
@@ -97,6 +104,7 @@ export class StrategyEngine extends EventEmitter {
 
     this.strategies.delete(name);
     this.candleData.delete(name);
+    this.candleDataByAsset.delete(name);
     this.latestTicks.delete(name);
   }
 
@@ -112,6 +120,20 @@ export class StrategyEngine extends EventEmitter {
    */
   getAllStrategies(): BaseStrategy[] {
     return Array.from(this.strategies.values());
+  }
+
+  /**
+   * Get all monitored assets (union of all strategy assets)
+   */
+  getMonitoredAssets(): string[] {
+    const assets = new Set<string>();
+    this.strategies.forEach((strategy) => {
+      const config = strategy.getConfig();
+      if (config.assets) {
+        config.assets.forEach((asset) => assets.add(asset));
+      }
+    });
+    return Array.from(assets);
   }
 
   /**
@@ -199,25 +221,42 @@ export class StrategyEngine extends EventEmitter {
 
   /**
    * Process a new candle (distribute to all strategies)
+   * IMPORTANT: Maintains separate candle buffers per asset to avoid mixing data
    */
   async processCandle(candle: Candle): Promise<void> {
+    console.log('[StrategyEngine] processCandle called for', candle.asset, 'at', new Date(candle.timestamp * 1000).toISOString());
+    console.log('[StrategyEngine] Number of strategies:', this.strategies.size);
+
     const promises: Promise<void>[] = [];
 
     this.strategies.forEach((strategy, name) => {
-      // Add candle to strategy's buffer
-      const candles = this.candleData.get(name) || [];
-      candles.push(candle);
+      console.log('[StrategyEngine] Processing strategy:', name);
 
-      // Keep last 500 candles per strategy
-      if (candles.length > 500) {
-        candles.shift();
+      // Get per-asset candle buffer for this strategy
+      const assetBuffers = this.candleDataByAsset.get(name) || new Map<string, Candle[]>();
+      
+      // Get or create buffer for this specific asset
+      if (!assetBuffers.has(candle.asset)) {
+        assetBuffers.set(candle.asset, []);
+      }
+      const assetCandles = assetBuffers.get(candle.asset)!;
+      
+      // Add candle to asset-specific buffer
+      assetCandles.push(candle);
+
+      // Keep last 500 candles per asset
+      if (assetCandles.length > 500) {
+        assetCandles.shift();
       }
 
-      this.candleData.set(name, candles);
+      assetBuffers.set(candle.asset, assetCandles);
+      this.candleDataByAsset.set(name, assetBuffers);
+      
+      console.log('[StrategyEngine] Candles in buffer for', name, `[${candle.asset}]:`, assetCandles.length);
 
-      // Create context
+      // Create context with ONLY candles for this asset
       const context: StrategyContext = {
-        candles,
+        candles: assetCandles, // Use asset-specific buffer
         latestTick: this.latestTicks.get(name) || null,
         balance: this.balance,
         openPositions: this.openPositions,
@@ -228,6 +267,7 @@ export class StrategyEngine extends EventEmitter {
     });
 
     await Promise.all(promises);
+    console.log('[StrategyEngine] All strategies processed');
   }
 
   /**
@@ -245,10 +285,26 @@ export class StrategyEngine extends EventEmitter {
   }
 
   /**
-   * Get candle data for a strategy
+   * Get candle data for a strategy (all assets combined)
    */
   getCandleData(strategyName: string): Candle[] {
     return this.candleData.get(strategyName) || [];
+  }
+
+  /**
+   * Get candle data for a specific asset in a strategy
+   */
+  getCandleDataForAsset(strategyName: string, asset: string): Candle[] {
+    const assetBuffers = this.candleDataByAsset.get(strategyName);
+    if (!assetBuffers) return [];
+    return assetBuffers.get(asset) || [];
+  }
+
+  /**
+   * Get latest tick for a strategy
+   */
+  getLatestTick(strategyName: string): Tick | null {
+    return this.latestTicks.get(strategyName) || null;
   }
 
   /**
@@ -256,6 +312,7 @@ export class StrategyEngine extends EventEmitter {
    */
   clearCandleData(strategyName: string): void {
     this.candleData.set(strategyName, []);
+    this.candleDataByAsset.set(strategyName, new Map<string, Candle[]>());
   }
 
   /**

@@ -68,6 +68,8 @@ export interface Balance {
   currency: string;
   /** Account type (demo, real) */
   accountType: 'demo' | 'real';
+  /** Login ID (e.g., "VRT1234567" for demo, "CR1234567" for real) */
+  loginid?: string;
   /** Timestamp */
   timestamp: number;
 }

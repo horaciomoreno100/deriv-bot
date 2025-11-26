@@ -2,20 +2,43 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "jsx": "react"
   },
   "include": [
     "src/index.ts",
-    "src/client/**/*",
+    "src/main.ts",
     "src/strategies/**/*",
     "src/strategy/**/*",
     "src/indicators/**/*",
-    "src/types/**/*"
+    "src/types/**/*",
+    "src/adapters/**/*",
+    "src/scripts/**/*",
+    "src/risk/**/*",
+    "src/position/**/*",
+    "src/dashboard/**/*",
+    "src/services/**/*",
+    "src/analysis/**/*",
+    "src/trade-management/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "src/strategies/pivot-reversal.strategy.ts",
+    "src/strategies/validation-test.strategy.ts",
+    "src/scripts/run-validation-test.ts",
+    "src/scripts/run-pivot-reversal-demo.ts",
+    "src/scripts/run-vdubus-demo.ts",
+    "src/scripts/run-mean-reversion-demo-v2.ts",
+    "src/scripts/optimize-r75.ts",
+    "src/scripts/run-backtest-squeeze.ts",
+    "src/scripts/backtest-bb-squeeze.ts",
+    "src/scripts/fetch-historical-data.ts",
+    "src/scripts/optimize-all-assets.ts",
+    "src/scripts/test-contract-subscription.ts",
+    "src/scripts/check-multiplier-support.ts",
+    "src/scripts/list-available-symbols.ts"
   ],
   "references": [
     { "path": "../shared" },

@@ -27,6 +27,15 @@ export interface StrategyContext {
 export interface StrategyEvents {
   'signal': (signal: Signal) => void;
   'error': (error: Error) => void;
+  'indicators': (indicators: {
+    rsi: number;
+    bbUpper: number;
+    bbMiddle: number;
+    bbLower: number;
+    atr: number;
+    asset: string;
+    timestamp: number;
+  }) => void;
 }
 
 /**
@@ -126,17 +135,32 @@ export abstract class BaseStrategy extends EventEmitter {
    * Process a new candle (closed)
    */
   async processCandle(candle: Candle, context: StrategyContext): Promise<void> {
+    console.log('[BaseStrategy] processCandle called, running:', this.running, 'asset:', candle.asset);
     if (!this.running) {
+      console.log('[BaseStrategy] Strategy not running, skipping');
       return;
     }
 
     try {
+      console.log('[BaseStrategy] Calling onCandle...');
       const signal = await this.onCandle(candle, context);
 
       if (signal) {
+        console.log('[BaseStrategy] ✅ SIGNAL CREATED - Emitting signal:', signal.direction, 'for', signal.asset || signal.symbol);
+        console.log('[BaseStrategy] Signal details:', {
+          direction: signal.direction,
+          asset: signal.asset || signal.symbol,
+          confidence: signal.confidence,
+          timestamp: new Date(signal.timestamp).toISOString(),
+          metadata: signal.metadata
+        });
         this.emit('signal', signal);
+        console.log('[BaseStrategy] ✅ Signal emitted successfully');
+      } else {
+        console.log('[BaseStrategy] ⏳ No signal generated for', candle.asset);
       }
     } catch (error) {
+      console.log('[BaseStrategy] Error in onCandle:', error);
       this.emit('error', error as Error);
     }
   }
@@ -147,11 +171,16 @@ export abstract class BaseStrategy extends EventEmitter {
   protected createSignal(
     direction: 'CALL' | 'PUT',
     confidence: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
+    asset?: string // Optional: specify asset explicitly
   ): Signal {
+    // Use provided asset, or first asset from config, or empty string
+    const signalAsset = asset || this.config.assets?.[0] || '';
+    
     return {
       strategyName: this.config.name,
-      symbol: this.config.assets[0] || '', // For now, single asset
+      symbol: signalAsset,
+      asset: signalAsset, // Also include asset for compatibility
       direction,
       confidence,
       timestamp: Date.now(),

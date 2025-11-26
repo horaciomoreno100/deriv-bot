@@ -55,15 +55,16 @@ model Symbol {
   @@map("symbols")
 }
 
-// Trades (binary options contracts)
+// Trades (binary options & CFD contracts)
 model Trade {
   id          String   @id @default(cuid())
   contractId  String   @unique
 
   // Trade info
-  type        String   // CALL or PUT
+  type        String   // CALL or PUT (or MULTUP/MULTDOWN for CFDs)
+  tradeMode   String   // "binary" or "cfd"
   asset       String
-  timeframe   Int      // seconds
+  timeframe   Int?     // seconds (for binary options)
 
   // Prices & Money
   entryPrice  Float
@@ -71,9 +72,17 @@ model Trade {
   stake       Float
   payout      Float?
 
+  // CFD-specific fields
+  multiplier  Int?     // CFD multiplier (e.g., 50x, 100x)
+  takeProfit  Float?   // TP price level
+  stopLoss    Float?   // SL price level
+  takeProfitAmount  Float?  // TP in dollars
+  stopLossAmount    Float?  // SL in dollars
+
   // Result
   result      String?  // WIN, LOSS, or PENDING
   profit      Float?   // payout - stake (negative if loss)
+  profitPct   Float?   // profit percentage
 
   // Timestamps
   openedAt    DateTime @default(now())
@@ -82,19 +91,38 @@ model Trade {
 
   // Signal that triggered trade
   signalType  String?  // RSI_OVERSOLD, RSI_OVERBOUGHT, BB_LOWER, BB_UPPER
+  confidence  Float?   // Signal confidence (0-1)
+
+  // Indicators at entry
   rsi         Float?
   bbUpper     Float?
   bbMiddle    Float?
   bbLower     Float?
   atr         Float?
 
+  // Additional context
+  bbDistancePct Float?  // Distance to BB band (%)
+  priceVsMiddle Float?  // Price vs BB middle
+
+  // Market context at entry
+  volumeAtEntry Int?
+  spreadAtEntry Float?
+
+  // Balance tracking
+  balanceBefore Float?
+  balanceAfter  Float?
+
   // Strategy
   strategyName String  // e.g., "mean-reversion-v2"
+
+  // Metadata (JSON string for flexible additional data)
+  metadata     String?  // JSON string with extra context
 
   @@index([openedAt])
   @@index([asset])
   @@index([strategyName])
   @@index([result])
+  @@index([tradeMode])
   @@map("trades")
 }
 

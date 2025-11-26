@@ -1,0 +1,50 @@
+// Prisma schema for BacktestJS
+// This is required by @backtest/framework
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// BacktestJS models
+model HistoricalData {
+  id        String   @id @default(uuid())
+  symbol    String
+  timestamp BigInt
+  open      Float
+  high      Float
+  low       Float
+  close     Float
+  volume    Float?
+  createdAt DateTime @default(now())
+
+  @@unique([symbol, timestamp])
+  @@index([symbol])
+}
+
+model BacktestResult {
+  id              String   @id @default(uuid())
+  strategyName    String
+  symbol          String
+  startingAmount  Float
+  endingAmount    Float
+  totalTrades     Int
+  winningTrades   Int
+  losingTrades    Int
+  winRate         Float
+  profitFactor    Float?
+  maxDrawdown     Float?
+  sharpeRatio     Float?
+  parameters      String   // JSON string
+  startTime       DateTime
+  endTime         DateTime
+  createdAt       DateTime @default(now())
+
+  @@index([strategyName])
+  @@index([symbol])
+}

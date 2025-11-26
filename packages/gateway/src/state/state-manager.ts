@@ -10,19 +10,44 @@ import { EventEmitter } from 'events';
 
 export interface TradeInput {
   contractId: string;
-  type: 'CALL' | 'PUT';
+  type: string; // CALL, PUT, MULTUP, MULTDOWN, etc.
+  tradeMode: 'binary' | 'cfd';
   asset: string;
-  timeframe: number;
+  timeframe: number | null;
   entryPrice: number;
   stake: number;
-  expiryTime?: Date;
-  signalType?: string;
-  rsi?: number;
-  bbUpper?: number;
-  bbMiddle?: number;
-  bbLower?: number;
-  atr?: number;
   strategyName: string;
+
+  // CFD-specific
+  multiplier?: number | null;
+  takeProfit?: number | null;
+  stopLoss?: number | null;
+  takeProfitAmount?: number | null;
+  stopLossAmount?: number | null;
+
+  // Signal context
+  signalType?: string | null;
+  confidence?: number | null;
+
+  // Indicators
+  rsi?: number | null;
+  bbUpper?: number | null;
+  bbMiddle?: number | null;
+  bbLower?: number | null;
+  atr?: number | null;
+
+  // Additional context
+  bbDistancePct?: number | null;
+  priceVsMiddle?: number | null;
+
+  // Balance tracking
+  balanceBefore?: number | null;
+
+  // Metadata
+  metadata?: string | null;
+
+  // Optional fields
+  expiryTime?: Date;
 }
 
 export interface TradeUpdate {
@@ -30,6 +55,7 @@ export interface TradeUpdate {
   payout?: number;
   result?: 'WIN' | 'LOSS';
   closedAt?: Date;
+  metadata?: string;
 }
 
 export interface StatsQuery {
@@ -94,18 +120,42 @@ export class StateManager extends EventEmitter {
       data: {
         contractId: input.contractId,
         type: input.type,
+        tradeMode: input.tradeMode,
         asset: input.asset,
         timeframe: input.timeframe,
         entryPrice: input.entryPrice,
         stake: input.stake,
         result: 'PENDING',
         expiryTime: input.expiryTime,
+
+        // CFD-specific
+        multiplier: input.multiplier,
+        takeProfit: input.takeProfit,
+        stopLoss: input.stopLoss,
+        takeProfitAmount: input.takeProfitAmount,
+        stopLossAmount: input.stopLossAmount,
+
+        // Signal context
         signalType: input.signalType,
+        confidence: input.confidence,
+
+        // Indicators
         rsi: input.rsi,
         bbUpper: input.bbUpper,
         bbMiddle: input.bbMiddle,
         bbLower: input.bbLower,
         atr: input.atr,
+
+        // Additional context
+        bbDistancePct: input.bbDistancePct,
+        priceVsMiddle: input.priceVsMiddle,
+
+        // Balance tracking
+        balanceBefore: input.balanceBefore,
+
+        // Metadata
+        metadata: input.metadata,
+
         strategyName: input.strategyName,
       },
     });
@@ -140,6 +190,7 @@ export class StateManager extends EventEmitter {
         result: update.result,
         profit,
         closedAt: update.closedAt || new Date(),
+        ...(update.metadata && { metadata: update.metadata }),
       },
     });
 

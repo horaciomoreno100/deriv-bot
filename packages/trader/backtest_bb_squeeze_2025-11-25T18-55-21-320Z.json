@@ -1,0 +1,179 @@
+[
+  {
+    "symbol": "frxEURUSD",
+    "totalTrades": 1,
+    "wonTrades": 1,
+    "lostTrades": 0,
+    "winRate": 100,
+    "totalProfit": 0.21547080370616978,
+    "totalLoss": 0,
+    "netProfit": 0.2154708037069213,
+    "roi": 0.0021547080370692127,
+    "profitFactor": null,
+    "avgWin": 0.21547080370616978,
+    "avgLoss": 0,
+    "maxDrawdown": 0,
+    "sharpeRatio": 0,
+    "trades": [
+      {
+        "id": "frxEURUSD_1761050040000_1764096918998",
+        "asset": "frxEURUSD",
+        "direction": "PUT",
+        "entryPrice": 1.16025,
+        "entryTime": 1761050040000,
+        "exitPrice": 1.16,
+        "exitTime": 1761050100000,
+        "stake": 1000,
+        "profit": 0.21547080370616978,
+        "result": "WIN",
+        "exitReason": "BB_MIDDLE",
+        "metadata": {
+          "price": 1.16025,
+          "bbUpper": "1.16",
+          "bbMiddle": "1.16",
+          "bbLower": "1.16",
+          "kcUpper": "1.16",
+          "kcLower": "1.16",
+          "kcMultiplier": 1.5,
+          "rsi": "35.7",
+          "rsiPeriod": 14,
+          "breakoutType": "BELOW",
+          "tpPrice": 1.155609,
+          "slPrice": 1.1625705,
+          "tpPct": 0.004,
+          "slPct": 0.002,
+          "smartExit": "Exit at BB_Middle: 1.16"
+        }
+      }
+    ],
+    "equity": [
+      10000,
+      10000.215470803707,
+      10001.771790405419,
+      9999.974755713725
+    ],
+    "timestamps": [
+      1761050100000,
+      1761043980000,
+      1761044520000
+    ]
+  },
+  {
+    "symbol": "frxGBPUSD",
+    "totalTrades": 1,
+    "wonTrades": 1,
+    "lostTrades": 0,
+    "winRate": 100,
+    "totalProfit": 1.771790405418526,
+    "totalLoss": 0,
+    "netProfit": 1.7717904054188693,
+    "roi": 0.01771790405418869,
+    "profitFactor": null,
+    "avgWin": 1.771790405418526,
+    "avgLoss": 0,
+    "maxDrawdown": 0,
+    "sharpeRatio": 0,
+    "trades": [
+      {
+        "id": "frxGBPUSD_1761043920000_1764096919803",
+        "asset": "frxGBPUSD",
+        "direction": "CALL",
+        "entryPrice": 1.33763,
+        "entryTime": 1761043920000,
+        "exitPrice": 1.34,
+        "exitTime": 1761043980000,
+        "stake": 1000,
+        "profit": 1.771790405418526,
+        "result": "WIN",
+        "exitReason": "BB_MIDDLE",
+        "metadata": {
+          "price": 1.33763,
+          "bbUpper": "1.34",
+          "bbMiddle": "1.34",
+          "bbLower": "1.34",
+          "kcUpper": "1.34",
+          "kcLower": "1.34",
+          "kcMultiplier": 1.5,
+          "rsi": "57.2",
+          "rsiPeriod": 14,
+          "breakoutType": "ABOVE",
+          "tpPrice": 1.34298052,
+          "slPrice": 1.3349547400000001,
+          "tpPct": 0.004,
+          "slPct": 0.002,
+          "smartExit": "Exit at BB_Middle: 1.34"
+        }
+      }
+    ],
+    "equity": [
+      10000,
+      10000.215470803707,
+      10001.771790405419,
+      9999.974755713725
+    ],
+    "timestamps": [
+      1761050100000,
+      1761043980000,
+      1761044520000
+    ]
+  },
+  {
+    "symbol": "frxXAUUSD",
+    "totalTrades": 1,
+    "wonTrades": 0,
+    "lostTrades": 1,
+    "winRate": 0,
+    "totalProfit": 0,
+    "totalLoss": 0.025244286275075526,
+    "netProfit": -0.025244286274755723,
+    "roi": -0.0002524428627475572,
+    "profitFactor": 0,
+    "avgWin": 0,
+    "avgLoss": 0.025244286275075526,
+    "maxDrawdown": 0.0002524428627475572,
+    "sharpeRatio": 0,
+    "trades": [
+      {
+        "id": "frxXAUUSD_1761044340000_1764096920623",
+        "asset": "frxXAUUSD",
+        "direction": "PUT",
+        "entryPrice": 4254.23,
+        "entryTime": 1761044340000,
+        "exitPrice": 4258.8,
+        "exitTime": 1761044520000,
+        "stake": 23.5,
+        "profit": -0.025244286275075526,
+        "result": "LOSS",
+        "exitReason": "BB_MIDDLE",
+        "metadata": {
+          "price": 4254.23,
+          "bbUpper": "4262.47",
+          "bbMiddle": "4258.80",
+          "bbLower": "4255.13",
+          "kcUpper": "4262.71",
+          "kcLower": "4254.08",
+          "kcMultiplier": 1.5,
+          "rsi": "39.3",
+          "rsiPeriod": 14,
+          "breakoutType": "BELOW",
+          "tpPrice": 4237.2130799999995,
+          "slPrice": 4262.73846,
+          "tpPct": 0.004,
+          "slPct": 0.002,
+          "smartExit": "Exit at BB_Middle: 4258.80"
+        }
+      }
+    ],
+    "equity": [
+      10000,
+      10000.215470803707,
+      10001.771790405419,
+      9999.974755713725
+    ],
+    "timestamps": [
+      1761050100000,
+      1761043980000,
+      1761044520000
+    ]
+  }
+]

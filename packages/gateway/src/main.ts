@@ -31,6 +31,7 @@ interface GatewayConfig {
   derivAppId: number;
   derivApiToken: string;
   derivEndpoint: string;
+  derivAccount: string; // Account loginid or 'current' (default)
 
   // Gateway Server
   gatewayPort: number;
@@ -51,12 +52,14 @@ function loadConfig(): GatewayConfig {
   console.log(`  DERIV_APP_ID: ${process.env.DERIV_APP_ID || 'NOT SET'}`);
   console.log(`  DERIV_API_TOKEN: ${process.env.DERIV_API_TOKEN ? 'SET (length: ' + process.env.DERIV_API_TOKEN.length + ')' : 'NOT SET'}`);
   console.log(`  DERIV_ENDPOINT: ${process.env.DERIV_ENDPOINT || 'NOT SET'}`);
+  console.log(`  DERIV_ACCOUNT: ${process.env.DERIV_ACCOUNT || 'current (default)'}`);
 
   return {
     // Deriv API
     derivAppId: parseInt(process.env.DERIV_APP_ID || '1089', 10),
     derivApiToken: process.env.DERIV_API_TOKEN || '',
     derivEndpoint: process.env.DERIV_ENDPOINT || 'wss://ws.derivws.com/websockets/v3',
+    derivAccount: process.env.DERIV_ACCOUNT || 'current',
 
     // Gateway Server
     gatewayPort: parseInt(process.env.GATEWAY_PORT || '3000', 10),
@@ -100,6 +103,7 @@ class Gateway {
       appId: config.derivAppId,
       endpoint: config.derivEndpoint,
       apiToken: config.derivApiToken,
+      defaultAccount: config.derivAccount,
     });
 
     // Initialize GatewayServer
@@ -108,15 +112,16 @@ class Gateway {
       host: config.gatewayHost,
     });
 
-    // Initialize MarketDataCache
+    // Get EventBus singleton (needed for MarketDataCache)
+    this.eventBus = EventBus.getInstance();
+
+    // Initialize MarketDataCache with EventBus
     this.marketCache = new MarketDataCache({
       maxTicksPerAsset: config.maxTicksPerAsset,
       maxCandlesPerAsset: config.maxCandlesPerAsset,
       enablePersistence: config.enablePersistence,
+      eventBus: this.eventBus,
     });
-
-    // Get EventBus singleton
-    this.eventBus = EventBus.getInstance();
 
     // Initialize Prisma Client
     this.prisma = new PrismaClient();

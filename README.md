@@ -1,6 +1,6 @@
 # Deriv Bot
 
-Bot de trading automatizado para opciones binarias en Deriv con arquitectura modular, backtesting avanzado (Python/Backtrader) y ejecución en tiempo real (TypeScript).
+Bot de trading automatizado para opciones binarias en Deriv con arquitectura modular y ejecución en tiempo real (TypeScript).
 
 ## ✨ Estrategia Mean Reversion - Optimizada
 
@@ -13,29 +13,62 @@ Bot de trading automatizado para opciones binarias en Deriv con arquitectura mod
 
 **Status:** ✅ Sistema funcionando en Demo - Listo para Forward Testing
 
+## 🤖 NUEVO: AI-Enhanced Signal Analysis
+
+Sistema de análisis basado en IA que mejora la calidad de señales mediante:
+
+- **Detección de Régimen de Mercado** (trending, ranging, reversal, volatility)
+- **Signal Quality Scoring** (0-100) con 6 componentes
+- **Ajustes Dinámicos** de TP/SL según volatilidad
+- **Filtrado Inteligente** rechaza señales de baja calidad
+
+**Resultado esperado**: Win rate +10-15%, Profit factor +30-50%
+
+### 🔍 AI Observer (Recomendado - NO interfiere con tu sistema)
+
+Corre en **paralelo** con tu trader actual, analiza señales sin modificar nada:
+
+```bash
+# Terminal 1: Tu trader actual (corriendo normalmente)
+# Terminal 2: AI Observer (nuevo - solo observa y reporta)
+cd packages/trader
+SYMBOL=R_10,R_25,R_50,R_75,R_100 npx tsx src/scripts/run-ai-observer.ts
+```
+
+Al terminar, genera reporte completo:
+
+- Threshold óptimo para tu estrategia
+- Regímenes problemáticos (cuándo NO tradear)
+- Distribución de calidad de señales
+- Top 5 mejores/peores señales
+
+📖 Ver: [AI_OBSERVER_GUIDE.md](./AI_OBSERVER_GUIDE.md) | [AI_ANALYSIS_SUMMARY.md](./AI_ANALYSIS_SUMMARY.md) | [AI_ANALYSIS_GUIDE.md](./AI_ANALYSIS_GUIDE.md)
+
 ## 🏗️ Arquitectura
 
 Sistema modular con Gateway centralizado:
 
 ```
 ┌─────────┐      ┌─────────┐      ┌──────────┐
-│  REPL   │─────▶│ Gateway │─────▶│  Deriv   │
-│ (Ink)   │      │  (WS)   │      │   API    │
+│ Web UI  │─────▶│ Gateway │─────▶│  Deriv   │
+│(Charts) │      │  (WS)   │      │   API    │
 └─────────┘      └─────────┘      └──────────┘
-                      │
-                      ▼
-                 ┌─────────┐
-                 │ Trader  │
-                 │Strategy │
+     │                │
+┌─────────┐           ▼
+│  REPL   │      ┌─────────┐
+│ (CLI)   │      │ Trader  │
+└─────────┘      │Strategy │
                  └─────────┘
 ```
+
+**Nuevo**: 🎨 **Web UI Dashboard** con gráfico de velas en tiempo real, indicadores técnicos y marcadores de trades.
 
 ## 🚀 Quick Start
 
 ### Prerrequisitos
 - Node.js >= 18
 - pnpm >= 8
-- Python 3.11+ (solo para backtesting)
+
 
 ### Instalación
 
@@ -66,12 +99,43 @@ GATEWAY_URL=ws://localhost:3000
 
 ### Ejecutar el Sistema
 
+#### 🎨 Opción 1: Web UI Dashboard (Recomendado)
+
+Dashboard web con gráfico de velas en tiempo real:
+
+```bash
+# Script automático que inicia Gateway + Web UI
+./start-dashboard.sh
+
+# O manualmente:
+# Terminal 1: Gateway
+pnpm gateway
+
+# Terminal 2: Web UI
+pnpm web-ui
+```
+
+Abre tu navegador en: **http://localhost:5173**
+
+Ver: [QUICKSTART_WEB_UI.md](./QUICKSTART_WEB_UI.md) para guía completa.
+
+#### 🖥️ Opción 2: CLI/REPL (Terminal)
+
 **Terminal 1 - Gateway:**
 ```bash
 pnpm --filter @deriv-bot/gateway dev
 ```
 
-**Terminal 2 - Trader (Demo):**
+**Terminal 2 - REPL:**
+```bash
+pnpm --filter @deriv-bot/cli dev
+```
+
+#### 🤖 Ejecutar Estrategia de Trading
+
+Para ver trades automáticos (funciona con ambas opciones):
+
+**Terminal 3:**
 ```bash
 pnpm --filter @deriv-bot/trader demo
 ```
@@ -106,14 +170,18 @@ deriv-bot/
 │   │       ├── risk/          # Risk manager
 │   │       └── scripts/       # run-mean-reversion-demo-v2.ts
 │   │
-│   ├── shared/             # 📦 Shared types (Candle, Tick, Trade)
+│   ├── web-ui/             # 🎨 Web Dashboard (Nuevo!)
+│   │   └── src/
+│   │       ├── components/    # CandlestickChart, TradingDashboard
+│   │       ├── hooks/         # useGatewayConnection
+│   │       └── types/         # Type definitions
 │   │
-│   └── binary_backtester/  # 🐍 Python Backtesting (Backtrader)
-│       ├── strategies/        # Mean Reversion optimizada
-│       ├── run_mean_reversion_test_v2.py
-│       └── requirements.txt
+│   ├── cli/                # 🖥️  Terminal REPL Dashboard
+│   │
+│   └── shared/             # 📦 Shared types (Candle, Tick, Trade)
 │
 ├── .env                    # ⚙️  Configuración (tokens, endpoints)
+├── start-dashboard.sh      # 🚀 Script de inicio Web UI
 └── README.md              # 📖 Este archivo
 ```
 
@@ -125,7 +193,7 @@ Toda la documentación está en [`/docs`](./docs):
 - **[RUN_DEMO.md](./docs/RUN_DEMO.md)** - Guía para ejecutar el demo
 - **[FINAL_STATUS.md](./docs/FINAL_STATUS.md)** - Estado actual del proyecto
 - [DERIV_API_ANALYSIS.md](./docs/DERIV_API_ANALYSIS.md) - Análisis del API de Deriv
-- [BINARY_BACKTESTER_PACKAGE.md](./docs/BINARY_BACKTESTER_PACKAGE.md) - Guía de backtesting
+
 
 Ver todos los docs: [docs/INDEX.md](./docs/INDEX.md)
 
@@ -173,12 +241,6 @@ pnpm --filter @deriv-bot/trader dev       # Modo desarrollo
 pnpm --filter @deriv-bot/trader build     # Build para producción
 ```
 
-### Backtesting (Python)
-```bash
-cd packages/binary_backtester
-source venv/bin/activate
-python run_mean_reversion_test_v2.py
-```
 
 ## 🎯 Mean Reversion Strategy
 
@@ -231,7 +293,7 @@ pnpm --filter @deriv-bot/shared dev
 ### ✅ Completado
 - [x] Arquitectura Gateway + Trader
 - [x] Conexión con Deriv API (WebSocket)
-- [x] Sistema de backtesting Python/Backtrader
+
 - [x] Optimización Mean Reversion (63.87% WR, 54.09% ROI)
 - [x] Implementación TypeScript de estrategia
 - [x] Market data cache + candle builder

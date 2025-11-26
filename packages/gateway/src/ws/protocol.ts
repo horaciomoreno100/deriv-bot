@@ -4,61 +4,27 @@
  * This defines all message types exchanged between Gateway and Trader
  */
 
-import type { Tick, Symbol, Balance } from '@deriv-bot/shared';
+import type {
+  Tick,
+  Symbol,
+  Balance,
+  BaseMessage,
+  CommandMessage,
+  ResponseMessage,
+  EventMessage,
+  ErrorMessage,
+  GatewayMessage,
+} from '@deriv-bot/shared';
 
-/**
- * Base message structure
- */
-export interface BaseMessage {
-  type: string;
-  timestamp?: number;
-}
-
-/**
- * Command message from Trader to Gateway
- */
-export interface CommandMessage extends BaseMessage {
-  type: 'command';
-  command: string;
-  params?: Record<string, any>;
-  requestId?: string;
-}
-
-/**
- * Response message from Gateway to Trader
- */
-export interface ResponseMessage extends BaseMessage {
-  type: 'response';
-  requestId?: string;
-  success: boolean;
-  data?: any;
-  error?: {
-    code: string;
-    message: string;
-  };
-}
-
-/**
- * Event message from Gateway to Trader (broadcast)
- */
-export interface EventMessage extends BaseMessage {
-  type: 'tick' | 'balance' | 'trade:executed' | 'trade:result' | 'instruments' | 'historical_data' | 'candle_update' | 'candle_closed';
-  data: any;
-}
-
-/**
- * Error message
- */
-export interface ErrorMessage extends BaseMessage {
-  type: 'error';
-  code: string;
-  message: string;
-}
-
-/**
- * Message types union
- */
-export type GatewayMessage = CommandMessage | ResponseMessage | EventMessage | ErrorMessage;
+// Re-export the shared protocol types
+export type {
+  BaseMessage,
+  CommandMessage,
+  ResponseMessage,
+  EventMessage,
+  ErrorMessage,
+  GatewayMessage,
+};
 
 // ============================================
 // Command Payloads
