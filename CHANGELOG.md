@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.4.0](///compare/v0.3.0...v0.4.0) (2025-11-27)
+
+### Features
+
+* add OpenObserve logging to all trader services 516b56d
+* add Slack alerts for crash detection and trade notifications e1e974f
+* add Telegram alerts for connection events aef28af
+* improve OpenObserve observability with per-service stream support f8d090a
+* integrate OpenObserve logging in Gateway, Trader, and Telegram c7a5416
+* **telegram:** add /signals command to view signal proximities c3ed8db
+* **telegram:** add server monitoring commands ad8ed72
+* **trader:** Add HybridMTFStrategy with multi-timeframe analysis e646ab9
+
+### Bug Fixes
+
+* add diagnostic logging for OpenObserve logger f500189
+* add dotenv dependency to shared package and fix unused variable 8a1eacf
+* auto-resubscribe to assets on gateway reconnection c7bcc3f
+* ensure all services load .env from project root 5adbd5f
+* ensure telegram logger initializes after env vars are loaded b0ed298
+* **gateway:** add force re-subscription for stale tick streams 8450ca9
+* **telegram:** fix proximity bar calculation (was 0-100, not 0-1) a4ff32e
+* **telegram:** fix trade notification showing stake as entry price 9616e38
+* update run-bb-squeeze-mr to use loadEnvFromRoot 3fc695d
+
 ## [0.3.0](///compare/v0.2.1...v0.3.0) (2025-11-26)
 
 ### Features
