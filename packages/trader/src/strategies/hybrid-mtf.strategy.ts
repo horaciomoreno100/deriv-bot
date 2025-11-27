@@ -467,8 +467,28 @@ export class HybridMTFStrategy extends BaseStrategy {
         // Detect regime
         const regime = this.detectRegime(candles15m);
         if (!regime) {
-            console.log(`[HybridMTF.getSignalReadiness] Could not detect regime (need ${this.params.ctxSmaPeriod + 1} 15m candles, have ${candles15m.length})`);
-            return null;
+            // Return partial readiness info even if regime can't be detected yet
+            const needed15m = this.params.ctxSmaPeriod + 1;
+            const have15m = candles15m.length;
+            const progress = Math.min(100, Math.round((have15m / needed15m) * 100));
+            
+            return {
+                asset,
+                direction: 'neutral' as const,
+                overallProximity: progress,
+                criteria: [
+                    {
+                        name: '15m Context (Regime Detection)',
+                        current: have15m,
+                        target: needed15m,
+                        unit: 'candles',
+                        passed: false,
+                        distance: needed15m - have15m,
+                    },
+                ],
+                readyToSignal: false,
+                missingCriteria: [`Need ${needed15m} 15m candles for regime detection (have ${have15m}, ${progress}% complete)`],
+            };
         }
 
         // Get 5m RSI
