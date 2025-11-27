@@ -159,10 +159,10 @@ function generateMockTrades(
   for (let i = 30; i < candles.length - 10; i += 15 + Math.floor(Math.random() * 20)) {
     const entryCandle = candles[i];
     if (!entryCandle) continue;
-    
+
     const rsiValue = rsi[i];
     if (rsiValue === undefined) continue;
-    
+
     const direction = rsiValue < 40 ? 'CALL' : rsiValue > 60 ? 'PUT' : null;
 
     if (!direction) continue;
@@ -197,7 +197,7 @@ function generateMockTrades(
     const bbUpperVal = bb.upper[i] ?? entryCandle.close;
     const bbMiddleVal = bb.middle[i] ?? entryCandle.close;
     const bbLowerVal = bb.lower[i] ?? entryCandle.close;
-    
+
     const signalSnapshot = createSnapshot(entryCandle, i, {
       rsi: rsiVal,
       bbUpper: bbUpperVal,
@@ -219,14 +219,12 @@ function generateMockTrades(
     const exitBbUpper = bb.upper[exitIndex] ?? exitCandle.close;
     const exitBbMiddle = bb.middle[exitIndex] ?? exitCandle.close;
     const exitBbLower = bb.lower[exitIndex] ?? exitCandle.close;
-    
+
     const exitSnapshot = createSnapshot(exitCandle, exitIndex, {
       rsi: exitRsi,
       bbUpper: exitBbUpper,
       bbMiddle: exitBbMiddle,
       bbLower: exitBbLower,
-      bbMiddle: bb.middle[exitIndex],
-      bbLower: bb.lower[exitIndex],
       squeezeOn: Math.random() > 0.6,
     });
 
