@@ -288,15 +288,46 @@ async function main() {
   // Load historical candles first (before setting up signal proximity)
   console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
   // Need enough candles for 15m context: SMA(50) needs 50 15m candles = 50*15 = 750 1m candles
-  // Add buffer: 800 candles to ensure we have enough for resampling
-  const HISTORICAL_CANDLES = 800;
+  // API limit is ~500 candles per call, so make multiple calls
+  const HISTORICAL_CANDLES_NEEDED = 800;
+  const API_LIMIT = 500;
 
   for (const symbol of SYMBOLS) {
     try {
-      const candles = await gatewayClient.getCandles(symbol, '1m', HISTORICAL_CANDLES);
-      console.log(`   ✅ ${symbol}: ${candles.length} candles`);
-      candleBuffers.set(symbol, [...candles]); // Store candles for strategy
-      warmUpCandlesPerAsset.set(symbol, candles.length);
+      const allCandles: Candle[] = [];
+      let loaded = 0;
+      let attempts = 0;
+      const maxAttempts = 3; // Try up to 3 times to get enough candles
+
+      while (loaded < HISTORICAL_CANDLES_NEEDED && attempts < maxAttempts) {
+        const remaining = HISTORICAL_CANDLES_NEEDED - loaded;
+        const count = Math.min(API_LIMIT, remaining);
+        const candles = await gatewayClient.getCandles(symbol, '1m', count);
+        
+        if (candles.length === 0) break; // No more candles available
+        
+        // Merge candles (remove duplicates by epoch)
+        const existingEpochs = new Set(allCandles.map(c => c.epoch));
+        const newCandles = candles.filter(c => !existingEpochs.has(c.epoch));
+        allCandles.push(...newCandles);
+        
+        // Sort by epoch (oldest first)
+        allCandles.sort((a, b) => a.epoch - b.epoch);
+        
+        // Keep only the most recent HISTORICAL_CANDLES_NEEDED candles
+        if (allCandles.length > HISTORICAL_CANDLES_NEEDED) {
+          allCandles.splice(0, allCandles.length - HISTORICAL_CANDLES_NEEDED);
+        }
+        
+        loaded = allCandles.length;
+        attempts++;
+        
+        if (candles.length < count) break; // API returned fewer candles than requested
+      }
+
+      console.log(`   ✅ ${symbol}: ${allCandles.length} candles (${attempts} attempt(s))`);
+      candleBuffers.set(symbol, allCandles);
+      warmUpCandlesPerAsset.set(symbol, allCandles.length);
     } catch (error: any) {
       console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
       candleBuffers.set(symbol, []);
