@@ -671,8 +671,6 @@ async function main() {
     }
 
     const winRate = totalTrades > 0 ? (wonTrades / totalTrades) * 100 : 0;
-    const stats = strategyAccountant.getStats(STRATEGY_NAME);
-    const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
 
     console.log(`\n📊 STATISTICS:`);
     console.log(`   Total: ${totalTrades} | Wins: ${wonTrades} | Losses: ${lostTrades}`);
