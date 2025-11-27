@@ -459,7 +459,7 @@ export function formatServerStatus(status: {
 }
 
 /**
- * Format logs
+ * Format logs for Telegram (max 4096 chars)
  */
 export function formatLogs(data: {
   logs: Array<{
@@ -474,21 +474,42 @@ export function formatLogs(data: {
     return `📋 *Logs*\n\n_No logs available_`;
   }
 
-  let message = `📋 *Logs* (${data.service}, last ${data.lines} lines)\n\n`;
+  // Telegram max message is 4096 chars, leave room for header
+  const MAX_TOTAL_LENGTH = 3800;
+  const MAX_PER_LOG = 1500;
+
+  let message = `📋 *Logs* (${data.service})\n\n`;
 
   for (const log of data.logs) {
-    const typeEmoji = log.type === 'error' ? '❌' : '📄';
-    message += `${typeEmoji} *${log.service}* (${log.type}):\n`;
-
-    // Truncate very long logs and escape markdown
-    let content = log.content;
-    if (content.length > 3000) {
-      content = content.slice(-3000) + '\n...(truncated)';
+    // Check if we're approaching the limit
+    if (message.length > MAX_TOTAL_LENGTH) {
+      message += `\n_...more logs truncated_`;
+      break;
     }
 
-    // Split into lines and take last N
-    const lines = content.split('\n').slice(-30);
-    message += `\`\`\`\n${lines.join('\n')}\n\`\`\`\n\n`;
+    const typeEmoji = log.type === 'error' ? '❌' : '📄';
+    let content = log.content || '';
+
+    // Take only last N lines and limit total chars
+    const lines = content.split('\n').filter(l => l.trim()).slice(-15);
+    content = lines.join('\n');
+
+    if (content.length > MAX_PER_LOG) {
+      content = '...' + content.slice(-MAX_PER_LOG);
+    }
+
+    // Skip if empty
+    if (!content.trim()) continue;
+
+    const logBlock = `${typeEmoji} *${log.service}* (${log.type}):\n\`\`\`\n${content}\n\`\`\`\n\n`;
+
+    // Check if adding this would exceed limit
+    if (message.length + logBlock.length > MAX_TOTAL_LENGTH) {
+      message += `\n_...truncated (message too long)_`;
+      break;
+    }
+
+    message += logBlock;
   }
 
   return message;
