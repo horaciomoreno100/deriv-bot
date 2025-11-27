@@ -676,17 +676,19 @@ export class GatewayClient extends EventEmitter {
 
   /**
    * Re-subscribe to all tracked assets after reconnection
+   * @param force - If true, forces re-subscription even if Gateway thinks it's already subscribed
+   *                This is useful when the Deriv connection was lost but Gateway state wasn't cleared
    */
-  private async resubscribeAssets(): Promise<void> {
+  private async resubscribeAssets(force: boolean = false): Promise<void> {
     if (this.subscribedAssets.size === 0) {
       return;
     }
 
     const assets = Array.from(this.subscribedAssets);
-    this.log(`Re-subscribing to ${assets.length} asset(s): ${assets.join(', ')}`);
+    this.log(`Re-subscribing to ${assets.length} asset(s): ${assets.join(', ')}${force ? ' (FORCED)' : ''}`);
 
     try {
-      await this.sendCommand('follow', { assets });
+      await this.sendCommand('follow', { assets, force });
       this.log(`Successfully re-subscribed to ${assets.length} asset(s)`);
       this.emit('resubscribed' as any, { assets });
     } catch (error) {
@@ -741,11 +743,12 @@ export class GatewayClient extends EventEmitter {
 
     if (staleAssets.length > 0) {
       this.log(`Health check: ${staleAssets.length} stale asset(s) detected: ${staleAssets.join(', ')}`);
-      this.log('Triggering re-subscription...');
+      this.log('Triggering FORCED re-subscription...');
       this.emit('health:stale' as any, { staleAssets });
 
-      // Re-subscribe to restore tick stream
-      this.resubscribeAssets().catch(error => {
+      // Force re-subscribe to restore tick stream
+      // Using force=true because Gateway may think it's subscribed but Deriv connection may be stale
+      this.resubscribeAssets(true).catch(error => {
         this.log('Health check re-subscription failed:', error);
       });
     }

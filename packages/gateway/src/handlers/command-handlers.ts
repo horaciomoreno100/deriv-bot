@@ -123,6 +123,9 @@ export function unregisterTrader(ws: WebSocket): void {
 /**
  * Handle 'follow' command
  * Subscribe to real-time ticks for assets
+ *
+ * @param force - If true, force re-subscription even if already subscribed
+ *                Useful when health check detects stale tick streams
  */
 export async function handleFollowCommand(
   ws: WebSocket,
@@ -130,16 +133,28 @@ export async function handleFollowCommand(
   context: CommandHandlerContext
 ): Promise<void> {
   const { derivClient, marketCache, gatewayServer, eventBus } = context;
-  const { assets } = command.params as { assets: string[] };
+  const { assets, force } = command.params as { assets: string[]; force?: boolean };
 
-  console.log(`[handleFollowCommand] Starting follow for assets:`, assets);
+  console.log(`[handleFollowCommand] Starting follow for assets:`, assets, force ? '(FORCED)' : '');
 
   try {
     for (const asset of assets) {
-      // Skip if already subscribed
-      if (activeSubscriptions.has(asset)) {
+      // Skip if already subscribed (unless force is true)
+      if (activeSubscriptions.has(asset) && !force) {
         console.log(`[handleFollowCommand] Already subscribed to ${asset}, skipping`);
         continue;
+      }
+
+      // If forcing, unsubscribe first
+      if (force && activeSubscriptions.has(asset)) {
+        const oldSubscriptionId = activeSubscriptions.get(asset);
+        console.log(`[handleFollowCommand] Force mode: unsubscribing ${asset} (sub ID: ${oldSubscriptionId})`);
+        try {
+          await derivClient.unsubscribe(oldSubscriptionId!);
+        } catch (error) {
+          console.log(`[handleFollowCommand] Could not unsubscribe ${asset} (may already be stale):`, error);
+        }
+        activeSubscriptions.delete(asset);
       }
 
       console.log(`[handleFollowCommand] Subscribing to ${asset}...`);

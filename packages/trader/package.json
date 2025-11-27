@@ -49,7 +49,9 @@
     "backtest:test-improvements": "tsx src/backtest/test-improvements.ts",
     "dashboard": "tsx src/scripts/run-dashboard-simple.ts",
     "dashboard:legacy": "tsx src/scripts/run-dashboard.ts",
-    "test:validation": "tsx src/scripts/run-validation-test.ts"
+    "test:validation": "tsx src/scripts/run-validation-test.ts",
+    "analyze:forex": "tsx src/scripts/forex-market-characterization.ts",
+    "analyze:regime": "tsx src/scripts/analyze-market-regimes.ts"
   },
   "dependencies": {
     "@deriv-bot/gateway": "workspace:*",
