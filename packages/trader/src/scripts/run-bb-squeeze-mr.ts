@@ -151,8 +151,7 @@ async function main() {
   const adapter = new UnifiedTradeAdapter(gatewayClient, TRADE_MODE);
 
   // Initialize TradeManager
-  const MONITORED_SYMBOLS = ['R_10', 'R_25', 'R_50', 'R_75', 'R_100'];
-  tradeManager = new TradeManager(gatewayClient, adapter, MONITORED_SYMBOLS, {
+  tradeManager = new TradeManager(gatewayClient, adapter, SYMBOLS, {
     pollingInterval: 30000,
     smartExit: {
       maxTradeDuration: 40 * 60 * 1000,
@@ -648,20 +647,12 @@ async function main() {
       console.log(`   ❌ TRADE LOST`);
     }
 
-    // Get real balance from API (most accurate)
-    try {
-      const balanceInfo = await gatewayClient.getBalance();
-      if (balanceInfo) {
-        balance = balanceInfo.amount;
-      }
-    } catch (error) {
-      // Fallback: calculate locally
-      const stakeReturned = trade.stake || 0;
-      balance += stakeReturned + profit;
-    }
+    // Get strategy balance from accountant
+    const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
+    const stats = strategyAccountant.getStats(STRATEGY_NAME);
 
     console.log(`   P&L: $${profit.toFixed(2)}`);
-    console.log(`   Balance: $${balance.toFixed(2)}`);
+    console.log(`   Strategy Balance: $${strategyBalance.toFixed(2)}`);
 
     try {
       await gatewayClient.updateTrade({
