@@ -400,9 +400,21 @@ async function main() {
     console.log('🔄 [GatewayClient] Attempting to reconnect...');
   });
 
-  gatewayClient.on('connected', () => {
+  gatewayClient.on('connected', async () => {
     console.log('✅ [GatewayClient] Reconnected to Gateway');
     telegramAlerter.sendConnectionAlert('connected', 'Successfully reconnected to Gateway server');
+
+    // Re-register trader with Gateway after reconnection
+    try {
+      const registration = await gatewayClient.registerTrader({
+        name: 'BB-Squeeze-MR Trader',
+        strategy: 'BB-Squeeze-MR',
+        symbols: SYMBOLS,
+      });
+      console.log(`📝 [Reconnect] Re-registered with Gateway: ${registration.traderId}`);
+    } catch (error) {
+      console.log('⚠️  [Reconnect] Could not re-register with Gateway');
+    }
   });
 
   gatewayClient.on('resubscribed' as any, (data: { assets: string[] }) => {
