@@ -68,15 +68,10 @@ En el servidor, agregar el nuevo proceso PM2:
 ssh root@tu-servidor-ip
 cd /opt/apps/deriv-bot
 
-# Iniciar KELTNER_MR como proceso PM2
-pm2 start pnpm --name "trader-keltner-mr" -- \
-  --filter @deriv-bot/trader demo:keltner-mr
-
-# O usando el comando directo (después de build)
-pm2 start "node packages/trader/dist/scripts/run-keltner-mr.js" \
-  --name "trader-keltner-mr" \
-  --cwd /opt/apps/deriv-bot \
-  --env production
+# Iniciar KELTNER_MR como proceso PM2 (usando pnpm como el otro trader)
+pm2 start "pnpm" --name "trader-keltner-mr" -- \
+  --filter "@deriv-bot/trader" "demo:keltner-mr" \
+  --cwd /opt/apps/deriv-bot
 
 # Guardar configuración PM2
 pm2 save

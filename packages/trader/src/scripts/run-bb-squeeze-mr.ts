@@ -17,17 +17,25 @@ import { BBSqueezeMRStrategy } from '../strategies/bb-squeeze-mr.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
+import { StrategyAccountant } from '../accounting/strategy-accountant.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
+import dotenv from 'dotenv';
 
 // Load environment variables from project root
 loadEnvFromRoot();
+dotenv.config();
 
 // Configuration
+const STRATEGY_NAME = 'BB-SQUEEZE-MR';
 const TRADE_MODE: TradeMode = (process.env.TRADE_MODE as TradeMode) || 'cfd';
-const SYMBOLS_STR = process.env.SYMBOL || 'R_75,R_100';
+// Strategy optimized specifically for R_75 (Mean Reversion works best)
+const SYMBOLS_STR = process.env.SYMBOL || 'R_75';
 const SYMBOLS = SYMBOLS_STR.split(',').map(s => s.trim()).filter(s => s.length > 0);
 const INITIAL_BALANCE = parseFloat(process.env.INITIAL_CAPITAL || '10000');
 const ACCOUNT_LOGINID = process.env.ACCOUNT_LOGINID;
+
+// Strategy allocation (per-strategy balance)
+const STRATEGY_ALLOCATION = parseFloat(process.env.STRATEGY_ALLOCATION || '1000');
 
 // Risk parameters
 const RISK_PERCENTAGE_CFD = parseFloat(process.env.RISK_PERCENTAGE || '0.02'); // 2% for CFDs
@@ -40,7 +48,6 @@ const currentCandles = new Map<string, Partial<Candle>>();
 const lastCandleTimes = new Map<string, number>();
 
 // State
-let balance = INITIAL_BALANCE;
 let totalTrades = 0;
 let wonTrades = 0;
 let lostTrades = 0;
@@ -56,6 +63,9 @@ let tradeManager: TradeManager;
 
 // Trade Execution Service
 let tradeExecutionService: TradeExecutionService;
+
+// Strategy Accountant
+let strategyAccountant: StrategyAccountant;
 
 // Telegram Alerter for connection events
 const telegramAlerter = getTelegramAlerter({ serviceName: 'BB-Squeeze-MR' });
@@ -106,15 +116,27 @@ function processTick(tick: Tick): Candle | null {
 
 async function main() {
   console.log('='.repeat(80));
-  console.log('🔄 BOLLINGER BAND SQUEEZE MEAN REVERSION STRATEGY - DEMO');
+  console.log(`🎯 ${STRATEGY_NAME} - MEAN REVERSION STRATEGY`);
   console.log('='.repeat(80));
   console.log();
   console.log(`📊 Configuration:`);
+  console.log(`   Strategy: ${STRATEGY_NAME}`);
   console.log(`   Symbols: ${SYMBOLS.join(', ')}`);
+  if (!SYMBOLS.includes('R_75')) {
+    console.log(`   ⚠️  WARNING: Strategy optimized for R_75 only!`);
+    console.log(`   ⚠️  Other symbols not tested - use at your own risk`);
+  }
   console.log(`   Timeframe: ${TIMEFRAME}s (1min)`);
   console.log(`   Trade Mode: ${TRADE_MODE.toUpperCase()}`);
-  console.log(`   Balance: $${INITIAL_BALANCE.toFixed(2)}`);
+  console.log(`   Strategy Allocation: $${STRATEGY_ALLOCATION.toFixed(2)}`);
+  console.log(`   Total Account Balance: $${INITIAL_BALANCE.toFixed(2)}`);
   console.log(`   Warm-up: ${WARM_UP_CANDLES_REQUIRED} candles required`);
+  console.log();
+
+  // Initialize Strategy Accountant
+  strategyAccountant = new StrategyAccountant();
+  strategyAccountant.allocate(STRATEGY_NAME, STRATEGY_ALLOCATION);
+  console.log(`💰 Allocated $${STRATEGY_ALLOCATION} to ${STRATEGY_NAME}`);
   console.log();
 
   // Initialize Gateway Client
@@ -299,12 +321,39 @@ async function main() {
       return;
     }
 
+    // Check strategy balance using StrategyAccountant
+    const riskContext = strategyAccountant.getRiskContext(STRATEGY_NAME);
+    if (!riskContext || riskContext.balance <= 0) {
+      console.log(`\n⚠️  SEÑAL IGNORADA - Insufficient strategy balance`);
+      console.log(`   Available: $${riskContext?.balance.toFixed(2) || '0.00'}\n`);
+      return;
+    }
+
+    // Calculate stake based on strategy balance
+    const stakeAmount = Math.max(
+      1.0,
+      Math.min(
+        riskContext.balance * RISK_PERCENTAGE_CFD,
+        riskContext.balance * 0.10 // Max 10% of strategy balance
+      )
+    );
+
+    // Reserve stake
+    if (!strategyAccountant.reserveStake(STRATEGY_NAME, stakeAmount)) {
+      console.log(`\n⚠️  SEÑAL IGNORADA - Could not reserve stake`);
+      return;
+    }
+
+    strategyAccountant.incrementOpenPositions(STRATEGY_NAME);
+
     console.log(`\n${'='.repeat(80)}`);
-    console.log(`🎯 SEÑAL DETECTADA - EJECUTANDO TRADE (MEAN REVERSION)`);
+    console.log(`🎯 ${STRATEGY_NAME} SIGNAL - EXECUTING TRADE`);
     console.log(`${'='.repeat(80)}`);
     console.log(`   Direction: ${signal.direction}`);
     console.log(`   Confidence: ${(signal.confidence * 100).toFixed(1)}%`);
     console.log(`   Asset: ${asset}`);
+    console.log(`   Stake: $${stakeAmount.toFixed(2)} (${(RISK_PERCENTAGE_CFD * 100).toFixed(1)}% of strategy balance)`);
+    console.log(`   Strategy Balance: $${riskContext.balance.toFixed(2)}`);
     console.log(`   Timestamp: ${new Date(signal.timestamp).toISOString()}`);
     if (signal.metadata) {
       console.log(`   Metadata:`, signal.metadata);
@@ -315,9 +364,10 @@ async function main() {
     const result = await tradeExecutionService.executeTrade(signal, asset);
     if (result.success) {
       totalTrades++;
-      if (result.stake) {
-        balance -= result.stake;
-      }
+    } else {
+      // Release stake if trade failed
+      strategyAccountant.releaseStake(STRATEGY_NAME, stakeAmount);
+      strategyAccountant.decrementOpenPositions(STRATEGY_NAME);
     }
   });
 
@@ -330,17 +380,17 @@ async function main() {
   try {
     const balanceInfo = await gatewayClient.getBalance();
     if (balanceInfo) {
-      balance = balanceInfo.amount;
-      console.log(`💰 Balance: $${balance.toFixed(2)}`);
+      console.log(`💰 Account Balance: $${balanceInfo.amount.toFixed(2)}`);
       if (balanceInfo.loginid) {
         console.log(`📋 Account: ${balanceInfo.loginid} (${balanceInfo.accountType})`);
       }
+      console.log(`💰 Strategy Allocation: $${STRATEGY_ALLOCATION.toFixed(2)}`);
       console.log();
-      engine.updateBalance(balance);
+      engine.updateBalance(balanceInfo.amount);
     }
   } catch (error) {
     console.warn('⚠️  Could not get balance\n');
-    engine.updateBalance(balance);
+    engine.updateBalance(INITIAL_BALANCE);
   }
 
   // Start TradeManager
@@ -491,17 +541,17 @@ async function main() {
           lostTrades++;
         }
 
-        // Get real balance from API (most accurate)
-        try {
-          const balanceInfo = await gatewayClient.getBalance();
-          if (balanceInfo) {
-            balance = balanceInfo.amount;
-          }
-        } catch (error) {
-          // Fallback: calculate locally
-          const stakeReturned = trade.stake || 0;
-          balance += stakeReturned + profit;
-        }
+        // Update accountant
+        const stake = trade.stake || 0;
+        strategyAccountant.recordTrade(STRATEGY_NAME, {
+          contractId: contractId,
+          symbol: trade.symbol,
+          direction: trade.direction,
+          stake,
+          profit,
+          timestamp: Date.now(),
+        });
+        strategyAccountant.decrementOpenPositions(STRATEGY_NAME);
 
         await gatewayClient.updateTrade({
           contractId: contractId,

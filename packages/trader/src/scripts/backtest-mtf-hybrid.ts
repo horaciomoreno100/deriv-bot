@@ -96,11 +96,13 @@ function loadCandles(asset: string, timeframe: string, days: string): Candle[] |
         join(process.cwd(), 'backtest-data', `${asset}_${timeframe}_${days}d.csv`),
         join(process.cwd(), 'packages', 'trader', 'backtest-data', `${asset}_${timeframe}_${days}d.csv`),
         join(process.cwd(), 'data', `${asset}_${timeframe}_${days}d.csv`),
+        join(process.cwd(), 'packages', 'trader', 'data', `${asset}_${timeframe}_${days}d.csv`),
         // Fallback for 1m -> 60s
         ...(timeframe === '1m' ? [
             join(process.cwd(), 'backtest-data', `${asset}_60s_${days}d.csv`),
             join(process.cwd(), 'packages', 'trader', 'backtest-data', `${asset}_60s_${days}d.csv`),
-            join(process.cwd(), 'data', `${asset}_60s_${days}d.csv`)
+            join(process.cwd(), 'data', `${asset}_60s_${days}d.csv`),
+            join(process.cwd(), 'packages', 'trader', 'data', `${asset}_60s_${days}d.csv`)
         ] : [])
     ];
 
