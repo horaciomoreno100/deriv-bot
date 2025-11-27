@@ -374,10 +374,18 @@ async function main() {
               console.log(`[Signal Proximity] ${symbol}: getSignalReadiness returned null`);
             }
           } catch (error: any) {
-            // Only log if it's not a connection error (will retry automatically)
-            if (!error.message?.includes('Not connected to Gateway') && !error.message?.includes('Not connected')) {
-              console.error(`[Signal Proximity] Error for ${symbol}:`, error.message || error);
+            // Silently skip connection errors - they're expected during reconnection
+            const errorMsg = error?.message || String(error || '');
+            const isConnectionError = 
+              errorMsg.includes('Not connected to Gateway') ||
+              errorMsg.includes('Not connected') ||
+              errorMsg.includes('Connection closed') ||
+              errorMsg.includes('WebSocket is not open');
+            
+            if (!isConnectionError) {
+              console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
             }
+            // Connection errors are silently ignored - will retry on next interval
           }
         } else {
           // Log when buffer is not ready (only once per symbol to avoid spam)
