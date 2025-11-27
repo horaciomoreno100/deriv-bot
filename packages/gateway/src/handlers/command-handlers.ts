@@ -57,6 +57,28 @@ interface RegisteredTrader {
 const registeredTraders = new Map<WebSocket, RegisteredTrader>();
 
 /**
+ * Signal Proximity Cache - stores latest proximity per asset
+ */
+interface SignalProximityEntry {
+  asset: string;
+  direction: 'call' | 'put' | 'neutral';
+  proximity: number;
+  criteria?: Array<{
+    name: string;
+    current: number;
+    target: number;
+    unit: string;
+    passed: boolean;
+    distance: number;
+  }>;
+  readyToSignal: boolean;
+  missingCriteria?: string[];
+  timestamp: number;
+}
+
+const signalProximityCache = new Map<string, SignalProximityEntry>(); // asset -> proximity
+
+/**
  * Trader info returned by getRegisteredTraders
  */
 interface TraderInfo {
@@ -1055,6 +1077,9 @@ export async function handleCommand(
     case 'heartbeat':
       await handleHeartbeatCommand(ws, command, context);
       break;
+    case 'get_signal_proximities':
+      await handleGetSignalProximitiesCommand(ws, command, context);
+      break;
     default:
       context.gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
         code: 'UNKNOWN_COMMAND',
@@ -1107,6 +1132,19 @@ export async function handlePublishSignalProximityCommand(
     proximity: proximity?.overallProximity,
     direction: proximity?.direction,
   });
+
+  // Store in cache for later retrieval via get_signal_proximities command
+  if (proximity?.asset) {
+    signalProximityCache.set(proximity.asset, {
+      asset: proximity.asset,
+      direction: proximity.direction || 'neutral',
+      proximity: proximity.overallProximity || proximity.proximity || 0,
+      criteria: proximity.criteria,
+      readyToSignal: proximity.readyToSignal || false,
+      missingCriteria: proximity.missingCriteria,
+      timestamp: Date.now(),
+    });
+  }
 
   // Broadcast signal proximity to all connected clients
   gatewayServer.broadcast({
@@ -1457,4 +1495,49 @@ function formatUptime(ms: number): string {
     return `${minutes}m ${seconds % 60}s`;
   }
   return `${seconds}s`;
+}
+
+/**
+ * Handle 'get_signal_proximities' command
+ * Returns the latest signal proximity data for all tracked assets
+ */
+export async function handleGetSignalProximitiesCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+
+  try {
+    // Get all signal proximities from cache
+    const proximities = Array.from(signalProximityCache.values());
+
+    // Filter out stale entries (older than 5 minutes)
+    const now = Date.now();
+    const STALE_THRESHOLD = 5 * 60 * 1000; // 5 minutes
+    const activeProximities = proximities.filter(p => (now - p.timestamp) < STALE_THRESHOLD);
+
+    // Sort by proximity (highest first - closer to signal)
+    activeProximities.sort((a, b) => b.proximity - a.proximity);
+
+    // Add formatted time since last update
+    const result = activeProximities.map(p => ({
+      ...p,
+      age: now - p.timestamp,
+      ageFormatted: formatUptime(now - p.timestamp),
+    }));
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      proximities: result,
+      count: result.length,
+      timestamp: now,
+    });
+
+  } catch (error: any) {
+    console.error('[handleGetSignalProximitiesCommand] Error:', error.message);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'ERROR',
+      message: error.message,
+    });
+  }
 }

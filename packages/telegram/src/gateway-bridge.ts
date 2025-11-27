@@ -282,4 +282,32 @@ export class GatewayBridge extends EventEmitter {
   }> {
     return await this.sendCommand('get_bot_info');
   }
+
+  /**
+   * Get signal proximities for all tracked assets
+   */
+  async getSignalProximities(): Promise<{
+    proximities: Array<{
+      asset: string;
+      direction: 'call' | 'put' | 'neutral';
+      proximity: number;
+      criteria?: Array<{
+        name: string;
+        current: number;
+        target: number;
+        unit: string;
+        passed: boolean;
+        distance: number;
+      }>;
+      readyToSignal: boolean;
+      missingCriteria?: string[];
+      timestamp: number;
+      age: number;
+      ageFormatted: string;
+    }>;
+    count: number;
+    timestamp: number;
+  }> {
+    return await this.sendCommand('get_signal_proximities');
+  }
 }

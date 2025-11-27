@@ -275,3 +275,70 @@ export function formatBotInfo(info: {
 
   return message;
 }
+
+/**
+ * Format signal proximities
+ */
+export function formatSignalProximities(data: {
+  proximities: Array<{
+    asset: string;
+    direction: 'call' | 'put' | 'neutral';
+    proximity: number;
+    criteria?: Array<{
+      name: string;
+      current: number;
+      target: number;
+      unit: string;
+      passed: boolean;
+      distance: number;
+    }>;
+    readyToSignal: boolean;
+    missingCriteria?: string[];
+    ageFormatted: string;
+  }>;
+  count: number;
+}): string {
+  if (data.count === 0) {
+    return `📡 *Signal Proximities*\n\n_No active signal data available_\n\n_Proximities are updated every 10 seconds when the trader is running._`;
+  }
+
+  let message = `📡 *Signal Proximities*\n\n`;
+
+  for (const prox of data.proximities) {
+    // Direction emoji
+    const dirEmoji = prox.direction === 'call' ? '🟢' :
+                     prox.direction === 'put' ? '🔴' : '⚪';
+
+    // Proximity bar (0-100%)
+    const pct = Math.min(100, Math.max(0, prox.proximity * 100));
+    const filledBlocks = Math.round(pct / 10);
+    const emptyBlocks = 10 - filledBlocks;
+    const bar = '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
+
+    // Ready indicator
+    const readyEmoji = prox.readyToSignal ? '✅' : '⏳';
+
+    message += `${dirEmoji} *${prox.asset}*\n`;
+    message += `├ Direction: \`${prox.direction.toUpperCase()}\`\n`;
+    message += `├ Proximity: \`${bar}\` ${pct.toFixed(0)}%\n`;
+    message += `├ Ready: ${readyEmoji}\n`;
+
+    // Show criteria if available
+    if (prox.criteria && prox.criteria.length > 0) {
+      message += `├ *Criteria:*\n`;
+      for (const c of prox.criteria) {
+        const checkEmoji = c.passed ? '✅' : '❌';
+        message += `│  ${checkEmoji} ${c.name}: \`${c.current.toFixed(2)}\`/\`${c.target.toFixed(2)}\`\n`;
+      }
+    }
+
+    // Show missing criteria if not ready
+    if (!prox.readyToSignal && prox.missingCriteria && prox.missingCriteria.length > 0) {
+      message += `├ Missing: \`${prox.missingCriteria.join(', ')}\`\n`;
+    }
+
+    message += `└ Updated: \`${prox.ageFormatted} ago\`\n\n`;
+  }
+
+  return message;
+}

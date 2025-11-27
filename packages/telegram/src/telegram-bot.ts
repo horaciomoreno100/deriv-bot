@@ -7,7 +7,7 @@
 
 import TelegramBot from 'node-telegram-bot-api';
 import type { GatewayBridge } from './gateway-bridge.js';
-import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo } from './formatters.js';
+import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo, formatSignalProximities } from './formatters.js';
 import { getOpenObserveLogger, loadEnvFromRoot, type OpenObserveLogger } from '@deriv-bot/shared';
 
 // Lazy initialization of logger - will be initialized when first used
@@ -66,6 +66,7 @@ export class TelegramBotService {
         `/status - Open positions\n` +
         `/profit - Today's P/L\n` +
         `/stats - Trading statistics\n` +
+        `/signals - Signal proximities\n` +
         `/assets - Monitored assets\n` +
         `/help - Show this message`
       );
@@ -84,6 +85,7 @@ export class TelegramBotService {
         `/status - Open positions & P/L\n` +
         `/profit - Last 24h performance\n` +
         `/stats - Daily statistics\n` +
+        `/signals - Signal proximities by asset\n` +
         `/assets - Assets being monitored\n\n` +
         `/help - This message`
       );
@@ -167,6 +169,17 @@ export class TelegramBotService {
         } else {
           this.sendMessage(`*Monitored Assets:*\n${assets.map(a => `• ${a}`).join('\n')}`);
         }
+      } catch (error: any) {
+        this.sendMessage(`Error: ${error.message}`);
+      }
+    });
+
+    // /signals - Signal proximities
+    this.bot.onText(/\/signals/, async (msg) => {
+      if (!this.isAuthorized(msg.from?.id)) return;
+      try {
+        const proximities = await this.gateway.getSignalProximities();
+        this.sendMessage(formatSignalProximities(proximities));
       } catch (error: any) {
         this.sendMessage(`Error: ${error.message}`);
       }
