@@ -212,6 +212,23 @@ async function main() {
     console.log('⚠️  Could not register with Gateway (older version?)\n');
   }
 
+  // Listen for reconnection events and re-register
+  gatewayClient.on('connected', async () => {
+    console.log('✅ [GatewayClient] Reconnected to Gateway');
+    
+    // Re-register trader with Gateway after reconnection
+    try {
+      const registration = await gatewayClient.registerTrader({
+        name: `${STRATEGY_NAME} Trader`,
+        strategy: STRATEGY_NAME,
+        symbols: SYMBOLS,
+      });
+      console.log(`📝 [Reconnect] Re-registered with Gateway: ${registration.traderId}`);
+    } catch (error) {
+      console.log('⚠️  [Reconnect] Could not re-register with Gateway');
+    }
+  });
+
   // Start heartbeat
   setInterval(async () => {
     try {
