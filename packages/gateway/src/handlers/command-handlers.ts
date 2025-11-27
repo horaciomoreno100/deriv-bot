@@ -1741,10 +1741,10 @@ export async function handleGetLogsCommand(
     let logs: Array<{ service: string; type: string; content: string }> = [];
 
     // Map service names to PM2 process names
-    const serviceMap: Record<string, string> = {
-      'gateway': 'gateway',
-      'trader': 'trader-squeeze-mr',
-      'telegram': 'telegram',
+    const serviceMap: Record<string, string[]> = {
+      'gateway': ['gateway'],
+      'trader': ['trader-squeeze-mr', 'trader-keltner-mr', 'trader-hybrid-mtf'],
+      'telegram': ['telegram'],
     };
 
     const services = service === 'all'
