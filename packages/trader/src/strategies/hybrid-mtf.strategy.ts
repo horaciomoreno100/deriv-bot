@@ -428,4 +428,231 @@ export class HybridMTFStrategy extends BaseStrategy {
         console.log(`[HybridMTF] ⏳ Mean Reversion signal pending confirmation (${signal})`);
         return null;
     }
+
+    /**
+     * Get signal readiness for dashboard/signal proximity
+     */
+    getSignalReadiness(candles: Candle[]): {
+        asset: string;
+        direction: 'call' | 'put' | 'neutral';
+        overallProximity: number;
+        criteria: Array<{
+            name: string;
+            current: number;
+            target: number;
+            unit: string;
+            passed: boolean;
+            distance: number;
+        }>;
+        readyToSignal: boolean;
+        missingCriteria: string[];
+    } | null {
+        if (!candles || candles.length < this.params.minCandles) {
+            return null;
+        }
+
+        const firstCandle = candles[0];
+        if (!firstCandle) {
+            return null;
+        }
+
+        const asset = firstCandle.asset || 'UNKNOWN';
+
+        // Resample candles
+        const candles5m = this.resampleCandles(candles, 5);
+        const candles15m = this.resampleCandles(candles, 15);
+
+        // Detect regime
+        const regime = this.detectRegime(candles15m);
+        if (!regime) {
+            return null;
+        }
+
+        // Get 5m RSI
+        const rsi5m = this.get5mRSI(candles5m);
+        if (rsi5m === null) {
+            return null;
+        }
+
+        // Calculate 1m indicators
+        const closes = candles.map(c => c.close);
+        const bbResult = BollingerBands.calculate({
+            period: this.params.bbPeriod,
+            values: closes,
+            stdDev: this.params.bbStdDev,
+        });
+
+        const rsiResult = RSI.calculate({
+            period: this.params.rsiPeriod,
+            values: closes,
+        });
+
+        if (!bbResult || bbResult.length === 0 || !rsiResult || rsiResult.length === 0) {
+            return null;
+        }
+
+        const currentBB = bbResult[bbResult.length - 1];
+        const currentRSI = rsiResult[rsiResult.length - 1];
+        const currentCandle = candles[candles.length - 1];
+
+        if (!currentBB || currentRSI === undefined || !currentCandle) {
+            return null;
+        }
+
+        const price = currentCandle.close;
+
+        // Check cooldown
+        const now = Date.now();
+        const lastTradeTime = this.lastTradeTime[asset] || 0;
+        const timeSinceLastTrade = now - lastTradeTime;
+        const cooldownMs = this.params.cooldownSeconds * 1000;
+        const cooldownOk = timeSinceLastTrade >= cooldownMs;
+
+        // Check 5m RSI filter (avoid extremes)
+        const rsi5mOk = rsi5m >= this.params.midRsiOversold && rsi5m <= this.params.midRsiOverbought;
+
+        // Entry conditions based on regime
+        let callReady = false;
+        let putReady = false;
+
+        if (regime === 'BULLISH_TREND') {
+            // Only CALL signals
+            const rsiOversold = currentRSI < this.params.rsiOversold;
+            const priceNearBBLower = price <= currentBB.lower;
+            callReady = priceNearBBLower && rsiOversold && rsi5mOk && cooldownOk;
+        } else if (regime === 'BEARISH_TREND') {
+            // Only PUT signals
+            const rsiOverbought = currentRSI > this.params.rsiOverbought;
+            const priceNearBBUpper = price >= currentBB.upper;
+            putReady = priceNearBBUpper && rsiOverbought && rsi5mOk && cooldownOk;
+        } else {
+            // RANGE: Mean Reversion (both directions)
+            const rsiOversold = currentRSI < this.params.rsiOversold;
+            const rsiOverbought = currentRSI > this.params.rsiOverbought;
+            const priceNearBBLower = price <= currentBB.lower;
+            const priceNearBBUpper = price >= currentBB.upper;
+            callReady = priceNearBBLower && rsiOversold && rsi5mOk && cooldownOk;
+            putReady = priceNearBBUpper && rsiOverbought && rsi5mOk && cooldownOk;
+        }
+
+        // Determine direction and proximity
+        let direction: 'call' | 'put' | 'neutral' = 'neutral';
+        let overallProximity = 0;
+
+        if (callReady) {
+            direction = 'call';
+            overallProximity = 100;
+        } else if (putReady) {
+            direction = 'put';
+            overallProximity = 100;
+        } else {
+            // Calculate proximity scores
+            const distToBBLower = Math.abs((price - currentBB.lower) / price);
+            const distToBBUpper = Math.abs((price - currentBB.upper) / price);
+
+            const callProximity = Math.max(
+                0,
+                (regime === 'BULLISH_TREND' || regime === 'RANGE' ? 100 : 0) * 0.3 +
+                (price <= currentBB.lower ? 100 : Math.max(0, 100 - distToBBLower * 10000)) * 0.3 +
+                (currentRSI < this.params.rsiOversold ? 100 : Math.max(0, 100 - Math.abs(currentRSI - this.params.rsiOversold) * 2)) * 0.2 +
+                (rsi5mOk ? 100 : 0) * 0.1 +
+                (cooldownOk ? 100 : Math.min(100, (timeSinceLastTrade / cooldownMs) * 100)) * 0.1
+            );
+
+            const putProximity = Math.max(
+                0,
+                (regime === 'BEARISH_TREND' || regime === 'RANGE' ? 100 : 0) * 0.3 +
+                (price >= currentBB.upper ? 100 : Math.max(0, 100 - distToBBUpper * 10000)) * 0.3 +
+                (currentRSI > this.params.rsiOverbought ? 100 : Math.max(0, 100 - Math.abs(currentRSI - this.params.rsiOverbought) * 2)) * 0.2 +
+                (rsi5mOk ? 100 : 0) * 0.1 +
+                (cooldownOk ? 100 : Math.min(100, (timeSinceLastTrade / cooldownMs) * 100)) * 0.1
+            );
+
+            if (callProximity > putProximity && callProximity > 10) {
+                direction = 'call';
+                overallProximity = Math.min(100, callProximity);
+            } else if (putProximity > 10) {
+                direction = 'put';
+                overallProximity = Math.min(100, putProximity);
+            }
+        }
+
+        // Build criteria array
+        const criteria = [
+            {
+                name: 'Regime (15m)',
+                current: regime === 'BULLISH_TREND' ? 1 : (regime === 'BEARISH_TREND' ? -1 : 0),
+                target: direction === 'call' ? 1 : (direction === 'put' ? -1 : 0),
+                unit: '',
+                passed: (regime === 'BULLISH_TREND' && direction === 'call') ||
+                    (regime === 'BEARISH_TREND' && direction === 'put') ||
+                    (regime === 'RANGE'),
+                distance: 0,
+            },
+            {
+                name: 'Price vs BB_Lower',
+                current: price,
+                target: currentBB.lower,
+                unit: '',
+                passed: price <= currentBB.lower,
+                distance: Math.abs((price - currentBB.lower) / price * 100),
+            },
+            {
+                name: 'Price vs BB_Upper',
+                current: price,
+                target: currentBB.upper,
+                unit: '',
+                passed: price >= currentBB.upper,
+                distance: Math.abs((price - currentBB.upper) / price * 100),
+            },
+            {
+                name: 'RSI (1m)',
+                current: currentRSI,
+                target: direction === 'call' ? this.params.rsiOversold : this.params.rsiOverbought,
+                unit: '',
+                passed: direction === 'call' ? currentRSI < this.params.rsiOversold : currentRSI > this.params.rsiOverbought,
+                distance: direction === 'call'
+                    ? Math.abs(currentRSI - this.params.rsiOversold)
+                    : Math.abs(currentRSI - this.params.rsiOverbought),
+            },
+            {
+                name: 'RSI (5m) Filter',
+                current: rsi5m,
+                target: (this.params.midRsiOversold + this.params.midRsiOverbought) / 2,
+                unit: '',
+                passed: rsi5mOk,
+                distance: rsi5mOk ? 0 : Math.min(
+                    Math.abs(rsi5m - this.params.midRsiOversold),
+                    Math.abs(rsi5m - this.params.midRsiOverbought)
+                ),
+            },
+            {
+                name: 'Cooldown',
+                current: timeSinceLastTrade / 1000,
+                target: cooldownMs / 1000,
+                unit: 's',
+                passed: cooldownOk,
+                distance: cooldownOk ? 0 : (cooldownMs - timeSinceLastTrade) / 1000,
+            },
+        ];
+
+        const missingCriteria: string[] = [];
+        if (regime === 'BULLISH_TREND' && direction === 'put') missingCriteria.push('BULLISH_TREND only allows CALL');
+        if (regime === 'BEARISH_TREND' && direction === 'call') missingCriteria.push('BEARISH_TREND only allows PUT');
+        if (direction === 'call' && price > currentBB.lower) missingCriteria.push('Price must be <= BB_Lower for CALL');
+        if (direction === 'put' && price < currentBB.upper) missingCriteria.push('Price must be >= BB_Upper for PUT');
+        if (direction === 'call' && currentRSI >= this.params.rsiOversold) missingCriteria.push(`RSI(1m) must be < ${this.params.rsiOversold} for CALL`);
+        if (direction === 'put' && currentRSI <= this.params.rsiOverbought) missingCriteria.push(`RSI(1m) must be > ${this.params.rsiOverbought} for PUT`);
+        if (!rsi5mOk) missingCriteria.push(`RSI(5m) must be between ${this.params.midRsiOversold}-${this.params.midRsiOverbought}`);
+        if (!cooldownOk) missingCriteria.push('Cooldown active');
+
+        return {
+            asset,
+            direction,
+            overallProximity: Math.round(overallProximity),
+            criteria,
+            readyToSignal: callReady || putReady,
+            missingCriteria,
+        };
+    }
 }

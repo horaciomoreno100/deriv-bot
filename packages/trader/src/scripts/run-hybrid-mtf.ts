@@ -234,17 +234,17 @@ async function main() {
     parameters: {
       // Parameters from backtest (optimized for R_100)
       ctxAdxPeriod: 14,
-    ctxAdxThreshold: 25,
-    ctxSmaPeriod: 50,
-    ctxSlopeThreshold: 0.0002,
-    midRsiPeriod: 14,
-    midRsiOverbought: 80,
-    midRsiOversold: 20,
-    bbPeriod: 20,
-    bbStdDev: 2,
-    rsiPeriod: 14,
-    rsiOverbought: 55,
-    rsiOversold: 45,
+      ctxAdxThreshold: 25,
+      ctxSmaPeriod: 50,
+      ctxSlopeThreshold: 0.0002,
+      midRsiPeriod: 14,
+      midRsiOverbought: 80,
+      midRsiOversold: 20,
+      bbPeriod: 20,
+      bbStdDev: 2,
+      rsiPeriod: 14,
+      rsiOverbought: 55,
+      rsiOversold: 45,
       takeProfitPct: 0.005,
       stopLossPct: 0.005,
       cooldownSeconds: 60,
@@ -267,6 +267,44 @@ async function main() {
   console.log('   RANGE (15m): Mean Reversion (both directions, POST_CONFIRM)\n');
 
   console.log(`✅ Strategy "${strategy.getName()}" initialized\n`);
+
+  // Signal proximity check - publish every 10 seconds
+  const PROXIMITY_CHECK_INTERVAL = 10000;
+  const proximityCheckInterval = setInterval(async () => {
+    if (typeof (strategy as any).getSignalReadiness === 'function') {
+      for (const symbol of SYMBOLS) {
+        const buffer = candleBuffers.get(symbol) || [];
+        if (buffer.length >= 100) { // minCandles for Hybrid MTF
+          try {
+            const readiness = (strategy as any).getSignalReadiness(buffer);
+            if (readiness) {
+              // Convert criteria format to match Gateway expectations
+              const criteria = readiness.criteria.map((c: any) => ({
+                name: c.name,
+                current: c.current,
+                target: c.target,
+                unit: c.unit || '',
+                passed: c.passed,
+                distance: c.distance || 0,
+              }));
+
+              await gatewayClient.publishSignalProximity({
+                asset: symbol,
+                direction: readiness.direction,
+                overallProximity: readiness.overallProximity,
+                proximity: readiness.overallProximity, // For compatibility
+                criteria,
+                readyToSignal: readiness.readyToSignal,
+                missingCriteria: readiness.missingCriteria || [],
+              });
+            }
+          } catch (error) {
+            // Skip silently
+          }
+        }
+      }
+    }
+  }, PROXIMITY_CHECK_INTERVAL);
 
   // Process signals from strategy
   async function processStrategySignal(signal: Signal | null, assetParam: string) {

@@ -276,6 +276,179 @@ export class KeltnerMRStrategy extends MRStrategyBase {
   }
 
   // ============================================================================
+  // SIGNAL PROXIMITY
+  // ============================================================================
+
+  /**
+   * Get signal readiness for dashboard/signal proximity
+   */
+  getSignalReadiness(candles: Candle[]): {
+    asset: string;
+    direction: 'call' | 'put' | 'neutral';
+    overallProximity: number;
+    criteria: Array<{
+      name: string;
+      current: number;
+      target: number;
+      unit: string;
+      passed: boolean;
+      distance: number;
+    }>;
+    readyToSignal: boolean;
+    missingCriteria: string[];
+  } | null {
+    if (!candles || candles.length < this.params.minCandles) {
+      return null;
+    }
+
+    const firstCandle = candles[0];
+    if (!firstCandle) {
+      return null;
+    }
+
+    const asset = firstCandle.asset || 'UNKNOWN';
+
+    // Calculate base indicators
+    const baseIndicators = this.calculateBaseIndicators(candles);
+    if (!baseIndicators) {
+      return null;
+    }
+
+    // Calculate Keltner indicators
+    const keltnerIndicators = this.calculateKeltnerIndicators(candles, baseIndicators);
+    if (!keltnerIndicators) {
+      return null;
+    }
+
+    const { price, rsi, adx, kcUpper, kcMiddle, kcLower, kcAtr } = keltnerIndicators;
+
+    // Check cooldown
+    const now = Date.now();
+    // Use activeTrade or closedTrades to determine last trade time
+    // For simplicity, use 0 if no trade history (will pass cooldown check)
+    const lastTradeTime = this.activeTrade?.entryTime ||
+      (this.closedTrades.length > 0 ? this.closedTrades[this.closedTrades.length - 1]!.exitTime : 0);
+    const timeSinceLastTrade = now - lastTradeTime;
+    const cooldownMs = 60 * 1000; // 1 minute cooldown
+    const cooldownOk = timeSinceLastTrade >= cooldownMs;
+
+    // Check if in ranging market
+    const isRanging = this.isRangingMarket(adx);
+
+    // Calculate distances
+    const distToLower = (price - kcLower) / kcLower;
+    const distToUpper = (kcUpper - price) / kcUpper;
+    const distToMiddle = Math.abs((price - kcMiddle) / kcMiddle);
+
+    // Entry conditions
+    const longReady = price <= kcLower && rsi < this.specificParams.rsiOversold && isRanging && cooldownOk;
+    const shortReady = price >= kcUpper && rsi > this.specificParams.rsiOverbought && isRanging && cooldownOk;
+
+    // Determine direction and proximity
+    let direction: 'call' | 'put' | 'neutral' = 'neutral';
+    let overallProximity = 0;
+
+    if (longReady) {
+      direction = 'call';
+      overallProximity = 100;
+    } else if (shortReady) {
+      direction = 'put';
+      overallProximity = 100;
+    } else {
+      // Calculate proximity scores
+      const callProximity = Math.max(
+        0,
+        (price <= kcLower ? 100 : Math.max(0, 100 - Math.abs(distToLower) * 5000)) * 0.4 +
+        (rsi < this.specificParams.rsiOversold ? 100 : Math.max(0, 100 - Math.abs(rsi - this.specificParams.rsiOversold) * 3)) * 0.3 +
+        (isRanging ? 100 : 0) * 0.2 +
+        (cooldownOk ? 100 : Math.min(100, (timeSinceLastTrade / cooldownMs) * 100)) * 0.1
+      );
+
+      const putProximity = Math.max(
+        0,
+        (price >= kcUpper ? 100 : Math.max(0, 100 - Math.abs(distToUpper) * 5000)) * 0.4 +
+        (rsi > this.specificParams.rsiOverbought ? 100 : Math.max(0, 100 - Math.abs(rsi - this.specificParams.rsiOverbought) * 3)) * 0.3 +
+        (isRanging ? 100 : 0) * 0.2 +
+        (cooldownOk ? 100 : Math.min(100, (timeSinceLastTrade / cooldownMs) * 100)) * 0.1
+      );
+
+      if (callProximity > putProximity && callProximity > 10) {
+        direction = 'call';
+        overallProximity = Math.min(100, callProximity);
+      } else if (putProximity > 10) {
+        direction = 'put';
+        overallProximity = Math.min(100, putProximity);
+      }
+    }
+
+    // Build criteria array
+    const criteria = [
+      {
+        name: 'Price vs KC_Lower',
+        current: price,
+        target: kcLower,
+        unit: '',
+        passed: price <= kcLower,
+        distance: Math.abs(distToLower * 100),
+      },
+      {
+        name: 'Price vs KC_Upper',
+        current: price,
+        target: kcUpper,
+        unit: '',
+        passed: price >= kcUpper,
+        distance: Math.abs(distToUpper * 100),
+      },
+      {
+        name: 'RSI',
+        current: rsi,
+        target: direction === 'call' ? this.specificParams.rsiOversold : this.specificParams.rsiOverbought,
+        unit: '',
+        passed: direction === 'call' ? rsi < this.specificParams.rsiOversold : rsi > this.specificParams.rsiOverbought,
+        distance: direction === 'call'
+          ? Math.abs(rsi - this.specificParams.rsiOversold)
+          : Math.abs(rsi - this.specificParams.rsiOverbought),
+      },
+      {
+        name: 'ADX (Ranging)',
+        current: adx,
+        target: this.params.adxThreshold,
+        unit: '',
+        passed: isRanging,
+        distance: Math.abs(adx - this.params.adxThreshold),
+      },
+      {
+        name: 'Cooldown',
+        current: timeSinceLastTrade / 1000,
+        target: cooldownMs / 1000,
+        unit: 's',
+        passed: cooldownOk,
+        distance: cooldownOk ? 0 : (cooldownMs - timeSinceLastTrade) / 1000,
+      },
+    ];
+
+    const missingCriteria: string[] = [];
+    if (direction === 'call') {
+      if (price > kcLower) missingCriteria.push('Price must be <= KC_Lower');
+      if (rsi >= this.specificParams.rsiOversold) missingCriteria.push(`RSI must be < ${this.specificParams.rsiOversold}`);
+    } else if (direction === 'put') {
+      if (price < kcUpper) missingCriteria.push('Price must be >= KC_Upper');
+      if (rsi <= this.specificParams.rsiOverbought) missingCriteria.push(`RSI must be > ${this.specificParams.rsiOverbought}`);
+    }
+    if (!isRanging) missingCriteria.push(`ADX must be < ${this.params.adxThreshold} (ranging market)`);
+    if (!cooldownOk) missingCriteria.push('Cooldown active');
+
+    return {
+      asset,
+      direction,
+      overallProximity: Math.round(overallProximity),
+      criteria,
+      readyToSignal: longReady || shortReady,
+      missingCriteria,
+    };
+  }
+
+  // ============================================================================
   // PARAMETER GETTERS
   // ============================================================================
 

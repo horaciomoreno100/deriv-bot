@@ -288,15 +288,79 @@ export class TelegramBotService {
 
   /**
    * Send message to configured chat
+   * Automatically splits long messages (Telegram limit: 4096 characters)
    */
   async sendMessage(text: string): Promise<void> {
     try {
-      await this.bot.sendMessage(this.config.chatId, text, {
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true,
-      });
-    } catch (error) {
-      console.error('[TelegramBot] Failed to send message:', error);
+      const MAX_LENGTH = 4096;
+
+      // If message is within limit, send as-is
+      if (text.length <= MAX_LENGTH) {
+        await this.bot.sendMessage(this.config.chatId, text, {
+          parse_mode: 'Markdown',
+          disable_web_page_preview: true,
+        });
+        return;
+      }
+
+      // Split long message into chunks
+      const chunks: string[] = [];
+      let currentChunk = '';
+      const lines = text.split('\n');
+
+      for (const line of lines) {
+        // If adding this line would exceed limit, save current chunk and start new one
+        if (currentChunk.length + line.length + 1 > MAX_LENGTH) {
+          if (currentChunk) {
+            chunks.push(currentChunk);
+            currentChunk = '';
+          }
+
+          // If single line is too long, truncate it
+          if (line.length > MAX_LENGTH) {
+            chunks.push(line.substring(0, MAX_LENGTH - 3) + '...');
+            currentChunk = '...' + line.substring(MAX_LENGTH - 3);
+          } else {
+            currentChunk = line;
+          }
+        } else {
+          currentChunk += (currentChunk ? '\n' : '') + line;
+        }
+      }
+
+      // Add remaining chunk
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      // Send all chunks
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        const prefix = chunks.length > 1 ? `*[Part ${i + 1}/${chunks.length}]*\n\n` : '';
+        await this.bot.sendMessage(this.config.chatId, prefix + chunk, {
+          parse_mode: 'Markdown',
+          disable_web_page_preview: true,
+        });
+
+        // Small delay between chunks to avoid rate limiting
+        if (i < chunks.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
+    } catch (error: any) {
+      console.error('[TelegramBot] Failed to send message:', error.message || error);
+      // If it's a "message too long" error, try sending a truncated version
+      if (error.response?.body?.description?.includes('too long')) {
+        try {
+          const truncated = text.substring(0, 4000) + '\n\n... _(message truncated)_';
+          await this.bot.sendMessage(this.config.chatId, truncated, {
+            parse_mode: 'Markdown',
+            disable_web_page_preview: true,
+          });
+        } catch (retryError) {
+          console.error('[TelegramBot] Failed to send truncated message:', retryError);
+        }
+      }
     }
   }
 
