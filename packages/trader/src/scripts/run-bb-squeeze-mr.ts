@@ -695,12 +695,15 @@ async function main() {
   // Periodic summary
   const summaryInterval = setInterval(() => {
     if (totalTrades > 0) {
-      console.log(`\n📊 RESUMEN:`);
+      const stats = strategyAccountant.getStats(STRATEGY_NAME);
+      const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
+      console.log(`\n📊 RESUMEN - ${STRATEGY_NAME}:`);
       console.log(`   Trades: ${totalTrades} | Wins: ${wonTrades} | Losses: ${lostTrades}`);
-      console.log(`   Balance: $${balance.toFixed(2)}`);
+      console.log(`   Strategy Balance: $${strategyBalance.toFixed(2)}`);
+      console.log(`   Total P&L: $${stats.totalPnL.toFixed(2)} | ROI: ${stats.roi.toFixed(2)}%`);
 
-      const stats = tradeManager.getRiskStats();
-      console.log(`   Open: ${stats.openTrades}/${stats.maxOpenTrades}\n`);
+      const riskStats = tradeManager.getRiskStats();
+      console.log(`   Open: ${riskStats.openTrades}/${riskStats.maxOpenTrades}\n`);
     }
   }, 60000);
 
