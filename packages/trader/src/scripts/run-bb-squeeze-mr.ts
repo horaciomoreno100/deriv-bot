@@ -680,13 +680,14 @@ async function main() {
     }
 
     const winRate = totalTrades > 0 ? (wonTrades / totalTrades) * 100 : 0;
-    const totalPnL = balance - INITIAL_BALANCE;
-    const roi = (totalPnL / INITIAL_BALANCE) * 100;
+    const stats = strategyAccountant.getStats(STRATEGY_NAME);
+    const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
 
     console.log(`\n📊 STATISTICS:`);
     console.log(`   Total: ${totalTrades} | Wins: ${wonTrades} | Losses: ${lostTrades}`);
     console.log(`   Win Rate: ${winRate.toFixed(2)}%`);
-    console.log(`   Total P&L: $${totalPnL.toFixed(2)} | ROI: ${roi.toFixed(2)}%\n`);
+    console.log(`   Total P&L: $${stats.totalPnL.toFixed(2)} | ROI: ${stats.roi.toFixed(2)}%`);
+    console.log(`   Strategy Balance: $${strategyBalance.toFixed(2)}\n`);
   });
 
   console.log('✅ Ready. Waiting for signals...\n');
@@ -713,17 +714,18 @@ async function main() {
     tradeManager.stop();
 
     const winRate = totalTrades > 0 ? (wonTrades / totalTrades) * 100 : 0;
-    const totalPnL = balance - INITIAL_BALANCE;
-    const roi = (totalPnL / INITIAL_BALANCE) * 100;
+    const stats = strategyAccountant.getStats(STRATEGY_NAME);
+    const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
 
     console.log('\n' + '='.repeat(80));
-    console.log('📊 FINAL STATISTICS (MEAN REVERSION)');
+    console.log(`📊 FINAL STATISTICS - ${STRATEGY_NAME}`);
     console.log('='.repeat(80));
     console.log(`   Total Trades: ${totalTrades}`);
     console.log(`   Wins: ${wonTrades} | Losses: ${lostTrades}`);
     console.log(`   Win Rate: ${winRate.toFixed(2)}%`);
-    console.log(`   Total P&L: $${totalPnL.toFixed(2)}`);
-    console.log(`   ROI: ${roi.toFixed(2)}%`);
+    console.log(`   Total P&L: $${stats.totalPnL.toFixed(2)}`);
+    console.log(`   ROI: ${stats.roi.toFixed(2)}%`);
+    console.log(`   Final Balance: $${strategyBalance.toFixed(2)}`);
     console.log('='.repeat(80));
 
     await gatewayClient.disconnect();

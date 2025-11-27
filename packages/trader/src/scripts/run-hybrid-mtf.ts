@@ -322,13 +322,13 @@ async function main() {
   }
 
   // Subscribe to ticks
+  console.log(`📡 Subscribing to: ${SYMBOLS.join(', ')}...`);
+  await gatewayClient.follow(SYMBOLS);
   for (const symbol of SYMBOLS) {
-    console.log(`📡 Subscribing to ${symbol}...`);
-    await gatewayClient.subscribe(symbol);
     candleBuffers.set(symbol, []);
     warmUpCandlesPerAsset.set(symbol, 0);
   }
-  console.log();
+  console.log(`✅ Subscribed\n`);
 
   // Handle ticks
   gatewayClient.on('tick', async (tick: Tick) => {
