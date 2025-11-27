@@ -13,13 +13,12 @@
  *   SYMBOL="R_100" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:hybrid-mtf
  */
 
-import { GatewayClient, loadEnvFromRoot, getTelegramAlerter } from '@deriv-bot/shared';
+import { GatewayClient, loadEnvFromRoot, getTelegramAlerter, initSlackAlerts } from '@deriv-bot/shared';
 import { HybridMTFStrategy } from '../strategies/hybrid-mtf.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
 import { StrategyAccountant } from '../accounting/strategy-accountant.js';
-import { initSlackAlerts } from '../utils/slack-alerts.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 import dotenv from 'dotenv';
 
