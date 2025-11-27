@@ -1752,15 +1752,32 @@ export async function handleGetLogsCommand(
       : [service];
 
     for (const svc of services) {
-      const pm2Name = serviceMap[svc] || svc;
+      const pm2Names = serviceMap[svc] || [svc];
 
+      for (const pm2Name of pm2Names) {
       try {
         if (logType === 'all' || logType === 'out') {
           const outLogs = execSync(
             `pm2 logs ${pm2Name} --lines ${lines} --nostream --out 2>/dev/null || echo "No logs available"`,
             { encoding: 'utf8', timeout: 5000 }
           );
-          logs.push({ service: svc, type: 'out', content: outLogs.trim() });
+          // Filter out PM2 headers (TAILING, last X lines, etc.)
+          const filteredOutLogs = outLogs
+            .split('\n')
+            .filter(line => {
+              const trimmed = line.trim();
+              return trimmed && 
+                     !trimmed.includes('[TAILING]') && 
+                     !trimmed.includes('Tailing last') &&
+                     !trimmed.match(/last \d+ lines/i) &&
+                     !trimmed.match(/\.log last \d+ lines/i);
+            })
+            .join('\n')
+            .trim();
+          
+          if (filteredOutLogs && filteredOutLogs !== 'No logs available') {
+            logs.push({ service: svc, type: 'out', content: filteredOutLogs });
+          }
         }
 
         if (logType === 'all' || logType === 'error') {
@@ -1768,12 +1785,28 @@ export async function handleGetLogsCommand(
             `pm2 logs ${pm2Name} --lines ${lines} --nostream --err 2>/dev/null || echo "No error logs"`,
             { encoding: 'utf8', timeout: 5000 }
           );
-          if (errLogs.trim() && errLogs.trim() !== 'No error logs') {
-            logs.push({ service: svc, type: 'error', content: errLogs.trim() });
+          
+          // Filter out PM2 headers (TAILING, last X lines, etc.)
+          const filteredErrLogs = errLogs
+            .split('\n')
+            .filter(line => {
+              const trimmed = line.trim();
+              return trimmed && 
+                     !trimmed.includes('[TAILING]') && 
+                     !trimmed.includes('Tailing last') &&
+                     !trimmed.match(/last \d+ lines/i) &&
+                     !trimmed.match(/\.log last \d+ lines/i);
+            })
+            .join('\n')
+            .trim();
+          
+          if (filteredErrLogs && filteredErrLogs !== 'No error logs' && filteredErrLogs.length > 0) {
+            logs.push({ service: svc, type: 'error', content: filteredErrLogs });
           }
         }
       } catch {
-        logs.push({ service: svc, type: 'error', content: `Could not read logs for ${svc}` });
+        logs.push({ service: pm2Name, type: 'error', content: `Could not read logs for ${pm2Name}` });
+      }
       }
     }
 
