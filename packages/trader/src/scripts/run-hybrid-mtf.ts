@@ -393,12 +393,32 @@ async function main() {
     }
   }
 
+  // Load historical candles first
+  console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
+  const HISTORICAL_CANDLES = 150; // Load more than minCandles (100) to ensure we have enough
+
+  for (const symbol of SYMBOLS) {
+    try {
+      const candles = await gatewayClient.getCandles(symbol, '1m', HISTORICAL_CANDLES);
+      console.log(`   ✅ ${symbol}: ${candles.length} candles`);
+      candleBuffers.set(symbol, [...candles]); // Store candles for strategy
+      warmUpCandlesPerAsset.set(symbol, candles.length);
+    } catch (error: any) {
+      console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
+      candleBuffers.set(symbol, []);
+      warmUpCandlesPerAsset.set(symbol, 0);
+    }
+  }
+  console.log();
+
   // Subscribe to ticks
   console.log(`📡 Subscribing to: ${SYMBOLS.join(', ')}...`);
   await gatewayClient.follow(SYMBOLS);
   for (const symbol of SYMBOLS) {
-    candleBuffers.set(symbol, []);
-    warmUpCandlesPerAsset.set(symbol, 0);
+    if (!candleBuffers.has(symbol)) {
+      candleBuffers.set(symbol, []);
+      warmUpCandlesPerAsset.set(symbol, 0);
+    }
   }
   console.log(`✅ Subscribed\n`);
 
