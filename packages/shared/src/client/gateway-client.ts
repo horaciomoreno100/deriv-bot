@@ -95,6 +95,13 @@ export class GatewayClient extends EventEmitter {
   }>();
   private requestId = 0;
 
+  // Track subscribed assets for auto-resubscription on reconnect
+  private subscribedAssets: Set<string> = new Set();
+  private lastTickTime: Map<string, number> = new Map();
+  private healthCheckInterval: NodeJS.Timeout | null = null;
+  private readonly HEALTH_CHECK_INTERVAL = 120000; // 2 minutes
+  private readonly TICK_TIMEOUT = 180000; // 3 minutes without ticks = stale
+
   constructor(config: GatewayClientConfig) {
     super();
     this.config = {
@@ -167,9 +174,13 @@ export class GatewayClient extends EventEmitter {
 
   /**
    * Subscribe to assets (follow)
+   * Automatically re-subscribes on reconnect
    */
   async follow(assets: string[]): Promise<void> {
     await this.sendCommand('follow', { assets });
+    // Track subscribed assets for auto-resubscription
+    assets.forEach(asset => this.subscribedAssets.add(asset));
+    this.log(`Subscribed to ${assets.length} asset(s), tracking for auto-resubscription`);
   }
 
   /**
@@ -177,6 +188,8 @@ export class GatewayClient extends EventEmitter {
    */
   async unfollow(assets: string[]): Promise<void> {
     await this.sendCommand('unfollow', { assets });
+    // Remove from tracking
+    assets.forEach(asset => this.subscribedAssets.delete(asset));
   }
 
   /**
@@ -607,6 +620,11 @@ export class GatewayClient extends EventEmitter {
   private handleEvent(message: EventMessage): void {
     const { type, data } = message;
 
+    // Track tick times for health monitoring
+    if (type === 'tick' && data?.asset) {
+      this.lastTickTime.set(data.asset, Date.now());
+    }
+
     // Emit typed event
     this.emit(type as any, data);
   }
@@ -647,11 +665,97 @@ export class GatewayClient extends EventEmitter {
       this.reconnectTimer = null;
       try {
         await this.connect();
+        // Re-subscribe to previously subscribed assets
+        await this.resubscribeAssets();
       } catch (error) {
         this.log('Reconnection failed:', error);
         // Will schedule another attempt via handleDisconnect
       }
     }, this.config.reconnectInterval);
+  }
+
+  /**
+   * Re-subscribe to all tracked assets after reconnection
+   */
+  private async resubscribeAssets(): Promise<void> {
+    if (this.subscribedAssets.size === 0) {
+      return;
+    }
+
+    const assets = Array.from(this.subscribedAssets);
+    this.log(`Re-subscribing to ${assets.length} asset(s): ${assets.join(', ')}`);
+
+    try {
+      await this.sendCommand('follow', { assets });
+      this.log(`Successfully re-subscribed to ${assets.length} asset(s)`);
+      this.emit('resubscribed' as any, { assets });
+    } catch (error) {
+      this.log('Failed to re-subscribe:', error);
+      // Emit error but don't clear subscriptions - will retry on next reconnect
+      this.emit('error', new Error(`Failed to re-subscribe to assets: ${error}`));
+    }
+  }
+
+  /**
+   * Start health check interval to detect silent disconnections
+   * Checks if ticks are being received for subscribed assets
+   */
+  startHealthCheck(): void {
+    if (this.healthCheckInterval) {
+      return;
+    }
+
+    this.log('Starting health check interval');
+    this.healthCheckInterval = setInterval(() => {
+      this.checkConnectionHealth();
+    }, this.HEALTH_CHECK_INTERVAL);
+  }
+
+  /**
+   * Stop health check interval
+   */
+  stopHealthCheck(): void {
+    if (this.healthCheckInterval) {
+      clearInterval(this.healthCheckInterval);
+      this.healthCheckInterval = null;
+    }
+  }
+
+  /**
+   * Check if connection is healthy by verifying tick reception
+   */
+  private checkConnectionHealth(): void {
+    if (!this.isConnected() || this.subscribedAssets.size === 0) {
+      return;
+    }
+
+    const now = Date.now();
+    const staleAssets: string[] = [];
+
+    for (const asset of this.subscribedAssets) {
+      const lastTick = this.lastTickTime.get(asset);
+      if (!lastTick || (now - lastTick) > this.TICK_TIMEOUT) {
+        staleAssets.push(asset);
+      }
+    }
+
+    if (staleAssets.length > 0) {
+      this.log(`Health check: ${staleAssets.length} stale asset(s) detected: ${staleAssets.join(', ')}`);
+      this.log('Triggering re-subscription...');
+      this.emit('health:stale' as any, { staleAssets });
+
+      // Re-subscribe to restore tick stream
+      this.resubscribeAssets().catch(error => {
+        this.log('Health check re-subscription failed:', error);
+      });
+    }
+  }
+
+  /**
+   * Get subscribed assets (for debugging/monitoring)
+   */
+  getSubscribedAssets(): string[] {
+    return Array.from(this.subscribedAssets);
   }
 
   /**

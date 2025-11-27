@@ -122,7 +122,7 @@ async function main() {
     url: process.env.GATEWAY_WS_URL || 'ws://localhost:3000',
     autoReconnect: true,
     reconnectInterval: 5000,
-    enableLogging: false,
+    enableLogging: true, // Enable logging for debugging reconnection issues
   });
 
   // Create trade adapter
@@ -411,6 +411,35 @@ async function main() {
   await gatewayClient.follow(SYMBOLS);
   console.log(`✅ Subscribed\n`);
 
+  // Start health check to detect silent disconnections
+  gatewayClient.startHealthCheck();
+  console.log('🏥 Health check started (monitors tick stream)\n');
+
+  // Listen for reconnection events
+  gatewayClient.on('disconnected', () => {
+    console.log('\n⚠️  [GatewayClient] Disconnected from Gateway');
+    ooLogger.warn('trader', 'Disconnected from Gateway');
+  });
+
+  gatewayClient.on('reconnecting', () => {
+    console.log('🔄 [GatewayClient] Attempting to reconnect...');
+  });
+
+  gatewayClient.on('connected', () => {
+    console.log('✅ [GatewayClient] Reconnected to Gateway');
+    ooLogger.info('trader', 'Reconnected to Gateway');
+  });
+
+  gatewayClient.on('resubscribed' as any, (data: { assets: string[] }) => {
+    console.log(`📡 [GatewayClient] Re-subscribed to ${data.assets.length} asset(s): ${data.assets.join(', ')}`);
+    ooLogger.info('trader', 'Re-subscribed to assets', { assets: data.assets });
+  });
+
+  gatewayClient.on('health:stale' as any, (data: { staleAssets: string[] }) => {
+    console.log(`\n🏥 [HealthCheck] Stale tick stream detected for: ${data.staleAssets.join(', ')}`);
+    ooLogger.warn('trader', 'Stale tick stream detected', { staleAssets: data.staleAssets });
+  });
+
   console.log('✅ Strategy is now running!');
   console.log('⏳ Waiting for signals...\n');
   console.log('Strategy Logic (MEAN REVERSION):');
@@ -654,6 +683,7 @@ async function main() {
 
     clearInterval(proximityCheckInterval);
     clearInterval(summaryInterval);
+    gatewayClient.stopHealthCheck();
     tradeManager.stop();
 
     const winRate = totalTrades > 0 ? (wonTrades / totalTrades) * 100 : 0;
