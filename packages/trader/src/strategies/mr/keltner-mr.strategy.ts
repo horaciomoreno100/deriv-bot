@@ -320,7 +320,7 @@ export class KeltnerMRStrategy extends MRStrategyBase {
       return null;
     }
 
-    const { price, rsi, adx, kcUpper, kcMiddle, kcLower } = keltnerIndicators;
+    const { price, rsi, adx, kcUpper, kcLower } = keltnerIndicators;
 
     // Check cooldown
     const now = Date.now();
