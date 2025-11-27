@@ -414,12 +414,7 @@ async function main() {
   // Subscribe to ticks
   console.log(`📡 Subscribing to: ${SYMBOLS.join(', ')}...`);
   await gatewayClient.follow(SYMBOLS);
-  for (const symbol of SYMBOLS) {
-    if (!candleBuffers.has(symbol)) {
-      candleBuffers.set(symbol, []);
-      warmUpCandlesPerAsset.set(symbol, 0);
-    }
-  }
+  // Don't clear buffers here - they already have historical candles loaded
   console.log(`✅ Subscribed\n`);
 
   // Handle ticks
