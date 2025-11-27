@@ -263,15 +263,9 @@ export function formatBotInfo(info: {
 }): string {
   let message = `🤖 *Bot Information*\n\n`;
 
-  // System info
-  message += `*System:*\n`;
-  message += `├ Gateway Uptime: \`${info.system.gatewayUptimeFormatted}\`\n`;
-  message += `└ Connected Traders: \`${info.system.connectedTraders}\`\n\n`;
-
   // Active traders - group by strategy to avoid duplicates
+  let uniqueTraders: typeof info.traders = [];
   if (info.traders.length > 0) {
-    message += `*Active Traders:*\n`;
-    
     // Group traders by strategy+symbols to show only the most recent one
     const tradersByStrategy = new Map<string, typeof info.traders[0]>();
     for (const trader of info.traders) {
@@ -284,7 +278,17 @@ export function formatBotInfo(info: {
     }
     
     // Show only unique strategies (most recent instance)
-    const uniqueTraders = Array.from(tradersByStrategy.values());
+    uniqueTraders = Array.from(tradersByStrategy.values());
+  }
+
+  // System info
+  message += `*System:*\n`;
+  message += `├ Gateway Uptime: \`${info.system.gatewayUptimeFormatted}\`\n`;
+  message += `└ Connected Traders: \`${uniqueTraders.length}\`\n\n`;
+
+  // Active traders
+  if (uniqueTraders.length > 0) {
+    message += `*Active Traders:*\n`;
     for (const trader of uniqueTraders) {
       const statusEmoji = trader.isActive ? '🟢' : '🔴';
       message += `${statusEmoji} *${trader.name}*\n`;
