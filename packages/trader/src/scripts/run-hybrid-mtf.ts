@@ -315,11 +315,18 @@ async function main() {
                 missingCriteria: readiness.missingCriteria || [],
               });
             }
-          } catch (error) {
-            // Skip silently
+          } catch (error: any) {
+            console.error(`[Signal Proximity] Error for ${symbol}:`, error.message || error);
+          }
+        } else {
+          // Log when buffer is not ready (only once per symbol to avoid spam)
+          if (buffer.length === 0 || buffer.length % 20 === 0) {
+            console.log(`[Signal Proximity] ${symbol}: Waiting for candles (${buffer.length}/100)`);
           }
         }
       }
+    } else {
+      console.warn('[Signal Proximity] Strategy does not have getSignalReadiness method');
     }
   }, PROXIMITY_CHECK_INTERVAL);
 
