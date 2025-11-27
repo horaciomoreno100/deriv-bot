@@ -12,7 +12,7 @@
  * 5. 💰 Riesgo Dinámico - 1-2% del capital por trade
  */
 
-import { GatewayClient, getOpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
+import { GatewayClient, loadEnvFromRoot } from '@deriv-bot/shared';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { MeanReversionStrategy } from '../strategies/mean-reversion.strategy.js';
@@ -23,9 +23,6 @@ import { RSI } from 'technicalindicators';
 
 // Load environment variables from project root
 loadEnvFromRoot();
-
-// OpenObserve Logger (with service name for per-service streams)
-const ooLogger = getOpenObserveLogger({ service: 'trader' });
 
 // Configuration
 const GATEWAY_URL = process.env.GATEWAY_URL || 'ws://localhost:3000';
@@ -184,7 +181,6 @@ async function main() {
   console.log(`   Warm-up: ${WARM_UP_CANDLES_REQUIRED} velas requeridas para estabilizar indicadores`);
   console.log();
 
-  ooLogger.info('trader', 'RSI-BB-Scalping demo started', {
     symbols: SYMBOLS,
     timeframe: TIMEFRAME,
     tradeMode: TRADE_MODE,
@@ -336,14 +332,12 @@ async function main() {
       if (result.stake) {
         balance -= result.stake;
       }
-      ooLogger.info('trader', 'Trade executed', {
         asset: signal.symbol || SYMBOLS[0],
         direction: signal.direction,
         stake: result.stake,
         contractId: result.contractId
       });
     } else {
-      ooLogger.warn('trader', 'Trade failed', {
         asset: signal.symbol || SYMBOLS[0],
         direction: signal.direction,
         error: result.error
@@ -354,7 +348,6 @@ async function main() {
   // Listen for errors
   engine.on('strategy:error', (error: Error) => {
     console.error(`❌ Strategy error:`, error);
-    ooLogger.error('trader', 'Strategy error', { error: error.message });
   });
 
   // Connect to Gateway
@@ -667,7 +660,6 @@ async function main() {
     if (won) {
       wonTrades++;
       balance += (trade.stake || 0) + profit;
-      ooLogger.info('trader', 'Trade closed - WIN', {
         contractId: data.id,
         profit,
         asset: trade.asset,
@@ -678,7 +670,6 @@ async function main() {
       lostTrades++;
       balance += (trade.stake || 0) + profit; // profit is negative for losses
       console.log(`\n❌ TRADE LOST: ${data.id}`);
-      ooLogger.info('trader', 'Trade closed - LOSS', {
         contractId: data.id,
         profit,
         asset: trade.asset,
@@ -748,7 +739,6 @@ async function main() {
   // Keep running
   process.on('SIGINT', async () => {
     console.log('\n\n🛑 Stopping...');
-    ooLogger.warn('trader', 'RSI-BB-Scalping demo shutting down');
 
     // Clear intervals
     clearInterval(proximityCheckInterval);
@@ -772,7 +762,6 @@ async function main() {
     console.log(`   ROI: ${roi.toFixed(2)}%`);
     console.log('='.repeat(80));
 
-    ooLogger.info('trader', 'RSI-BB-Scalping demo stopped', {
       totalTrades,
       wonTrades,
       lostTrades,
@@ -782,7 +771,6 @@ async function main() {
       finalBalance: balance
     });
 
-    await ooLogger.close();
     process.exit(0);
   });
 }

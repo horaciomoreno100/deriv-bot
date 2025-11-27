@@ -10,5 +10,4 @@ export * from './logger.js';
 export * from './client/gateway-client.js';
 export * from './slack-alerts.js';
 export * from './telegram-alerts.js';
-export * from './logging/openobserve.js';
 export * from './utils/load-env.js';

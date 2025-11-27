@@ -11,7 +11,7 @@
  * - RSI Zone Filter: Avoid 30-40 indecision zone
  */
 
-import { GatewayClient, getOpenObserveLogger, loadEnvFromRoot, getTelegramAlerter } from '@deriv-bot/shared';
+import { GatewayClient, loadEnvFromRoot, getTelegramAlerter } from '@deriv-bot/shared';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { BBSqueezeMRStrategy } from '../strategies/bb-squeeze-mr.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
@@ -56,9 +56,6 @@ let tradeManager: TradeManager;
 
 // Trade Execution Service
 let tradeExecutionService: TradeExecutionService;
-
-// OpenObserve Logger (with service name for per-service streams)
-const ooLogger = getOpenObserveLogger({ service: 'trader' });
 
 // Telegram Alerter for connection events
 const telegramAlerter = getTelegramAlerter({ serviceName: 'BB-Squeeze-MR' });
@@ -185,12 +182,6 @@ async function main() {
   console.log('🔌 Connecting to Gateway...');
   await gatewayClient.connect();
   console.log('✅ Connected to Gateway\n');
-  ooLogger.info('trader', 'Trader started', {
-    strategy: 'BB-Squeeze-MR',
-    symbols: SYMBOLS,
-    tradeMode: TRADE_MODE,
-    balance: INITIAL_BALANCE
-  });
 
   // Register trader with Gateway for monitoring
   try {
@@ -320,13 +311,6 @@ async function main() {
     }
     console.log(`${'='.repeat(80)}\n`);
 
-    ooLogger.info('trader', 'Signal detected', {
-      asset,
-      direction: signal.direction,
-      confidence: signal.confidence,
-      metadata: signal.metadata
-    });
-
     // Execute trade using TradeExecutionService
     const result = await tradeExecutionService.executeTrade(signal, asset);
     if (result.success) {
@@ -334,18 +318,6 @@ async function main() {
       if (result.stake) {
         balance -= result.stake;
       }
-      ooLogger.info('trader', 'Trade executed', {
-        asset,
-        direction: signal.direction,
-        stake: result.stake,
-        contractId: result.contractId
-      });
-    } else {
-      ooLogger.warn('trader', 'Trade failed', {
-        asset,
-        direction: signal.direction,
-        error: result.error
-      });
     }
   });
 
@@ -421,30 +393,25 @@ async function main() {
   // Listen for reconnection events and send Telegram alerts
   gatewayClient.on('disconnected', () => {
     console.log('\n⚠️  [GatewayClient] Disconnected from Gateway');
-    ooLogger.warn('trader', 'Disconnected from Gateway');
     telegramAlerter.sendConnectionAlert('disconnected', 'Lost connection to Gateway server');
   });
 
   gatewayClient.on('reconnecting', () => {
     console.log('🔄 [GatewayClient] Attempting to reconnect...');
-    // Don't spam Telegram with reconnecting messages
   });
 
   gatewayClient.on('connected', () => {
     console.log('✅ [GatewayClient] Reconnected to Gateway');
-    ooLogger.info('trader', 'Reconnected to Gateway');
     telegramAlerter.sendConnectionAlert('connected', 'Successfully reconnected to Gateway server');
   });
 
   gatewayClient.on('resubscribed' as any, (data: { assets: string[] }) => {
     console.log(`📡 [GatewayClient] Re-subscribed to ${data.assets.length} asset(s): ${data.assets.join(', ')}`);
-    ooLogger.info('trader', 'Re-subscribed to assets', { assets: data.assets });
     telegramAlerter.sendConnectionAlert('resubscribed', `Re-subscribed to: ${data.assets.join(', ')}`);
   });
 
   gatewayClient.on('health:stale' as any, (data: { staleAssets: string[] }) => {
     console.log(`\n🏥 [HealthCheck] Stale tick stream detected for: ${data.staleAssets.join(', ')}`);
-    ooLogger.warn('trader', 'Stale tick stream detected', { staleAssets: data.staleAssets });
     telegramAlerter.sendConnectionAlert('health_stale', `No ticks received for: ${data.staleAssets.join(', ')}. Attempting re-subscription...`);
   });
 
@@ -619,17 +586,6 @@ async function main() {
       console.log(`   ❌ TRADE LOST`);
     }
 
-    ooLogger.info('trader', 'Trade closed', {
-      contractId,
-      result: won ? 'WIN' : 'LOSS',
-      profit,
-      asset: trade.asset,
-      direction: trade.direction,
-      totalTrades,
-      wonTrades,
-      lostTrades
-    });
-
     // Get real balance from API (most accurate)
     try {
       const balanceInfo = await gatewayClient.getBalance();
@@ -707,17 +663,6 @@ async function main() {
     console.log(`   Total P&L: $${totalPnL.toFixed(2)}`);
     console.log(`   ROI: ${roi.toFixed(2)}%`);
     console.log('='.repeat(80));
-
-    ooLogger.warn('trader', 'Trader shutting down', {
-      totalTrades,
-      wonTrades,
-      lostTrades,
-      winRate,
-      totalPnL,
-      roi,
-      finalBalance: balance
-    });
-    await ooLogger.close();
 
     await gatewayClient.disconnect();
     console.log('✅ Shutdown complete');

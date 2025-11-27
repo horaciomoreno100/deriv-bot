@@ -8,22 +8,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import type { GatewayBridge } from './gateway-bridge.js';
 import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo, formatSignalProximities } from './formatters.js';
-import { getOpenObserveLogger, loadEnvFromRoot, type OpenObserveLogger } from '@deriv-bot/shared';
-
-// Lazy initialization of logger - will be initialized when first used
-// This ensures environment variables are loaded first
-let ooLogger: OpenObserveLogger | null = null;
-
-function getLogger(): OpenObserveLogger {
-  if (!ooLogger) {
-    // Ensure environment variables are loaded before initializing logger
-    if (!process.env.OPENOBSERVE_USER) {
-      loadEnvFromRoot();
-    }
-    ooLogger = getOpenObserveLogger({ service: 'telegram' });
-  }
-  return ooLogger;
-}
 
 export interface TelegramBotConfig {
   token: string;
@@ -195,13 +179,13 @@ export class TelegramBotService {
     // Trade opened
     this.gateway.on('trade:executed', (data) => {
       this.sendMessage(formatTrade(data, 'opened'));
-      getLogger().info('telegram', 'Trade notification sent', { type: 'opened', asset: data.asset });
+      console.log('[TelegramBot] Trade notification sent:', { type: 'opened', asset: data.asset });
     });
 
     // Trade closed
     this.gateway.on('trade:result', (data) => {
       this.sendMessage(formatTrade(data, 'closed'));
-      getLogger().info('telegram', 'Trade notification sent', { type: 'closed', profit: data.profit });
+      console.log('[TelegramBot] Trade notification sent:', { type: 'closed', profit: data.profit });
     });
 
     console.log('[TelegramBot] Gateway events registered');
