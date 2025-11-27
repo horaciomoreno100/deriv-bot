@@ -223,6 +223,8 @@ function generateMockTrades(
     const exitSnapshot = createSnapshot(exitCandle, exitIndex, {
       rsi: exitRsi,
       bbUpper: exitBbUpper,
+      bbMiddle: exitBbMiddle,
+      bbLower: exitBbLower,
       bbMiddle: bb.middle[exitIndex],
       bbLower: bb.lower[exitIndex],
       squeezeOn: Math.random() > 0.6,
