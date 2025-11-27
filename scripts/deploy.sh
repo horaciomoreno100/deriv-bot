@@ -105,7 +105,7 @@ elif [[ "$1" == "--restart-all" ]]; then
     echo -e "${GREEN}✓${NC} All services restarted"
 else
     echo -e "${YELLOW}[5/5]${NC} Restarting services (gateway, traders, telegram)..."
-    ssh $SERVER "pm2 restart gateway trader-squeeze-mr trader-keltner-mr telegram && pm2 save"
+    ssh $SERVER "pm2 restart gateway trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf telegram && pm2 save"
     echo -e "${GREEN}✓${NC} Services restarted"
 fi
 echo ""
