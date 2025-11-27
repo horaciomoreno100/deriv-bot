@@ -332,6 +332,9 @@ async function main() {
                 readyToSignal: readiness.readyToSignal,
                 missingCriteria: readiness.missingCriteria || [],
               });
+              console.log(`[Signal Proximity] Published for ${symbol}: ${readiness.direction} ${readiness.overallProximity}%`);
+            } else {
+              console.log(`[Signal Proximity] ${symbol}: getSignalReadiness returned null`);
             }
           } catch (error: any) {
             console.error(`[Signal Proximity] Error for ${symbol}:`, error.message || error);
