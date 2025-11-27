@@ -39,6 +39,7 @@
     "demo:sr": "tsx src/scripts/run-support-resistance-demo.ts",
     "demo:squeeze": "tsx src/scripts/run-bb-squeeze.ts",
     "demo:squeeze-mr": "tsx src/scripts/run-bb-squeeze-mr.ts",
+    "demo:keltner-mr": "tsx src/scripts/run-keltner-mr.ts",
     "data:fetch": "tsx src/scripts/fetch-historical-data.ts",
     "optimize:r75": "tsx src/scripts/optimize-r75.ts",
     "optimize:all": "tsx src/scripts/optimize-all-assets.ts",
@@ -51,7 +52,12 @@
     "dashboard:legacy": "tsx src/scripts/run-dashboard.ts",
     "test:validation": "tsx src/scripts/run-validation-test.ts",
     "analyze:forex": "tsx src/scripts/forex-market-characterization.ts",
-    "analyze:regime": "tsx src/scripts/analyze-market-regimes.ts"
+    "analyze:regime": "tsx src/scripts/analyze-market-regimes.ts",
+    "data:fetch:forex": "tsx src/scripts/fetch-forex-historical.ts",
+    "data:fetch:calendar": "tsx src/scripts/fetch-economic-calendar.ts",
+    "analyze:news": "tsx src/scripts/analyze-news-impact.ts",
+    "compare:mr": "tsx src/scripts/compare-mr-strategies.ts",
+    "compare:mr:full": "RUN_MC=true RUN_OOS=true tsx src/scripts/compare-mr-strategies.ts"
   },
   "dependencies": {
     "@deriv-bot/gateway": "workspace:*",

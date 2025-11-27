@@ -18,7 +18,8 @@
     "src/dashboard/**/*",
     "src/services/**/*",
     "src/analysis/**/*",
-    "src/trade-management/**/*"
+    "src/trade-management/**/*",
+    "src/accounting/**/*"
   ],
   "exclude": [
     "node_modules",

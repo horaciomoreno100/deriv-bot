@@ -71,6 +71,8 @@ export interface Contract {
   profit?: number;
   /** Duration in seconds */
   duration: number;
+  /** Strategy that generated this contract */
+  strategyName?: string;
 }
 
 /**
@@ -98,23 +100,25 @@ export interface TradeResult {
   /** Contract ID */
   contractId: string;
   /** Asset symbol */
-  symbol: string;
+  symbol?: string;
   /** Direction */
-  direction: ContractDirection;
+  direction?: ContractDirection;
   /** Status */
   status: ContractStatus;
   /** Stake amount */
-  stake: number;
+  stake?: number;
   /** Payout received (if won) */
-  payout: number;
+  payout?: number;
   /** Profit/loss */
   profit: number;
   /** Entry price */
-  entryPrice: number;
+  entryPrice?: number;
   /** Exit price */
   exitPrice: number;
   /** Entry timestamp */
-  entryTime: number;
+  entryTime?: number;
   /** Exit timestamp */
   exitTime: number;
+  /** Strategy that generated this trade */
+  strategyName?: string;
 }

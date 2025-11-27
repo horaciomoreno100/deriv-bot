@@ -7,3 +7,4 @@ export * from './trade.js';
 export * from './strategy.js';
 export * from './ai-analysis.js';
 export * from './protocol.js';
+export * from './economic-event.js';
