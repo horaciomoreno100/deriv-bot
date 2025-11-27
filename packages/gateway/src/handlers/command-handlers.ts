@@ -1761,9 +1761,16 @@ export async function handleGetLogsCommand(
             `pm2 logs ${pm2Name} --lines ${lines} --nostream --out 2>/dev/null || echo "No logs available"`,
             { encoding: 'utf8', timeout: 5000 }
           );
-          // Filter out PM2 headers (TAILING, last X lines, etc.)
+          // Filter out PM2 headers, ANSI codes, and service prefixes
           const filteredOutLogs = outLogs
             .split('\n')
+            .map(line => {
+              // Remove ANSI color codes (e.g., [31m, [39m, [1m, [90m, [22m)
+              let cleaned = line.replace(/\x1b\[[0-9;]*m/g, '');
+              // Remove PM2 service prefix (e.g., "25|trader- | ")
+              cleaned = cleaned.replace(/^\d+\|[^|]+\|\s*/, '');
+              return cleaned;
+            })
             .filter(line => {
               const trimmed = line.trim();
               return trimmed && 
@@ -1786,9 +1793,16 @@ export async function handleGetLogsCommand(
             { encoding: 'utf8', timeout: 5000 }
           );
           
-          // Filter out PM2 headers (TAILING, last X lines, etc.)
+          // Filter out PM2 headers, ANSI codes, and service prefixes
           const filteredErrLogs = errLogs
             .split('\n')
+            .map(line => {
+              // Remove ANSI color codes (e.g., [31m, [39m, [1m, [90m, [22m)
+              let cleaned = line.replace(/\x1b\[[0-9;]*m/g, '');
+              // Remove PM2 service prefix (e.g., "25|trader- | ")
+              cleaned = cleaned.replace(/^\d+\|[^|]+\|\s*/, '');
+              return cleaned;
+            })
             .filter(line => {
               const trimmed = line.trim();
               return trimmed && 
