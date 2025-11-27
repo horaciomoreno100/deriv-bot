@@ -95,14 +95,14 @@ interface TraderInfo {
 
 /**
  * Get registered traders info (for external use)
- * Only returns active traders (heartbeat within 2 minutes)
+ * Only returns active traders (heartbeat within 5 minutes)
  */
 export function getRegisteredTraders(): TraderInfo[] {
   const now = Date.now();
-  const ACTIVE_THRESHOLD = 120000; // 2 minutes
+  const ACTIVE_THRESHOLD = 300000; // 5 minutes (heartbeat every 30s, so this is safe)
   
-  // Clean up inactive traders (heartbeat older than 5 minutes)
-  const INACTIVE_THRESHOLD = 300000; // 5 minutes
+  // Clean up inactive traders (heartbeat older than 10 minutes)
+  const INACTIVE_THRESHOLD = 600000; // 10 minutes
   for (const [ws, trader] of registeredTraders.entries()) {
     if (now - trader.lastHeartbeat > INACTIVE_THRESHOLD) {
       // Check if WebSocket is still open
@@ -124,7 +124,7 @@ export function getRegisteredTraders(): TraderInfo[] {
       startedAt: t.startedAt,
       lastHeartbeat: t.lastHeartbeat,
       uptime: now - t.startedAt,
-      isActive: (now - t.lastHeartbeat) < 60000, // Active if heartbeat within 60s
+      isActive: (now - t.lastHeartbeat) < 120000, // Active if heartbeat within 2 minutes
     }))
     .sort((a, b) => b.startedAt - a.startedAt); // Sort by most recent first
 }
