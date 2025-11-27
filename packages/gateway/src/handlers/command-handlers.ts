@@ -95,19 +95,38 @@ interface TraderInfo {
 
 /**
  * Get registered traders info (for external use)
+ * Only returns active traders (heartbeat within 2 minutes)
  */
 export function getRegisteredTraders(): TraderInfo[] {
   const now = Date.now();
-  return Array.from(registeredTraders.values()).map(t => ({
-    id: t.id,
-    name: t.name,
-    strategy: t.strategy,
-    symbols: t.symbols,
-    startedAt: t.startedAt,
-    lastHeartbeat: t.lastHeartbeat,
-    uptime: now - t.startedAt,
-    isActive: (now - t.lastHeartbeat) < 60000, // Active if heartbeat within 60s
-  }));
+  const ACTIVE_THRESHOLD = 120000; // 2 minutes
+  
+  // Clean up inactive traders (heartbeat older than 5 minutes)
+  const INACTIVE_THRESHOLD = 300000; // 5 minutes
+  for (const [ws, trader] of registeredTraders.entries()) {
+    if (now - trader.lastHeartbeat > INACTIVE_THRESHOLD) {
+      // Check if WebSocket is still open
+      if (ws.readyState !== 1) { // 1 = OPEN
+        console.log(`[getRegisteredTraders] Removing inactive trader: ${trader.name} (last heartbeat: ${Math.round((now - trader.lastHeartbeat) / 1000)}s ago)`);
+        registeredTraders.delete(ws);
+      }
+    }
+  }
+  
+  // Return only active traders
+  return Array.from(registeredTraders.values())
+    .filter(t => (now - t.lastHeartbeat) < ACTIVE_THRESHOLD)
+    .map(t => ({
+      id: t.id,
+      name: t.name,
+      strategy: t.strategy,
+      symbols: t.symbols,
+      startedAt: t.startedAt,
+      lastHeartbeat: t.lastHeartbeat,
+      uptime: now - t.startedAt,
+      isActive: (now - t.lastHeartbeat) < 60000, // Active if heartbeat within 60s
+    }))
+    .sort((a, b) => b.startedAt - a.startedAt); // Sort by most recent first
 }
 
 /**

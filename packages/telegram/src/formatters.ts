@@ -268,10 +268,24 @@ export function formatBotInfo(info: {
   message += `├ Gateway Uptime: \`${info.system.gatewayUptimeFormatted}\`\n`;
   message += `└ Connected Traders: \`${info.system.connectedTraders}\`\n\n`;
 
-  // Active traders
+  // Active traders - group by strategy to avoid duplicates
   if (info.traders.length > 0) {
     message += `*Active Traders:*\n`;
+    
+    // Group traders by strategy+symbols to show only the most recent one
+    const tradersByStrategy = new Map<string, typeof info.traders[0]>();
     for (const trader of info.traders) {
+      const key = `${trader.strategy}-${trader.symbols.sort().join(',')}`;
+      const existing = tradersByStrategy.get(key);
+      // Keep the one with longer uptime (most likely the active one)
+      if (!existing || trader.uptime > existing.uptime) {
+        tradersByStrategy.set(key, trader);
+      }
+    }
+    
+    // Show only unique strategies (most recent instance)
+    const uniqueTraders = Array.from(tradersByStrategy.values());
+    for (const trader of uniqueTraders) {
       const statusEmoji = trader.isActive ? '🟢' : '🔴';
       message += `${statusEmoji} *${trader.name}*\n`;
       message += `├ Strategy: \`${trader.strategy}\`\n`;
