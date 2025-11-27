@@ -278,7 +278,7 @@ export abstract class MRStrategyBase {
     this.openTrade(candle, entrySignal);
 
     // Convert to Signal format for external systems
-    return this.toSignal(entrySignal, asset);
+    return this.toSignal(entrySignal, asset, candle.close);
   }
 
   // ============================================================================
@@ -471,7 +471,7 @@ export abstract class MRStrategyBase {
   /**
    * Convert internal signal to external Signal format
    */
-  protected toSignal(signal: MRTradeSignal, asset: string): Signal {
+  protected toSignal(signal: MRTradeSignal, asset: string, entryPrice: number): Signal {
     return {
       strategyName: this.getName(),
       symbol: asset,
@@ -481,6 +481,8 @@ export abstract class MRStrategyBase {
       timestamp: Date.now(),
       metadata: {
         ...signal.metadata,
+        price: entryPrice, // Entry price for CFD trades
+        currentPrice: entryPrice, // Alias for compatibility
         stopLoss: signal.stopLoss,
         takeProfit: signal.takeProfit,
         maxBars: signal.maxBars,
