@@ -11,7 +11,7 @@
  * - RSI Zone Filter: Avoid 30-40 indecision zone
  */
 
-import { GatewayClient, getOpenObserveLogger, loadEnvFromRoot } from '@deriv-bot/shared';
+import { GatewayClient, getOpenObserveLogger, loadEnvFromRoot, getTelegramAlerter } from '@deriv-bot/shared';
 import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { BBSqueezeMRStrategy } from '../strategies/bb-squeeze-mr.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
@@ -59,6 +59,9 @@ let tradeExecutionService: TradeExecutionService;
 
 // OpenObserve Logger (with service name for per-service streams)
 const ooLogger = getOpenObserveLogger({ service: 'trader' });
+
+// Telegram Alerter for connection events
+const telegramAlerter = getTelegramAlerter({ serviceName: 'BB-Squeeze-MR' });
 
 /**
  * Process tick and build candle (per asset)
@@ -415,29 +418,34 @@ async function main() {
   gatewayClient.startHealthCheck();
   console.log('🏥 Health check started (monitors tick stream)\n');
 
-  // Listen for reconnection events
+  // Listen for reconnection events and send Telegram alerts
   gatewayClient.on('disconnected', () => {
     console.log('\n⚠️  [GatewayClient] Disconnected from Gateway');
     ooLogger.warn('trader', 'Disconnected from Gateway');
+    telegramAlerter.sendConnectionAlert('disconnected', 'Lost connection to Gateway server');
   });
 
   gatewayClient.on('reconnecting', () => {
     console.log('🔄 [GatewayClient] Attempting to reconnect...');
+    // Don't spam Telegram with reconnecting messages
   });
 
   gatewayClient.on('connected', () => {
     console.log('✅ [GatewayClient] Reconnected to Gateway');
     ooLogger.info('trader', 'Reconnected to Gateway');
+    telegramAlerter.sendConnectionAlert('connected', 'Successfully reconnected to Gateway server');
   });
 
   gatewayClient.on('resubscribed' as any, (data: { assets: string[] }) => {
     console.log(`📡 [GatewayClient] Re-subscribed to ${data.assets.length} asset(s): ${data.assets.join(', ')}`);
     ooLogger.info('trader', 'Re-subscribed to assets', { assets: data.assets });
+    telegramAlerter.sendConnectionAlert('resubscribed', `Re-subscribed to: ${data.assets.join(', ')}`);
   });
 
   gatewayClient.on('health:stale' as any, (data: { staleAssets: string[] }) => {
     console.log(`\n🏥 [HealthCheck] Stale tick stream detected for: ${data.staleAssets.join(', ')}`);
     ooLogger.warn('trader', 'Stale tick stream detected', { staleAssets: data.staleAssets });
+    telegramAlerter.sendConnectionAlert('health_stale', `No ticks received for: ${data.staleAssets.join(', ')}. Attempting re-subscription...`);
   });
 
   console.log('✅ Strategy is now running!');
