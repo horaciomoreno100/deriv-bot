@@ -39,7 +39,8 @@ interface PortfolioCacheEntry {
 }
 
 const portfolioCache = new Map<string, PortfolioCacheEntry>(); // account -> cache entry
-const PORTFOLIO_CACHE_TTL = 5000; // 5 seconds cache
+const PORTFOLIO_CACHE_TTL = 10000; // 10 seconds - return fresh cache immediately
+const PORTFOLIO_STALE_TTL = 300000; // 5 minutes - use stale cache on errors
 
 /**
  * Registered Traders tracking
@@ -319,16 +320,18 @@ export async function handlePortfolioCommand(
     console.log(`[handlePortfolioCommand] Response sent`);
   } catch (error) {
     console.error(`[handlePortfolioCommand] Error:`, error);
-    
-    // If rate limit error and we have cached data, return cached data
-    if (error instanceof Error && error.message.includes('rate limit') && cached) {
-      console.log(`[handlePortfolioCommand] Rate limit hit, returning stale cache`);
+
+    // If we have cached data within stale TTL, return it on any error (timeout, rate limit, etc.)
+    if (cached && (now - cached.timestamp) < PORTFOLIO_STALE_TTL) {
+      const cacheAge = Math.round((now - cached.timestamp) / 1000);
+      console.log(`[handlePortfolioCommand] Error occurred, returning stale cache (age: ${cacheAge}s)`);
       gatewayServer.respondToCommand(ws, command.requestId!, true, {
         positions: cached.positions,
         count: cached.positions.length,
         totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + pos.profit, 0),
         cached: true,
         stale: true,
+        cacheAge,
       });
       return;
     }
