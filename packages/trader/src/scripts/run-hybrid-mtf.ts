@@ -333,6 +333,11 @@ async function main() {
   // Signal proximity check - publish every 10 seconds
   const PROXIMITY_CHECK_INTERVAL = 10000;
   const proximityCheckInterval = setInterval(async () => {
+    // Check connection first - skip entire check if not connected
+    if (!gatewayClient.isConnected()) {
+      return; // Skip silently, will retry on next interval
+    }
+
     if (typeof (strategy as any).getSignalReadiness === 'function') {
       for (const symbol of SYMBOLS) {
         const buffer = candleBuffers.get(symbol) || [];
@@ -340,10 +345,9 @@ async function main() {
           try {
             const readiness = (strategy as any).getSignalReadiness(buffer);
             if (readiness) {
-              // Check if connected before publishing
+              // Double-check connection before publishing (connection might drop between checks)
               if (!gatewayClient.isConnected()) {
-                // Skip silently if not connected (will retry on next interval)
-                return;
+                continue; // Skip this symbol, try next one
               }
 
               // Convert criteria format to match Gateway expectations
@@ -371,7 +375,7 @@ async function main() {
             }
           } catch (error: any) {
             // Only log if it's not a connection error (will retry automatically)
-            if (!error.message?.includes('Not connected to Gateway')) {
+            if (!error.message?.includes('Not connected to Gateway') && !error.message?.includes('Not connected')) {
               console.error(`[Signal Proximity] Error for ${symbol}:`, error.message || error);
             }
           }
