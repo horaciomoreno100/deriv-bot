@@ -51,17 +51,27 @@ echo ""
 ssh $SERVER << 'ENDSSH'
     echo "Clearing error logs..."
     
+    # Clear PM2 error logs by truncating the log files
     for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
         echo "  → Clearing $service error log..."
-        pm2 flush $service --err 2>/dev/null || echo "    (No errors to clear)"
+        # Find and truncate error log files
+        if [ -f "/root/.pm2/logs/${service}-error.log" ]; then
+            > "/root/.pm2/logs/${service}-error.log"
+            echo "    ✅ Cleared /root/.pm2/logs/${service}-error.log"
+        fi
+        # Also check for logs in the project directory
+        if [ -f "/opt/apps/deriv-bot/logs/${service}-error.log" ]; then
+            > "/opt/apps/deriv-bot/logs/${service}-error.log"
+            echo "    ✅ Cleared /opt/apps/deriv-bot/logs/${service}-error.log"
+        fi
     done
     
     echo ""
     echo "✅ Error logs cleared"
     echo ""
-    echo "Current error counts:"
+    echo "Current error counts (should be 0 or very low):"
     for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
-        error_count=$(pm2 logs $service --err --lines 10 --nostream 2>/dev/null | wc -l || echo "0")
+        error_count=$(pm2 logs $service --err --lines 10 --nostream 2>/dev/null | grep -v "^$" | wc -l || echo "0")
         echo "  $service: $error_count errors"
     done
 ENDSSH
