@@ -309,7 +309,7 @@ export class KeltnerMRStrategy extends MRStrategyBase {
     const asset = firstCandle.asset || 'UNKNOWN';
 
     // Calculate base indicators
-    const baseIndicators = this.calculateBaseIndicators(candles);
+    const baseIndicators = this.calculateIndicators(candles);
     if (!baseIndicators) {
       return null;
     }
@@ -320,7 +320,7 @@ export class KeltnerMRStrategy extends MRStrategyBase {
       return null;
     }
 
-    const { price, rsi, adx, kcUpper, kcMiddle, kcLower, kcAtr } = keltnerIndicators;
+    const { price, rsi, adx, kcUpper, kcMiddle, kcLower } = keltnerIndicators;
 
     // Check cooldown
     const now = Date.now();
@@ -338,7 +338,6 @@ export class KeltnerMRStrategy extends MRStrategyBase {
     // Calculate distances
     const distToLower = (price - kcLower) / kcLower;
     const distToUpper = (kcUpper - price) / kcUpper;
-    const distToMiddle = Math.abs((price - kcMiddle) / kcMiddle);
 
     // Entry conditions
     const longReady = price <= kcLower && rsi < this.specificParams.rsiOversold && isRanging && cooldownOk;
