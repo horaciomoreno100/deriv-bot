@@ -302,7 +302,7 @@ async function main() {
       while (loaded < HISTORICAL_CANDLES_NEEDED && attempts < maxAttempts) {
         const remaining = HISTORICAL_CANDLES_NEEDED - loaded;
         const count = Math.min(API_LIMIT, remaining);
-        const candles = await gatewayClient.getCandles(symbol, '1m', count);
+        const candles = await gatewayClient.getCandles(symbol, 60, count); // 60 seconds = 1 minute
         
         if (candles.length === 0) break; // No more candles available
         
