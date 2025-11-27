@@ -285,6 +285,24 @@ async function main() {
 
   console.log(`✅ Strategy "${strategy.getName()}" initialized\n`);
 
+  // Load historical candles first (before setting up signal proximity)
+  console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
+  const HISTORICAL_CANDLES = 150; // Load more than minCandles (100) to ensure we have enough
+
+  for (const symbol of SYMBOLS) {
+    try {
+      const candles = await gatewayClient.getCandles(symbol, '1m', HISTORICAL_CANDLES);
+      console.log(`   ✅ ${symbol}: ${candles.length} candles`);
+      candleBuffers.set(symbol, [...candles]); // Store candles for strategy
+      warmUpCandlesPerAsset.set(symbol, candles.length);
+    } catch (error: any) {
+      console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
+      candleBuffers.set(symbol, []);
+      warmUpCandlesPerAsset.set(symbol, 0);
+    }
+  }
+  console.log();
+
   // Signal proximity check - publish every 10 seconds
   const PROXIMITY_CHECK_INTERVAL = 10000;
   const proximityCheckInterval = setInterval(async () => {
@@ -392,24 +410,6 @@ async function main() {
       strategyAccountant.releaseStake(STRATEGY_NAME, stakeAmount);
     }
   }
-
-  // Load historical candles first
-  console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
-  const HISTORICAL_CANDLES = 150; // Load more than minCandles (100) to ensure we have enough
-
-  for (const symbol of SYMBOLS) {
-    try {
-      const candles = await gatewayClient.getCandles(symbol, '1m', HISTORICAL_CANDLES);
-      console.log(`   ✅ ${symbol}: ${candles.length} candles`);
-      candleBuffers.set(symbol, [...candles]); // Store candles for strategy
-      warmUpCandlesPerAsset.set(symbol, candles.length);
-    } catch (error: any) {
-      console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
-      candleBuffers.set(symbol, []);
-      warmUpCandlesPerAsset.set(symbol, 0);
-    }
-  }
-  console.log();
 
   // Subscribe to ticks
   console.log(`📡 Subscribing to: ${SYMBOLS.join(', ')}...`);
