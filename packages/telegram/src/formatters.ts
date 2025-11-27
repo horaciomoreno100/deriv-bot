@@ -309,8 +309,8 @@ export function formatSignalProximities(data: {
     const dirEmoji = prox.direction === 'call' ? '🟢' :
                      prox.direction === 'put' ? '🔴' : '⚪';
 
-    // Proximity bar (0-100%)
-    const pct = Math.min(100, Math.max(0, prox.proximity * 100));
+    // Proximity bar (0-100%) - proximity is already in 0-100 range
+    const pct = Math.min(100, Math.max(0, prox.proximity));
     const filledBlocks = Math.round(pct / 10);
     const emptyBlocks = 10 - filledBlocks;
     const bar = '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
