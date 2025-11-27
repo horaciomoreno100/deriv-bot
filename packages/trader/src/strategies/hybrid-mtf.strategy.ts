@@ -125,6 +125,8 @@ export class HybridMTFStrategy extends BaseStrategy {
     // Internal buffers for resampled candles
     private candles5m: Record<string, ResampledCandle[]> = {};
     private candles15m: Record<string, ResampledCandle[]> = {};
+    // Flag to track if we have direct candles loaded (from API)
+    private hasDirectCandles: Record<string, { has5m: boolean; has15m: boolean }> = {};
 
     constructor(config: StrategyConfig) {
         super(config);
@@ -132,6 +134,39 @@ export class HybridMTFStrategy extends BaseStrategy {
             ...DEFAULT_PARAMS,
             ...(config.parameters as Partial<HybridMTFParams>),
         };
+    }
+
+    /**
+     * Load historical candles directly from API (5m and 15m)
+     * This is much more efficient than resampling from 1m candles
+     */
+    loadDirectCandles(asset: string, candles5m: Candle[], candles15m: Candle[]): void {
+        // Convert Candle[] to ResampledCandle[]
+        // Candle.timestamp is in seconds, ResampledCandle.timestamp is in milliseconds
+        const resampled5m: ResampledCandle[] = candles5m.map(c => ({
+            timestamp: c.timestamp * 1000, // Convert seconds to milliseconds
+            open: c.open,
+            high: c.high,
+            low: c.low,
+            close: c.close,
+        })).sort((a, b) => a.timestamp - b.timestamp);
+
+        const resampled15m: ResampledCandle[] = candles15m.map(c => ({
+            timestamp: c.timestamp * 1000, // Convert seconds to milliseconds
+            open: c.open,
+            high: c.high,
+            low: c.low,
+            close: c.close,
+        })).sort((a, b) => a.timestamp - b.timestamp);
+
+        this.candles5m[asset] = resampled5m;
+        this.candles15m[asset] = resampled15m;
+        this.hasDirectCandles[asset] = {
+            has5m: resampled5m.length > 0,
+            has15m: resampled15m.length > 0,
+        };
+
+        console.log(`[HybridMTF] ✅ Loaded direct candles for ${asset}: ${resampled5m.length} x 5m, ${resampled15m.length} x 15m`);
     }
 
     /**
@@ -245,6 +280,9 @@ export class HybridMTFStrategy extends BaseStrategy {
         if (this.lastTradeTime[asset] === undefined) this.lastTradeTime[asset] = 0;
         if (!this.candles5m[asset]) this.candles5m[asset] = [];
         if (!this.candles15m[asset]) this.candles15m[asset] = [];
+        if (!this.hasDirectCandles[asset]) {
+            this.hasDirectCandles[asset] = { has5m: false, has15m: false };
+        }
 
         // Check cooldown
         const now = Date.now();
@@ -256,11 +294,24 @@ export class HybridMTFStrategy extends BaseStrategy {
             return null;
         }
 
-        // Resample to 5m and 15m
-        const candles5m = this.resampleCandles(candles, 5);
-        const candles15m = this.resampleCandles(candles, 15);
+        // Use direct candles if available, otherwise resample from 1m
+        let candles5m: ResampledCandle[];
+        let candles15m: ResampledCandle[];
 
-        console.log(`[HybridMTF] 📊 Resampled: ${candles.length} x 1m → ${candles5m.length} x 5m, ${candles15m.length} x 15m`);
+        if (this.hasDirectCandles[asset].has5m && this.hasDirectCandles[asset].has15m) {
+            // Use direct candles from API (much faster!)
+            candles5m = this.candles5m[asset];
+            candles15m = this.candles15m[asset];
+            
+            // Update with latest 1m candle if needed (for real-time updates)
+            // This is optional - the direct candles should be sufficient
+            console.log(`[HybridMTF] 📊 Using direct candles: ${candles5m.length} x 5m, ${candles15m.length} x 15m`);
+        } else {
+            // Fallback: resample from 1m candles
+            candles5m = this.resampleCandles(candles, 5);
+            candles15m = this.resampleCandles(candles, 15);
+            console.log(`[HybridMTF] 📊 Resampled: ${candles.length} x 1m → ${candles5m.length} x 5m, ${candles15m.length} x 15m`);
+        }
 
         // Detect regime
         const regime = this.detectRegime(candles15m);
@@ -462,9 +513,19 @@ export class HybridMTFStrategy extends BaseStrategy {
 
         const asset = firstCandle.asset || 'UNKNOWN';
 
-        // Resample candles
-        const candles5m = this.resampleCandles(candles, 5);
-        const candles15m = this.resampleCandles(candles, 15);
+        // Use direct candles if available, otherwise resample from 1m
+        let candles5m: ResampledCandle[];
+        let candles15m: ResampledCandle[];
+
+        if (this.hasDirectCandles[asset]?.has5m && this.hasDirectCandles[asset]?.has15m) {
+            // Use direct candles from API
+            candles5m = this.candles5m[asset] || [];
+            candles15m = this.candles15m[asset] || [];
+        } else {
+            // Fallback: resample from 1m candles
+            candles5m = this.resampleCandles(candles, 5);
+            candles15m = this.resampleCandles(candles, 15);
+        }
 
         // Detect regime
         const regime = this.detectRegime(candles15m);

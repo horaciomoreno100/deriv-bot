@@ -287,47 +287,41 @@ async function main() {
 
   // Load historical candles first (before setting up signal proximity)
   console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
-  // Need enough candles for 15m context: SMA(50) needs 50 15m candles = 50*15 = 750 1m candles
-  // API limit is ~500 candles per call, so make multiple calls
-  const HISTORICAL_CANDLES_NEEDED = 800;
-  const API_LIMIT = 500;
+  // Strategy needs:
+  // - 1m candles for execution (need 100+ for indicators)
+  // - 5m candles for RSI filter (need 15+ for RSI 14)
+  // - 15m candles for regime detection (need 51 for SMA 50)
+  // Load 5m and 15m candles directly from API (much more efficient than resampling!)
+  const CANDLES_15M_NEEDED = 60; // 51 for SMA(50) + buffer
+  const CANDLES_5M_NEEDED = 20; // 15 for RSI(14) + buffer
+  const CANDLES_1M_NEEDED = 100; // For BB/RSI indicators on 1m
 
   for (const symbol of SYMBOLS) {
     try {
-      const allCandles: Candle[] = [];
-      let loaded = 0;
-      let attempts = 0;
-      const maxAttempts = 3; // Try up to 3 times to get enough candles
-
-      while (loaded < HISTORICAL_CANDLES_NEEDED && attempts < maxAttempts) {
-        const remaining = HISTORICAL_CANDLES_NEEDED - loaded;
-        const count = Math.min(API_LIMIT, remaining);
-        const candles = await gatewayClient.getCandles(symbol, 60, count); // 60 seconds = 1 minute
-        
-        if (candles.length === 0) break; // No more candles available
-        
-        // Merge candles (remove duplicates by epoch)
-        const existingEpochs = new Set(allCandles.map(c => c.epoch));
-        const newCandles = candles.filter(c => !existingEpochs.has(c.epoch));
-        allCandles.push(...newCandles);
-        
-        // Sort by epoch (oldest first)
-        allCandles.sort((a, b) => a.epoch - b.epoch);
-        
-        // Keep only the most recent HISTORICAL_CANDLES_NEEDED candles
-        if (allCandles.length > HISTORICAL_CANDLES_NEEDED) {
-          allCandles.splice(0, allCandles.length - HISTORICAL_CANDLES_NEEDED);
-        }
-        
-        loaded = allCandles.length;
-        attempts++;
-        
-        if (candles.length < count) break; // API returned fewer candles than requested
+      // Load 15m candles directly (for regime detection)
+      const candles15m = await gatewayClient.getCandles(symbol, 900, CANDLES_15M_NEEDED); // 900 seconds = 15 minutes
+      console.log(`   ✅ ${symbol}: ${candles15m.length} x 15m candles`);
+      
+      // Load 5m candles directly (for RSI filter)
+      const candles5m = await gatewayClient.getCandles(symbol, 300, CANDLES_5M_NEEDED); // 300 seconds = 5 minutes
+      console.log(`   ✅ ${symbol}: ${candles5m.length} x 5m candles`);
+      
+      // Load 1m candles (for execution)
+      const candles1m = await gatewayClient.getCandles(symbol, 60, CANDLES_1M_NEEDED); // 60 seconds = 1 minute
+      console.log(`   ✅ ${symbol}: ${candles1m.length} x 1m candles`);
+      
+      // Store 1m candles in buffer (for strategy execution)
+      candleBuffers.set(symbol, candles1m);
+      warmUpCandlesPerAsset.set(symbol, candles1m.length);
+      
+      // Pre-load direct candles into strategy (much faster than resampling!)
+      strategy.loadDirectCandles(symbol, candles5m, candles15m);
+      
+      if (candles15m.length >= 51 && candles5m.length >= 15) {
+        console.log(`   ✅ ${symbol}: Ready for trading! (${candles15m.length} x 15m, ${candles5m.length} x 5m)`);
+      } else {
+        console.log(`   ⚠️  ${symbol}: Need ${Math.max(0, 51 - candles15m.length)} more 15m, ${Math.max(0, 15 - candles5m.length)} more 5m candles`);
       }
-
-      console.log(`   ✅ ${symbol}: ${allCandles.length} candles (${attempts} attempt(s))`);
-      candleBuffers.set(symbol, allCandles);
-      warmUpCandlesPerAsset.set(symbol, allCandles.length);
     } catch (error: any) {
       console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
       candleBuffers.set(symbol, []);
