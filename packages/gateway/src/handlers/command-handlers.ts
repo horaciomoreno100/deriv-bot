@@ -850,7 +850,8 @@ export async function handleCFDTradeCommand(
         amount,
         multiplier,
         duration,
-        openPrice: result.buyPrice,
+        openPrice: entryPrice, // Use market price, not buyPrice (stake)
+        stake: result.buyPrice, // Include stake separately
         timestamp: result.purchaseTime,
         status: 'open',
         takeProfit,

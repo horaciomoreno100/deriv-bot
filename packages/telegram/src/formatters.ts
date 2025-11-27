@@ -146,26 +146,54 @@ export function formatTrade(
     result?: 'won' | 'lost';
     profit?: number;
     timestamp?: number;
+    multiplier?: number;
+    takeProfit?: number;
+    stopLoss?: number;
   },
   action: 'opened' | 'closed'
 ): string {
   const symbol = trade.asset || trade.symbol || 'Unknown';
   const direction = trade.direction || trade.contract_type || '';
-  const amount = trade.amount || trade.stake || 0;
+  // For CFDs, prefer stake over amount (amount is the nominal value)
+  const stake = trade.stake || trade.amount || 0;
 
   if (action === 'opened') {
     const price = trade.openPrice || trade.entry_price || 0;
-    const dirEmoji = direction.toUpperCase().includes('CALL') ? '🟢' : '🔴';
+    // Handle both binary (CALL/PUT) and CFD (BUY/SELL) directions
+    const dirUpper = direction.toUpperCase();
+    const isLong = dirUpper.includes('CALL') || dirUpper.includes('BUY') || dirUpper === 'RISE';
+    const dirEmoji = isLong ? '🟢' : '🔴';
 
-    return (
+    // Build message with optional CFD-specific fields
+    let message = (
       `${dirEmoji} *Trade Opened*\n\n` +
       `Symbol: \`${symbol}\`\n` +
       `Direction: \`${direction}\`\n` +
-      `Stake: \`${amount.toFixed(2)}\`\n` +
-      `Entry: \`${price.toFixed(5)}\`\n` +
-      (trade.duration ? `Duration: \`${trade.duration}s\`\n` : '') +
-      `Time: \`${new Date(trade.timestamp || Date.now()).toLocaleTimeString()}\``
+      `Stake: \`$${stake.toFixed(2)}\`\n` +
+      `Entry: \`${price.toFixed(5)}\`\n`
     );
+
+    // Add multiplier for CFD trades
+    if (trade.multiplier) {
+      message += `Multiplier: \`x${trade.multiplier}\`\n`;
+    }
+
+    // Add TP/SL for CFD trades
+    if (trade.takeProfit) {
+      message += `TP: \`${trade.takeProfit.toFixed(2)}\`\n`;
+    }
+    if (trade.stopLoss) {
+      message += `SL: \`${trade.stopLoss.toFixed(2)}\`\n`;
+    }
+
+    // Add duration for binary options
+    if (trade.duration) {
+      message += `Duration: \`${trade.duration}s\`\n`;
+    }
+
+    message += `Time: \`${new Date(trade.timestamp || Date.now()).toLocaleTimeString()}\``;
+
+    return message;
   } else {
     // Trade closed
     const result = trade.result;
