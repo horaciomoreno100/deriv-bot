@@ -223,8 +223,17 @@ async function main() {
 
   // Initialize strategy
   const strategy = new HybridMTFStrategy({
-    // Parameters from backtest (optimized for R_100)
-    ctxAdxPeriod: 14,
+    name: STRATEGY_NAME.toLowerCase(),
+    enabled: true,
+    assets: SYMBOLS,
+    maxConcurrentTrades: 1,
+    amount: 100,
+    amountType: 'fixed',
+    cooldownSeconds: 60,
+    minConfidence: 0.7,
+    parameters: {
+      // Parameters from backtest (optimized for R_100)
+      ctxAdxPeriod: 14,
     ctxAdxThreshold: 25,
     ctxSmaPeriod: 50,
     ctxSlopeThreshold: 0.0002,
@@ -236,11 +245,12 @@ async function main() {
     rsiPeriod: 14,
     rsiOverbought: 55,
     rsiOversold: 45,
-    takeProfitPct: 0.005,
-    stopLossPct: 0.005,
-    cooldownSeconds: 60,
-    minCandles: 100,
-    confirmationCandles: 1,
+      takeProfitPct: 0.005,
+      stopLossPct: 0.005,
+      cooldownSeconds: 60,
+      minCandles: 100,
+      confirmationCandles: 1,
+    },
   });
 
   console.log('📊 Strategy Configuration:');
