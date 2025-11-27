@@ -1,0 +1,828 @@
+{
+  "totalCombinations": 96,
+  "profitable": 88,
+  "topByExpectancy": [
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 421,
+        "winRate": 40.85510688836104,
+        "profitFactor": 1.3669617177883124,
+        "netPnl": 379.4164438892785,
+        "expectancy": 0.9012267075754834,
+        "roi": 37.941644388927855,
+        "maxDrawdown": 85.79054145993177
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.0588235294117645,
+        "worstDrawdown": 85.79054145993177
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 421,
+        "winRate": 40.85510688836104,
+        "profitFactor": 1.3640087271908967,
+        "netPnl": 376.3632284256528,
+        "expectancy": 0.8939744143127144,
+        "roi": 37.63632284256528,
+        "maxDrawdown": 85.79054145993177
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.0588235294117645,
+        "worstDrawdown": 85.79054145993177
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 39.76608187134503,
+        "profitFactor": 1.358953226448951,
+        "netPnl": 302.96774834395785,
+        "expectancy": 0.885870609192859,
+        "roi": 30.296774834395784,
+        "maxDrawdown": 84.43378471157985
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 10,
+        "avgStreakLength": 2.111801242236025,
+        "worstDrawdown": 84.43378471157985
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 39.473684210526315,
+        "profitFactor": 1.347054287484893,
+        "netPnl": 294.0468026068013,
+        "expectancy": 0.8597859725345072,
+        "roi": 29.404680260680127,
+        "maxDrawdown": 84.43378471157985
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 10,
+        "avgStreakLength": 2.138364779874214,
+        "worstDrawdown": 84.43378471157985
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 39.473684210526315,
+        "profitFactor": 1.347054287484893,
+        "netPnl": 294.0468026068013,
+        "expectancy": 0.8597859725345072,
+        "roi": 29.404680260680127,
+        "maxDrawdown": 84.43378471157985
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 10,
+        "avgStreakLength": 2.138364779874214,
+        "worstDrawdown": 84.43378471157985
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 39.473684210526315,
+        "profitFactor": 1.3466150398439203,
+        "netPnl": 293.67464364194143,
+        "expectancy": 0.8586977884267295,
+        "roi": 29.36746436419414,
+        "maxDrawdown": 84.43378471157985
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 10,
+        "avgStreakLength": 2.138364779874214,
+        "worstDrawdown": 84.43378471157985
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 421,
+        "winRate": 40.85510688836104,
+        "profitFactor": 1.339469434844199,
+        "netPnl": 350.991069460792,
+        "expectancy": 0.8337080034698143,
+        "roi": 35.0991069460792,
+        "maxDrawdown": 85.79054145993177
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.0588235294117645,
+        "worstDrawdown": 85.79054145993177
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 420,
+        "winRate": 41.904761904761905,
+        "profitFactor": 1.3242877520124994,
+        "netPnl": 350.1331182845058,
+        "expectancy": 0.833650281629776,
+        "roi": 35.01331182845058,
+        "maxDrawdown": 93.24954022068687
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.014423076923077,
+        "worstDrawdown": 93.24954022068687
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 420,
+        "winRate": 41.904761904761905,
+        "profitFactor": 1.321459912178438,
+        "netPnl": 347.0799028208801,
+        "expectancy": 0.8263807210020957,
+        "roi": 34.707990282088005,
+        "maxDrawdown": 93.24954022068687
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.014423076923077,
+        "worstDrawdown": 93.24954022068687
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 421,
+        "winRate": 41.09263657957244,
+        "profitFactor": 1.3301464262654288,
+        "netPnl": 340.2841741628067,
+        "expectancy": 0.8082759481301816,
+        "roi": 34.02841741628067,
+        "maxDrawdown": 85.79054145993177
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.0388349514563107,
+        "worstDrawdown": 85.79054145993177
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 40.643274853801174,
+        "profitFactor": 1.3092665921461033,
+        "netPnl": 272.77854112664204,
+        "expectancy": 0.7975980734697146,
+        "roi": 27.2778541126642,
+        "maxDrawdown": 85.04475023926238
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.085889570552147,
+        "worstDrawdown": 85.04475023926238
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 40.35087719298245,
+        "profitFactor": 1.297614605016382,
+        "netPnl": 263.5539357947662,
+        "expectancy": 0.7706255432595501,
+        "roi": 26.355393579476615,
+        "maxDrawdown": 85.04475023926238
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.111801242236025,
+        "worstDrawdown": 85.04475023926238
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 40.35087719298245,
+        "profitFactor": 1.297614605016382,
+        "netPnl": 263.5539357947662,
+        "expectancy": 0.7706255432595501,
+        "roi": 26.355393579476615,
+        "maxDrawdown": 85.04475023926238
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.111801242236025,
+        "worstDrawdown": 85.04475023926238
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 342,
+        "winRate": 40.35087719298245,
+        "profitFactor": 1.2971943496974998,
+        "netPnl": 263.1817768299063,
+        "expectancy": 0.7695373591517729,
+        "roi": 26.31817768299063,
+        "maxDrawdown": 85.04475023926238
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.111801242236025,
+        "worstDrawdown": 85.04475023926238
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 420,
+        "winRate": 41.904761904761905,
+        "profitFactor": 1.29796062015279,
+        "netPnl": 321.70774385601953,
+        "expectancy": 0.7659708187048091,
+        "roi": 32.17077438560195,
+        "maxDrawdown": 93.24954022068687
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.014423076923077,
+        "worstDrawdown": 93.24954022068687
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.3,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 420,
+        "winRate": 42.142857142857146,
+        "profitFactor": 1.2892729303353956,
+        "netPnl": 311.3045081527539,
+        "expectancy": 0.7412012098875098,
+        "roi": 31.13045081527539,
+        "maxDrawdown": 93.24954022068687
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 1.9952380952380953,
+        "worstDrawdown": 93.24954022068687
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.5,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 341,
+        "winRate": 42.52199413489736,
+        "profitFactor": 1.225984636089551,
+        "netPnl": 215.65046344232633,
+        "expectancy": 0.6324060511505176,
+        "roi": 21.565046344232634,
+        "maxDrawdown": 102.26470889765073
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.0059171597633134,
+        "worstDrawdown": 102.26470889765073
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.5,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 418,
+        "winRate": 43.54066985645933,
+        "profitFactor": 1.2236300651715095,
+        "netPnl": 263.1779870648138,
+        "expectancy": 0.6296124092459663,
+        "roi": 26.317798706481383,
+        "maxDrawdown": 108.16753774218091
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 1.9485981308411215,
+        "worstDrawdown": 108.16753774218091
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.5,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 418,
+        "winRate": 43.54066985645933,
+        "profitFactor": 1.2210356583188378,
+        "netPnl": 260.12477160118806,
+        "expectancy": 0.6223080660315503,
+        "roi": 26.012477160118806,
+        "maxDrawdown": 108.16753774218091
+      },
+      "streaks": {
+        "maxConsecutiveWins": 6,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 1.9485981308411215,
+        "worstDrawdown": 108.16753774218091
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.5,
+        "rejection": true,
+        "cleanApproach": true,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 341,
+        "winRate": 42.22873900293255,
+        "profitFactor": 1.214748928292245,
+        "netPnl": 205.8185389210123,
+        "expectancy": 0.603573427920856,
+        "roi": 20.581853892101233,
+        "maxDrawdown": 102.26470889765073
+      },
+      "streaks": {
+        "maxConsecutiveWins": 9,
+        "maxConsecutiveLosses": 8,
+        "avgStreakLength": 2.029940119760479,
+        "worstDrawdown": 102.26470889765073
+      }
+    }
+  ],
+  "topByROI": [
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2659,
+        "winRate": 31.891688604738622,
+        "profitFactor": 1.14112685877485,
+        "netPnl": 885.5806757094406,
+        "expectancy": 0.33305027292570166,
+        "roi": 88.55806757094406
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2659,
+        "winRate": 31.891688604738622,
+        "profitFactor": 1.1404459858583078,
+        "netPnl": 881.3081516644916,
+        "expectancy": 0.33144345681251997,
+        "roi": 88.13081516644917
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2589,
+        "winRate": 34.26033217458478,
+        "profitFactor": 1.1324082144293472,
+        "netPnl": 864.2192237603786,
+        "expectancy": 0.33380425792212387,
+        "roi": 86.42192237603786
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2589,
+        "winRate": 34.26033217458478,
+        "profitFactor": 1.1292325293654422,
+        "netPnl": 843.4917478053276,
+        "expectancy": 0.325798280341957,
+        "roi": 84.34917478053275
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2671,
+        "winRate": 31.973043803818797,
+        "profitFactor": 1.128038163329934,
+        "netPnl": 810.6159803359806,
+        "expectancy": 0.30348782491051374,
+        "roi": 81.06159803359806
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2661,
+        "winRate": 31.905298759864714,
+        "profitFactor": 1.1240146159634374,
+        "netPnl": 780.219457986931,
+        "expectancy": 0.2932053581311278,
+        "roi": 78.02194579869311
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2600,
+        "winRate": 34.38461538461539,
+        "profitFactor": 1.1184169705708582,
+        "netPnl": 775.0763682389061,
+        "expectancy": 0.2981062954765026,
+        "roi": 77.5076368238906
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 2591,
+        "winRate": 34.27248166730992,
+        "profitFactor": 1.1073520560858663,
+        "netPnl": 702.5619476882966,
+        "expectancy": 0.27115474630964753,
+        "roi": 70.25619476882966
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1360,
+        "winRate": 33.088235294117645,
+        "profitFactor": 1.2268904693409421,
+        "netPnl": 679.7573493788113,
+        "expectancy": 0.4998215804255972,
+        "roi": 67.97573493788114
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 2130,
+        "winRate": 31.971830985915496,
+        "profitFactor": 1.136627804230612,
+        "netPnl": 666.7370813785465,
+        "expectancy": 0.31302210393358987,
+        "roi": 66.67370813785465
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1360,
+        "winRate": 33.088235294117645,
+        "profitFactor": 1.2175268232856529,
+        "netPnl": 651.7041339151847,
+        "expectancy": 0.4791942161141063,
+        "roi": 65.17041339151847
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.5,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1325,
+        "winRate": 36.9811320754717,
+        "profitFactor": 1.1920748378467176,
+        "netPnl": 633.5526482346609,
+        "expectancy": 0.47815294206389547,
+        "roi": 63.35526482346609
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": false,
+        "adx": 25
+      },
+      "metrics": {
+        "trades": 2130,
+        "winRate": 31.971830985915496,
+        "profitFactor": 1.1279170934271117,
+        "netPnl": 624.2292336489909,
+        "expectancy": 0.29306536791032434,
+        "roi": 62.422923364899084
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1360,
+        "winRate": 33.161764705882355,
+        "profitFactor": 1.2074639265747238,
+        "netPnl": 620.8221918490485,
+        "expectancy": 0.4564869057713592,
+        "roi": 62.08221918490485
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.5,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1325,
+        "winRate": 36.9811320754717,
+        "profitFactor": 1.1835699143391465,
+        "netPnl": 605.4994327710351,
+        "expectancy": 0.4569807039781404,
+        "roi": 60.549943277103516
+      }
+    },
+    {
+      "params": {
+        "tp": 0.01,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1908,
+        "winRate": 35.79664570230608,
+        "profitFactor": 1.1177840897196216,
+        "netPnl": 602.5613517555494,
+        "expectancy": 0.3158078363498684,
+        "roi": 60.25613517555494
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.5,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1325,
+        "winRate": 37.056603773584904,
+        "profitFactor": 1.1829078429973097,
+        "netPnl": 602.5575906241379,
+        "expectancy": 0.45476044575406593,
+        "roi": 60.255759062413794
+      }
+    },
+    {
+      "params": {
+        "tp": 0.005,
+        "slBuffer": 0.3,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1360,
+        "winRate": 33.088235294117645,
+        "profitFactor": 1.1990496965194424,
+        "netPnl": 596.3471911964407,
+        "expectancy": 0.438490581762089,
+        "roi": 59.63471911964406
+      }
+    },
+    {
+      "params": {
+        "tp": 0.0075,
+        "slBuffer": 0.2,
+        "rejection": true,
+        "cleanApproach": false,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1908,
+        "winRate": 35.79664570230608,
+        "profitFactor": 1.1137324410693417,
+        "netPnl": 581.8338758004957,
+        "expectancy": 0.3049443793503652,
+        "roi": 58.18338758004956
+      }
+    },
+    {
+      "params": {
+        "tp": 0.003,
+        "slBuffer": 0.2,
+        "rejection": false,
+        "cleanApproach": true,
+        "adx": 30
+      },
+      "metrics": {
+        "trades": 1381,
+        "winRate": 30.050687907313538,
+        "profitFactor": 1.2015833577972033,
+        "netPnl": 573.4103385371163,
+        "expectancy": 0.41521385846279246,
+        "roi": 57.34103385371163
+      }
+    }
+  ]
+}

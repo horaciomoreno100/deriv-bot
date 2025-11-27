@@ -1,0 +1,1282 @@
+[
+  {
+    "id": "gdp-2024-11-27",
+    "name": "GDP q/q (Q3 Second)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1732714200,
+    "date": "2024-11-27",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2024-11-28",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1732800600,
+    "date": "2024-11-28",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2024-12-02",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1733151600,
+    "date": "2024-12-02",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2024-12-05",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1733405400,
+    "date": "2024-12-05",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2024-12-06",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1733491800,
+    "date": "2024-12-06",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2024-12-12",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1734009300,
+    "date": "2024-12-12",
+    "time": "13:15"
+  },
+  {
+    "id": "cpi-2024-12-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1734010200,
+    "date": "2024-12-12",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2024-12-12",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1734010200,
+    "date": "2024-12-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2024-12-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1734269400,
+    "date": "2024-12-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2024-12-18",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1734548400,
+    "date": "2024-12-18",
+    "time": "19:00"
+  },
+  {
+    "id": "gdp-2024-12-19",
+    "name": "GDP q/q (Q3 Final)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1734615000,
+    "date": "2024-12-19",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2024-12-19",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1734615000,
+    "date": "2024-12-19",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2024-12-26",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1735219800,
+    "date": "2024-12-26",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-01-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1735743600,
+    "date": "2025-01-01",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-01-02",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1735824600,
+    "date": "2025-01-02",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-01-03",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1735911000,
+    "date": "2025-01-03",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-01-09",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1736428500,
+    "date": "2025-01-09",
+    "time": "13:15"
+  },
+  {
+    "id": "jobless-2025-01-09",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1736429400,
+    "date": "2025-01-09",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-01-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1736688600,
+    "date": "2025-01-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-01-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1736947800,
+    "date": "2025-01-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-01-15",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1736967600,
+    "date": "2025-01-15",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-01-16",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1737034200,
+    "date": "2025-01-16",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-01-23",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1737639000,
+    "date": "2025-01-23",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-01-25",
+    "name": "GDP q/q (Q4 Advance)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1737811800,
+    "date": "2025-01-25",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-01-30",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1738243800,
+    "date": "2025-01-30",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-02-03",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1738594800,
+    "date": "2025-02-03",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-02-06",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1738848600,
+    "date": "2025-02-06",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-02-07",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1738935000,
+    "date": "2025-02-07",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-02-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1739367000,
+    "date": "2025-02-12",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-02-13",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1739453400,
+    "date": "2025-02-13",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-02-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1739626200,
+    "date": "2025-02-15",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-02-20",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1740058200,
+    "date": "2025-02-20",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-02-27",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1740663000,
+    "date": "2025-02-27",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-02-28",
+    "name": "GDP q/q (Q4 Second)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1740749400,
+    "date": "2025-02-28",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-03-03",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1741014000,
+    "date": "2025-03-03",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-03-06",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1741267800,
+    "date": "2025-03-06",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-03-07",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1741354200,
+    "date": "2025-03-07",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-03-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1741786200,
+    "date": "2025-03-12",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-03-13",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1741871700,
+    "date": "2025-03-13",
+    "time": "13:15"
+  },
+  {
+    "id": "jobless-2025-03-13",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1741872600,
+    "date": "2025-03-13",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-03-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1742045400,
+    "date": "2025-03-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-03-19",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1742410800,
+    "date": "2025-03-19",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-03-20",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1742477400,
+    "date": "2025-03-20",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-03-27",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1743082200,
+    "date": "2025-03-27",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-03-28",
+    "name": "GDP q/q (Q4 Final)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1743168600,
+    "date": "2025-03-28",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-04-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1743519600,
+    "date": "2025-04-01",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-04-03",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1743687000,
+    "date": "2025-04-03",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-04-04",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1743773400,
+    "date": "2025-04-04",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-04-10",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1744290900,
+    "date": "2025-04-10",
+    "time": "13:15"
+  },
+  {
+    "id": "jobless-2025-04-10",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1744291800,
+    "date": "2025-04-10",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-04-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1744464600,
+    "date": "2025-04-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-04-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1744723800,
+    "date": "2025-04-15",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-04-17",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1744896600,
+    "date": "2025-04-17",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-04-24",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1745501400,
+    "date": "2025-04-24",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-04-25",
+    "name": "GDP q/q (Q1 Advance)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1745587800,
+    "date": "2025-04-25",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-05-01",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1746106200,
+    "date": "2025-05-01",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-05-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1746111600,
+    "date": "2025-05-01",
+    "time": "15:00"
+  },
+  {
+    "id": "nfp-2025-05-02",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1746192600,
+    "date": "2025-05-02",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-05-08",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1746711000,
+    "date": "2025-05-08",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-05-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1747056600,
+    "date": "2025-05-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-05-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1747315800,
+    "date": "2025-05-15",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-05-15",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1747315800,
+    "date": "2025-05-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-05-21",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1747854000,
+    "date": "2025-05-21",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-05-22",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1747920600,
+    "date": "2025-05-22",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-05-28",
+    "name": "GDP q/q (Q1 Second)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1748439000,
+    "date": "2025-05-28",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-05-29",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1748525400,
+    "date": "2025-05-29",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-06-02",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1748876400,
+    "date": "2025-06-02",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-06-05",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1749130200,
+    "date": "2025-06-05",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-06-06",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1749216600,
+    "date": "2025-06-06",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-06-12",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1749734100,
+    "date": "2025-06-12",
+    "time": "13:15"
+  },
+  {
+    "id": "cpi-2025-06-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1749735000,
+    "date": "2025-06-12",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-06-12",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1749735000,
+    "date": "2025-06-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-06-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1749994200,
+    "date": "2025-06-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-06-18",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1750273200,
+    "date": "2025-06-18",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-06-19",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1750339800,
+    "date": "2025-06-19",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-06-26",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1750944600,
+    "date": "2025-06-26",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-06-27",
+    "name": "GDP q/q (Q1 Final)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1751031000,
+    "date": "2025-06-27",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-07-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1751382000,
+    "date": "2025-07-01",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-07-03",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1751549400,
+    "date": "2025-07-03",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-07-04",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1751635800,
+    "date": "2025-07-04",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-07-10",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1752153300,
+    "date": "2025-07-10",
+    "time": "13:15"
+  },
+  {
+    "id": "jobless-2025-07-10",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1752154200,
+    "date": "2025-07-10",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-07-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1752327000,
+    "date": "2025-07-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-07-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1752586200,
+    "date": "2025-07-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-07-16",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1752692400,
+    "date": "2025-07-16",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-07-17",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1752759000,
+    "date": "2025-07-17",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-07-24",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1753363800,
+    "date": "2025-07-24",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-07-25",
+    "name": "GDP q/q (Q2 Advance)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1753450200,
+    "date": "2025-07-25",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-07-31",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1753968600,
+    "date": "2025-07-31",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-08-01",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1754055000,
+    "date": "2025-08-01",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-08-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1754060400,
+    "date": "2025-08-01",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-08-07",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1754573400,
+    "date": "2025-08-07",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-08-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1755005400,
+    "date": "2025-08-12",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-08-14",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1755178200,
+    "date": "2025-08-14",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-08-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1755264600,
+    "date": "2025-08-15",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-08-21",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1755783000,
+    "date": "2025-08-21",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-08-28",
+    "name": "GDP q/q (Q2 Second)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1756387800,
+    "date": "2025-08-28",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-08-28",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1756387800,
+    "date": "2025-08-28",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-09-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1756738800,
+    "date": "2025-09-01",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-09-04",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1756992600,
+    "date": "2025-09-04",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-09-05",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1757079000,
+    "date": "2025-09-05",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-09-11",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1757596500,
+    "date": "2025-09-11",
+    "time": "13:15"
+  },
+  {
+    "id": "jobless-2025-09-11",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1757597400,
+    "date": "2025-09-11",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-09-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1757683800,
+    "date": "2025-09-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-09-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1757943000,
+    "date": "2025-09-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-09-17",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1758135600,
+    "date": "2025-09-17",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-09-18",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1758202200,
+    "date": "2025-09-18",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-09-25",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1758807000,
+    "date": "2025-09-25",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-09-26",
+    "name": "GDP q/q (Q2 Final)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1758893400,
+    "date": "2025-09-26",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-10-01",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1759330800,
+    "date": "2025-10-01",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-10-02",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1759411800,
+    "date": "2025-10-02",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-10-03",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1759498200,
+    "date": "2025-10-03",
+    "time": "13:30"
+  },
+  {
+    "id": "ecb-2025-10-09",
+    "name": "ECB Interest Rate Decision",
+    "currency": "EUR",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1760015700,
+    "date": "2025-10-09",
+    "time": "13:15"
+  },
+  {
+    "id": "jobless-2025-10-09",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1760016600,
+    "date": "2025-10-09",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-10-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1760275800,
+    "date": "2025-10-12",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-10-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1760535000,
+    "date": "2025-10-15",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-10-16",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1760621400,
+    "date": "2025-10-16",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-10-23",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1761226200,
+    "date": "2025-10-23",
+    "time": "13:30"
+  },
+  {
+    "id": "gdp-2025-10-28",
+    "name": "GDP q/q (Q3 Advance)",
+    "currency": "USD",
+    "category": "GDP",
+    "impact": "HIGH",
+    "timestamp": 1761658200,
+    "date": "2025-10-28",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-10-30",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1761831000,
+    "date": "2025-10-30",
+    "time": "13:30"
+  },
+  {
+    "id": "ism-2025-11-03",
+    "name": "ISM Manufacturing PMI",
+    "currency": "USD",
+    "category": "MANUFACTURING",
+    "impact": "MEDIUM",
+    "timestamp": 1762182000,
+    "date": "2025-11-03",
+    "time": "15:00"
+  },
+  {
+    "id": "jobless-2025-11-06",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1762435800,
+    "date": "2025-11-06",
+    "time": "13:30"
+  },
+  {
+    "id": "nfp-2025-11-07",
+    "name": "Non-Farm Payrolls",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "HIGH",
+    "timestamp": 1762522200,
+    "date": "2025-11-07",
+    "time": "13:30"
+  },
+  {
+    "id": "cpi-2025-11-12",
+    "name": "CPI m/m",
+    "currency": "USD",
+    "category": "INFLATION",
+    "impact": "HIGH",
+    "timestamp": 1762954200,
+    "date": "2025-11-12",
+    "time": "13:30"
+  },
+  {
+    "id": "jobless-2025-11-13",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1763040600,
+    "date": "2025-11-13",
+    "time": "13:30"
+  },
+  {
+    "id": "retail-2025-11-15",
+    "name": "Retail Sales m/m",
+    "currency": "USD",
+    "category": "RETAIL",
+    "impact": "MEDIUM",
+    "timestamp": 1763213400,
+    "date": "2025-11-15",
+    "time": "13:30"
+  },
+  {
+    "id": "fomc-2025-11-19",
+    "name": "FOMC Interest Rate Decision",
+    "currency": "USD",
+    "category": "INTEREST_RATE",
+    "impact": "HIGH",
+    "timestamp": 1763578800,
+    "date": "2025-11-19",
+    "time": "19:00"
+  },
+  {
+    "id": "jobless-2025-11-20",
+    "name": "Initial Jobless Claims",
+    "currency": "USD",
+    "category": "EMPLOYMENT",
+    "impact": "MEDIUM",
+    "timestamp": 1763645400,
+    "date": "2025-11-20",
+    "time": "13:30"
+  }
+]

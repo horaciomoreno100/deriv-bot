@@ -284,4 +284,89 @@ describe('PositionManager', () => {
       expect(positionManager.getDailyStats().tradeCount).toBe(0);
     });
   });
+
+  // ==========================================================================
+  // STRATEGY-BASED FILTERING (NEW)
+  // ==========================================================================
+
+  describe('strategy filtering', () => {
+    it('should track positions by strategy', () => {
+      const contract1 = { ...mockContract, id: 'c1', strategyName: 'KELTNER_MR' };
+      const contract2 = { ...mockContract, id: 'c2', strategyName: 'BB_SQUEEZE' };
+      const contract3 = { ...mockContract, id: 'c3', strategyName: 'KELTNER_MR' };
+
+      positionManager.addPosition(contract1);
+      positionManager.addPosition(contract2);
+      positionManager.addPosition(contract3);
+
+      expect(positionManager.getOpenPositionsByStrategy('KELTNER_MR')).toHaveLength(2);
+      expect(positionManager.getOpenPositionsByStrategy('BB_SQUEEZE')).toHaveLength(1);
+    });
+
+    it('should count open positions by strategy', () => {
+      const contract1 = { ...mockContract, id: 'c1', strategyName: 'KELTNER_MR' };
+      const contract2 = { ...mockContract, id: 'c2', strategyName: 'BB_SQUEEZE' };
+
+      positionManager.addPosition(contract1);
+      positionManager.addPosition(contract2);
+
+      expect(positionManager.getOpenPositionsCountByStrategy('KELTNER_MR')).toBe(1);
+      expect(positionManager.getOpenPositionsCountByStrategy('BB_SQUEEZE')).toBe(1);
+      expect(positionManager.getOpenPositionsCountByStrategy('NON_EXISTENT')).toBe(0);
+    });
+
+    it('should get daily stats by strategy', () => {
+      // KELTNER_MR: 1 win
+      const keltnerContract = { ...mockContract, id: 'k1', strategyName: 'KELTNER_MR' };
+      positionManager.addPosition(keltnerContract);
+      positionManager.closePosition({
+        contractId: 'k1',
+        status: 'won',
+        profit: 50,
+        exitPrice: 1250,
+        exitTime: Date.now(),
+        strategyName: 'KELTNER_MR',
+      });
+
+      // BB_SQUEEZE: 1 loss
+      const bbContract = { ...mockContract, id: 'b1', strategyName: 'BB_SQUEEZE' };
+      positionManager.addPosition(bbContract);
+      positionManager.closePosition({
+        contractId: 'b1',
+        status: 'lost',
+        profit: -20,
+        exitPrice: 1200,
+        exitTime: Date.now(),
+        strategyName: 'BB_SQUEEZE',
+      });
+
+      const keltnerStats = positionManager.getDailyStatsByStrategy('KELTNER_MR');
+      const bbStats = positionManager.getDailyStatsByStrategy('BB_SQUEEZE');
+
+      expect(keltnerStats.wins).toBe(1);
+      expect(keltnerStats.losses).toBe(0);
+      expect(keltnerStats.pnl).toBe(50);
+
+      expect(bbStats.wins).toBe(0);
+      expect(bbStats.losses).toBe(1);
+      expect(bbStats.pnl).toBe(-20);
+    });
+
+    it('should inherit strategyName from position when closing', () => {
+      const contract = { ...mockContract, id: 'c1', strategyName: 'KELTNER_MR' };
+      positionManager.addPosition(contract);
+
+      // Close without strategyName in result - should inherit from position
+      positionManager.closePosition({
+        contractId: 'c1',
+        status: 'won',
+        profit: 50,
+        exitPrice: 1250,
+        exitTime: Date.now(),
+      });
+
+      const stats = positionManager.getDailyStatsByStrategy('KELTNER_MR');
+      expect(stats.wins).toBe(1);
+    });
+  });
 });

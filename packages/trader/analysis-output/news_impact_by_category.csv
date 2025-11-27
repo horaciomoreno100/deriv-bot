@@ -1,0 +1,5 @@
+category,totalSignals,revertedSignals,reversionRate,avgBarsToReversion,avgDrawdown,maxDrawdown
+NO_NEWS,0,0,0.00,0.00,0.0000,0.0000
+NEWS_MEDIUM,0,0,0.00,0.00,0.0000,0.0000
+NEWS_HIGH,0,0,0.00,0.00,0.0000,0.0000
+NEWS_DAY,0,0,0.00,0.00,0.0000,0.0000

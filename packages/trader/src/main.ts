@@ -13,6 +13,7 @@ import { GatewayClient, loadEnvFromRoot } from '@deriv-bot/shared';
 import { StrategyEngine } from './strategy/strategy-engine.js';
 import { RiskManager } from './risk/risk-manager.js';
 import { PositionManager } from './position/position-manager.js';
+import { StrategyAccountant } from './accounting/strategy-accountant.js';
 import type { BaseStrategy } from './strategy/base-strategy.js';
 import type { Signal, Contract } from '@deriv-bot/shared';
 
@@ -68,6 +69,7 @@ export class Trader {
   private strategyEngine: StrategyEngine;
   private riskManager: RiskManager;
   private positionManager: PositionManager;
+  private accountant: StrategyAccountant;
   private running = false;
   private balance: number = 0;
 
@@ -96,8 +98,27 @@ export class Trader {
     // Initialize Position Manager
     this.positionManager = new PositionManager();
 
+    // Initialize Strategy Accountant
+    this.accountant = new StrategyAccountant();
+
     // Setup event handlers
     this.setupHandlers();
+  }
+
+  /**
+   * Allocate balance to a strategy for independent accounting
+   * When allocations are used, each strategy trades with its own balance
+   */
+  allocateToStrategy(strategyName: string, amount: number): void {
+    this.accountant.allocate(strategyName, amount);
+    this.log(`💰 Allocated ${amount} to ${strategyName}`);
+  }
+
+  /**
+   * Get the StrategyAccountant for external access
+   */
+  getAccountant(): StrategyAccountant {
+    return this.accountant;
   }
 
   /**
@@ -141,11 +162,25 @@ export class Trader {
       this.log(`📈 Position opened: ${position.direction} ${position.symbol} @ ${position.entryPrice}`);
     });
 
-    this.positionManager.on('position:closed', (_position, result) => {
+    this.positionManager.on('position:closed', (position, result) => {
       const emoji = result.status === 'won' ? '✅' : '❌';
       this.log(`${emoji} Position closed: ${result.status.toUpperCase()} | P/L: ${result.profit.toFixed(2)}`);
 
-      // Print daily stats
+      // Record trade in accountant if strategy has allocation
+      const strategyName = result.strategyName ?? position.strategyName;
+      if (strategyName && this.accountant.hasStrategy(strategyName)) {
+        this.accountant.recordTrade(strategyName, result);
+        this.accountant.decrementOpenPositions(strategyName);
+        this.accountant.releaseStake(strategyName, position.stake);
+
+        // Print strategy-specific stats
+        const strategyStats = this.accountant.getStats(strategyName);
+        if (strategyStats) {
+          this.log(`📊 [${strategyName}] Balance: ${this.accountant.getBalance(strategyName).toFixed(2)} | ROI: ${strategyStats.roi.toFixed(1)}% | Win Rate: ${(strategyStats.winRate * 100).toFixed(1)}%`);
+        }
+      }
+
+      // Print global daily stats
       const stats = this.positionManager.getDailyStats();
       this.log(`📊 Daily Stats: ${stats.wins}W / ${stats.losses}L | Win Rate: ${(stats.winRate * 100).toFixed(1)}% | P/L: ${stats.pnl.toFixed(2)}`);
     });
@@ -247,21 +282,52 @@ export class Trader {
    * Handle signal from strategy
    */
   private async handleSignal(signal: Signal, strategy: BaseStrategy): Promise<void> {
-    this.log(`🔔 Signal from ${strategy.getName()}: ${signal.direction} ${signal.symbol} (confidence: ${(signal.confidence * 100).toFixed(0)}%)`);
+    const strategyName = strategy.getName();
+    this.log(`🔔 Signal from ${strategyName}: ${signal.direction} ${signal.symbol} (confidence: ${(signal.confidence * 100).toFixed(0)}%)`);
+
+    // Use per-strategy accounting if strategy has allocation, otherwise global balance
+    const useStrategyAccounting = this.accountant.hasStrategy(strategyName);
+    let riskContext;
+
+    if (useStrategyAccounting) {
+      // Use strategy-specific accounting
+      const strategyContext = this.accountant.getRiskContext(strategyName);
+      if (!strategyContext) {
+        this.log(`❌ Signal rejected: Strategy ${strategyName} context not available`);
+        return;
+      }
+      riskContext = {
+        balance: strategyContext.balance,
+        openPositions: strategyContext.openPositions,
+        dailyPnL: strategyContext.dailyPnL,
+      };
+    } else {
+      // Use global balance
+      riskContext = {
+        balance: this.balance,
+        openPositions: this.positionManager.getOpenPositionsCount(),
+        dailyPnL: this.positionManager.getDailyStats().pnl,
+      };
+    }
 
     // Evaluate with Risk Manager
-    const decision = this.riskManager.evaluateSignal(signal, {
-      balance: this.balance,
-      openPositions: this.positionManager.getOpenPositionsCount(),
-      dailyPnL: this.positionManager.getDailyStats().pnl,
-    });
+    const decision = this.riskManager.evaluateSignal(signal, riskContext);
 
     if (!decision.approved) {
       this.log(`❌ Signal rejected: ${decision.reason}`);
       return;
     }
 
-    this.log(`✅ Signal approved | Stake: ${decision.stakeAmount}`);
+    // Reserve stake in accountant if using per-strategy accounting
+    if (useStrategyAccounting) {
+      const reserved = this.accountant.reserveStake(strategyName, decision.stakeAmount!);
+      if (!reserved) {
+        this.log(`❌ Signal rejected: Insufficient balance in ${strategyName} account`);
+        return;
+      }
+    }
+
+    this.log(`✅ Signal approved | Stake: ${decision.stakeAmount}${useStrategyAccounting ? ` [${strategyName}]` : ''}`);
 
     try {
       // Execute trade via Gateway
@@ -273,7 +339,7 @@ export class Trader {
         durationUnit: 'm',
       });
 
-      // Add position
+      // Add position with strategyName
       const contract: Contract = {
         id: result.contractId,
         symbol: signal.symbol,
@@ -284,15 +350,25 @@ export class Trader {
         entryTime: result.purchaseTime,
         status: 'open',
         duration: 60,
+        strategyName, // Track which strategy opened this position
       };
 
       this.positionManager.addPosition(contract);
 
-      // Update balance
+      // Track open position in accountant
+      if (useStrategyAccounting) {
+        this.accountant.incrementOpenPositions(strategyName);
+      }
+
+      // Update global balance (actual account balance)
       this.balance -= decision.stakeAmount!;
       this.strategyEngine.updateBalance(this.balance);
 
     } catch (error) {
+      // Release stake if trade failed
+      if (useStrategyAccounting) {
+        this.accountant.releaseStake(strategyName, decision.stakeAmount!);
+      }
       this.log(`❌ Trade execution failed:`, error);
     }
   }

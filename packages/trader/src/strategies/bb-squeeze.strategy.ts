@@ -30,6 +30,7 @@
 
 import { BaseStrategy, type StrategyContext } from '../strategy/base-strategy.js';
 import type { Candle, Signal, StrategyConfig } from '@deriv-bot/shared';
+import { NewsFilterService, createNewsFilter } from '@deriv-bot/shared';
 import { BollingerBands, ATR, RSI } from 'technicalindicators';
 
 /**
@@ -60,6 +61,10 @@ export interface BBSqueezeParams {
   enableTimeFilter: boolean;
   /** Enable RSI zone filter (default: true) - avoids RSI 30-40 indecision zone */
   enableRSIFilter: boolean;
+  /** Enable news filter for forex pairs (default: false) - filters trades during economic events */
+  enableNewsFilter: boolean;
+  /** Asset type for news filtering */
+  assetType: 'synthetic' | 'forex' | 'commodities';
 }
 
 /**
@@ -138,6 +143,8 @@ const DEFAULT_PARAMS: BBSqueezeParams = {
   skipSaturday: true,         // Saturday has 70% loss rate
   enableTimeFilter: true,     // Avoid bad day+hour combinations
   enableRSIFilter: true,      // Avoid RSI 30-40 indecision zone
+  enableNewsFilter: false,    // Disabled by default (only for forex/commodities)
+  assetType: 'synthetic',     // Default to synthetic indices (R_75, R_100, etc.)
 };
 
 /**
@@ -179,6 +186,7 @@ export class BBSqueezeStrategy extends BaseStrategy {
   private lastTradeTime: Record<string, number> = {};
   private inSqueeze: Record<string, boolean> = {};
   private lastSqueezeTime: Record<string, number> = {};
+  private newsFilter: NewsFilterService | null = null;
 
   constructor(config: StrategyConfig) {
     super(config);
@@ -188,6 +196,18 @@ export class BBSqueezeStrategy extends BaseStrategy {
       ...DEFAULT_PARAMS,
       ...(config.parameters as Partial<BBSqueezeParams>),
     };
+
+    // Initialize news filter if enabled
+    if (this.baseParams.enableNewsFilter) {
+      this.newsFilter = createNewsFilter({
+        minutesBeforeHigh: 15,
+        minutesAfterHigh: 30,
+        minutesBeforeMedium: 10,
+        minutesAfterMedium: 15,
+        currencies: ['USD', 'EUR'],
+      });
+      console.log('[BBSqueeze] 📰 News filter enabled (HIGH: ±15/30min, MED: ±10/15min)');
+    }
   }
 
   /**
@@ -199,6 +219,33 @@ export class BBSqueezeStrategy extends BaseStrategy {
       ...this.baseParams,
       ...override,
     };
+  }
+
+  /**
+   * Map Deriv asset to forex pair for news filtering
+   */
+  private getForexPairForAsset(asset: string): string | null {
+    const mapping: Record<string, string | null> = {
+      // Forex pairs
+      'frxEURUSD': 'EURUSD',
+      'frxGBPUSD': 'GBPUSD',
+      'frxUSDJPY': 'USDJPY',
+      'frxAUDUSD': 'AUDUSD',
+      'frxUSDCAD': 'USDCAD',
+      'frxUSDCHF': 'USDCHF',
+      'frxNZDUSD': 'NZDUSD',
+      // Commodities (affected by USD news)
+      'frxXAUUSD': 'XAUUSD', // Gold
+      'frxXAGUSD': 'XAGUSD', // Silver
+      // Synthetic indices - no news impact
+      'R_10': null,
+      'R_25': null,
+      'R_50': null,
+      'R_75': null,
+      'R_100': null,
+    };
+
+    return mapping[asset] ?? null;
   }
 
   /**
@@ -308,6 +355,19 @@ export class BBSqueezeStrategy extends BaseStrategy {
     if (params.enableTimeFilter && !isGoodTimeWindow(dayOfWeek, hourUTC)) {
       console.log(`[BBSqueeze] ⏰ Skipping bad time window: day=${dayOfWeek}, hour=${hourUTC} for ${asset}`);
       return null;
+    }
+
+    // News filter (for forex/commodities only)
+    if (this.newsFilter && params.enableNewsFilter) {
+      // Map asset to forex pair for news filtering
+      const forexPair = this.getForexPairForAsset(asset);
+      if (forexPair) {
+        const newsCheck = this.newsFilter.shouldTradeAt(Math.floor(candle.timestamp / 1000), forexPair);
+        if (!newsCheck.canTrade) {
+          console.log(`[BBSqueeze] 📰 News filter blocked: ${newsCheck.reason}`);
+          return null;
+        }
+      }
     }
 
     // Calculate indicators

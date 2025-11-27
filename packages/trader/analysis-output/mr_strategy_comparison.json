@@ -1,0 +1,144 @@
+{
+  "asset": "frxEURUSD",
+  "dateRange": {
+    "from": "2024-11-26",
+    "to": "2025-11-27"
+  },
+  "candleCount": 72958,
+  "ranking": [
+    {
+      "rank": 1,
+      "strategy": "KELTNER_MR",
+      "winRate": 42.616033755274266,
+      "profitFactor": 1.0907818000611749,
+      "netPnl": 743.9090320331397,
+      "trades": 1422
+    },
+    {
+      "rank": 2,
+      "strategy": "RSI_MR",
+      "winRate": 42.65734265734265,
+      "profitFactor": 1.0797479609099334,
+      "netPnl": 102.00055571930488,
+      "trades": 143
+    },
+    {
+      "rank": 3,
+      "strategy": "BB_BOUNCE",
+      "winRate": 65.80310880829016,
+      "profitFactor": 1.0089903966560296,
+      "netPnl": 15.83684904144775,
+      "trades": 579
+    },
+    {
+      "rank": 4,
+      "strategy": "BB_SQUEEZE_MR",
+      "winRate": 37.704918032786885,
+      "profitFactor": 0.8681662198297232,
+      "netPnl": -148.52548990566208,
+      "trades": 183
+    }
+  ],
+  "strategies": {
+    "BB_SQUEEZE_MR": {
+      "trades": 183,
+      "metrics": {
+        "totalTrades": 183,
+        "wins": 69,
+        "losses": 114,
+        "winRate": 37.704918032786885,
+        "netPnl": -148.52548990566208,
+        "grossProfit": 978.0862913375532,
+        "grossLoss": 1126.6117812432153,
+        "profitFactor": 0.8681662198297232,
+        "avgWin": 14.175163642573235,
+        "avgLoss": 9.882559484589608,
+        "avgPnl": -0.8116146989380442,
+        "maxDrawdown": 237.77013463353433,
+        "maxDrawdownPct": 2.377701346335343,
+        "maxConsecutiveWins": 5,
+        "maxConsecutiveLosses": 11,
+        "nearMisses": 0,
+        "immediateReversals": 56,
+        "avgBarsHeld": 6.3497267759562845,
+        "expectancy": -0.8116146989380448,
+        "sqn": -0.780464473826639
+      }
+    },
+    "RSI_MR": {
+      "trades": 143,
+      "metrics": {
+        "totalTrades": 143,
+        "wins": 61,
+        "losses": 82,
+        "winRate": 42.65734265734265,
+        "netPnl": 102.00055571930488,
+        "grossProfit": 1381.0370922710447,
+        "grossLoss": 1279.0365365517398,
+        "profitFactor": 1.0797479609099334,
+        "avgWin": 22.63995233231221,
+        "avgLoss": 15.5980065433139,
+        "avgPnl": 0.7132905994356985,
+        "maxDrawdown": 179.835780894864,
+        "maxDrawdownPct": 1.79835780894864,
+        "maxConsecutiveWins": 4,
+        "maxConsecutiveLosses": 6,
+        "nearMisses": 1,
+        "immediateReversals": 36,
+        "avgBarsHeld": 10.146853146853147,
+        "expectancy": 0.7132905994356964,
+        "sqn": 0.37454008671467476
+      }
+    },
+    "BB_BOUNCE": {
+      "trades": 579,
+      "metrics": {
+        "totalTrades": 579,
+        "wins": 381,
+        "losses": 198,
+        "winRate": 65.80310880829016,
+        "netPnl": 15.83684904144775,
+        "grossProfit": 1777.3663618495632,
+        "grossLoss": 1761.5295128081154,
+        "profitFactor": 1.0089903966560296,
+        "avgWin": 4.665003574408303,
+        "avgLoss": 8.896613701051088,
+        "avgPnl": 0.027352070883329447,
+        "maxDrawdown": 270.4558979794674,
+        "maxDrawdownPct": 2.7045589797946743,
+        "maxConsecutiveWins": 16,
+        "maxConsecutiveLosses": 5,
+        "nearMisses": 0,
+        "immediateReversals": 111,
+        "avgBarsHeld": 3.1485319516407597,
+        "expectancy": 0.027352070883331248,
+        "sqn": 0.08202376611968255
+      }
+    },
+    "KELTNER_MR": {
+      "trades": 1422,
+      "metrics": {
+        "totalTrades": 1422,
+        "wins": 606,
+        "losses": 816,
+        "winRate": 42.616033755274266,
+        "netPnl": 743.9090320331397,
+        "grossProfit": 8938.382280325686,
+        "grossLoss": 8194.473248292546,
+        "profitFactor": 1.0907818000611749,
+        "avgWin": 14.749805743111693,
+        "avgLoss": 10.042246627809494,
+        "avgPnl": 0.5231427792075526,
+        "maxDrawdown": 367.75879384386644,
+        "maxDrawdownPct": 3.6775879384386645,
+        "maxConsecutiveWins": 7,
+        "maxConsecutiveLosses": 10,
+        "nearMisses": 1,
+        "immediateReversals": 350,
+        "avgBarsHeld": 6.964838255977496,
+        "expectancy": 0.5231427792075536,
+        "sqn": 1.3745837215254328
+      }
+    }
+  }
+}

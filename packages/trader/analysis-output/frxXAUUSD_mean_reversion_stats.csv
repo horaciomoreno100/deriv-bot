@@ -1,0 +1,5 @@
+session,totalTouchesUpper,totalTouchesLower,reversionsFromUpper,reversionsFromLower,reversionRateUpper,reversionRateLower,avgBarsToReversion,avgDrawdownBeforeReversion
+ASIAN,31643,31683,25677,28034,81.15,88.48,5.5,0.0465
+LONDON,12325,12326,10538,11145,85.50,90.42,5.7,0.0557
+NEW_YORK,15849,15851,12965,14134,81.80,89.17,5.7,0.0423
+LONDON_NY_OVERLAP,9141,9151,7419,8109,81.16,88.61,5.4,0.0815

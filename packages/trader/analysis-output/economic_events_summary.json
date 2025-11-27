@@ -1,0 +1,25 @@
+{
+  "dateRange": {
+    "from": "2024-11-27",
+    "to": "2025-11-27"
+  },
+  "totalEvents": 128,
+  "byImpact": {
+    "high": 52,
+    "medium": 76,
+    "low": 0
+  },
+  "byCategory": {
+    "GDP": 12,
+    "EMPLOYMENT": 64,
+    "MANUFACTURING": 12,
+    "INTEREST_RATE": 16,
+    "INFLATION": 12,
+    "RETAIL": 12
+  },
+  "currencies": [
+    "USD",
+    "EUR"
+  ],
+  "source": "Hardcoded 2024 events"
+}

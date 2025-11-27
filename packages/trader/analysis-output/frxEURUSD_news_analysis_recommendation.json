@@ -1,0 +1,33 @@
+{
+  "symbol": "frxEURUSD",
+  "dataRange": {
+    "from": "2024-11-26",
+    "to": "2025-11-27"
+  },
+  "totalCandles": 72958,
+  "totalSignals": 2684,
+  "recommendedWindow": {
+    "name": "Conservative",
+    "highImpact": {
+      "before": 15,
+      "after": 30
+    },
+    "mediumImpact": {
+      "before": 10,
+      "after": 15
+    }
+  },
+  "results": {
+    "noNewsRevRate": 41.61624891961971,
+    "highNewsRevRate": 11.11111111111111,
+    "improvement": 30.505137808508596
+  },
+  "worstEvents": [
+    "PMI/ISM",
+    "Jobless Claims",
+    "CPI",
+    "FOMC",
+    "ECB Rate"
+  ],
+  "generatedAt": "2025-11-27T12:43:32.740Z"
+}

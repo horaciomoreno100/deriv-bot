@@ -109,14 +109,20 @@ export class PositionManager extends EventEmitter {
     position.exitTime = result.exitTime;
     position.profit = result.profit;
 
+    // Inherit strategyName from position if not in result
+    const resultWithStrategy: TradeResult = {
+      ...result,
+      strategyName: result.strategyName ?? position.strategyName,
+    };
+
     // Remove from open positions
     this.openPositions.delete(result.contractId);
 
     // Add to closed positions
-    this.closedPositions.push(result);
+    this.closedPositions.push(resultWithStrategy);
 
     // Emit event
-    this.emit('position:closed', position, result);
+    this.emit('position:closed', position, resultWithStrategy);
   }
 
   /**
@@ -131,6 +137,64 @@ export class PositionManager extends EventEmitter {
    */
   getOpenPositionsCount(): number {
     return this.openPositions.size;
+  }
+
+  // ==========================================================================
+  // STRATEGY-BASED FILTERING
+  // ==========================================================================
+
+  /**
+   * Get open positions filtered by strategy
+   */
+  getOpenPositionsByStrategy(strategyName: string): Contract[] {
+    return Array.from(this.openPositions.values()).filter(
+      (p) => p.strategyName === strategyName
+    );
+  }
+
+  /**
+   * Get open positions count for a specific strategy
+   */
+  getOpenPositionsCountByStrategy(strategyName: string): number {
+    return this.getOpenPositionsByStrategy(strategyName).length;
+  }
+
+  /**
+   * Get daily statistics filtered by strategy
+   */
+  getDailyStatsByStrategy(strategyName: string): DailyStats {
+    const todayResults = this.getClosedPositions().filter(
+      (r) => r.strategyName === strategyName
+    );
+
+    if (todayResults.length === 0) {
+      return {
+        pnl: 0,
+        tradeCount: 0,
+        wins: 0,
+        losses: 0,
+        winRate: 0,
+        averageProfit: 0,
+        averageLoss: 0,
+      };
+    }
+
+    const wins = todayResults.filter((r) => r.status === 'won');
+    const losses = todayResults.filter((r) => r.status === 'lost');
+
+    const totalPnL = todayResults.reduce((sum, r) => sum + r.profit, 0);
+    const totalWinProfit = wins.reduce((sum, r) => sum + r.profit, 0);
+    const totalLossProfit = losses.reduce((sum, r) => sum + r.profit, 0);
+
+    return {
+      pnl: totalPnL,
+      tradeCount: todayResults.length,
+      wins: wins.length,
+      losses: losses.length,
+      winRate: wins.length / todayResults.length,
+      averageProfit: wins.length > 0 ? totalWinProfit / wins.length : 0,
+      averageLoss: losses.length > 0 ? totalLossProfit / losses.length : 0,
+    };
   }
 
   /**

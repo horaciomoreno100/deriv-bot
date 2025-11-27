@@ -1,0 +1,30 @@
+{
+  "symbol": "frxEURUSD",
+  "analysisDate": "2025-11-27T12:41:28.653Z",
+  "dataRange": {
+    "from": "2025-11-24",
+    "to": "2025-11-27"
+  },
+  "totalSignals": 0,
+  "recommendedWindow": {
+    "name": "Conservative",
+    "highImpact": {
+      "minutesBefore": 15,
+      "minutesAfter": 30
+    },
+    "mediumImpact": {
+      "minutesBefore": 10,
+      "minutesAfter": 15
+    }
+  },
+  "expectedImprovement": {
+    "reversionRate": 0,
+    "noNewsRevRate": 0,
+    "highNewsRevRate": 0
+  },
+  "worstEvents": [],
+  "bestSession": {
+    "noNews": "ASIAN",
+    "improvement": 0
+  }
+}
