@@ -370,3 +370,126 @@ export function formatSignalProximities(data: {
 
   return message;
 }
+
+/**
+ * Format server status
+ */
+export function formatServerStatus(status: {
+  cpu: {
+    count: number;
+    usage: number;
+    model: string;
+  };
+  memory: {
+    total: number;
+    used: number;
+    free: number;
+    usagePct: number;
+    totalFormatted: string;
+    usedFormatted: string;
+    freeFormatted: string;
+  };
+  disk: {
+    total: number;
+    used: number;
+    available: number;
+    usagePct: number;
+    totalFormatted: string;
+    usedFormatted: string;
+    availableFormatted: string;
+  };
+  system: {
+    platform: string;
+    hostname: string;
+    uptime: number;
+    uptimeFormatted: string;
+    loadAvg: number[];
+  };
+  processes: Array<{
+    name: string;
+    status: string;
+    cpu: number;
+    memory: number;
+    memoryFormatted: string;
+    uptime: number;
+    uptimeFormatted: string;
+    restarts: number;
+  }>;
+}): string {
+  // Memory emoji based on usage
+  const memEmoji = status.memory.usagePct > 80 ? '🔴' : status.memory.usagePct > 60 ? '🟡' : '🟢';
+  // Disk emoji based on usage
+  const diskEmoji = status.disk.usagePct > 80 ? '🔴' : status.disk.usagePct > 60 ? '🟡' : '🟢';
+
+  let message = `🖥️ *Server Status*\n\n`;
+
+  // System info
+  message += `*System:*\n`;
+  message += `├ Host: \`${status.system.hostname}\`\n`;
+  message += `├ Platform: \`${status.system.platform}\`\n`;
+  message += `├ Uptime: \`${status.system.uptimeFormatted}\`\n`;
+  message += `└ Load: \`${status.system.loadAvg.join(', ')}\`\n\n`;
+
+  // CPU
+  message += `*CPU:* \`${status.cpu.usage.toFixed(1)}%\` (${status.cpu.count} cores)\n\n`;
+
+  // Memory
+  message += `*Memory:* ${memEmoji}\n`;
+  message += `├ Used: \`${status.memory.usedFormatted}\` / \`${status.memory.totalFormatted}\`\n`;
+  message += `└ Usage: \`${status.memory.usagePct.toFixed(1)}%\`\n\n`;
+
+  // Disk
+  message += `*Disk:* ${diskEmoji}\n`;
+  message += `├ Used: \`${status.disk.usedFormatted}\` / \`${status.disk.totalFormatted}\`\n`;
+  message += `└ Usage: \`${status.disk.usagePct}%\`\n\n`;
+
+  // PM2 Processes
+  if (status.processes.length > 0) {
+    message += `*PM2 Processes:*\n`;
+    for (const proc of status.processes) {
+      const statusEmoji = proc.status === 'online' ? '🟢' : '🔴';
+      message += `${statusEmoji} *${proc.name}*\n`;
+      message += `├ Memory: \`${proc.memoryFormatted}\`\n`;
+      message += `├ Uptime: \`${proc.uptimeFormatted}\`\n`;
+      message += `└ Restarts: \`${proc.restarts}\`\n\n`;
+    }
+  }
+
+  return message;
+}
+
+/**
+ * Format logs
+ */
+export function formatLogs(data: {
+  logs: Array<{
+    service: string;
+    type: string;
+    content: string;
+  }>;
+  service: string;
+  lines: number;
+}): string {
+  if (data.logs.length === 0) {
+    return `📋 *Logs*\n\n_No logs available_`;
+  }
+
+  let message = `📋 *Logs* (${data.service}, last ${data.lines} lines)\n\n`;
+
+  for (const log of data.logs) {
+    const typeEmoji = log.type === 'error' ? '❌' : '📄';
+    message += `${typeEmoji} *${log.service}* (${log.type}):\n`;
+
+    // Truncate very long logs and escape markdown
+    let content = log.content;
+    if (content.length > 3000) {
+      content = content.slice(-3000) + '\n...(truncated)';
+    }
+
+    // Split into lines and take last N
+    const lines = content.split('\n').slice(-30);
+    message += `\`\`\`\n${lines.join('\n')}\n\`\`\`\n\n`;
+  }
+
+  return message;
+}

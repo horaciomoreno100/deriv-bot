@@ -7,7 +7,7 @@
 
 import TelegramBot from 'node-telegram-bot-api';
 import type { GatewayBridge } from './gateway-bridge.js';
-import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo, formatSignalProximities } from './formatters.js';
+import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo, formatSignalProximities, formatServerStatus, formatLogs } from './formatters.js';
 
 export interface TelegramBotConfig {
   token: string;
@@ -52,6 +52,9 @@ export class TelegramBotService {
         `/stats - Trading statistics\n` +
         `/signals - Signal proximities\n` +
         `/assets - Monitored assets\n` +
+        `/server - Server status (RAM/CPU/disk)\n` +
+        `/logs - Recent logs\n` +
+        `/health - System health check\n` +
         `/help - Show this message`
       );
     });
@@ -71,6 +74,10 @@ export class TelegramBotService {
         `/stats - Daily statistics\n` +
         `/signals - Signal proximities by asset\n` +
         `/assets - Assets being monitored\n\n` +
+        `*Server:*\n` +
+        `/server - RAM, CPU, disk, PM2 status\n` +
+        `/logs [n] - Last n lines (default 50)\n` +
+        `/health - Gateway + trader health\n\n` +
         `/help - This message`
       );
     });
@@ -166,6 +173,80 @@ export class TelegramBotService {
         this.sendMessage(formatSignalProximities(proximities));
       } catch (error: any) {
         this.sendMessage(`Error: ${error.message}`);
+      }
+    });
+
+    // /server - Server status (RAM, CPU, disk, PM2)
+    this.bot.onText(/\/server/, async (msg) => {
+      if (!this.isAuthorized(msg.from?.id)) return;
+      try {
+        const status = await this.gateway.getServerStatus();
+        this.sendMessage(formatServerStatus(status));
+      } catch (error: any) {
+        this.sendMessage(`Error: ${error.message}`);
+      }
+    });
+
+    // /logs - Recent logs (optionally specify number of lines)
+    this.bot.onText(/\/logs(?:\s+(\d+))?/, async (msg, match) => {
+      if (!this.isAuthorized(msg.from?.id)) return;
+      try {
+        const lines = match?.[1] ? parseInt(match[1], 10) : 50;
+        const logs = await this.gateway.getLogs({ lines, type: 'all' });
+        this.sendMessage(formatLogs(logs));
+      } catch (error: any) {
+        this.sendMessage(`Error: ${error.message}`);
+      }
+    });
+
+    // /errors - Recent error logs
+    this.bot.onText(/\/errors(?:\s+(\d+))?/, async (msg, match) => {
+      if (!this.isAuthorized(msg.from?.id)) return;
+      try {
+        const lines = match?.[1] ? parseInt(match[1], 10) : 30;
+        const logs = await this.gateway.getLogs({ lines, type: 'error' });
+        this.sendMessage(formatLogs(logs));
+      } catch (error: any) {
+        this.sendMessage(`Error: ${error.message}`);
+      }
+    });
+
+    // /health - System health check
+    this.bot.onText(/\/health/, async (msg) => {
+      if (!this.isAuthorized(msg.from?.id)) return;
+      try {
+        const start = Date.now();
+        await this.gateway.ping();
+        const latency = Date.now() - start;
+
+        const status = await this.gateway.getServerStatus();
+        const botInfo = await this.gateway.getBotInfo();
+
+        // Build health summary
+        const gwStatus = latency < 500 ? '🟢' : latency < 1000 ? '🟡' : '🔴';
+        const memStatus = status.memory.usagePct < 60 ? '🟢' : status.memory.usagePct < 80 ? '🟡' : '🔴';
+        const diskStatus = status.disk.usagePct < 70 ? '🟢' : status.disk.usagePct < 85 ? '🟡' : '🔴';
+
+        // Check PM2 processes
+        const pm2Issues = status.processes.filter(p => p.status !== 'online');
+        const pm2Status = pm2Issues.length === 0 ? '🟢' : '🔴';
+
+        // Check traders
+        const tradersActive = botInfo.traders.filter(t => t.isActive).length;
+        const traderStatus = tradersActive > 0 ? '🟢' : '🔴';
+
+        const healthMsg =
+          `*System Health*\n\n` +
+          `${gwStatus} Gateway: ${latency}ms\n` +
+          `${traderStatus} Traders: ${tradersActive}/${botInfo.traders.length} active\n` +
+          `${memStatus} Memory: ${status.memory.usagePct.toFixed(0)}%\n` +
+          `${diskStatus} Disk: ${status.disk.usagePct.toFixed(0)}%\n` +
+          `${pm2Status} PM2: ${status.processes.length - pm2Issues.length}/${status.processes.length} online\n\n` +
+          `_Uptime: ${status.system.uptimeFormatted}_`;
+
+        this.sendMessage(healthMsg);
+      } catch (error: any) {
+        this.sendMessage(`🔴 *Health Check Failed*\n\n${error.message}`);
       }
     });
 

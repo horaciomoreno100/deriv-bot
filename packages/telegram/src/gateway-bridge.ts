@@ -310,4 +310,74 @@ export class GatewayBridge extends EventEmitter {
   }> {
     return await this.sendCommand('get_signal_proximities');
   }
+
+  /**
+   * Get server status (CPU, RAM, disk, PM2 processes)
+   */
+  async getServerStatus(): Promise<{
+    cpu: {
+      count: number;
+      usage: number;
+      model: string;
+    };
+    memory: {
+      total: number;
+      used: number;
+      free: number;
+      usagePct: number;
+      totalFormatted: string;
+      usedFormatted: string;
+      freeFormatted: string;
+    };
+    disk: {
+      total: number;
+      used: number;
+      available: number;
+      usagePct: number;
+      totalFormatted: string;
+      usedFormatted: string;
+      availableFormatted: string;
+    };
+    system: {
+      platform: string;
+      hostname: string;
+      uptime: number;
+      uptimeFormatted: string;
+      loadAvg: number[];
+    };
+    processes: Array<{
+      name: string;
+      status: string;
+      cpu: number;
+      memory: number;
+      memoryFormatted: string;
+      uptime: number;
+      uptimeFormatted: string;
+      restarts: number;
+    }>;
+    timestamp: number;
+  }> {
+    return await this.sendCommand('get_server_status');
+  }
+
+  /**
+   * Get logs from PM2
+   */
+  async getLogs(params?: {
+    service?: 'gateway' | 'trader' | 'telegram' | 'all';
+    lines?: number;
+    type?: 'out' | 'error' | 'all';
+  }): Promise<{
+    logs: Array<{
+      service: string;
+      type: string;
+      content: string;
+    }>;
+    service: string;
+    lines: number;
+    type: string;
+    timestamp: number;
+  }> {
+    return await this.sendCommand('get_logs', params);
+  }
 }

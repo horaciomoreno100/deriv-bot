@@ -1096,6 +1096,12 @@ export async function handleCommand(
     case 'get_signal_proximities':
       await handleGetSignalProximitiesCommand(ws, command, context);
       break;
+    case 'get_server_status':
+      await handleGetServerStatusCommand(ws, command, context);
+      break;
+    case 'get_logs':
+      await handleGetLogsCommand(ws, command, context);
+      break;
     default:
       context.gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
         code: 'UNKNOWN_COMMAND',
@@ -1556,4 +1562,223 @@ export async function handleGetSignalProximitiesCommand(
       message: error.message,
     });
   }
+}
+
+/**
+ * Handle 'get_server_status' command
+ * Returns server resource usage (CPU, RAM, disk) and PM2 process status
+ */
+export async function handleGetServerStatusCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+  const os = await import('os');
+  const { execSync } = await import('child_process');
+
+  try {
+    // CPU info
+    const cpus = os.cpus();
+    const cpuCount = cpus.length;
+
+    // Calculate CPU usage (average across all cores)
+    const cpuUsage = cpus.reduce((acc, cpu) => {
+      const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
+      const idle = cpu.times.idle;
+      return acc + ((total - idle) / total) * 100;
+    }, 0) / cpuCount;
+
+    // Memory info
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
+    const usedMem = totalMem - freeMem;
+    const memUsagePct = (usedMem / totalMem) * 100;
+
+    // Disk info (try to get it, fallback if not available)
+    let diskInfo = { total: 0, used: 0, available: 0, usedPct: 0 };
+    try {
+      const dfOutput = execSync('df -k / | tail -1', { encoding: 'utf8' });
+      const parts = dfOutput.trim().split(/\s+/);
+      if (parts.length >= 4) {
+        diskInfo = {
+          total: parseInt(parts[1] || '0') * 1024,
+          used: parseInt(parts[2] || '0') * 1024,
+          available: parseInt(parts[3] || '0') * 1024,
+          usedPct: parseInt(parts[4] || '0') || 0,
+        };
+      }
+    } catch {
+      // Disk info not available
+    }
+
+    // Load average
+    const loadAvg = os.loadavg();
+
+    // Uptime
+    const uptime = os.uptime();
+
+    // PM2 processes (try to get them)
+    let pm2Processes: Array<{
+      name: string;
+      status: string;
+      cpu: number;
+      memory: number;
+      uptime: number;
+      restarts: number;
+    }> = [];
+
+    try {
+      const pm2Output = execSync('pm2 jlist 2>/dev/null', { encoding: 'utf8' });
+      const pm2Data = JSON.parse(pm2Output);
+      pm2Processes = pm2Data.map((proc: any) => ({
+        name: proc.name,
+        status: proc.pm2_env?.status || 'unknown',
+        cpu: proc.monit?.cpu || 0,
+        memory: proc.monit?.memory || 0,
+        uptime: proc.pm2_env?.pm_uptime ? Date.now() - proc.pm2_env.pm_uptime : 0,
+        restarts: proc.pm2_env?.restart_time || 0,
+      }));
+    } catch {
+      // PM2 not available or not running
+    }
+
+    const status = {
+      cpu: {
+        count: cpuCount,
+        usage: Math.round(cpuUsage * 10) / 10,
+        model: cpus[0]?.model || 'unknown',
+      },
+      memory: {
+        total: totalMem,
+        used: usedMem,
+        free: freeMem,
+        usagePct: Math.round(memUsagePct * 10) / 10,
+        totalFormatted: formatBytes(totalMem),
+        usedFormatted: formatBytes(usedMem),
+        freeFormatted: formatBytes(freeMem),
+      },
+      disk: {
+        total: diskInfo.total,
+        used: diskInfo.used,
+        available: diskInfo.available,
+        usagePct: diskInfo.usedPct,
+        totalFormatted: formatBytes(diskInfo.total),
+        usedFormatted: formatBytes(diskInfo.used),
+        availableFormatted: formatBytes(diskInfo.available),
+      },
+      system: {
+        platform: os.platform(),
+        hostname: os.hostname(),
+        uptime,
+        uptimeFormatted: formatUptime(uptime * 1000),
+        loadAvg: loadAvg.map(l => Math.round(l * 100) / 100),
+      },
+      processes: pm2Processes.map(p => ({
+        ...p,
+        memoryFormatted: formatBytes(p.memory),
+        uptimeFormatted: formatUptime(p.uptime),
+      })),
+      timestamp: Date.now(),
+    };
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, status);
+
+  } catch (error: any) {
+    console.error('[handleGetServerStatusCommand] Error:', error.message);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'ERROR',
+      message: error.message,
+    });
+  }
+}
+
+/**
+ * Handle 'get_logs' command
+ * Returns recent logs from PM2 log files
+ */
+export async function handleGetLogsCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer } = context;
+  const { execSync } = await import('child_process');
+
+  const params = (command.params || {}) as {
+    service?: 'gateway' | 'trader' | 'telegram' | 'all';
+    lines?: number;
+    type?: 'out' | 'error' | 'all';
+  };
+
+  const service = params.service || 'trader';
+  const lines = Math.min(params.lines || 50, 200); // Cap at 200 lines
+  const logType = params.type || 'out';
+
+  try {
+    let logs: Array<{ service: string; type: string; content: string }> = [];
+
+    // Map service names to PM2 process names
+    const serviceMap: Record<string, string> = {
+      'gateway': 'gateway',
+      'trader': 'trader-squeeze-mr',
+      'telegram': 'telegram',
+    };
+
+    const services = service === 'all'
+      ? ['gateway', 'trader', 'telegram']
+      : [service];
+
+    for (const svc of services) {
+      const pm2Name = serviceMap[svc] || svc;
+
+      try {
+        if (logType === 'all' || logType === 'out') {
+          const outLogs = execSync(
+            `pm2 logs ${pm2Name} --lines ${lines} --nostream --out 2>/dev/null || echo "No logs available"`,
+            { encoding: 'utf8', timeout: 5000 }
+          );
+          logs.push({ service: svc, type: 'out', content: outLogs.trim() });
+        }
+
+        if (logType === 'all' || logType === 'error') {
+          const errLogs = execSync(
+            `pm2 logs ${pm2Name} --lines ${lines} --nostream --err 2>/dev/null || echo "No error logs"`,
+            { encoding: 'utf8', timeout: 5000 }
+          );
+          if (errLogs.trim() && errLogs.trim() !== 'No error logs') {
+            logs.push({ service: svc, type: 'error', content: errLogs.trim() });
+          }
+        }
+      } catch {
+        logs.push({ service: svc, type: 'error', content: `Could not read logs for ${svc}` });
+      }
+    }
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, {
+      logs,
+      service,
+      lines,
+      type: logType,
+      timestamp: Date.now(),
+    });
+
+  } catch (error: any) {
+    console.error('[handleGetLogsCommand] Error:', error.message);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'ERROR',
+      message: error.message,
+    });
+  }
+}
+
+/**
+ * Format bytes to human readable format
+ */
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
 }
