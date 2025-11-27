@@ -63,13 +63,39 @@ REPORT_FILE="$REPORT_DIR/report-$(date +%Y%m%d-%H%M%S).txt"
     
     echo "⚠️  Recent Errors (last 10 minutes):"
     echo ""
+    has_errors=false
     for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
-        error_count=$(pm2 logs $service --err --lines 50 --nostream 2>/dev/null | grep -iE 'error|fatal|exception' | wc -l || echo "0")
+        # Check if error log file exists and has content
+        error_log_pm2="/root/.pm2/logs/${service}-error.log"
+        error_log_app="/opt/apps/deriv-bot/logs/${service}-error.log"
+        
+        # Count actual error lines (excluding empty lines and headers)
+        error_count=0
+        if [ -f "$error_log_pm2" ] && [ -s "$error_log_pm2" ]; then
+            error_count=$(grep -v '^[[:space:]]*$' "$error_log_pm2" | grep -v 'TAILING' | grep -v 'last.*lines' | wc -l || echo "0")
+        fi
+        if [ -f "$error_log_app" ] && [ -s "$error_log_app" ]; then
+            app_errors=$(grep -v '^[[:space:]]*$' "$error_log_app" | grep -v 'TAILING' | grep -v 'last.*lines' | wc -l || echo "0")
+            error_count=$((error_count + app_errors))
+        fi
+        
+        # Only show if there are actual errors
         if [ "$error_count" -gt 0 ]; then
+            has_errors=true
             echo "  ⚠️  $service: $error_count errors"
-            pm2 logs $service --err --lines 5 --nostream 2>/dev/null | grep -iE 'error|fatal|exception' | tail -2 | sed 's/^/     /' || true
+            # Show last 2 actual error lines (not headers)
+            if [ -f "$error_log_pm2" ] && [ -s "$error_log_pm2" ]; then
+                grep -v '^[[:space:]]*$' "$error_log_pm2" | grep -v 'TAILING' | grep -v 'last.*lines' | grep -iE 'error|fatal|exception' | tail -2 | sed 's/^/     /' || true
+            fi
+            if [ -f "$error_log_app" ] && [ -s "$error_log_app" ]; then
+                grep -v '^[[:space:]]*$' "$error_log_app" | grep -v 'TAILING' | grep -v 'last.*lines' | grep -iE 'error|fatal|exception' | tail -2 | sed 's/^/     /' || true
+            fi
         fi
     done
+    
+    if [ "$has_errors" = false ]; then
+        echo "  ✅ No errors found"
+    fi
     echo ""
     
     echo "💻 System Resources:"
