@@ -139,10 +139,12 @@ export class HybridMTFStrategy extends BaseStrategy {
      */
     private resampleCandles(candles1m: Candle[], intervalMinutes: number): ResampledCandle[] {
         const resampled: ResampledCandle[] = [];
-        const intervalMs = intervalMinutes * 60 * 1000;
+        const intervalSeconds = intervalMinutes * 60; // Candle.timestamp is in seconds
 
         for (const candle of candles1m) {
-            const slotStart = Math.floor(candle.timestamp / intervalMs) * intervalMs;
+            // Convert to seconds for calculation, then back to ms for storage
+            const slotStartSeconds = Math.floor(candle.timestamp / intervalSeconds) * intervalSeconds;
+            const slotStart = slotStartSeconds * 1000; // Convert to ms for ResampledCandle
 
             // Find or create resampled candle for this slot
             let resampledCandle = resampled.find(c => c.timestamp === slotStart);
