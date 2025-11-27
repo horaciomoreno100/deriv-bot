@@ -448,11 +448,13 @@ export class HybridMTFStrategy extends BaseStrategy {
         missingCriteria: string[];
     } | null {
         if (!candles || candles.length < this.params.minCandles) {
+            console.log(`[HybridMTF.getSignalReadiness] Not enough candles: ${candles?.length || 0} < ${this.params.minCandles}`);
             return null;
         }
 
         const firstCandle = candles[0];
         if (!firstCandle) {
+            console.log(`[HybridMTF.getSignalReadiness] No first candle`);
             return null;
         }
 
@@ -465,12 +467,14 @@ export class HybridMTFStrategy extends BaseStrategy {
         // Detect regime
         const regime = this.detectRegime(candles15m);
         if (!regime) {
+            console.log(`[HybridMTF.getSignalReadiness] Could not detect regime (need ${this.params.ctxSmaPeriod + 1} 15m candles, have ${candles15m.length})`);
             return null;
         }
 
         // Get 5m RSI
         const rsi5m = this.get5mRSI(candles5m);
         if (rsi5m === null) {
+            console.log(`[HybridMTF.getSignalReadiness] Could not get 5m RSI (need ${this.params.midRsiPeriod + 1} 5m candles, have ${candles5m.length})`);
             return null;
         }
 
