@@ -340,6 +340,12 @@ async function main() {
           try {
             const readiness = (strategy as any).getSignalReadiness(buffer);
             if (readiness) {
+              // Check if connected before publishing
+              if (!gatewayClient.isConnected()) {
+                // Skip silently if not connected (will retry on next interval)
+                return;
+              }
+
               // Convert criteria format to match Gateway expectations
               const criteria = readiness.criteria.map((c: any) => ({
                 name: c.name,
@@ -364,7 +370,10 @@ async function main() {
               console.log(`[Signal Proximity] ${symbol}: getSignalReadiness returned null`);
             }
           } catch (error: any) {
-            console.error(`[Signal Proximity] Error for ${symbol}:`, error.message || error);
+            // Only log if it's not a connection error (will retry automatically)
+            if (!error.message?.includes('Not connected to Gateway')) {
+              console.error(`[Signal Proximity] Error for ${symbol}:`, error.message || error);
+            }
           }
         } else {
           // Log when buffer is not ready (only once per symbol to avoid spam)

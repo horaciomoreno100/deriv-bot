@@ -1777,7 +1777,10 @@ export async function handleGetLogsCommand(
                      !trimmed.includes('[TAILING]') && 
                      !trimmed.includes('Tailing last') &&
                      !trimmed.match(/last \d+ lines/i) &&
-                     !trimmed.match(/\.log last \d+ lines/i);
+                     !trimmed.match(/\.log last \d+ lines/i) &&
+                     // Filter out non-critical messages that aren't real errors
+                     !trimmed.includes('SLACK_WEBHOOK_URL not set') &&
+                     !trimmed.match(/^SLACK_WEBHOOK_URL/i);
             })
             .join('\n')
             .trim();
@@ -1809,7 +1812,10 @@ export async function handleGetLogsCommand(
                      !trimmed.includes('[TAILING]') && 
                      !trimmed.includes('Tailing last') &&
                      !trimmed.match(/last \d+ lines/i) &&
-                     !trimmed.match(/\.log last \d+ lines/i);
+                     !trimmed.match(/\.log last \d+ lines/i) &&
+                     // Filter out non-critical messages that aren't real errors
+                     !trimmed.includes('SLACK_WEBHOOK_URL not set') &&
+                     !trimmed.match(/^SLACK_WEBHOOK_URL/i);
             })
             .join('\n')
             .trim();
