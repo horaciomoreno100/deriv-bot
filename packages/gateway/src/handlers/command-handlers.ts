@@ -1756,6 +1756,8 @@ export async function handleGetLogsCommand(
 
       for (const pm2Name of pm2Names) {
       try {
+        // Use the actual PM2 process name as the service identifier for traders
+        const logServiceName = svc === 'trader' ? pm2Name : svc;
         if (logType === 'all' || logType === 'out') {
           const outLogs = execSync(
             `pm2 logs ${pm2Name} --lines ${lines} --nostream --out 2>/dev/null || echo "No logs available"`,
@@ -1786,7 +1788,7 @@ export async function handleGetLogsCommand(
             .trim();
           
           if (filteredOutLogs && filteredOutLogs !== 'No logs available') {
-            logs.push({ service: svc, type: 'out', content: filteredOutLogs });
+            logs.push({ service: logServiceName, type: 'out', content: filteredOutLogs });
           }
         }
 
@@ -1821,11 +1823,12 @@ export async function handleGetLogsCommand(
             .trim();
           
           if (filteredErrLogs && filteredErrLogs !== 'No error logs' && filteredErrLogs.length > 0) {
-            logs.push({ service: svc, type: 'error', content: filteredErrLogs });
+            logs.push({ service: logServiceName, type: 'error', content: filteredErrLogs });
           }
         }
       } catch {
-        logs.push({ service: pm2Name, type: 'error', content: `Could not read logs for ${pm2Name}` });
+        const logServiceName = svc === 'trader' ? pm2Name : svc;
+        logs.push({ service: logServiceName, type: 'error', content: `Could not read logs for ${pm2Name}` });
       }
       }
     }
