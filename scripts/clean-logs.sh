@@ -66,6 +66,15 @@ ssh $SERVER << 'ENDSSH'
         fi
     done
     
+    # Also clean old log files (without -mr suffix, etc.)
+    echo "  → Cleaning old log files..."
+    for old_log in /root/.pm2/logs/trader-squeeze-error.log /root/.pm2/logs/trader-keltner-error.log; do
+        if [ -f "$old_log" ]; then
+            > "$old_log"
+            echo "    ✅ Cleared $old_log"
+        fi
+    done
+    
     echo ""
     echo "✅ Error logs cleared"
     echo ""
