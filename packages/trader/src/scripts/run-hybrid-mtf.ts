@@ -287,7 +287,9 @@ async function main() {
 
   // Load historical candles first (before setting up signal proximity)
   console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
-  const HISTORICAL_CANDLES = 150; // Load more than minCandles (100) to ensure we have enough
+  // Need enough candles for 15m context: SMA(50) needs 50 15m candles = 50*15 = 750 1m candles
+  // Add buffer: 800 candles to ensure we have enough for resampling
+  const HISTORICAL_CANDLES = 800;
 
   for (const symbol of SYMBOLS) {
     try {
