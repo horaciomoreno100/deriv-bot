@@ -299,7 +299,7 @@ export async function handlePortfolioCommand(
   command: CommandMessage,
   context: CommandHandlerContext
 ): Promise<void> {
-  const { derivClient, gatewayServer, stateManager } = context;
+  const { derivClient, gatewayServer } = context;
   const { account } = (command.params || {}) as { account?: string };
   const accountKey = account || 'current';
 
@@ -322,47 +322,40 @@ export async function handlePortfolioCommand(
   console.log(`[handlePortfolioCommand] Getting portfolio${account ? ` for account ${account}` : ''}...`);
 
   try {
-    // Get standard portfolio (Binary options)
-    const binaryPositions = await derivClient.getPortfolio(account);
-    console.log(`[handlePortfolioCommand] Found ${binaryPositions.length} binary position(s)`);
+    // Get standard portfolio (includes both Binary and Multiplier contracts)
+    const portfolioPositions = await derivClient.getPortfolio(account);
+    console.log(`[handlePortfolioCommand] Found ${portfolioPositions.length} position(s) from portfolio API`);
 
-    // Get open trades from DB (for Multiplier/CFD positions)
-    const openTrades = await stateManager.getOpenTrades();
-    const multiplierTrades = openTrades.filter(t => t.tradeMode === 'cfd');
-    console.log(`[handlePortfolioCommand] Found ${multiplierTrades.length} open CFD trade(s) in DB`);
+    // Separate Multiplier positions (MULTUP/MULTDOWN) from Binary positions
+    // The portfolio API returns Multipliers but WITHOUT live P/L data
+    const multiplierPositions = portfolioPositions.filter(
+      p => p.contractType === 'MULTUP' || p.contractType === 'MULTDOWN'
+    );
+    const binaryPositions = portfolioPositions.filter(
+      p => p.contractType !== 'MULTUP' && p.contractType !== 'MULTDOWN'
+    );
 
-    let multiplierPositions: any[] = [];
+    console.log(`[handlePortfolioCommand] ${binaryPositions.length} binary, ${multiplierPositions.length} multiplier`);
 
-    // If we have open Multiplier trades, get live P/L from Deriv API
-    if (multiplierTrades.length > 0) {
-      const contractIds = multiplierTrades.map(t => t.contractId);
-      console.log(`[handlePortfolioCommand] Querying live P/L for contracts: ${contractIds.join(', ')}`);
+    let enrichedMultiplierPositions: any[] = [];
+
+    // For Multiplier positions, get live P/L using proposal_open_contract
+    if (multiplierPositions.length > 0) {
+      const contractIds = multiplierPositions.map(p => p.contractId);
+      console.log(`[handlePortfolioCommand] Querying live P/L for ${contractIds.length} Multiplier contract(s)`);
 
       try {
-        multiplierPositions = await derivClient.getMultiplierPositions(contractIds);
-        console.log(`[handlePortfolioCommand] Got live data for ${multiplierPositions.length} Multiplier position(s)`);
+        enrichedMultiplierPositions = await derivClient.getMultiplierPositions(contractIds);
+        console.log(`[handlePortfolioCommand] Got live P/L for ${enrichedMultiplierPositions.length} Multiplier position(s)`);
       } catch (err) {
-        console.warn(`[handlePortfolioCommand] Failed to get Multiplier positions:`, err);
-        // Fall back to DB data without live P/L
-        multiplierPositions = multiplierTrades.map(t => ({
-          contractId: t.contractId,
-          symbol: t.asset,
-          contractType: t.type,
-          buyPrice: t.stake,
-          currentPrice: t.entryPrice,
-          profit: 0, // Unknown without API
-          profitPercentage: 0,
-          purchaseTime: t.openedAt,
-          status: 'open' as const,
-          isSold: false,
-          multiplier: t.multiplier,
-          direction: t.type === 'MULTUP' ? 'CALL' : 'PUT',
-        }));
+        console.warn(`[handlePortfolioCommand] Failed to get Multiplier P/L, using portfolio data:`, err);
+        // Fall back to portfolio data (without P/L)
+        enrichedMultiplierPositions = multiplierPositions;
       }
     }
 
-    // Combine all positions
-    const allPositions = [...binaryPositions, ...multiplierPositions];
+    // Combine binary positions + enriched multiplier positions
+    const allPositions = [...binaryPositions, ...enrichedMultiplierPositions];
     console.log(`[handlePortfolioCommand] Total positions: ${allPositions.length}`);
 
     // Update cache
