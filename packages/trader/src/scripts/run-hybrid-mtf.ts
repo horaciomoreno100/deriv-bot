@@ -391,17 +391,15 @@ async function main() {
             
             // Check if it's a connection error (multiple ways to detect)
             // IMPORTANT: Check connection state FIRST - most reliable
+            const hasNotConnectedMsg = errorMsg.includes('Not connected to Gateway') || errorMsg.includes('Not connected');
+            const hasConnectionKeywords = errorMsg.includes('Connection closed') || errorMsg.includes('WebSocket') || errorMsg.includes('socket');
+            const hasStackKeywords = errorStack.includes('Not connected') || errorStack.includes('Connection closed') || errorStack.includes('WebSocket');
+            
             const isConnectionError = 
               !currentlyConnected || // Most reliable: check actual connection state
-              errorMsg.includes('Not connected to Gateway') ||
-              errorMsg.includes('Not connected') ||
-              errorMsg.includes('Connection closed') ||
-              errorMsg.includes('WebSocket is not open') ||
-              errorMsg.includes('WebSocket') ||
-              errorMsg.includes('socket') ||
-              errorStack.includes('Not connected') ||
-              errorStack.includes('Connection closed') ||
-              errorStack.includes('WebSocket');
+              hasNotConnectedMsg ||
+              hasConnectionKeywords ||
+              hasStackKeywords;
             
             // ALWAYS silently ignore connection errors - they're expected during reconnection
             if (isConnectionError) {
@@ -410,7 +408,8 @@ async function main() {
             }
             
             // Only log if it's NOT a connection error (real errors)
-            console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
+            // This should rarely happen - if it does, it's a real bug
+            console.error(`[Signal Proximity] Real error for ${symbol} (not connection):`, errorMsg);
           }
         } else {
           // Log when buffer is not ready (only once per symbol to avoid spam)
