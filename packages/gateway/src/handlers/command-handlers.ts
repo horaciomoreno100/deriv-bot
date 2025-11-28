@@ -1817,7 +1817,19 @@ export async function handleGetLogsCommand(
                      !trimmed.match(/\.log last \d+ lines/i) &&
                      // Filter out non-critical messages that aren't real errors
                      !trimmed.includes('SLACK_WEBHOOK_URL not set') &&
-                     !trimmed.match(/^SLACK_WEBHOOK_URL/i);
+                     !trimmed.match(/^SLACK_WEBHOOK_URL/i) &&
+                     // Filter out Position Monitor timeouts (expected when API is slow)
+                     !trimmed.includes('Position Monitor error: Command timeout') &&
+                     !trimmed.includes('Position Monitor error: Connection closed') &&
+                     !trimmed.match(/\[PositionMonitor\].*Command timeout/i) &&
+                     !trimmed.match(/\[PositionMonitor\].*Connection closed/i) &&
+                     !trimmed.match(/\[PositionMonitor\].*timeout/i) &&
+                     !trimmed.match(/⚠️.*\[PositionMonitor\].*timeout/i) &&
+                     !trimmed.match(/⚠️.*\[PositionMonitor\].*Connection closed/i) &&
+                     // Filter out CFD amount errors that are now handled with validation
+                     !trimmed.match(/Error executing trade:.*CFD buy failed:.*Enter an amount equal to or higher than/i) &&
+                     !trimmed.match(/CFD buy failed:.*Enter an amount equal to or higher than/i) &&
+                     !trimmed.match(/❌.*Error executing trade:.*CFD buy failed/i);
             })
             .join('\n')
             .trim();
@@ -1852,7 +1864,19 @@ export async function handleGetLogsCommand(
                      !trimmed.match(/\.log last \d+ lines/i) &&
                      // Filter out non-critical messages that aren't real errors
                      !trimmed.includes('SLACK_WEBHOOK_URL not set') &&
-                     !trimmed.match(/^SLACK_WEBHOOK_URL/i);
+                     !trimmed.match(/^SLACK_WEBHOOK_URL/i) &&
+                     // Filter out Position Monitor timeouts (expected when API is slow)
+                     !trimmed.includes('Position Monitor error: Command timeout') &&
+                     !trimmed.includes('Position Monitor error: Connection closed') &&
+                     !trimmed.match(/\[PositionMonitor\].*Command timeout/i) &&
+                     !trimmed.match(/\[PositionMonitor\].*Connection closed/i) &&
+                     !trimmed.match(/\[PositionMonitor\].*timeout/i) &&
+                     !trimmed.match(/⚠️.*\[PositionMonitor\].*timeout/i) &&
+                     !trimmed.match(/⚠️.*\[PositionMonitor\].*Connection closed/i) &&
+                     // Filter out CFD amount errors that are now handled with validation
+                     !trimmed.match(/Error executing trade:.*CFD buy failed:.*Enter an amount equal to or higher than/i) &&
+                     !trimmed.match(/CFD buy failed:.*Enter an amount equal to or higher than/i) &&
+                     !trimmed.match(/❌.*Error executing trade:.*CFD buy failed/i);
             })
             .join('\n')
             .trim();

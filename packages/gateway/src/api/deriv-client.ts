@@ -768,7 +768,21 @@ export class DerivClient {
         errorCode: error.error?.code,
         errorDetails: error.error?.details,
       });
-      throw new Error(`CFD buy failed: ${error.message || error.error?.message || 'Unknown error'}`);
+      
+      // Provide clearer error messages for common issues
+      const errorMessage = error.message || error.error?.message || 'Unknown error';
+      let userFriendlyMessage = errorMessage;
+      
+      // Check for minimum amount errors
+      if (errorMessage.includes('Enter an amount equal to or higher than')) {
+        const minAmountMatch = errorMessage.match(/higher than ([\d.]+)/);
+        const minAmount = minAmountMatch ? minAmountMatch[1] : '5.00';
+        userFriendlyMessage = `CFD buy failed: Amount too low. Minimum required: $${minAmount}. Provided: $${formattedAmount.toFixed(2)}. Please increase stake to at least $${minAmount}.`;
+      } else if (errorMessage.includes('Enter an amount equal to or lower than')) {
+        userFriendlyMessage = `CFD buy failed: Amount too high. ${errorMessage}`;
+      }
+      
+      throw new Error(userFriendlyMessage);
     }
   }
 

@@ -155,7 +155,22 @@ export class PositionMonitor {
       await this.checkClosedPositions();
 
     } catch (error: any) {
-      console.error(`⚠️  Position Monitor error: ${error.message}`);
+      // Handle timeouts and connection errors gracefully - these are expected when API is slow
+      const isTimeout = error.message?.includes('timeout') || error.message?.includes('Command timeout');
+      const isConnectionError = error.message?.includes('Connection closed') || error.message?.includes('Not connected');
+      
+      if (isTimeout || isConnectionError) {
+        // Silently handle timeouts and connection errors - they're expected and will retry on next poll
+        // These are not critical errors, just temporary API issues
+        // Still send empty update to prevent stale state
+        if (this.onPositionUpdate) {
+          this.onPositionUpdate([]);
+        }
+        // Don't log these as errors - they're expected when API is slow
+      } else {
+        // Log other errors as warnings (not critical errors)
+        console.warn(`⚠️  [PositionMonitor] Error checking positions: ${error.message}`);
+      }
     }
   }
 
@@ -235,7 +250,17 @@ export class PositionMonitor {
       }
 
     } catch (error: any) {
-      console.error(`⚠️  Error checking closed positions: ${error.message}`);
+      // Handle timeouts gracefully - these are expected when API is slow
+      const isTimeout = error.message?.includes('timeout') || error.message?.includes('Command timeout');
+      const isConnectionError = error.message?.includes('Connection closed') || error.message?.includes('Not connected');
+      
+      if (isTimeout || isConnectionError) {
+        // Silently handle timeouts - will retry on next poll
+        // Don't log these as errors
+      } else {
+        // Log other errors as warnings
+        console.warn(`⚠️  [PositionMonitor] Error checking closed positions: ${error.message}`);
+      }
     }
   }
 

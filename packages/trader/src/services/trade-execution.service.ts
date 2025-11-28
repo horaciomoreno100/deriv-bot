@@ -130,7 +130,7 @@ export class TradeExecutionService {
 
       // Calculate dynamic stake using TradeManager
       const slPercentage = this.config.mode === 'cfd' ? this.config.cfdStopLossPct : undefined;
-      const stake = await this.tradeManager.calculateStake(this.config.mode, slPercentage);
+      let stake = await this.tradeManager.calculateStake(this.config.mode, slPercentage);
 
       console.log(`   💡 Stake calculado: $${stake.toFixed(2)}`);
 
@@ -144,6 +144,20 @@ export class TradeExecutionService {
         }
       } catch (error) {
         console.warn(`   ⚠️  No se pudo obtener balance`);
+      }
+
+      // Validate minimum stake for CFD trades
+      // Deriv API requires minimum stake based on symbol and multiplier
+      // Based on errors seen: minimum is typically $3-5, using $5 as safe minimum
+      if (this.config.mode === 'cfd') {
+        const MIN_STAKE_CFD = 5.0; // Safe minimum for CFD trades
+        if (stake < MIN_STAKE_CFD) {
+          if (currentBalance < MIN_STAKE_CFD) {
+            throw new Error(`Insufficient balance for CFD trade. Required: $${MIN_STAKE_CFD.toFixed(2)}, Available: $${currentBalance.toFixed(2)}`);
+          }
+          console.log(`   ⚠️  Stake ${stake.toFixed(2)} below minimum ${MIN_STAKE_CFD.toFixed(2)}, adjusting to minimum`);
+          stake = MIN_STAKE_CFD;
+        }
       }
 
       // Execute trade based on mode
