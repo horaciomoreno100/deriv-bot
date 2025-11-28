@@ -1,7 +1,10 @@
 /**
- * Hybrid Multi-Timeframe (MTF) Strategy - Backtest Adapter
+ * Hybrid Multi-Timeframe (MTF) Strategy - Backtest Adapter (OPTIMIZED)
  *
  * Combines Momentum and Mean Reversion based on multi-timeframe regime detection.
+ *
+ * OPTIMIZATION: Pre-calculates 5m and 15m candles + indicators ONCE before backtest
+ * instead of resampling on every candle (O(n) vs O(n²))
  *
  * LOGIC:
  * - 15m Context: Determines macro regime (BULLISH_TREND / BEARISH_TREND / RANGE)
@@ -18,31 +21,32 @@ import { BollingerBands, ADX, SMA, RSI } from 'technicalindicators';
  */
 interface HybridMTFParams {
   // 15m Context (Macro Trend Detection)
-  ctxAdxPeriod: number;
-  ctxAdxThreshold: number;
-  ctxSmaPeriod: number;
-  ctxSlopeThreshold: number;
+  ctxAdxPeriod: number;       // ADX period for trend strength (default: 10)
+  ctxAdxThreshold: number;    // ADX threshold for trend (default: 20)
+  ctxSmaPeriod: number;       // SMA period for trend direction (default: 20)
+  ctxSlopeThreshold: number;  // Min slope for trend confirmation
 
   // 5m Filter (Intermediate RSI)
   midRsiPeriod: number;
-  midRsiOverbought: number;
-  midRsiOversold: number;
+  midRsiOverbought: number;   // 5m RSI overbought (default: 70)
+  midRsiOversold: number;     // 5m RSI oversold (default: 30)
 
   // 1m Execution (BB + RSI)
   bbPeriod: number;
   bbStdDev: number;
+  bbWidthMin: number;         // Min BB width to avoid low volatility (default: 0.003)
   rsiPeriod: number;
-  rsiOverbought: number;
-  rsiOversold: number;
+  rsiOverbought: number;      // 1m RSI overbought (default: 70)
+  rsiOversold: number;        // 1m RSI oversold (default: 30)
 
   // Risk Management
-  takeProfitPct: number;
-  stopLossPct: number;
+  takeProfitPct: number;      // TP % (default: 0.008 = 0.8%)
+  stopLossPct: number;        // SL % (default: 0.005 = 0.5%) -> 1.6:1 ratio
   cooldownBars: number;
   minCandles: number;
 
   // Confirmation
-  confirmationCandles: number;
+  confirmationCandles: number; // Candles to wait for MR confirmation (default: 2)
 }
 
 /**
@@ -61,61 +65,76 @@ interface PendingSignal {
   candlesWaited: number;
 }
 
+/**
+ * Pre-calculated data for a specific 1m candle index
+ */
+interface PreCalculatedData {
+  regime: MacroRegime | null;
+  rsi5m: number | null;
+  bb: { upper: number; middle: number; lower: number } | null;
+  rsi1m: number | null;
+}
+
 const DEFAULT_PARAMS: HybridMTFParams = {
-  // 15m Context
-  ctxAdxPeriod: 14,
-  ctxAdxThreshold: 25,
-  ctxSmaPeriod: 50,
+  // 15m Context - ADX 10 is faster than 14 for regime detection
+  ctxAdxPeriod: 10,
+  ctxAdxThreshold: 20,
+  ctxSmaPeriod: 20,
   ctxSlopeThreshold: 0.0002,
 
-  // 5m Filter
+  // 5m Filter - 70/30 are useful extremes (80/20 rarely triggers)
   midRsiPeriod: 14,
-  midRsiOverbought: 80,
-  midRsiOversold: 20,
+  midRsiOverbought: 70,
+  midRsiOversold: 30,
 
-  // 1m Execution
+  // 1m Execution - 70/30 for real overbought/oversold (55/45 is neutral zone)
   bbPeriod: 20,
   bbStdDev: 2,
+  bbWidthMin: 0.003, // Min BB width to avoid low volatility environments
   rsiPeriod: 14,
-  rsiOverbought: 55,
-  rsiOversold: 45,
+  rsiOverbought: 70,
+  rsiOversold: 30,
 
-  // Risk Management
-  takeProfitPct: 0.005,
+  // Risk Management - 1.6:1 ratio (TP 0.8% / SL 0.5%)
+  takeProfitPct: 0.008,
   stopLossPct: 0.005,
-  cooldownBars: 60, // 60 candles = 1 min cooldown for 1m timeframe
+  cooldownBars: 5,
   minCandles: 100,
 
-  // Confirmation
-  confirmationCandles: 1,
+  // Confirmation - 2 candles for Mean Reversion (1 is too aggressive)
+  confirmationCandles: 2,
 };
 
 const ASSET_CONFIGS: Record<string, Partial<HybridMTFParams>> = {
   'R_75': {
-    takeProfitPct: 0.005,
+    takeProfitPct: 0.008,
     stopLossPct: 0.005,
   },
   'R_100': {
-    takeProfitPct: 0.005,
+    takeProfitPct: 0.008,
     stopLossPct: 0.005,
   },
   'R_25': {
-    takeProfitPct: 0.004,
+    takeProfitPct: 0.006,
     stopLossPct: 0.004,
   },
 };
 
 /**
- * Hybrid Multi-Timeframe Strategy for Backtesting
+ * Hybrid Multi-Timeframe Strategy for Backtesting (OPTIMIZED)
  */
 export class HybridMTFBacktestStrategy implements BacktestableStrategy {
   readonly name = 'Hybrid-MTF';
-  readonly version = '1.0.0';
+  readonly version = '2.0.0'; // Major update: fixed logic + improved params
 
   private params: HybridMTFParams;
   private asset: string;
   private lastTradeIndex: number = -1;
   private pendingSignal: PendingSignal | null = null;
+
+  // Pre-calculated data (populated in preCalculate)
+  private preCalculated: PreCalculatedData[] = [];
+  private isPreCalculated: boolean = false;
 
   constructor(asset: string, customParams?: Partial<HybridMTFParams>) {
     this.asset = asset;
@@ -136,62 +155,214 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
     };
   }
 
+  /**
+   * Pre-calculate all MTF data ONCE before the backtest loop
+   * This is called by the runner before starting the backtest
+   */
+  preCalculate(candles: Candle[]): void {
+    console.log(`[Hybrid-MTF] Pre-calculating MTF data for ${candles.length} candles...`);
+    const startTime = Date.now();
+
+    // 1. Resample all candles to 5m and 15m ONCE
+    const candles5m = this.resampleAllCandles(candles, 5);
+    const candles15m = this.resampleAllCandles(candles, 15);
+
+    console.log(`[Hybrid-MTF] Resampled: ${candles5m.length} x 5m, ${candles15m.length} x 15m`);
+
+    // 2. Calculate 15m regime indicators (ADX + SMA)
+    const closes15m = candles15m.map(c => c.close);
+    const highs15m = candles15m.map(c => c.high);
+    const lows15m = candles15m.map(c => c.low);
+
+    const adx15m = ADX.calculate({
+      high: highs15m,
+      low: lows15m,
+      close: closes15m,
+      period: this.params.ctxAdxPeriod,
+    });
+
+    const sma15m = SMA.calculate({
+      period: this.params.ctxSmaPeriod,
+      values: closes15m,
+    });
+
+    // 3. Calculate 5m RSI
+    const closes5m = candles5m.map(c => c.close);
+    const rsi5mAll = RSI.calculate({
+      period: this.params.midRsiPeriod,
+      values: closes5m,
+    });
+
+    // 4. Calculate 1m indicators (BB + RSI)
+    const closes1m = candles.map(c => c.close);
+    const bb1m = BollingerBands.calculate({
+      period: this.params.bbPeriod,
+      values: closes1m,
+      stdDev: this.params.bbStdDev,
+    });
+    const rsi1m = RSI.calculate({
+      period: this.params.rsiPeriod,
+      values: closes1m,
+    });
+
+    // 5. Build index mappings: 1m timestamp -> 5m/15m candle index
+    const ts5mToIndex = new Map<number, number>();
+    const ts15mToIndex = new Map<number, number>();
+
+    candles5m.forEach((c, i) => ts5mToIndex.set(c.timestamp, i));
+    candles15m.forEach((c, i) => ts15mToIndex.set(c.timestamp, i));
+
+    // 6. Pre-calculate data for each 1m candle
+    this.preCalculated = new Array(candles.length);
+
+    // Offsets for indicator arrays (they start after warmup period)
+    const adxOffset = candles15m.length - adx15m.length;
+    const smaOffset = candles15m.length - sma15m.length;
+    const rsi5mOffset = candles5m.length - rsi5mAll.length;
+    const bbOffset = candles.length - bb1m.length;
+    const rsi1mOffset = candles.length - rsi1m.length;
+
+    for (let i = 0; i < candles.length; i++) {
+      const candle = candles[i]!;
+
+      // Find corresponding 5m and 15m slot timestamps
+      const slot5m = Math.floor(candle.timestamp / 300) * 300;
+      const slot15m = Math.floor(candle.timestamp / 900) * 900;
+
+      // Get indices in resampled arrays
+      const idx5m = ts5mToIndex.get(slot5m);
+      const idx15m = ts15mToIndex.get(slot15m);
+
+      // Calculate regime from 15m
+      let regime: MacroRegime | null = null;
+      if (idx15m !== undefined) {
+        const adxIdx = idx15m - adxOffset;
+        const smaIdx = idx15m - smaOffset;
+
+        if (adxIdx >= 0 && smaIdx >= 1 && adx15m[adxIdx] && sma15m[smaIdx] !== undefined && sma15m[smaIdx - 1] !== undefined) {
+          const adx = adx15m[adxIdx]!.adx;
+          const sma = sma15m[smaIdx]!;
+          const prevSma = sma15m[smaIdx - 1]!;
+          const smaSlope = (sma - prevSma) / prevSma;
+
+          if (adx > this.params.ctxAdxThreshold) {
+            if (smaSlope > this.params.ctxSlopeThreshold) regime = 'BULLISH_TREND';
+            else if (smaSlope < -this.params.ctxSlopeThreshold) regime = 'BEARISH_TREND';
+            else regime = 'RANGE';
+          } else {
+            regime = 'RANGE';
+          }
+        }
+      }
+
+      // Get 5m RSI
+      let rsi5m: number | null = null;
+      if (idx5m !== undefined) {
+        const rsiIdx = idx5m - rsi5mOffset;
+        if (rsiIdx >= 0 && rsi5mAll[rsiIdx] !== undefined) {
+          rsi5m = rsi5mAll[rsiIdx]!;
+        }
+      }
+
+      // Get 1m BB
+      let bb: { upper: number; middle: number; lower: number } | null = null;
+      const bbIdx = i - bbOffset;
+      if (bbIdx >= 0 && bb1m[bbIdx]) {
+        bb = {
+          upper: bb1m[bbIdx]!.upper,
+          middle: bb1m[bbIdx]!.middle,
+          lower: bb1m[bbIdx]!.lower,
+        };
+      }
+
+      // Get 1m RSI
+      let rsi1mVal: number | null = null;
+      const rsiIdx = i - rsi1mOffset;
+      if (rsiIdx >= 0 && rsi1m[rsiIdx] !== undefined) {
+        rsi1mVal = rsi1m[rsiIdx]!;
+      }
+
+      this.preCalculated[i] = {
+        regime,
+        rsi5m,
+        bb,
+        rsi1m: rsi1mVal,
+      };
+    }
+
+    this.isPreCalculated = true;
+    const elapsed = Date.now() - startTime;
+    console.log(`[Hybrid-MTF] Pre-calculation completed in ${elapsed}ms`);
+  }
+
+  /**
+   * Resample all 1m candles to higher timeframe
+   */
+  private resampleAllCandles(candles1m: Candle[], intervalMinutes: number): Candle[] {
+    const resampled: Map<number, Candle> = new Map();
+    const intervalSeconds = intervalMinutes * 60;
+
+    for (const candle of candles1m) {
+      const slotStart = Math.floor(candle.timestamp / intervalSeconds) * intervalSeconds;
+
+      const existing = resampled.get(slotStart);
+      if (!existing) {
+        resampled.set(slotStart, {
+          timestamp: slotStart,
+          open: candle.open,
+          high: candle.high,
+          low: candle.low,
+          close: candle.close,
+          asset: candle.asset,
+          timeframe: intervalMinutes * 60,
+        });
+      } else {
+        existing.high = Math.max(existing.high, candle.high);
+        existing.low = Math.min(existing.low, candle.low);
+        existing.close = candle.close;
+      }
+    }
+
+    return Array.from(resampled.values()).sort((a, b) => a.timestamp - b.timestamp);
+  }
+
   checkEntry(
     candles: Candle[],
     indicators: IndicatorSnapshot,
     currentIndex: number
   ): EntrySignal | null {
-    if (currentIndex < this.params.minCandles) return null;
-
-    // Cooldown check
-    if (this.lastTradeIndex >= 0 && currentIndex - this.lastTradeIndex < this.params.cooldownBars) {
-      return null;
+    // Ensure pre-calculation is done
+    if (!this.isPreCalculated) {
+      this.preCalculate(candles);
     }
+
+    if (currentIndex < this.params.minCandles) return null;
 
     const candle = candles[currentIndex];
     if (!candle) return null;
 
     const price = candle.close;
 
-    // Get candle slice for indicator calculation
-    const slice = candles.slice(0, currentIndex + 1);
-    const closes = slice.map(c => c.close);
-    const highs = slice.map(c => c.high);
-    const lows = slice.map(c => c.low);
+    // Get pre-calculated data for this index
+    const data = this.preCalculated[currentIndex];
+    if (!data || !data.regime || data.rsi5m === null || !data.bb || data.rsi1m === null) {
+      return null;
+    }
 
-    // Resample to 5m and 15m candles
-    const candles5m = this.resampleCandles(slice, 5);
-    const candles15m = this.resampleCandles(slice, 15);
+    const { regime, rsi5m, bb, rsi1m: rsi } = data;
 
-    // Detect regime from 15m candles
-    const regime = this.detectRegime(candles15m);
-    if (!regime) return null;
-
-    // Get 5m RSI filter
-    const rsi5m = this.calculate5mRSI(candles5m);
-    if (rsi5m === null) return null;
-
-    // Calculate 1m indicators
-    const bbResult = BollingerBands.calculate({
-      period: this.params.bbPeriod,
-      values: closes,
-      stdDev: this.params.bbStdDev,
-    });
-
-    const rsiResult = RSI.calculate({
-      period: this.params.rsiPeriod,
-      values: closes,
-    });
-
-    if (!bbResult.length || !rsiResult.length) return null;
-
-    const bb = bbResult[bbResult.length - 1]!;
-    const rsi = rsiResult[rsiResult.length - 1]!;
-
-    if (!bb || rsi === undefined) return null;
+    // BB width filter: avoid low volatility environments
+    const bbWidth = (bb.upper - bb.lower) / bb.middle;
+    if (bbWidth < this.params.bbWidthMin) {
+      return null;
+    }
 
     const breakoutAbove = price > bb.upper;
     const breakoutBelow = price < bb.lower;
+
+    // Pullback zones for Momentum strategy
+    const priceNearLowerBand = price <= bb.lower * 1.005; // Within 0.5% of lower
+    const priceNearUpperBand = price >= bb.upper * 0.995; // Within 0.5% of upper
 
     // Handle pending confirmation (Mean Reversion only)
     if (this.pendingSignal) {
@@ -222,7 +393,6 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
               ...indicators,
               rsi,
               rsi5m,
-              regime,
               bbUpper: bb.upper,
               bbMiddle: bb.middle,
               bbLower: bb.lower,
@@ -255,18 +425,22 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
 
     if (regime === 'BULLISH_TREND') {
       // 15m BULLISH: Only CALLs (Momentum)
-      // 5m Filter: Avoid extreme overbought
+      // FIXED: Enter on PULLBACKS (price near lower BB, RSI oversold), not on extensions
+      // 5m Filter: Avoid extreme overbought (trend exhaustion)
       if (rsi5m < this.params.midRsiOverbought) {
-        if (breakoutAbove && rsi > this.params.rsiOverbought) {
+        // Buy the dip: price pulls back to lower BB with oversold RSI in bullish trend
+        if (priceNearLowerBand && rsi < this.params.rsiOversold) {
           signal = 'CALL';
           strategyUsed = 'MOMENTUM';
         }
       }
     } else if (regime === 'BEARISH_TREND') {
       // 15m BEARISH: Only PUTs (Momentum)
-      // 5m Filter: Avoid extreme oversold
+      // FIXED: Enter on PULLBACKS (price near upper BB, RSI overbought), not on extensions
+      // 5m Filter: Avoid extreme oversold (trend exhaustion)
       if (rsi5m > this.params.midRsiOversold) {
-        if (breakoutBelow && rsi < this.params.rsiOversold) {
+        // Sell the rally: price pulls back to upper BB with overbought RSI in bearish trend
+        if (priceNearUpperBand && rsi > this.params.rsiOverbought) {
           signal = 'PUT';
           strategyUsed = 'MOMENTUM';
         }
@@ -299,7 +473,6 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
         ...indicators,
         rsi,
         rsi5m,
-        regime,
         bbUpper: bb.upper,
         bbMiddle: bb.middle,
         bbLower: bb.lower,
@@ -335,101 +508,11 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
     return null;
   }
 
-  /**
-   * Resample 1m candles to higher timeframe
-   */
-  private resampleCandles(candles1m: Candle[], intervalMinutes: number): Candle[] {
-    const resampled: Candle[] = [];
-    const intervalSeconds = intervalMinutes * 60;
-
-    for (const candle of candles1m) {
-      const slotStartSeconds = Math.floor(candle.timestamp / intervalSeconds) * intervalSeconds;
-
-      let resampledCandle = resampled.find(c => c.timestamp === slotStartSeconds);
-
-      if (!resampledCandle) {
-        resampledCandle = {
-          timestamp: slotStartSeconds,
-          open: candle.open,
-          high: candle.high,
-          low: candle.low,
-          close: candle.close,
-          asset: candle.asset,
-        };
-        resampled.push(resampledCandle);
-      } else {
-        resampledCandle.high = Math.max(resampledCandle.high, candle.high);
-        resampledCandle.low = Math.min(resampledCandle.low, candle.low);
-        resampledCandle.close = candle.close;
-      }
-    }
-
-    return resampled.sort((a, b) => a.timestamp - b.timestamp);
-  }
-
-  /**
-   * Detect macro regime from 15m context
-   */
-  private detectRegime(candles15m: Candle[]): MacroRegime | null {
-    if (candles15m.length < this.params.ctxSmaPeriod + 1) return null;
-
-    const closes = candles15m.map(c => c.close);
-    const highs = candles15m.map(c => c.high);
-    const lows = candles15m.map(c => c.low);
-
-    // Calculate ADX
-    const adxResult = ADX.calculate({
-      high: highs,
-      low: lows,
-      close: closes,
-      period: this.params.ctxAdxPeriod,
-    });
-
-    // Calculate SMA
-    const smaResult = SMA.calculate({
-      period: this.params.ctxSmaPeriod,
-      values: closes,
-    });
-
-    if (adxResult.length < 2 || smaResult.length < 2) return null;
-
-    const adxData = adxResult[adxResult.length - 1];
-    const sma = smaResult[smaResult.length - 1];
-    const prevSma = smaResult[smaResult.length - 2];
-
-    if (!adxData || sma === undefined || prevSma === undefined) return null;
-
-    const adx = adxData.adx;
-    const smaSlope = (sma - prevSma) / prevSma;
-
-    // Regime detection
-    if (adx > this.params.ctxAdxThreshold) {
-      if (smaSlope > this.params.ctxSlopeThreshold) return 'BULLISH_TREND';
-      if (smaSlope < -this.params.ctxSlopeThreshold) return 'BEARISH_TREND';
-    }
-
-    return 'RANGE';
-  }
-
-  /**
-   * Get 5m RSI for filtering
-   */
-  private calculate5mRSI(candles5m: Candle[]): number | null {
-    if (candles5m.length < this.params.midRsiPeriod + 1) return null;
-
-    const closes = candles5m.map(c => c.close);
-    const rsiResult = RSI.calculate({
-      period: this.params.midRsiPeriod,
-      values: closes,
-    });
-
-    const lastRsi = rsiResult[rsiResult.length - 1];
-    return lastRsi !== undefined ? lastRsi : null;
-  }
-
   reset(): void {
     this.lastTradeIndex = -1;
     this.pendingSignal = null;
+    this.preCalculated = [];
+    this.isPreCalculated = false;
   }
 }
 

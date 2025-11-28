@@ -80,6 +80,16 @@ export function runBacktest(
     {}
   );
 
+  // Reset strategy state before running
+  if (strategy.reset) {
+    strategy.reset();
+  }
+
+  // Pre-calculate MTF data if strategy supports it (optimization)
+  if ('preCalculate' in strategy && typeof (strategy as any).preCalculate === 'function') {
+    (strategy as any).preCalculate(candles);
+  }
+
   // Run backtest loop
   if (opts.verbose) {
     console.log('Running backtest...');
@@ -247,12 +257,16 @@ function calculateMetricsFromTrades(
   let equity = config.initialBalance;
   let peak = equity;
   let maxDrawdown = 0;
+  let maxDrawdownPct = 0;
 
   for (const trade of trades) {
     equity += trade.result.pnl;
     equityCurve.push(equity);
     peak = Math.max(peak, equity);
-    maxDrawdown = Math.max(maxDrawdown, peak - equity);
+    const currentDrawdown = peak - equity;
+    const currentDrawdownPct = peak > 0 ? (currentDrawdown / peak) * 100 : 0;
+    maxDrawdown = Math.max(maxDrawdown, currentDrawdown);
+    maxDrawdownPct = Math.max(maxDrawdownPct, currentDrawdownPct);
   }
 
   // Consecutive wins/losses
@@ -315,7 +329,7 @@ function calculateMetricsFromTrades(
     avgLoss,
     avgPnl,
     maxDrawdown,
-    maxDrawdownPct: (maxDrawdown / config.initialBalance) * 100,
+    maxDrawdownPct,  // Now calculated as % of peak, not initial balance
     maxConsecutiveWins,
     maxConsecutiveLosses,
     nearMisses,
