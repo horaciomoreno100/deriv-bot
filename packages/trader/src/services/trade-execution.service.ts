@@ -120,7 +120,10 @@ export class TradeExecutionService {
 
     try {
       // Get entry price from signal metadata
-      const entryPrice = typeof signal.metadata?.price === 'number' ? signal.metadata.price : 0;
+      // Support both 'price' and 'entryPrice' for backwards compatibility
+      const entryPrice = typeof signal.metadata?.price === 'number'
+        ? signal.metadata.price
+        : (typeof signal.metadata?.entryPrice === 'number' ? signal.metadata.entryPrice : 0);
       if (entryPrice === 0 && this.config.mode === 'cfd') {
         throw new Error('Entry price not available in signal metadata for CFD trade');
       }

@@ -318,11 +318,13 @@ export class SignalQualityScorer {
   private scoreRiskReward(signal: Signal): number {
     const metadata = signal.metadata;
 
-    if (!metadata || !metadata.tpPrice || !metadata.slPrice || !metadata.price) {
+    // Support both 'price' and 'entryPrice' for backwards compatibility
+    const priceValue = metadata?.price ?? metadata?.entryPrice;
+    if (!metadata || !metadata.tpPrice || !metadata.slPrice || !priceValue) {
       return 50; // No risk/reward data
     }
 
-    const entryPrice = Number(metadata.price);
+    const entryPrice = Number(priceValue);
     const tpPrice = Number(metadata.tpPrice);
     const slPrice = Number(metadata.slPrice);
 
