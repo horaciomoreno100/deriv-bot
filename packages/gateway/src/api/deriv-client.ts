@@ -1267,10 +1267,16 @@ export class DerivClient {
       }
 
       // Handle proposal_open_contract updates that may come without subscription field
-      // This happens when the contract closes (is_sold: true)
+      // This happens when: 1) one-time query (no subscribe:1), or 2) contract closes (is_sold: true)
       if (message.msg_type === 'proposal_open_contract' && message.proposal_open_contract) {
         const contract = message.proposal_open_contract;
         console.log(`[DerivClient] 📦 proposal_open_contract update: ${contract.contract_id} | is_sold: ${contract.is_sold}`);
+
+        // If this is a response to a pending request (one-time query), handle it
+        if (message.echo_req?.req_id) {
+          this.handleResponse(message);
+          // Don't return - also notify subscriptions if any
+        }
 
         // Find the subscription by contract_id and call its callback
         for (const sub of this.subscriptions.values()) {
