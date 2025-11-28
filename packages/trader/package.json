@@ -72,6 +72,7 @@
     "react-dom": "19.2.0",
     "technicalindicators": "^3.1.0",
     "trading-signals": "^7.1.0",
+    "uuid": "^13.0.0",
     "ws": "^8.18.3",
     "zod": "^3.22.4"
   },
@@ -80,6 +81,7 @@
     "@types/node": "^20.10.0",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
+    "@types/uuid": "^11.0.0",
     "@types/ws": "^8.18.1",
     "@vitest/ui": "^1.0.4",
     "prisma": "^5.22.0",
