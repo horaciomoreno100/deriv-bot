@@ -110,20 +110,20 @@ const ASSET_CONFIGS: Record<string, Partial<BBSqueezeMRParams>> = {
   'R_50': {
     kcMultiplier: 2.0,
     rsiPeriod: 14,
-    takeProfitPct: 0.005,  // 0.5%
-    stopLossPct: 0.005,    // 0.5% (1:1 ratio for MR)
+    takeProfitPct: 0.006,  // 0.6% (optimized from backtest)
+    stopLossPct: 0.004,    // 0.4% (1.5:1 ratio - better win rate)
   },
   'R_75': {
     kcMultiplier: 2.0,
     rsiPeriod: 14,
-    takeProfitPct: 0.005,  // 0.5%
-    stopLossPct: 0.005,    // 0.5% (1:1 ratio for MR)
+    takeProfitPct: 0.006,  // 0.6% (optimized from backtest: +$51.47, 47.3% WR, 1.05 PF)
+    stopLossPct: 0.004,    // 0.4% (1.5:1 ratio - better win rate than 1:1)
   },
   'R_100': {
     kcMultiplier: 2.0,
     rsiPeriod: 14,
-    takeProfitPct: 0.005,  // 0.5%
-    stopLossPct: 0.005,    // 0.5% (1:1 ratio for MR)
+    takeProfitPct: 0.006,  // 0.6% (optimized from backtest)
+    stopLossPct: 0.004,    // 0.4% (1.5:1 ratio - better win rate)
   },
 };
 
@@ -138,8 +138,8 @@ const DEFAULT_PARAMS: BBSqueezeMRParams = {
   rsiPeriod: 7,
   rsiCallMax: 45,           // CALL when RSI < 45 (oversold)
   rsiPutMin: 55,            // PUT when RSI > 55 (overbought)
-  takeProfitPct: 0.005,     // 0.5% TP
-  stopLossPct: 0.005,       // 0.5% SL (1:1 ratio)
+  takeProfitPct: 0.006,     // 0.6% TP (optimized from backtest)
+  stopLossPct: 0.004,       // 0.4% SL (1.5:1 ratio - better win rate)
   cooldownSeconds: 60,
   minCandles: 50,
   skipSaturday: true,

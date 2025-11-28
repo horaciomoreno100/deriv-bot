@@ -8,6 +8,7 @@
 import type { Candle, IndicatorSnapshot } from '@deriv-bot/shared';
 import type { IndicatorConfig, IndicatorName } from '../types.js';
 import { DEFAULT_INDICATOR_CONFIG } from '../types.js';
+import { ADX } from 'technicalindicators';
 
 /**
  * Indicator calculation result
@@ -307,6 +308,41 @@ function calculateStochastic(
 }
 
 /**
+ * Calculate ADX (Average Directional Index)
+ * Returns arrays of ADX, +DI, and -DI values
+ */
+function calculateADX(
+  candles: Candle[],
+  period: number
+): { adx: number[]; plusDI: number[]; minusDI: number[] } {
+  const highs = candles.map((c) => c.high);
+  const lows = candles.map((c) => c.low);
+  const closes = candles.map((c) => c.close);
+
+  const adxResult = ADX.calculate({
+    period,
+    high: highs,
+    low: lows,
+    close: closes,
+  });
+
+  // ADX calculation returns fewer values than input (needs warmup)
+  // Pad with null/0 values to align with candles array
+  const offset = candles.length - adxResult.length;
+  const adx: number[] = new Array(offset).fill(0);
+  const plusDI: number[] = new Array(offset).fill(0);
+  const minusDI: number[] = new Array(offset).fill(0);
+
+  for (const result of adxResult) {
+    adx.push(result.adx ?? 0);
+    plusDI.push(result.pdi ?? 0);
+    minusDI.push(result.mdi ?? 0);
+  }
+
+  return { adx, plusDI, minusDI };
+}
+
+/**
  * ZigZag Indicator Result
  */
 export interface ZigZagPoint {
@@ -536,6 +572,13 @@ export function createIndicatorCache(
     series.set('atr', calculateATR(candles, opts.atrPeriod!));
   }
 
+  if (requiredIndicators.includes('adx')) {
+    const adx = calculateADX(candles, opts.adxPeriod ?? 14);
+    series.set('adx', adx.adx);
+    series.set('plusDI', adx.plusDI);
+    series.set('minusDI', adx.minusDI);
+  }
+
   if (requiredIndicators.includes('sma')) {
     series.set('sma', calculateSMA(closes, opts.smaPeriod!));
   }
@@ -629,6 +672,9 @@ export function getAvailableIndicators(): IndicatorName[] {
     'kcMiddle',
     'kcLower',
     'atr',
+    'adx',
+    'plusDI',
+    'minusDI',
     'sma',
     'ema',
     'ema20',

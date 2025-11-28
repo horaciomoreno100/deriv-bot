@@ -6,7 +6,6 @@
 
 import type { Candle, IndicatorSnapshot } from '@deriv-bot/shared';
 import type { BacktestableStrategy, EntrySignal, BacktestConfig, MarketSnapshot } from '../types.js';
-import { BollingerBands, ATR, RSI, ADX } from 'technicalindicators';
 
 /**
  * BB Squeeze MR specific parameters
@@ -46,8 +45,8 @@ const DEFAULT_PARAMS: BBSqueezeMRParams = {
   rsiOversold: 30,
   rsiOverbought: 70,
   adxThreshold: 25,
-  takeProfitPct: 0.005,
-  stopLossPct: 0.003,
+  takeProfitPct: 0.006,  // 0.6% (optimized from backtest)
+  stopLossPct: 0.004,    // 0.4% (1.5:1 ratio - better win rate)
   cooldownBars: 1,
   minCandles: 50,
   maxBars: 12,
@@ -57,13 +56,13 @@ const DEFAULT_PARAMS: BBSqueezeMRParams = {
 const ASSET_CONFIGS: Record<string, Partial<BBSqueezeMRParams>> = {
   'R_75': {
     kcMultiplier: 1.5,
-    takeProfitPct: 0.005,
-    stopLossPct: 0.003,
+    takeProfitPct: 0.006,  // 0.6% (optimized from backtest: best config)
+    stopLossPct: 0.004,    // 0.4% (1.5:1 ratio)
   },
   'R_100': {
     kcMultiplier: 1.5,
-    takeProfitPct: 0.006,
-    stopLossPct: 0.003,
+    takeProfitPct: 0.006,  // 0.6% (optimized from backtest)
+    stopLossPct: 0.004,    // 0.4% (1.5:1 ratio)
   },
 };
 
@@ -86,7 +85,7 @@ export class BBSqueezeMRBacktestStrategy implements BacktestableStrategy {
   }
 
   requiredIndicators(): string[] {
-    return ['rsi', 'adx', 'bbUpper', 'bbMiddle', 'bbLower', 'kcUpper', 'kcMiddle', 'kcLower', 'atr'];
+    return ['rsi', 'adx', 'bbUpper', 'bbMiddle', 'bbLower', 'kcUpper', 'kcMiddle', 'kcLower', 'atr', 'squeezeOn'];
   }
 
   getDefaultConfig(): Partial<BacktestConfig> {
@@ -115,60 +114,32 @@ export class BBSqueezeMRBacktestStrategy implements BacktestableStrategy {
 
     const price = candle.close;
 
-    // Calculate indicators
-    const slice = candles.slice(0, currentIndex + 1);
-    const closes = slice.map(c => c.close);
-    const highs = slice.map(c => c.high);
-    const lows = slice.map(c => c.low);
+    // Use cached indicators from the snapshot
+    const rsi = indicators.rsi;
+    const adx = indicators.adx;
+    const bbUpper = indicators.bbUpper;
+    const bbMiddle = indicators.bbMiddle;
+    const bbLower = indicators.bbLower;
+    const kcUpper = indicators.kcUpper;
+    const kcMiddle = indicators.kcMiddle;
+    const kcLower = indicators.kcLower;
+    const atr = indicators.atr;
+    const isInSqueeze = indicators.squeezeOn ?? false;
 
-    // Bollinger Bands
-    const bbResult = BollingerBands.calculate({
-      period: this.params.bbPeriod,
-      values: closes,
-      stdDev: this.params.bbStdDev,
-    });
-
-    // RSI
-    const rsiResult = RSI.calculate({
-      period: this.params.rsiPeriod,
-      values: closes,
-    });
-
-    // ADX
-    const adxResult = ADX.calculate({
-      period: this.params.adxPeriod,
-      high: highs,
-      low: lows,
-      close: closes,
-    });
-
-    // ATR
-    const atrResult = ATR.calculate({
-      period: 14,
-      high: highs,
-      low: lows,
-      close: closes,
-    });
-
-    if (!bbResult.length || !rsiResult.length || !adxResult.length || !atrResult.length) {
+    // Validate all required indicators are present
+    if (
+      rsi === undefined ||
+      adx === undefined ||
+      bbUpper === undefined ||
+      bbMiddle === undefined ||
+      bbLower === undefined ||
+      kcUpper === undefined ||
+      kcMiddle === undefined ||
+      kcLower === undefined ||
+      atr === undefined
+    ) {
       return null;
     }
-
-    const bb = bbResult[bbResult.length - 1]!;
-    const rsi = rsiResult[rsiResult.length - 1]!;
-    const adxData = adxResult[adxResult.length - 1];
-    const atr = atrResult[atrResult.length - 1]!;
-
-    if (!bb || rsi === undefined || !adxData) return null;
-
-    const adx = adxData.adx;
-
-    // Calculate Keltner Channels
-    const kc = this.calculateKeltnerChannel(closes, atr);
-    if (!kc) return null;
-
-    // Detect squeeze
-    const isInSqueeze = bb.upper < kc.upper && bb.lower > kc.lower;
 
     // Update squeeze history
     this.squeezeHistory.push(isInSqueeze);
@@ -199,26 +170,27 @@ export class BBSqueezeMRBacktestStrategy implements BacktestableStrategy {
         ...indicators,
         rsi,
         adx,
-        bbUpper: bb.upper,
-        bbMiddle: bb.middle,
-        bbLower: bb.lower,
-        kcUpper: kc.upper,
-        kcMiddle: kc.middle,
-        kcLower: kc.lower,
+        bbUpper,
+        bbMiddle,
+        bbLower,
+        kcUpper,
+        kcMiddle,
+        kcLower,
+        atr,
         isInSqueeze,
         wasRecentlyInSqueeze,
       },
     };
 
     // LONG: Price at lower BB + RSI oversold
-    if (price <= bb.lower && rsi < this.params.rsiOversold) {
+    if (price <= bbLower && rsi < this.params.rsiOversold) {
       this.lastTradeIndex = currentIndex;
       return {
         timestamp: candle.timestamp,
         direction: 'CALL',
         price,
         confidence: this.calculateConfidence(rsi, adx, isInSqueeze),
-        reason: `BB Squeeze MR LONG: Price (${price.toFixed(2)}) <= BB_Lower (${bb.lower.toFixed(2)}), RSI=${rsi.toFixed(1)}, ADX=${adx.toFixed(1)}, Squeeze=${isInSqueeze}`,
+        reason: `BB Squeeze MR LONG: Price (${price.toFixed(2)}) <= BB_Lower (${bbLower.toFixed(2)}), RSI=${rsi.toFixed(1)}, ADX=${adx.toFixed(1)}, Squeeze=${isInSqueeze}`,
         strategyName: this.name,
         strategyVersion: this.version,
         snapshot,
@@ -228,14 +200,14 @@ export class BBSqueezeMRBacktestStrategy implements BacktestableStrategy {
     }
 
     // SHORT: Price at upper BB + RSI overbought
-    if (price >= bb.upper && rsi > this.params.rsiOverbought) {
+    if (price >= bbUpper && rsi > this.params.rsiOverbought) {
       this.lastTradeIndex = currentIndex;
       return {
         timestamp: candle.timestamp,
         direction: 'PUT',
         price,
         confidence: this.calculateConfidence(rsi, adx, isInSqueeze),
-        reason: `BB Squeeze MR SHORT: Price (${price.toFixed(2)}) >= BB_Upper (${bb.upper.toFixed(2)}), RSI=${rsi.toFixed(1)}, ADX=${adx.toFixed(1)}, Squeeze=${isInSqueeze}`,
+        reason: `BB Squeeze MR SHORT: Price (${price.toFixed(2)}) >= BB_Upper (${bbUpper.toFixed(2)}), RSI=${rsi.toFixed(1)}, ADX=${adx.toFixed(1)}, Squeeze=${isInSqueeze}`,
         strategyName: this.name,
         strategyVersion: this.version,
         snapshot,
@@ -247,24 +219,6 @@ export class BBSqueezeMRBacktestStrategy implements BacktestableStrategy {
     return null;
   }
 
-  private calculateKeltnerChannel(closes: number[], atr: number): { upper: number; middle: number; lower: number } | null {
-    // Simple EMA calculation
-    const period = this.params.kcPeriod;
-    if (closes.length < period) return null;
-
-    const k = 2 / (period + 1);
-    let ema = closes.slice(0, period).reduce((a, b) => a + b, 0) / period;
-
-    for (let i = period; i < closes.length; i++) {
-      ema = closes[i]! * k + ema * (1 - k);
-    }
-
-    return {
-      upper: ema + atr * this.params.kcMultiplier,
-      middle: ema,
-      lower: ema - atr * this.params.kcMultiplier,
-    };
-  }
 
   private calculateConfidence(rsi: number, adx: number, isInSqueeze: boolean): number {
     let confidence = 50;
