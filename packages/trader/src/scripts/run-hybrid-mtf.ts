@@ -384,12 +384,13 @@ async function main() {
             // Check connection state - if not connected, this is definitely a connection error
             const currentlyConnected = gatewayClient.isConnected();
             
-            // Debug: Log full error details to understand what's happening
+            // Extract error message
             const errorMsg = error?.message || String(error || '');
             const errorStack = error?.stack || '';
             const errorType = error?.constructor?.name || typeof error;
             
             // Check if it's a connection error (multiple ways to detect)
+            // IMPORTANT: Check connection state FIRST - most reliable
             const isConnectionError = 
               !currentlyConnected || // Most reliable: check actual connection state
               errorMsg.includes('Not connected to Gateway') ||
@@ -402,21 +403,14 @@ async function main() {
               errorStack.includes('Connection closed') ||
               errorStack.includes('WebSocket');
             
+            // ALWAYS silently ignore connection errors - they're expected during reconnection
             if (isConnectionError) {
-              // Connection errors are silently ignored - will retry on next interval
-              // Only log occasionally for debugging (10% of the time)
-              if (Math.random() < 0.1) {
-                console.log(`[Signal Proximity] ${symbol}: Connection error (connected: ${currentlyConnected}, type: ${errorType})`);
-              }
-            } else {
-              // Real error - log it
-              console.error(`[Signal Proximity] Error for ${symbol}:`, {
-                type: errorType,
-                message: errorMsg,
-                stack: errorStack.substring(0, 200),
-                connected: currentlyConnected,
-              });
+              // Do nothing - silently ignore
+              return; // Exit early to avoid any logging
             }
+            
+            // Only log if it's NOT a connection error (real errors)
+            console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
           }
         } else {
           // Log when buffer is not ready (only once per symbol to avoid spam)
