@@ -381,30 +381,36 @@ async function main() {
               console.log(`[Signal Proximity] ${symbol}: getSignalReadiness returned null`);
             }
           } catch (error: any) {
+            // Extract error message FIRST
+            const errorMsg = error?.message || String(error || '');
+            
+            // Check if error message contains "Not connected to Gateway" - this is the most direct check
+            // This MUST be checked first before any other logic
+            if (errorMsg.includes('Not connected to Gateway') || errorMsg.includes('Not connected')) {
+              // This is definitely a connection error - silently ignore
+              return;
+            }
+            
             // Check connection state - if not connected, this is definitely a connection error
             const currentlyConnected = gatewayClient.isConnected();
+            if (!currentlyConnected) {
+              // Not connected - silently ignore
+              return;
+            }
             
-            // Extract error message
-            const errorMsg = error?.message || String(error || '');
+            // Check for other connection-related keywords
             const errorStack = error?.stack || '';
-            const errorType = error?.constructor?.name || typeof error;
+            const hasConnectionKeywords = 
+              errorMsg.includes('Connection closed') || 
+              errorMsg.includes('WebSocket') || 
+              errorMsg.includes('socket') ||
+              errorStack.includes('Not connected') || 
+              errorStack.includes('Connection closed') || 
+              errorStack.includes('WebSocket');
             
-            // Check if it's a connection error (multiple ways to detect)
-            // IMPORTANT: Check connection state FIRST - most reliable
-            const hasNotConnectedMsg = errorMsg.includes('Not connected to Gateway') || errorMsg.includes('Not connected');
-            const hasConnectionKeywords = errorMsg.includes('Connection closed') || errorMsg.includes('WebSocket') || errorMsg.includes('socket');
-            const hasStackKeywords = errorStack.includes('Not connected') || errorStack.includes('Connection closed') || errorStack.includes('WebSocket');
-            
-            const isConnectionError = 
-              !currentlyConnected || // Most reliable: check actual connection state
-              hasNotConnectedMsg ||
-              hasConnectionKeywords ||
-              hasStackKeywords;
-            
-            // ALWAYS silently ignore connection errors - they're expected during reconnection
-            if (isConnectionError) {
-              // Do nothing - silently ignore
-              return; // Exit early to avoid any logging
+            if (hasConnectionKeywords) {
+              // Connection-related error - silently ignore
+              return;
             }
             
             // Only log if it's NOT a connection error (real errors)
