@@ -89,6 +89,19 @@ export {
   createKeltnerMRStrategy,
   HybridMTFBacktestStrategy,
   createHybridMTFStrategy,
+  TrendExhaustionBacktestStrategy,
+  createTrendExhaustionStrategy,
+  createRSIDivergenceStrategy,
+  createPinBarStrategy,
+  createEngulfingStrategy,
+  createEMADistanceStrategy,
+  createExhaustionCandlesStrategy,
+  createMultiComboStrategy,
+  MTFLevelsBacktestStrategy,
+  createMTFLevelsStrategy,
+  type DetectionMethod,
+  type TrendExhaustionParams,
+  type MTFLevelsParams,
 } from './strategies/index.js';
 
 // Legacy exports for backward compatibility

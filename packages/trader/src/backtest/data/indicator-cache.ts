@@ -306,6 +306,192 @@ function calculateStochastic(
   return { k, d };
 }
 
+/**
+ * ZigZag Indicator Result
+ */
+export interface ZigZagPoint {
+  index: number;
+  price: number;
+  type: 'high' | 'low';
+}
+
+/**
+ * Calculate ZigZag Indicator
+ *
+ * Identifies significant swing highs and lows by filtering out noise.
+ * A new pivot is confirmed only when price moves by at least `deviation` percent.
+ *
+ * @param candles - Array of candles
+ * @param deviation - Minimum percentage move to confirm a new pivot (default 0.5%)
+ * @param depth - Minimum bars between pivots (default 5)
+ */
+function calculateZigZag(
+  candles: Candle[],
+  deviation: number = 0.5,
+  depth: number = 5
+): {
+  zigzagHigh: number[];  // Price at swing high, 0 otherwise
+  zigzagLow: number[];   // Price at swing low, 0 otherwise
+  zigzagType: number[];  // 1 = swing high, -1 = swing low, 0 = none
+  lastSwingHigh: number[];  // Most recent swing high price
+  lastSwingLow: number[];   // Most recent swing low price
+  lastSwingHighIdx: number[];  // Index of most recent swing high
+  lastSwingLowIdx: number[];   // Index of most recent swing low
+} {
+  const n = candles.length;
+  const zigzagHigh: number[] = new Array(n).fill(0);
+  const zigzagLow: number[] = new Array(n).fill(0);
+  const zigzagType: number[] = new Array(n).fill(0);
+  const lastSwingHigh: number[] = new Array(n).fill(0);
+  const lastSwingLow: number[] = new Array(n).fill(0);
+  const lastSwingHighIdx: number[] = new Array(n).fill(-1);
+  const lastSwingLowIdx: number[] = new Array(n).fill(-1);
+
+  if (n < depth * 2) {
+    return { zigzagHigh, zigzagLow, zigzagType, lastSwingHigh, lastSwingLow, lastSwingHighIdx, lastSwingLowIdx };
+  }
+
+  const pivots: ZigZagPoint[] = [];
+  let lastPivotType: 'high' | 'low' | null = null;
+  let lastPivotPrice = 0;
+  let lastPivotIndex = 0;
+
+  // Find initial pivot
+  let maxHigh = candles[0]!.high;
+  let minLow = candles[0]!.low;
+  let maxHighIdx = 0;
+  let minLowIdx = 0;
+
+  for (let i = 1; i < Math.min(depth * 2, n); i++) {
+    if (candles[i]!.high > maxHigh) {
+      maxHigh = candles[i]!.high;
+      maxHighIdx = i;
+    }
+    if (candles[i]!.low < minLow) {
+      minLow = candles[i]!.low;
+      minLowIdx = i;
+    }
+  }
+
+  // Initialize with the first extreme
+  if (maxHighIdx < minLowIdx) {
+    pivots.push({ index: maxHighIdx, price: maxHigh, type: 'high' });
+    lastPivotType = 'high';
+    lastPivotPrice = maxHigh;
+    lastPivotIndex = maxHighIdx;
+    zigzagHigh[maxHighIdx] = maxHigh;
+    zigzagType[maxHighIdx] = 1;
+  } else {
+    pivots.push({ index: minLowIdx, price: minLow, type: 'low' });
+    lastPivotType = 'low';
+    lastPivotPrice = minLow;
+    lastPivotIndex = minLowIdx;
+    zigzagLow[minLowIdx] = minLow;
+    zigzagType[minLowIdx] = -1;
+  }
+
+  // Scan for pivots
+  for (let i = depth; i < n; i++) {
+    const candle = candles[i]!;
+    const deviationThreshold = lastPivotPrice * (deviation / 100);
+
+    if (lastPivotType === 'high') {
+      // Looking for a low
+      if (candle.low < lastPivotPrice - deviationThreshold) {
+        // Check if this is a local minimum
+        let isLocalMin = true;
+        for (let j = Math.max(0, i - depth); j < i; j++) {
+          if (candles[j]!.low < candle.low) {
+            isLocalMin = false;
+            break;
+          }
+        }
+
+        if (isLocalMin && i - lastPivotIndex >= depth) {
+          pivots.push({ index: i, price: candle.low, type: 'low' });
+          lastPivotType = 'low';
+          lastPivotPrice = candle.low;
+          lastPivotIndex = i;
+          zigzagLow[i] = candle.low;
+          zigzagType[i] = -1;
+        }
+      }
+      // Check for higher high (extend current high)
+      else if (candle.high > lastPivotPrice) {
+        // Update the last high pivot
+        const lastPivot = pivots[pivots.length - 1]!;
+        zigzagHigh[lastPivot.index] = 0;
+        zigzagType[lastPivot.index] = 0;
+
+        lastPivot.index = i;
+        lastPivot.price = candle.high;
+        lastPivotPrice = candle.high;
+        lastPivotIndex = i;
+        zigzagHigh[i] = candle.high;
+        zigzagType[i] = 1;
+      }
+    } else {
+      // Looking for a high
+      if (candle.high > lastPivotPrice + deviationThreshold) {
+        // Check if this is a local maximum
+        let isLocalMax = true;
+        for (let j = Math.max(0, i - depth); j < i; j++) {
+          if (candles[j]!.high > candle.high) {
+            isLocalMax = false;
+            break;
+          }
+        }
+
+        if (isLocalMax && i - lastPivotIndex >= depth) {
+          pivots.push({ index: i, price: candle.high, type: 'high' });
+          lastPivotType = 'high';
+          lastPivotPrice = candle.high;
+          lastPivotIndex = i;
+          zigzagHigh[i] = candle.high;
+          zigzagType[i] = 1;
+        }
+      }
+      // Check for lower low (extend current low)
+      else if (candle.low < lastPivotPrice) {
+        // Update the last low pivot
+        const lastPivot = pivots[pivots.length - 1]!;
+        zigzagLow[lastPivot.index] = 0;
+        zigzagType[lastPivot.index] = 0;
+
+        lastPivot.index = i;
+        lastPivot.price = candle.low;
+        lastPivotPrice = candle.low;
+        lastPivotIndex = i;
+        zigzagLow[i] = candle.low;
+        zigzagType[i] = -1;
+      }
+    }
+  }
+
+  // Fill lastSwingHigh/Low arrays for easy access
+  let currentSwingHigh = 0;
+  let currentSwingLow = 0;
+  let currentSwingHighIdx = -1;
+  let currentSwingLowIdx = -1;
+
+  for (let i = 0; i < n; i++) {
+    if (zigzagHigh[i]! > 0) {
+      currentSwingHigh = zigzagHigh[i]!;
+      currentSwingHighIdx = i;
+    }
+    if (zigzagLow[i]! > 0) {
+      currentSwingLow = zigzagLow[i]!;
+      currentSwingLowIdx = i;
+    }
+    lastSwingHigh[i] = currentSwingHigh;
+    lastSwingLow[i] = currentSwingLow;
+    lastSwingHighIdx[i] = currentSwingHighIdx;
+    lastSwingLowIdx[i] = currentSwingLowIdx;
+  }
+
+  return { zigzagHigh, zigzagLow, zigzagType, lastSwingHigh, lastSwingLow, lastSwingHighIdx, lastSwingLowIdx };
+}
+
 // =============================================================================
 // INDICATOR CACHE
 // =============================================================================
@@ -358,6 +544,11 @@ export function createIndicatorCache(
     series.set('ema', calculateEMA(closes, opts.emaPeriod!));
   }
 
+  // EMA20 specifically for trend exhaustion strategy
+  if (requiredIndicators.includes('ema20')) {
+    series.set('ema20', calculateEMA(closes, 20));
+  }
+
   if (
     requiredIndicators.includes('macd') ||
     requiredIndicators.includes('macdSignal') ||
@@ -373,6 +564,24 @@ export function createIndicatorCache(
     const stoch = calculateStochastic(candles, opts.stochKPeriod!, opts.stochDPeriod!);
     series.set('stochK', stoch.k);
     series.set('stochD', stoch.d);
+  }
+
+  // ZigZag indicator for swing high/low detection
+  if (
+    requiredIndicators.includes('zigzag') ||
+    requiredIndicators.includes('zigzagHigh') ||
+    requiredIndicators.includes('zigzagLow') ||
+    requiredIndicators.includes('lastSwingHigh') ||
+    requiredIndicators.includes('lastSwingLow')
+  ) {
+    const zigzag = calculateZigZag(candles, opts.zigzagDeviation ?? 0.3, opts.zigzagDepth ?? 5);
+    series.set('zigzagHigh', zigzag.zigzagHigh);
+    series.set('zigzagLow', zigzag.zigzagLow);
+    series.set('zigzagType', zigzag.zigzagType);
+    series.set('lastSwingHigh', zigzag.lastSwingHigh);
+    series.set('lastSwingLow', zigzag.lastSwingLow);
+    series.set('lastSwingHighIdx', zigzag.lastSwingHighIdx);
+    series.set('lastSwingLowIdx', zigzag.lastSwingLowIdx);
   }
 
   return {
@@ -422,6 +631,7 @@ export function getAvailableIndicators(): IndicatorName[] {
     'atr',
     'sma',
     'ema',
+    'ema20',
     'macd',
     'macdSignal',
     'macdHistogram',
@@ -429,5 +639,12 @@ export function getAvailableIndicators(): IndicatorName[] {
     'stochD',
     'squeezeOn',
     'squeezeHistogram',
+    'zigzagHigh',
+    'zigzagLow',
+    'zigzagType',
+    'lastSwingHigh',
+    'lastSwingLow',
+    'lastSwingHighIdx',
+    'lastSwingLowIdx',
   ];
 }

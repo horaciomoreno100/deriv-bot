@@ -1,5 +1,72 @@
 # Changelog
 
+## [0.5.0](///compare/v0.4.0...v0.5.0) (2025-11-28)
+
+### Features
+
+* add dynamic cooldown and optimized config v2.1.0 71c9816
+* add KELTNER_MR strategy for EUR/USD trading with session filter d74664d
+* add script to clean PM2 error logs 97aa1d0
+* add server monitoring system with 15-minute reports cc10013
+* add signal proximity support for Keltner-MR and Hybrid-MTF strategies 55210ec
+* Hybrid-MTF v2.0.0 - fixed logic and improved params feaecb4
+* load 5m and 15m candles directly from API instead of resampling 9f0b109
+* show live P/L for Multiplier positions in /status 4672f90
+* show specific trader/strategy name in Telegram logs 6e406eb
+
+### Bug Fixes
+
+* add debug logging to HybridMTF getSignalReadiness to diagnose null returns e4358a6
+* add entry price to signal metadata for CFD trades 38f53f3
+* add historical candles loading for Hybrid-MTF to enable signal proximity 32120fa
+* add logging for signal proximity in Hybrid-MTF to debug missing R_100 f53fb6c
+* add logging to debug why R_100 signal proximity is not being published 51106df
+* add re-registration logic on reconnect for Keltner-MR and Hybrid-MTF 26e71c6
+* add strategy config name to HybridMTFStrategy 9b97d58
+* apply same connection error handling to all traders c9709f2
+* check Gateway connection before signal proximity check 9bcd627
+* clean old log files without -mr suffix 7744011
+* completely silence connection errors in signal proximity 2de98ee
+* correct EUR/USD multiplier and improve connection error detection 0d6173f
+* correct gatewayClient.follow and balance references bf47fd9
+* correct method name and remove unused variables in KeltnerMRStrategy f3e17fa
+* correct serviceMap type to support multiple trader processes 9fb8012
+* correct slack-alerts import in run-hybrid-mtf 3b83f16
+* correct timestamp conversion in resampleCandles (seconds to milliseconds) e70c406
+* filter ANSI color codes and PM2 service prefixes from logs 2c2814f
+* filter PM2 headers from logs in Telegram bot d088213
+* **gateway:** improve portfolio cache resilience for Deriv API timeouts 70403cb
+* get live P/L for Multiplier positions using proposal_open_contract 73a765d
+* handle proposal_open_contract response without subscription field b004b73
+* improve clean-logs script to truncate log files directly f00aea5
+* improve connection error detection using actual connection state 74012ea
+* improve connection error detection with explicit checks 837b4f8
+* improve connection error filtering and fix TypeScript errors 2c0faf4
+* improve connection error filtering for signal proximity 9a8426f
+* improve error handling and log filtering 083eb40
+* increase active trader threshold to 5 minutes for better reliability 04b56e6
+* increase historical candles to 800 for Hybrid-MTF to enable 15m regime detection 760cdc9
+* make connected traders count match the displayed unique traders count 92c5a17
+* make multiple API calls to load enough historical candles for Hybrid-MTF 15m regime detection 8b75ad4
+* move historical candles loading before signal proximity interval setup 99bb59a
+* only show errors in monitoring report if they actually exist eae195d
+* prevent clearing candle buffers after loading historical candles in Hybrid-MTF cdc5b6f
+* prevent duplicate traders in /info command and cleanup inactive traders 26c6d47
+* prioritize direct error message check for connection errors 0285f93
+* reduce log spam for missing SLACK_WEBHOOK_URL 764e91e
+* remove duplicate properties in exitSnapshot 2b366e5
+* remove duplicate variable declarations in run-bb-squeeze-mr a5ebf96
+* remove last balance reference in summary 5710144
+* remove undefined balance variable and use SYMBOLS instead of hardcoded MONITORED_SYMBOLS 64c8ea5
+* remove unused kcMiddle variable f214c83
+* return partial signal readiness for Hybrid-MTF when regime cannot be detected yet 249b4f4
+* support both 'price' and 'entryPrice' in signal metadata 954ce90
+* **telegram:** truncate logs to fit Telegram 4096 char limit 5b97a37
+* **trader:** re-register with gateway on reconnect 5184a2f
+* update run-hybrid-mtf.ts with v2.0.0 params and banner fd453e0
+* use exitBbMiddle and exitBbLower variables d8fd5f1
+* use numeric timeframe (60) instead of string ('1m') in getCandles call de6a32d
+
 ## [0.4.0](///compare/v0.3.0...v0.4.0) (2025-11-27)
 
 ### Features
