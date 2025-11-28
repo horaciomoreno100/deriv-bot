@@ -381,32 +381,40 @@ async function main() {
               console.log(`[Signal Proximity] ${symbol}: getSignalReadiness returned null`);
             }
           } catch (error: any) {
+            // Check connection state - if not connected, this is definitely a connection error
+            const currentlyConnected = gatewayClient.isConnected();
+            
             // Debug: Log full error details to understand what's happening
             const errorMsg = error?.message || String(error || '');
             const errorStack = error?.stack || '';
             const errorType = error?.constructor?.name || typeof error;
             
-            // Check if it's a connection error
+            // Check if it's a connection error (multiple ways to detect)
             const isConnectionError = 
+              !currentlyConnected || // Most reliable: check actual connection state
               errorMsg.includes('Not connected to Gateway') ||
               errorMsg.includes('Not connected') ||
               errorMsg.includes('Connection closed') ||
               errorMsg.includes('WebSocket is not open') ||
+              errorMsg.includes('WebSocket') ||
+              errorMsg.includes('socket') ||
               errorStack.includes('Not connected') ||
-              errorStack.includes('Connection closed');
+              errorStack.includes('Connection closed') ||
+              errorStack.includes('WebSocket');
             
             if (isConnectionError) {
-              // Debug: Log connection error details (only occasionally to avoid spam)
-              if (Math.random() < 0.1) { // 10% of the time
-                console.log(`[Signal Proximity] ${symbol}: Connection error caught and ignored (type: ${errorType}, msg: ${errorMsg.substring(0, 100)})`);
-              }
               // Connection errors are silently ignored - will retry on next interval
+              // Only log occasionally for debugging (10% of the time)
+              if (Math.random() < 0.1) {
+                console.log(`[Signal Proximity] ${symbol}: Connection error (connected: ${currentlyConnected}, type: ${errorType})`);
+              }
             } else {
               // Real error - log it
               console.error(`[Signal Proximity] Error for ${symbol}:`, {
                 type: errorType,
                 message: errorMsg,
                 stack: errorStack.substring(0, 200),
+                connected: currentlyConnected,
               });
             }
           }
