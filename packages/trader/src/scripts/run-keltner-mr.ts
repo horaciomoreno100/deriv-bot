@@ -210,7 +210,7 @@ async function main() {
       accountLoginid: ACCOUNT_LOGINID,
       multiplierMap: {
         // Strategy optimized specifically for EUR/USD
-        'frxEURUSD': 300,  // EUR/USD - optimized multiplier from backtest (114.5% ROI)
+        'frxEURUSD': 250,  // EUR/USD - using acceptable multiplier (300 not allowed, using 250)
         // Other symbols not tested - use at your own risk
         'frxGBPUSD': 300,
         'frxUSDJPY': 300,
