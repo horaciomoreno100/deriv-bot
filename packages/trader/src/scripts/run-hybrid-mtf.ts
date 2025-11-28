@@ -334,7 +334,12 @@ async function main() {
   const PROXIMITY_CHECK_INTERVAL = 10000;
   const proximityCheckInterval = setInterval(async () => {
     // Check connection first - skip entire check if not connected
-    if (!gatewayClient.isConnected()) {
+    const isConnected = gatewayClient.isConnected();
+    if (!isConnected) {
+      // Debug: Log connection status (only occasionally to avoid spam)
+      if (Math.random() < 0.1) { // 10% of the time
+        console.log(`[Signal Proximity] Skipping check - Gateway not connected (isConnected: ${isConnected})`);
+      }
       return; // Skip silently, will retry on next interval
     }
 
@@ -346,7 +351,9 @@ async function main() {
             const readiness = (strategy as any).getSignalReadiness(buffer);
             if (readiness) {
               // Double-check connection before publishing (connection might drop between checks)
-              if (!gatewayClient.isConnected()) {
+              const stillConnected = gatewayClient.isConnected();
+              if (!stillConnected) {
+                console.log(`[Signal Proximity] ${symbol}: Connection lost before publish, skipping`);
                 continue; // Skip this symbol, try next one
               }
 
@@ -374,18 +381,34 @@ async function main() {
               console.log(`[Signal Proximity] ${symbol}: getSignalReadiness returned null`);
             }
           } catch (error: any) {
-            // Silently skip connection errors - they're expected during reconnection
+            // Debug: Log full error details to understand what's happening
             const errorMsg = error?.message || String(error || '');
+            const errorStack = error?.stack || '';
+            const errorType = error?.constructor?.name || typeof error;
+            
+            // Check if it's a connection error
             const isConnectionError = 
               errorMsg.includes('Not connected to Gateway') ||
               errorMsg.includes('Not connected') ||
               errorMsg.includes('Connection closed') ||
-              errorMsg.includes('WebSocket is not open');
+              errorMsg.includes('WebSocket is not open') ||
+              errorStack.includes('Not connected') ||
+              errorStack.includes('Connection closed');
             
-            if (!isConnectionError) {
-              console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
+            if (isConnectionError) {
+              // Debug: Log connection error details (only occasionally to avoid spam)
+              if (Math.random() < 0.1) { // 10% of the time
+                console.log(`[Signal Proximity] ${symbol}: Connection error caught and ignored (type: ${errorType}, msg: ${errorMsg.substring(0, 100)})`);
+              }
+              // Connection errors are silently ignored - will retry on next interval
+            } else {
+              // Real error - log it
+              console.error(`[Signal Proximity] Error for ${symbol}:`, {
+                type: errorType,
+                message: errorMsg,
+                stack: errorStack.substring(0, 200),
+              });
             }
-            // Connection errors are silently ignored - will retry on next interval
           }
         } else {
           // Log when buffer is not ready (only once per symbol to avoid spam)
