@@ -1,0 +1,1926 @@
+{
+  "metadata": {
+    "asset": "R_75",
+    "timeframe": 60,
+    "strategyName": "BB-Squeeze",
+    "strategyVersion": "2.1.0",
+    "executedAt": "2025-11-28T01:26:14.590Z",
+    "executionTimeMs": 742
+  },
+  "config": {
+    "asset": "R_75",
+    "timeframe": 60,
+    "initialBalance": 1000,
+    "stakeMode": "percentage",
+    "stakeAmount": 20,
+    "stakePct": 0.02,
+    "multiplier": 100,
+    "takeProfitPct": 0.004,
+    "stopLossPct": 0.002,
+    "maxBarsInTrade": 30,
+    "useTrailingStop": false,
+    "cooldownBars": 1
+  },
+  "dateRange": {
+    "from": "+057631-01-15T18:40:00.000Z",
+    "to": "+057878-03-18T20:40:00.000Z",
+    "candleCount": 129980
+  },
+  "metrics": {
+    "totalTrades": 17,
+    "wins": 3,
+    "losses": 14,
+    "winRate": 17.647058823529413,
+    "netPnl": -37.9165447843545,
+    "grossProfit": 18.083455215646016,
+    "grossLoss": 56.00000000000051,
+    "profitFactor": 0.322918843136533,
+    "avgWin": 6.0278184052153385,
+    "avgLoss": 4.000000000000036,
+    "avgPnl": -2.2303849873149706,
+    "maxDrawdown": 52.00000000000034,
+    "maxDrawdownPct": 5.200000000000034,
+    "maxConsecutiveWins": 2,
+    "maxConsecutiveLosses": 13,
+    "nearMisses": 4,
+    "immediateReversals": 0,
+    "avgBarsHeld": 7470.588235294117,
+    "expectancy": -2.23038498731497,
+    "sqn": -2.299991150195618,
+    "equityCurve": [
+      1002.0834552156458,
+      998.0834552156457,
+      1006.0834552156457,
+      1014.0834552156459,
+      1010.083455215646,
+      1006.0834552156462,
+      1002.083455215646,
+      998.083455215646,
+      994.0834552156459,
+      990.0834552156458,
+      986.0834552156457,
+      982.0834552156456,
+      978.0834552156455,
+      974.0834552156456,
+      970.0834552156456,
+      966.0834552156455,
+      962.0834552156456
+    ],
+    "peakEquity": 1014.0834552156459
+  },
+  "trades": [
+    {
+      "id": "6d36bccb-607c-4f68-af32-e7442ffefadd",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "a06392aa-b20f-4fc7-8bad-1744326e51ae",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1756506480000000,
+          "candle": {
+            "index": 228,
+            "timestamp": 1756506480000,
+            "open": 82156.9756,
+            "high": 82271.9868,
+            "low": 82121.2744,
+            "close": 82271.9868
+          },
+          "price": 82271.9868,
+          "indicators": {
+            "bbUpper": 82232.71690914084,
+            "bbMiddle": 82088.609015,
+            "bbLower": 81944.50112085915,
+            "kcUpper": 82259.43014674782,
+            "kcMiddle": 82078.96614621994,
+            "kcLower": 81898.50214569207,
+            "squeezeOn": true,
+            "squeezeHistogram": 9.642868780050776,
+            "rsi": 62.80008348578638
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (82271.99 > 82232.72) + RSI bullish (62.8 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1756506480000000,
+          "candle": {
+            "index": 228,
+            "timestamp": 1756506480000,
+            "open": 82156.9756,
+            "high": 82271.9868,
+            "low": 82121.2744,
+            "close": 82271.9868
+          },
+          "price": 82271.9868,
+          "indicators": {
+            "bbUpper": 82232.71690914084,
+            "bbMiddle": 82088.609015,
+            "bbLower": 81944.50112085915,
+            "kcUpper": 82259.43014674782,
+            "kcMiddle": 82078.96614621994,
+            "kcLower": 81898.50214569207,
+            "squeezeOn": true,
+            "squeezeHistogram": 9.642868780050776,
+            "rsi": 62.80008348578638
+          }
+        },
+        "requestedPrice": 82271.9868,
+        "executedPrice": 82271.9868,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 82601.0747472,
+        "slPrice": 82107.4428264,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1756508280000000,
+          "candle": {
+            "index": 258,
+            "timestamp": 1756508280000,
+            "open": 82391.048,
+            "high": 82392.787,
+            "low": 82316.781,
+            "close": 82357.6918
+          },
+          "price": 82357.6918,
+          "indicators": {
+            "bbUpper": 82530.26984666778,
+            "bbMiddle": 82340.47908500001,
+            "bbLower": 82150.68832333224,
+            "kcUpper": 82473.84639407624,
+            "kcMiddle": 82335.42951117987,
+            "kcLower": 82197.0126282835,
+            "squeezeOn": false,
+            "squeezeHistogram": 5.049573820142541,
+            "rsi": 53.37509676759299
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 82357.6918,
+        "durationMs": 1800000000
+      },
+      "result": {
+        "pnl": 2.0834552156458135,
+        "pnlPct": 0.10417276078229067,
+        "outcome": "WIN",
+        "maxFavorable": 5.770053920710685,
+        "maxFavorablePct": 0.28850269603553425,
+        "maxAdverse": 3.898233317005375,
+        "maxAdversePct": 0.19491166585026873
+      }
+    },
+    {
+      "id": "fd45d04e-0a0a-45dc-a71d-90de9901b30c",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "eb2758ff-70ce-4d2d-8f20-6d6bab9f3408",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1758317520000000,
+          "candle": {
+            "index": 30392,
+            "timestamp": 1758317520000,
+            "open": 71805.8355,
+            "high": 71819.5546,
+            "low": 71704.4813,
+            "close": 71746.9654
+          },
+          "price": 71746.9654,
+          "indicators": {
+            "bbUpper": 72354.9819259259,
+            "bbMiddle": 72104.821375,
+            "bbLower": 71854.6608240741,
+            "kcUpper": 72260.43250392281,
+            "kcMiddle": 72085.21130507767,
+            "kcLower": 71909.99010623252,
+            "squeezeOn": false,
+            "squeezeHistogram": 19.610069922331604,
+            "rsi": 28.923327165482362
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (71746.97 < 71854.66) + RSI bearish (28.9 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1758317520000000,
+          "candle": {
+            "index": 30392,
+            "timestamp": 1758317520000,
+            "open": 71805.8355,
+            "high": 71819.5546,
+            "low": 71704.4813,
+            "close": 71746.9654
+          },
+          "price": 71746.9654,
+          "indicators": {
+            "bbUpper": 72354.9819259259,
+            "bbMiddle": 72104.821375,
+            "bbLower": 71854.6608240741,
+            "kcUpper": 72260.43250392281,
+            "kcMiddle": 72085.21130507767,
+            "kcLower": 71909.99010623252,
+            "squeezeOn": false,
+            "squeezeHistogram": 19.610069922331604,
+            "rsi": 28.923327165482362
+          }
+        },
+        "requestedPrice": 71746.9654,
+        "executedPrice": 71746.9654,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 71459.9775384,
+        "slPrice": 71890.4593308,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1758318060000000,
+          "candle": {
+            "index": 30401,
+            "timestamp": 1758318060000,
+            "open": 71812.6092,
+            "high": 71901.1167,
+            "low": 71770.8253,
+            "close": 71770.8253
+          },
+          "price": 71770.8253,
+          "indicators": {
+            "bbUpper": 72325.86970865929,
+            "bbMiddle": 71904.419035,
+            "bbLower": 71482.96836134071,
+            "kcUpper": 72027.39866381134,
+            "kcMiddle": 71868.56659392267,
+            "kcLower": 71709.73452403401,
+            "squeezeOn": false,
+            "squeezeHistogram": 35.85244107732433,
+            "rsi": 40.35318687661481
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 71890.4593308,
+        "durationMs": 540000000
+      },
+      "result": {
+        "pnl": -4.0000000000000835,
+        "pnlPct": -0.20000000000000417,
+        "outcome": "LOSS",
+        "maxFavorable": 4.6994099070285555,
+        "maxFavorablePct": 0.23497049535142778,
+        "maxAdverse": 4.297082089551281,
+        "maxAdversePct": 0.214854104477564
+      }
+    },
+    {
+      "id": "c6b5cc17-efeb-4e6f-b87e-32f3e34d8fb5",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "27d23e81-4219-4e24-8dc9-81a9842bf8e7",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1758866340000000,
+          "candle": {
+            "index": 39539,
+            "timestamp": 1758866340000,
+            "open": 70935.1498,
+            "high": 70950.988,
+            "low": 70852.111,
+            "close": 70852.111
+          },
+          "price": 70852.111,
+          "indicators": {
+            "bbUpper": 71111.82519917033,
+            "bbMiddle": 70983.20789500001,
+            "bbLower": 70854.5905908297,
+            "kcUpper": 71127.97649468931,
+            "kcMiddle": 70965.40195595914,
+            "kcLower": 70802.82741722897,
+            "squeezeOn": true,
+            "squeezeHistogram": 17.805939040874364,
+            "rsi": 43.87695920228423
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (70852.11 < 70854.59) + RSI bearish (43.9 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1758866340000000,
+          "candle": {
+            "index": 39539,
+            "timestamp": 1758866340000,
+            "open": 70935.1498,
+            "high": 70950.988,
+            "low": 70852.111,
+            "close": 70852.111
+          },
+          "price": 70852.111,
+          "indicators": {
+            "bbUpper": 71111.82519917033,
+            "bbMiddle": 70983.20789500001,
+            "bbLower": 70854.5905908297,
+            "kcUpper": 71127.97649468931,
+            "kcMiddle": 70965.40195595914,
+            "kcLower": 70802.82741722897,
+            "squeezeOn": true,
+            "squeezeHistogram": 17.805939040874364,
+            "rsi": 43.87695920228423
+          }
+        },
+        "requestedPrice": 70852.111,
+        "executedPrice": 70852.111,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 70568.702556,
+        "slPrice": 70993.815222,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1758866460000000,
+          "candle": {
+            "index": 39541,
+            "timestamp": 1758866460000,
+            "open": 70609.7471,
+            "high": 70657.8788,
+            "low": 70555.9557,
+            "close": 70583.8573
+          },
+          "price": 70583.8573,
+          "indicators": {
+            "bbUpper": 71214.0233479846,
+            "bbMiddle": 70950.89095,
+            "bbLower": 70687.7585520154,
+            "kcUpper": 71077.09536730802,
+            "kcMiddle": 70899.00228050169,
+            "kcLower": 70720.90919369536,
+            "squeezeOn": false,
+            "squeezeHistogram": 51.888669498308445,
+            "rsi": 33.30017972536746
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 70568.702556,
+        "durationMs": 120000000
+      },
+      "result": {
+        "pnl": 8.000000000000016,
+        "pnlPct": 0.4000000000000008,
+        "outcome": "WIN",
+        "maxFavorable": 8.35981584232539,
+        "maxFavorablePct": 0.4179907921162695,
+        "maxAdverse": 0,
+        "maxAdversePct": 0
+      }
+    },
+    {
+      "id": "8bed995f-2fc0-417f-b8b3-c9319e0d0d32",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "ea266c53-3c88-4d3f-973d-73038898c886",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1758989460000000,
+          "candle": {
+            "index": 41591,
+            "timestamp": 1758989460000,
+            "open": 66557.1071,
+            "high": 66640.4157,
+            "low": 66557.1071,
+            "close": 66617.3253
+          },
+          "price": 66617.3253,
+          "indicators": {
+            "bbUpper": 66602.51257466238,
+            "bbMiddle": 66460.62904,
+            "bbLower": 66318.74550533762,
+            "kcUpper": 66634.3847200252,
+            "kcMiddle": 66484.89002299146,
+            "kcLower": 66335.39532595771,
+            "squeezeOn": false,
+            "squeezeHistogram": -24.26098299145815,
+            "rsi": 58.57189875120863
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (66617.33 > 66602.51) + RSI bullish (58.6 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1758989460000000,
+          "candle": {
+            "index": 41591,
+            "timestamp": 1758989460000,
+            "open": 66557.1071,
+            "high": 66640.4157,
+            "low": 66557.1071,
+            "close": 66617.3253
+          },
+          "price": 66617.3253,
+          "indicators": {
+            "bbUpper": 66602.51257466238,
+            "bbMiddle": 66460.62904,
+            "bbLower": 66318.74550533762,
+            "kcUpper": 66634.3847200252,
+            "kcMiddle": 66484.89002299146,
+            "kcLower": 66335.39532595771,
+            "squeezeOn": false,
+            "squeezeHistogram": -24.26098299145815,
+            "rsi": 58.57189875120863
+          }
+        },
+        "requestedPrice": 66617.3253,
+        "executedPrice": 66617.3253,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 66883.7946012,
+        "slPrice": 66484.0906494,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1758989760000000,
+          "candle": {
+            "index": 41596,
+            "timestamp": 1758989760000,
+            "open": 66709.6613,
+            "high": 66887.0536,
+            "low": 66709.6613,
+            "close": 66854.1381
+          },
+          "price": 66854.1381,
+          "indicators": {
+            "bbUpper": 66805.35913300015,
+            "bbMiddle": 66530.943545,
+            "bbLower": 66256.52795699985,
+            "kcUpper": 66734.72990080646,
+            "kcMiddle": 66583.52812222434,
+            "kcLower": 66432.32634364221,
+            "squeezeOn": false,
+            "squeezeHistogram": -52.58457722433377,
+            "rsi": 67.98533015457792
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 66883.7946012,
+        "durationMs": 300000000
+      },
+      "result": {
+        "pnl": 8.000000000000187,
+        "pnlPct": 0.4000000000000093,
+        "outcome": "WIN",
+        "maxFavorable": 8.097842379150652,
+        "maxFavorablePct": 0.40489211895753263,
+        "maxAdverse": 1.061945967980886,
+        "maxAdversePct": 0.05309729839904429
+      }
+    },
+    {
+      "id": "32736ab7-78ff-46ac-9440-2af5d19cdc47",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "1cde8298-c731-47ce-b1e7-f3b82a4b7290",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1759292100000000,
+          "candle": {
+            "index": 46635,
+            "timestamp": 1759292100000,
+            "open": 62395.3645,
+            "high": 62553.0367,
+            "low": 62385.7311,
+            "close": 62541.4335
+          },
+          "price": 62541.4335,
+          "indicators": {
+            "bbUpper": 62504.8765845323,
+            "bbMiddle": 62381.95818,
+            "bbLower": 62259.0397754677,
+            "kcUpper": 62553.29157674882,
+            "kcMiddle": 62409.78516244076,
+            "kcLower": 62266.2787481327,
+            "squeezeOn": false,
+            "squeezeHistogram": -27.82698244076164,
+            "rsi": 58.0223265371643
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (62541.43 > 62504.88) + RSI bullish (58.0 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1759292100000000,
+          "candle": {
+            "index": 46635,
+            "timestamp": 1759292100000,
+            "open": 62395.3645,
+            "high": 62553.0367,
+            "low": 62385.7311,
+            "close": 62541.4335
+          },
+          "price": 62541.4335,
+          "indicators": {
+            "bbUpper": 62504.8765845323,
+            "bbMiddle": 62381.95818,
+            "bbLower": 62259.0397754677,
+            "kcUpper": 62553.29157674882,
+            "kcMiddle": 62409.78516244076,
+            "kcLower": 62266.2787481327,
+            "squeezeOn": false,
+            "squeezeHistogram": -27.82698244076164,
+            "rsi": 58.0223265371643
+          }
+        },
+        "requestedPrice": 62541.4335,
+        "executedPrice": 62541.4335,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 62791.599234,
+        "slPrice": 62416.350633,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1759292220000000,
+          "candle": {
+            "index": 46637,
+            "timestamp": 1759292220000,
+            "open": 62506.6567,
+            "high": 62506.6567,
+            "low": 62325.4115,
+            "close": 62325.4115
+          },
+          "price": 62325.4115,
+          "indicators": {
+            "bbUpper": 62517.98955755644,
+            "bbMiddle": 62382.799905,
+            "bbLower": 62247.61025244356,
+            "kcUpper": 62560.94060908464,
+            "kcMiddle": 62409.52591256489,
+            "kcLower": 62258.11121604514,
+            "squeezeOn": false,
+            "squeezeHistogram": -26.726007564888278,
+            "rsi": 44.12677476537528
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 62416.350633,
+        "durationMs": 120000000
+      },
+      "result": {
+        "pnl": -3.9999999999999147,
+        "pnlPct": -0.19999999999999576,
+        "outcome": "LOSS",
+        "maxFavorable": 0.6674647136126325,
+        "maxFavorablePct": 0.03337323568063163,
+        "maxAdverse": 6.908124355672059,
+        "maxAdversePct": 0.3454062177836029
+      }
+    },
+    {
+      "id": "70f0c340-1de6-4603-872d-fcff6b725aa5",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "89a9db56-c08e-4bec-b360-af0aac5916dd",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1759433820000000,
+          "candle": {
+            "index": 48997,
+            "timestamp": 1759433820000,
+            "open": 61610.048,
+            "high": 61755.1304,
+            "low": 61610.048,
+            "close": 61741.5127
+          },
+          "price": 61741.5127,
+          "indicators": {
+            "bbUpper": 61663.76977421073,
+            "bbMiddle": 61530.92276499999,
+            "bbLower": 61398.07575578925,
+            "kcUpper": 61668.62490545329,
+            "kcMiddle": 61531.39928110248,
+            "kcLower": 61394.17365675167,
+            "squeezeOn": true,
+            "squeezeHistogram": -0.47651610249158693,
+            "rsi": 68.76474084027637
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (61741.51 > 61663.77) + RSI bullish (68.8 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1759433820000000,
+          "candle": {
+            "index": 48997,
+            "timestamp": 1759433820000,
+            "open": 61610.048,
+            "high": 61755.1304,
+            "low": 61610.048,
+            "close": 61741.5127
+          },
+          "price": 61741.5127,
+          "indicators": {
+            "bbUpper": 61663.76977421073,
+            "bbMiddle": 61530.92276499999,
+            "bbLower": 61398.07575578925,
+            "kcUpper": 61668.62490545329,
+            "kcMiddle": 61531.39928110248,
+            "kcLower": 61394.17365675167,
+            "squeezeOn": true,
+            "squeezeHistogram": -0.47651610249158693,
+            "rsi": 68.76474084027637
+          }
+        },
+        "requestedPrice": 61741.5127,
+        "executedPrice": 61741.5127,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 61988.4787508,
+        "slPrice": 61618.0296746,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1759434060000000,
+          "candle": {
+            "index": 49001,
+            "timestamp": 1759434060000,
+            "open": 61647.18,
+            "high": 61680.1833,
+            "low": 61565.201,
+            "close": 61565.201
+          },
+          "price": 61565.201,
+          "indicators": {
+            "bbUpper": 61743.79710680007,
+            "bbMiddle": 61561.16198500001,
+            "bbLower": 61378.52686319996,
+            "kcUpper": 61718.77493024808,
+            "kcMiddle": 61575.16471185029,
+            "kcLower": 61431.554493452495,
+            "squeezeOn": false,
+            "squeezeHistogram": -14.002726850274485,
+            "rsi": 50.79046260650551
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 61618.0296746,
+        "durationMs": 240000000
+      },
+      "result": {
+        "pnl": -3.999999999999907,
+        "pnlPct": -0.19999999999999538,
+        "outcome": "LOSS",
+        "maxFavorable": 1.9967635162914512,
+        "maxFavorablePct": 0.09983817581457256,
+        "maxAdverse": 5.711285399069867,
+        "maxAdversePct": 0.2855642699534934
+      }
+    },
+    {
+      "id": "6cd18b06-5464-4937-92a9-e3a29311fbb3",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "7cdee193-dc1b-445b-a566-3877ac13c72f",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1759674000000000,
+          "candle": {
+            "index": 53000,
+            "timestamp": 1759674000000,
+            "open": 65214.9049,
+            "high": 65348.6645,
+            "low": 65194.5403,
+            "close": 65348.6645
+          },
+          "price": 65348.6645,
+          "indicators": {
+            "bbUpper": 65299.30059862619,
+            "bbMiddle": 65148.71618500001,
+            "bbLower": 64998.13177137383,
+            "kcUpper": 65309.76977923348,
+            "kcMiddle": 65163.79291849378,
+            "kcLower": 65017.816057754084,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.076733493770007,
+            "rsi": 62.99441544242573
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (65348.66 > 65299.30) + RSI bullish (63.0 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1759674000000000,
+          "candle": {
+            "index": 53000,
+            "timestamp": 1759674000000,
+            "open": 65214.9049,
+            "high": 65348.6645,
+            "low": 65194.5403,
+            "close": 65348.6645
+          },
+          "price": 65348.6645,
+          "indicators": {
+            "bbUpper": 65299.30059862619,
+            "bbMiddle": 65148.71618500001,
+            "bbLower": 64998.13177137383,
+            "kcUpper": 65309.76977923348,
+            "kcMiddle": 65163.79291849378,
+            "kcLower": 65017.816057754084,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.076733493770007,
+            "rsi": 62.99441544242573
+          }
+        },
+        "requestedPrice": 65348.6645,
+        "executedPrice": 65348.6645,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 65610.059158,
+        "slPrice": 65217.967171,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1759674480000000,
+          "candle": {
+            "index": 53008,
+            "timestamp": 1759674480000,
+            "open": 65304.1314,
+            "high": 65315.067,
+            "low": 65203.5736,
+            "close": 65203.5736
+          },
+          "price": 65203.5736,
+          "indicators": {
+            "bbUpper": 65445.812238979765,
+            "bbMiddle": 65213.862584999995,
+            "bbLower": 64981.912931020226,
+            "kcUpper": 65379.29228795751,
+            "kcMiddle": 65242.67425008485,
+            "kcLower": 65106.056212212185,
+            "squeezeOn": false,
+            "squeezeHistogram": -28.811665084853303,
+            "rsi": 48.768118992201565
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 65217.967171,
+        "durationMs": 480000000
+      },
+      "result": {
+        "pnl": -4.000000000000072,
+        "pnlPct": -0.2000000000000036,
+        "outcome": "LOSS",
+        "maxFavorable": 2.1868296941249215,
+        "maxFavorablePct": 0.10934148470624608,
+        "maxAdverse": 4.44051614857395,
+        "maxAdversePct": 0.2220258074286975
+      }
+    },
+    {
+      "id": "3206f338-0afd-4ad3-bb12-a53e35883d90",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "516f3b17-7d2d-4dee-accd-4ce0b672cf23",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1760157840000000,
+          "candle": {
+            "index": 61064,
+            "timestamp": 1760157840000,
+            "open": 68940.6179,
+            "high": 69088.6388,
+            "low": 68905.1574,
+            "close": 69058.1877
+          },
+          "price": 69058.1877,
+          "indicators": {
+            "bbUpper": 69014.0453079484,
+            "bbMiddle": 68871.04945,
+            "bbLower": 68728.05359205161,
+            "kcUpper": 69040.24735243713,
+            "kcMiddle": 68885.45001486488,
+            "kcLower": 68730.65267729263,
+            "squeezeOn": false,
+            "squeezeHistogram": -14.400564864874468,
+            "rsi": 66.54328262376444
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (69058.19 > 69014.05) + RSI bullish (66.5 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1760157840000000,
+          "candle": {
+            "index": 61064,
+            "timestamp": 1760157840000,
+            "open": 68940.6179,
+            "high": 69088.6388,
+            "low": 68905.1574,
+            "close": 69058.1877
+          },
+          "price": 69058.1877,
+          "indicators": {
+            "bbUpper": 69014.0453079484,
+            "bbMiddle": 68871.04945,
+            "bbLower": 68728.05359205161,
+            "kcUpper": 69040.24735243713,
+            "kcMiddle": 68885.45001486488,
+            "kcLower": 68730.65267729263,
+            "squeezeOn": false,
+            "squeezeHistogram": -14.400564864874468,
+            "rsi": 66.54328262376444
+          }
+        },
+        "requestedPrice": 69058.1877,
+        "executedPrice": 69058.1877,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 69334.4204508,
+        "slPrice": 68920.0713246,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1760158380000000,
+          "candle": {
+            "index": 61073,
+            "timestamp": 1760158380000,
+            "open": 68950.4728,
+            "high": 68956.7531,
+            "low": 68871.1623,
+            "close": 68871.1623
+          },
+          "price": 68871.1623,
+          "indicators": {
+            "bbUpper": 69246.95120136645,
+            "bbMiddle": 68990.703,
+            "bbLower": 68734.45479863354,
+            "kcUpper": 69150.39011974774,
+            "kcMiddle": 68998.02241204023,
+            "kcLower": 68845.65470433272,
+            "squeezeOn": false,
+            "squeezeHistogram": -7.319412040233146,
+            "rsi": 43.33235840965074
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 68920.0713246,
+        "durationMs": 540000000
+      },
+      "result": {
+        "pnl": -4.000000000000024,
+        "pnlPct": -0.20000000000000123,
+        "outcome": "LOSS",
+        "maxFavorable": 5.1653918511388754,
+        "maxFavorablePct": 0.25826959255694376,
+        "maxAdverse": 5.416458387598221,
+        "maxAdversePct": 0.27082291937991104
+      }
+    },
+    {
+      "id": "eeaff3b0-9f32-4ab0-b2f2-8ecbed1963a5",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "ceadbcfb-d966-42f2-bb5f-816279c30c1a",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1760713260000000,
+          "candle": {
+            "index": 70321,
+            "timestamp": 1760713260000,
+            "open": 56706.3709,
+            "high": 56757.2742,
+            "low": 56675.6561,
+            "close": 56757.2742
+          },
+          "price": 56757.2742,
+          "indicators": {
+            "bbUpper": 56748.86578841826,
+            "bbMiddle": 56650.262290000006,
+            "bbLower": 56551.65879158175,
+            "kcUpper": 56758.311477402414,
+            "kcMiddle": 56647.62168517577,
+            "kcLower": 56536.93189294913,
+            "squeezeOn": true,
+            "squeezeHistogram": 2.640604824235197,
+            "rsi": 62.974651881776815
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (56757.27 > 56748.87) + RSI bullish (63.0 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1760713260000000,
+          "candle": {
+            "index": 70321,
+            "timestamp": 1760713260000,
+            "open": 56706.3709,
+            "high": 56757.2742,
+            "low": 56675.6561,
+            "close": 56757.2742
+          },
+          "price": 56757.2742,
+          "indicators": {
+            "bbUpper": 56748.86578841826,
+            "bbMiddle": 56650.262290000006,
+            "bbLower": 56551.65879158175,
+            "kcUpper": 56758.311477402414,
+            "kcMiddle": 56647.62168517577,
+            "kcLower": 56536.93189294913,
+            "squeezeOn": true,
+            "squeezeHistogram": 2.640604824235197,
+            "rsi": 62.974651881776815
+          }
+        },
+        "requestedPrice": 56757.2742,
+        "executedPrice": 56757.2742,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 56984.3032968,
+        "slPrice": 56643.7596516,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1760713320000000,
+          "candle": {
+            "index": 70322,
+            "timestamp": 1760713320000,
+            "open": 56761.6264,
+            "high": 56761.6264,
+            "low": 56594.6488,
+            "close": 56604.6275
+          },
+          "price": 56604.6275,
+          "indicators": {
+            "bbUpper": 56748.68236734764,
+            "bbMiddle": 56650.457785,
+            "bbLower": 56552.23320265236,
+            "kcUpper": 56767.52885098314,
+            "kcMiddle": 56643.52700087331,
+            "kcLower": 56519.52515076349,
+            "squeezeOn": true,
+            "squeezeHistogram": 6.930784126685467,
+            "rsi": 48.61988034381146
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 56643.7596516,
+        "durationMs": 60000000
+      },
+      "result": {
+        "pnl": -4.000000000000079,
+        "pnlPct": -0.20000000000000395,
+        "outcome": "LOSS",
+        "maxFavorable": 0.15336183991729382,
+        "maxFavorablePct": 0.007668091995864692,
+        "maxAdverse": 5.730557088662907,
+        "maxAdversePct": 0.2865278544331454
+      }
+    },
+    {
+      "id": "5216c420-ebef-4d8c-af01-b25e4a1f7e45",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "11d34255-0d35-48e6-bc6d-cd460d0bb26e",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1760786640000000,
+          "candle": {
+            "index": 71544,
+            "timestamp": 1760786640000,
+            "open": 57114.1055,
+            "high": 57125.7579,
+            "low": 57053.0414,
+            "close": 57058.1028
+          },
+          "price": 57058.1028,
+          "indicators": {
+            "bbUpper": 57440.34750577705,
+            "bbMiddle": 57267.33988,
+            "bbLower": 57094.33225422295,
+            "kcUpper": 57365.9564385176,
+            "kcMiddle": 57245.330630277305,
+            "kcLower": 57124.70482203701,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.00924972269422,
+            "rsi": 29.701533752081858
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (57058.10 < 57094.33) + RSI bearish (29.7 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1760786640000000,
+          "candle": {
+            "index": 71544,
+            "timestamp": 1760786640000,
+            "open": 57114.1055,
+            "high": 57125.7579,
+            "low": 57053.0414,
+            "close": 57058.1028
+          },
+          "price": 57058.1028,
+          "indicators": {
+            "bbUpper": 57440.34750577705,
+            "bbMiddle": 57267.33988,
+            "bbLower": 57094.33225422295,
+            "kcUpper": 57365.9564385176,
+            "kcMiddle": 57245.330630277305,
+            "kcLower": 57124.70482203701,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.00924972269422,
+            "rsi": 29.701533752081858
+          }
+        },
+        "requestedPrice": 57058.1028,
+        "executedPrice": 57058.1028,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 56829.8703888,
+        "slPrice": 57172.2190056,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1760786700000000,
+          "candle": {
+            "index": 71545,
+            "timestamp": 1760786700000,
+            "open": 57062.2766,
+            "high": 57209.7382,
+            "low": 57049.2559,
+            "close": 57195.2823
+          },
+          "price": 57195.2823,
+          "indicators": {
+            "bbUpper": 57440.77282449997,
+            "bbMiddle": 57265.688485000006,
+            "bbLower": 57090.604145500045,
+            "kcUpper": 57372.627801515926,
+            "kcMiddle": 57240.56412263185,
+            "kcLower": 57108.50044374777,
+            "squeezeOn": false,
+            "squeezeHistogram": 25.124362368158472,
+            "rsi": 44.63153670414439
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 57172.2190056,
+        "durationMs": 60000000
+      },
+      "result": {
+        "pnl": -4.000000000000107,
+        "pnlPct": -0.20000000000000528,
+        "outcome": "LOSS",
+        "maxFavorable": 0.3101014427701616,
+        "maxFavorablePct": 0.01550507213850808,
+        "maxAdverse": 5.315122394851138,
+        "maxAdversePct": 0.2657561197425569
+      }
+    },
+    {
+      "id": "5fefb87b-d9f9-44c6-969c-509564ddbd2f",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "b6c25042-0b1c-4baf-b291-7adfaa4142d1",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1760894640000000,
+          "candle": {
+            "index": 73344,
+            "timestamp": 1760894640000,
+            "open": 55252.0827,
+            "high": 55256.5201,
+            "low": 55133.8764,
+            "close": 55145.2304
+          },
+          "price": 55145.2304,
+          "indicators": {
+            "bbUpper": 55378.65589978353,
+            "bbMiddle": 55269.48478,
+            "bbLower": 55160.31366021647,
+            "kcUpper": 55377.32001657425,
+            "kcMiddle": 55250.75818862781,
+            "kcLower": 55124.19636068137,
+            "squeezeOn": false,
+            "squeezeHistogram": 18.726591372185794,
+            "rsi": 42.94691739462972
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (55145.23 < 55160.31) + RSI bearish (42.9 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1760894640000000,
+          "candle": {
+            "index": 73344,
+            "timestamp": 1760894640000,
+            "open": 55252.0827,
+            "high": 55256.5201,
+            "low": 55133.8764,
+            "close": 55145.2304
+          },
+          "price": 55145.2304,
+          "indicators": {
+            "bbUpper": 55378.65589978353,
+            "bbMiddle": 55269.48478,
+            "bbLower": 55160.31366021647,
+            "kcUpper": 55377.32001657425,
+            "kcMiddle": 55250.75818862781,
+            "kcLower": 55124.19636068137,
+            "squeezeOn": false,
+            "squeezeHistogram": 18.726591372185794,
+            "rsi": 42.94691739462972
+          }
+        },
+        "requestedPrice": 55145.2304,
+        "executedPrice": 55145.2304,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 54924.6494784,
+        "slPrice": 55255.5208608,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1760894760000000,
+          "candle": {
+            "index": 73346,
+            "timestamp": 1760894760000,
+            "open": 55139.2796,
+            "high": 55286.3636,
+            "low": 55139.2796,
+            "close": 55259.7451
+          },
+          "price": 55259.7451,
+          "indicators": {
+            "bbUpper": 55384.67418914116,
+            "bbMiddle": 55264.60599499999,
+            "bbLower": 55144.53780085882,
+            "kcUpper": 55374.58694622065,
+            "kcMiddle": 55243.28856166585,
+            "kcLower": 55111.99017711106,
+            "squeezeOn": false,
+            "squeezeHistogram": 21.317433334137604,
+            "rsi": 51.877673369938634
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 55255.5208608,
+        "durationMs": 120000000
+      },
+      "result": {
+        "pnl": -4.000000000000094,
+        "pnlPct": -0.20000000000000473,
+        "outcome": "LOSS",
+        "maxFavorable": 1.3238425058787382,
+        "maxFavorablePct": 0.06619212529393691,
+        "maxAdverse": 5.1186004293127985,
+        "maxAdversePct": 0.2559300214656399
+      }
+    },
+    {
+      "id": "2e26949d-cf4e-4b15-aea0-001900fa8199",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "00cec8d7-b181-4a59-8389-0f08f63e8d00",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761022200000000,
+          "candle": {
+            "index": 75470,
+            "timestamp": 1761022200000,
+            "open": 57263.9109,
+            "high": 57264.6697,
+            "low": 57174.58,
+            "close": 57194.3696
+          },
+          "price": 57194.3696,
+          "indicators": {
+            "bbUpper": 57614.9218643655,
+            "bbMiddle": 57444.179675,
+            "bbLower": 57273.4374856345,
+            "kcUpper": 57565.21624469314,
+            "kcMiddle": 57431.525049387725,
+            "kcLower": 57297.83385408231,
+            "squeezeOn": false,
+            "squeezeHistogram": 12.654625612274685,
+            "rsi": 28.864230343381337
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (57194.37 < 57273.44) + RSI bearish (28.9 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761022200000000,
+          "candle": {
+            "index": 75470,
+            "timestamp": 1761022200000,
+            "open": 57263.9109,
+            "high": 57264.6697,
+            "low": 57174.58,
+            "close": 57194.3696
+          },
+          "price": 57194.3696,
+          "indicators": {
+            "bbUpper": 57614.9218643655,
+            "bbMiddle": 57444.179675,
+            "bbLower": 57273.4374856345,
+            "kcUpper": 57565.21624469314,
+            "kcMiddle": 57431.525049387725,
+            "kcLower": 57297.83385408231,
+            "squeezeOn": false,
+            "squeezeHistogram": 12.654625612274685,
+            "rsi": 28.864230343381337
+          }
+        },
+        "requestedPrice": 57194.3696,
+        "executedPrice": 57194.3696,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 56965.5921216,
+        "slPrice": 57308.7583392,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761023640000000,
+          "candle": {
+            "index": 75494,
+            "timestamp": 1761023640000,
+            "open": 57267.958,
+            "high": 57316.2159,
+            "low": 57254.9587,
+            "close": 57292.1025
+          },
+          "price": 57292.1025,
+          "indicators": {
+            "bbUpper": 57325.01564677325,
+            "bbMiddle": 57187.39575000001,
+            "bbLower": 57049.77585322677,
+            "kcUpper": 57331.80013803379,
+            "kcMiddle": 57222.87284574221,
+            "kcLower": 57113.945553450634,
+            "squeezeOn": false,
+            "squeezeHistogram": -35.47709574220062,
+            "rsi": 55.302296603426676
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 57308.7583392,
+        "durationMs": 1440000000
+      },
+      "result": {
+        "pnl": -4.000000000000116,
+        "pnlPct": -0.2000000000000058,
+        "outcome": "LOSS",
+        "maxFavorable": 6.946166253399917,
+        "maxFavorablePct": 0.34730831266999584,
+        "maxAdverse": 4.260779543586566,
+        "maxAdversePct": 0.21303897717932832
+      }
+    },
+    {
+      "id": "47ddc4fd-6900-46b1-bd0a-ddc72c4c5793",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "576cfc70-3704-4c82-bd7a-6fbe133a6c3e",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762472220000000,
+          "candle": {
+            "index": 99637,
+            "timestamp": 1762472220000,
+            "open": 44874.4625,
+            "high": 44944.5086,
+            "low": 44859.2397,
+            "close": 44926.0304
+          },
+          "price": 44926.0304,
+          "indicators": {
+            "bbUpper": 44901.031412500044,
+            "bbMiddle": 44832.841775,
+            "bbLower": 44764.65213749996,
+            "kcUpper": 44929.70375633444,
+            "kcMiddle": 44828.777162458595,
+            "kcLower": 44727.85056858275,
+            "squeezeOn": true,
+            "squeezeHistogram": 4.06461254140595,
+            "rsi": 61.69579408904991
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (44926.03 > 44901.03) + RSI bullish (61.7 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762472220000000,
+          "candle": {
+            "index": 99637,
+            "timestamp": 1762472220000,
+            "open": 44874.4625,
+            "high": 44944.5086,
+            "low": 44859.2397,
+            "close": 44926.0304
+          },
+          "price": 44926.0304,
+          "indicators": {
+            "bbUpper": 44901.031412500044,
+            "bbMiddle": 44832.841775,
+            "bbLower": 44764.65213749996,
+            "kcUpper": 44929.70375633444,
+            "kcMiddle": 44828.777162458595,
+            "kcLower": 44727.85056858275,
+            "squeezeOn": true,
+            "squeezeHistogram": 4.06461254140595,
+            "rsi": 61.69579408904991
+          }
+        },
+        "requestedPrice": 44926.0304,
+        "executedPrice": 44926.0304,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 45105.7345216,
+        "slPrice": 44836.1783392,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762472400000000,
+          "candle": {
+            "index": 99640,
+            "timestamp": 1762472400000,
+            "open": 44888.5099,
+            "high": 44893.853,
+            "low": 44830.1943,
+            "close": 44862.7983
+          },
+          "price": 44862.7983,
+          "indicators": {
+            "bbUpper": 44911.39248570436,
+            "bbMiddle": 44836.301745,
+            "bbLower": 44761.211004295634,
+            "kcUpper": 44938.25765538257,
+            "kcMiddle": 44841.64950883312,
+            "kcLower": 44745.04136228367,
+            "squeezeOn": true,
+            "squeezeHistogram": -5.347763833124191,
+            "rsi": 53.624500337195656
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 44836.1783392,
+        "durationMs": 180000000
+      },
+      "result": {
+        "pnl": -4.000000000000157,
+        "pnlPct": -0.20000000000000787,
+        "outcome": "LOSS",
+        "maxFavorable": 0.7541195983342478,
+        "maxFavorablePct": 0.037705979916712394,
+        "maxAdverse": 4.266395189903109,
+        "maxAdversePct": 0.2133197594951555
+      }
+    },
+    {
+      "id": "7ff6b11b-b8c7-415e-b8ad-26f87edd29cd",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "026a6022-4d75-4010-be4c-2af879647579",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762654080000000,
+          "candle": {
+            "index": 102668,
+            "timestamp": 1762654080000,
+            "open": 42823.2348,
+            "high": 42888.6102,
+            "low": 42812.7712,
+            "close": 42878.005
+          },
+          "price": 42878.005,
+          "indicators": {
+            "bbUpper": 42859.260447619585,
+            "bbMiddle": 42770.675650000005,
+            "bbLower": 42682.090852380425,
+            "kcUpper": 42871.39736416478,
+            "kcMiddle": 42774.913199938186,
+            "kcLower": 42678.42903571159,
+            "squeezeOn": true,
+            "squeezeHistogram": -4.237549938181473,
+            "rsi": 61.567919453765356
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (42878.00 > 42859.26) + RSI bullish (61.6 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762654080000000,
+          "candle": {
+            "index": 102668,
+            "timestamp": 1762654080000,
+            "open": 42823.2348,
+            "high": 42888.6102,
+            "low": 42812.7712,
+            "close": 42878.005
+          },
+          "price": 42878.005,
+          "indicators": {
+            "bbUpper": 42859.260447619585,
+            "bbMiddle": 42770.675650000005,
+            "bbLower": 42682.090852380425,
+            "kcUpper": 42871.39736416478,
+            "kcMiddle": 42774.913199938186,
+            "kcLower": 42678.42903571159,
+            "squeezeOn": true,
+            "squeezeHistogram": -4.237549938181473,
+            "rsi": 61.567919453765356
+          }
+        },
+        "requestedPrice": 42878.005,
+        "executedPrice": 42878.005,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43049.51702,
+        "slPrice": 42792.24899,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762654560000000,
+          "candle": {
+            "index": 102676,
+            "timestamp": 1762654560000,
+            "open": 42799.5583,
+            "high": 42814.8315,
+            "low": 42781.2965,
+            "close": 42814.8315
+          },
+          "price": 42814.8315,
+          "indicators": {
+            "bbUpper": 42923.09132648702,
+            "bbMiddle": 42809.09504,
+            "bbLower": 42695.09875351298,
+            "kcUpper": 42891.60501162178,
+            "kcMiddle": 42814.09435999623,
+            "kcLower": 42736.58370837067,
+            "squeezeOn": false,
+            "squeezeHistogram": -4.999319996226404,
+            "rsi": 52.16175491487358
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 42792.24899,
+        "durationMs": 480000000
+      },
+      "result": {
+        "pnl": -3.9999999999998757,
+        "pnlPct": -0.1999999999999938,
+        "outcome": "LOSS",
+        "maxFavorable": 3.2459532573870353,
+        "maxFavorablePct": 0.16229766286935177,
+        "maxAdverse": 4.510867518206626,
+        "maxAdversePct": 0.2255433759103313
+      }
+    },
+    {
+      "id": "a0010465-79b0-4a8d-99b1-d770c4ae4229",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "97f8470c-1091-4b7f-aaaa-68dcb9e696b1",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763156280000000,
+          "candle": {
+            "index": 111038,
+            "timestamp": 1763156280000,
+            "open": 43546.147,
+            "high": 43546.147,
+            "low": 43434.488,
+            "close": 43440.9338
+          },
+          "price": 43440.9338,
+          "indicators": {
+            "bbUpper": 43636.32795777622,
+            "bbMiddle": 43543.314275,
+            "bbLower": 43450.30059222377,
+            "kcUpper": 43632.90310625952,
+            "kcMiddle": 43536.21503676277,
+            "kcLower": 43439.52696726602,
+            "squeezeOn": false,
+            "squeezeHistogram": 7.099238237227837,
+            "rsi": 40.58126238617429
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (43440.93 < 43450.30) + RSI bearish (40.6 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763156280000000,
+          "candle": {
+            "index": 111038,
+            "timestamp": 1763156280000,
+            "open": 43546.147,
+            "high": 43546.147,
+            "low": 43434.488,
+            "close": 43440.9338
+          },
+          "price": 43440.9338,
+          "indicators": {
+            "bbUpper": 43636.32795777622,
+            "bbMiddle": 43543.314275,
+            "bbLower": 43450.30059222377,
+            "kcUpper": 43632.90310625952,
+            "kcMiddle": 43536.21503676277,
+            "kcLower": 43439.52696726602,
+            "squeezeOn": false,
+            "squeezeHistogram": 7.099238237227837,
+            "rsi": 40.58126238617429
+          }
+        },
+        "requestedPrice": 43440.9338,
+        "executedPrice": 43440.9338,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43267.1700648,
+        "slPrice": 43527.8156676,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763156520000000,
+          "candle": {
+            "index": 111042,
+            "timestamp": 1763156520000,
+            "open": 43502.7844,
+            "high": 43561.8675,
+            "low": 43502.7844,
+            "close": 43541.0059
+          },
+          "price": 43541.0059,
+          "indicators": {
+            "bbUpper": 43620.71423746354,
+            "bbMiddle": 43524.285735,
+            "bbLower": 43427.85723253646,
+            "kcUpper": 43613.03189917599,
+            "kcMiddle": 43521.434041926776,
+            "kcLower": 43429.83618467756,
+            "squeezeOn": false,
+            "squeezeHistogram": 2.8516930732221226,
+            "rsi": 51.52292843623451
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 43527.8156676,
+        "durationMs": 240000000
+      },
+      "result": {
+        "pnl": -4.000000000000045,
+        "pnlPct": -0.20000000000000226,
+        "outcome": "LOSS",
+        "maxFavorable": 1.8896693238208584,
+        "maxFavorablePct": 0.0944834661910429,
+        "maxAdverse": 5.567730222226549,
+        "maxAdversePct": 0.2783865111113275
+      }
+    },
+    {
+      "id": "cf72767d-f005-4e98-bf11-e7f343f70d55",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "70e6364d-0085-4c60-9737-e8e388c032ff",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763409840000000,
+          "candle": {
+            "index": 115264,
+            "timestamp": 1763409840000,
+            "open": 42563.1583,
+            "high": 42563.1583,
+            "low": 42461.5212,
+            "close": 42468.6045
+          },
+          "price": 42468.6045,
+          "indicators": {
+            "bbUpper": 42797.14772149555,
+            "bbMiddle": 42668.459814999995,
+            "bbLower": 42539.77190850444,
+            "kcUpper": 42748.480942762646,
+            "kcMiddle": 42657.47470484832,
+            "kcLower": 42566.46846693399,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.985110151676054,
+            "rsi": 29.032537928260325
+          }
+        },
+        "direction": "PUT",
+        "confidence": 85,
+        "reason": "Breakout below BB (42468.60 < 42539.77) + RSI bearish (29.0 < 45)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763409840000000,
+          "candle": {
+            "index": 115264,
+            "timestamp": 1763409840000,
+            "open": 42563.1583,
+            "high": 42563.1583,
+            "low": 42461.5212,
+            "close": 42468.6045
+          },
+          "price": 42468.6045,
+          "indicators": {
+            "bbUpper": 42797.14772149555,
+            "bbMiddle": 42668.459814999995,
+            "bbLower": 42539.77190850444,
+            "kcUpper": 42748.480942762646,
+            "kcMiddle": 42657.47470484832,
+            "kcLower": 42566.46846693399,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.985110151676054,
+            "rsi": 29.032537928260325
+          }
+        },
+        "requestedPrice": 42468.6045,
+        "executedPrice": 42468.6045,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42298.730082,
+        "slPrice": 42553.541709000005,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763410500000000,
+          "candle": {
+            "index": 115275,
+            "timestamp": 1763410500000,
+            "open": 42536.538,
+            "high": 42574.4898,
+            "low": 42510.5082,
+            "close": 42555.5094
+          },
+          "price": 42555.5094,
+          "indicators": {
+            "bbUpper": 42757.94167314204,
+            "bbMiddle": 42539.63449499999,
+            "bbLower": 42321.32731685794,
+            "kcUpper": 42621.434988300956,
+            "kcMiddle": 42531.95408633671,
+            "kcLower": 42442.47318437246,
+            "squeezeOn": false,
+            "squeezeHistogram": 7.6804086632837425,
+            "rsi": 49.288174369624116
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 42553.541709000005,
+        "durationMs": 660000000
+      },
+      "result": {
+        "pnl": -4.000000000000157,
+        "pnlPct": -0.2000000000000079,
+        "outcome": "LOSS",
+        "maxFavorable": 5.819305882772691,
+        "maxFavorablePct": 0.29096529413863453,
+        "maxAdverse": 4.986521278324638,
+        "maxAdversePct": 0.24932606391623188
+      }
+    },
+    {
+      "id": "49be1f4b-5e8d-4c38-9e70-516b71861959",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "b19c54b0-fa88-4851-bfd3-f9112a18ca3c",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1764071040000000,
+          "candle": {
+            "index": 126284,
+            "timestamp": 1764071040000,
+            "open": 37506.5333,
+            "high": 37552.684,
+            "low": 37491.893,
+            "close": 37548.5074
+          },
+          "price": 37548.5074,
+          "indicators": {
+            "bbUpper": 37527.30392992047,
+            "bbMiddle": 37449.03877,
+            "bbLower": 37370.77361007953,
+            "kcUpper": 37552.3603118107,
+            "kcMiddle": 37464.12092658565,
+            "kcLower": 37375.881541360606,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.082156585653138,
+            "rsi": 58.893628119269565
+          }
+        },
+        "direction": "CALL",
+        "confidence": 85,
+        "reason": "Breakout above BB (37548.51 > 37527.30) + RSI bullish (58.9 > 55)",
+        "strategyName": "BB-Squeeze",
+        "strategyVersion": "2.1.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1764071040000000,
+          "candle": {
+            "index": 126284,
+            "timestamp": 1764071040000,
+            "open": 37506.5333,
+            "high": 37552.684,
+            "low": 37491.893,
+            "close": 37548.5074
+          },
+          "price": 37548.5074,
+          "indicators": {
+            "bbUpper": 37527.30392992047,
+            "bbMiddle": 37449.03877,
+            "bbLower": 37370.77361007953,
+            "kcUpper": 37552.3603118107,
+            "kcMiddle": 37464.12092658565,
+            "kcLower": 37375.881541360606,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.082156585653138,
+            "rsi": 58.893628119269565
+          }
+        },
+        "requestedPrice": 37548.5074,
+        "executedPrice": 37548.5074,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 37698.701429600005,
+        "slPrice": 37473.410385200004,
+        "tpPct": 0.004,
+        "slPct": 0.002
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1764071280000000,
+          "candle": {
+            "index": 126288,
+            "timestamp": 1764071280000,
+            "open": 37553.1108,
+            "high": 37553.1108,
+            "low": 37464.6828,
+            "close": 37494.3707
+          },
+          "price": 37494.3707,
+          "indicators": {
+            "bbUpper": 37564.2980346326,
+            "bbMiddle": 37462.255495000005,
+            "bbLower": 37360.21295536741,
+            "kcUpper": 37577.381974548574,
+            "kcMiddle": 37483.97837968526,
+            "kcLower": 37390.57478482194,
+            "squeezeOn": false,
+            "squeezeHistogram": -21.72288468525221,
+            "rsi": 51.13380589094384
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 37473.410385200004,
+        "durationMs": 240000000
+      },
+      "result": {
+        "pnl": -3.9999999999998854,
+        "pnlPct": -0.1999999999999943,
+        "outcome": "LOSS",
+        "maxFavorable": 0.6217717192132608,
+        "maxFavorablePct": 0.03108858596066304,
+        "maxAdverse": 4.464869887211544,
+        "maxAdversePct": 0.22324349436057722
+      }
+    }
+  ]
+}

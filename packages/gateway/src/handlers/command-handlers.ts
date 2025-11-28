@@ -290,27 +290,30 @@ export async function handleBalanceCommand(
 /**
  * Handle 'portfolio' command
  * Get all open positions (with caching to avoid rate limits)
+ *
+ * For Multiplier (CFD) positions: Uses open trades from DB + proposal_open_contract API
+ * For Binary positions: Uses standard portfolio API
  */
 export async function handlePortfolioCommand(
   ws: WebSocket,
   command: CommandMessage,
   context: CommandHandlerContext
 ): Promise<void> {
-  const { derivClient, gatewayServer } = context;
+  const { derivClient, gatewayServer, stateManager } = context;
   const { account } = (command.params || {}) as { account?: string };
   const accountKey = account || 'current';
 
   // Check cache first
   const cached = portfolioCache.get(accountKey);
   const now = Date.now();
-  
+
   if (cached && (now - cached.timestamp) < PORTFOLIO_CACHE_TTL) {
     // Return cached data
     console.log(`[handlePortfolioCommand] Returning cached portfolio for ${accountKey} (age: ${now - cached.timestamp}ms)`);
     gatewayServer.respondToCommand(ws, command.requestId!, true, {
       positions: cached.positions,
       count: cached.positions.length,
-      totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + pos.profit, 0),
+      totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + (pos.profit || 0), 0),
       cached: true,
     });
     return;
@@ -319,20 +322,59 @@ export async function handlePortfolioCommand(
   console.log(`[handlePortfolioCommand] Getting portfolio${account ? ` for account ${account}` : ''}...`);
 
   try {
-    const positions = await derivClient.getPortfolio(account);
+    // Get standard portfolio (Binary options)
+    const binaryPositions = await derivClient.getPortfolio(account);
+    console.log(`[handlePortfolioCommand] Found ${binaryPositions.length} binary position(s)`);
 
-    console.log(`[handlePortfolioCommand] Found ${positions.length} open position(s)`);
+    // Get open trades from DB (for Multiplier/CFD positions)
+    const openTrades = await stateManager.getOpenTrades();
+    const multiplierTrades = openTrades.filter(t => t.tradeMode === 'cfd');
+    console.log(`[handlePortfolioCommand] Found ${multiplierTrades.length} open CFD trade(s) in DB`);
+
+    let multiplierPositions: any[] = [];
+
+    // If we have open Multiplier trades, get live P/L from Deriv API
+    if (multiplierTrades.length > 0) {
+      const contractIds = multiplierTrades.map(t => t.contractId);
+      console.log(`[handlePortfolioCommand] Querying live P/L for contracts: ${contractIds.join(', ')}`);
+
+      try {
+        multiplierPositions = await derivClient.getMultiplierPositions(contractIds);
+        console.log(`[handlePortfolioCommand] Got live data for ${multiplierPositions.length} Multiplier position(s)`);
+      } catch (err) {
+        console.warn(`[handlePortfolioCommand] Failed to get Multiplier positions:`, err);
+        // Fall back to DB data without live P/L
+        multiplierPositions = multiplierTrades.map(t => ({
+          contractId: t.contractId,
+          symbol: t.asset,
+          contractType: t.type,
+          buyPrice: t.stake,
+          currentPrice: t.entryPrice,
+          profit: 0, // Unknown without API
+          profitPercentage: 0,
+          purchaseTime: t.openedAt,
+          status: 'open' as const,
+          isSold: false,
+          multiplier: t.multiplier,
+          direction: t.type === 'MULTUP' ? 'CALL' : 'PUT',
+        }));
+      }
+    }
+
+    // Combine all positions
+    const allPositions = [...binaryPositions, ...multiplierPositions];
+    console.log(`[handlePortfolioCommand] Total positions: ${allPositions.length}`);
 
     // Update cache
     portfolioCache.set(accountKey, {
-      positions,
+      positions: allPositions,
       timestamp: now,
     });
 
     gatewayServer.respondToCommand(ws, command.requestId!, true, {
-      positions,
-      count: positions.length,
-      totalProfit: positions.reduce((sum, pos) => sum + pos.profit, 0),
+      positions: allPositions,
+      count: allPositions.length,
+      totalProfit: allPositions.reduce((sum, pos) => sum + (pos.profit || 0), 0),
       cached: false,
     });
 
@@ -347,7 +389,7 @@ export async function handlePortfolioCommand(
       gatewayServer.respondToCommand(ws, command.requestId!, true, {
         positions: cached.positions,
         count: cached.positions.length,
-        totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + pos.profit, 0),
+        totalProfit: cached.positions.reduce((sum: number, pos: any) => sum + (pos.profit || 0), 0),
         cached: true,
         stale: true,
         cacheAge,

@@ -266,6 +266,19 @@ export class StateManager extends EventEmitter {
   }
 
   /**
+   * Get open trades (not closed yet)
+   * Returns trades where closedAt is null
+   */
+  async getOpenTrades(): Promise<Trade[]> {
+    return this.prisma.trade.findMany({
+      where: {
+        closedAt: null,
+      },
+      orderBy: { openedAt: 'desc' },
+    });
+  }
+
+  /**
    * Ensure daily stats record exists for a date
    */
   private async ensureDailyStats(date: string): Promise<void> {

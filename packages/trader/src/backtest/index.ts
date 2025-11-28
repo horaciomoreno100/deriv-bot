@@ -83,6 +83,12 @@ export {
 export {
   BBSqueezeBacktestStrategy,
   createBBSqueezeStrategy,
+  BBSqueezeMRBacktestStrategy,
+  createBBSqueezeMRStrategy,
+  KeltnerMRBacktestStrategy,
+  createKeltnerMRStrategy,
+  HybridMTFBacktestStrategy,
+  createHybridMTFStrategy,
 } from './strategies/index.js';
 
 // Legacy exports for backward compatibility

@@ -55,6 +55,7 @@ async function main() {
       highColumn: 'high',
       lowColumn: 'low',
       closeColumn: 'close',
+      timestampFormat: 'unix_ms', // CSV has timestamps in milliseconds
     });
   } catch (error) {
     console.error(`❌ Failed to load CSV: ${error}`);
