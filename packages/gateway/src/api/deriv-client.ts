@@ -694,9 +694,10 @@ export class DerivClient {
           }
 
           // Round to 2 decimal places, ensure positive, and cap at stake amount
+          // Deriv requires minimum SL of ~3.50 USD depending on symbol, using 5.00 as safe minimum
           parameters.limit_order.stop_loss = Math.min(
             formattedAmount,
-            Math.max(1.96, Math.round(dollarLoss * 100) / 100)
+            Math.max(5.00, Math.round(dollarLoss * 100) / 100)
           );
           console.log(`[DerivClient] SL: ${slPriceLevel} (price) → $${parameters.limit_order.stop_loss} (loss)`);
         }

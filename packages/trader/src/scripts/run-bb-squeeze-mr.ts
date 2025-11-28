@@ -591,7 +591,6 @@ async function main() {
 
         console.log(`   ✅ Trade updated (${result})`);
         console.log(`   P&L: $${profit.toFixed(2)}`);
-        console.log(`   Balance: $${balance.toFixed(2)}`);
 
         // Show updated stats
         const winRate = totalTrades > 0 ? (wonTrades / totalTrades) * 100 : 0;
