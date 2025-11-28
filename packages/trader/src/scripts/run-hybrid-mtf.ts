@@ -1,13 +1,22 @@
 /**
- * Hybrid Multi-Timeframe Strategy - Live Trading
+ * Hybrid Multi-Timeframe Strategy v2.0.0 - Live Trading
  *
  * Strategy: Combines Momentum and Mean Reversion based on multi-timeframe regime detection
  * - 15m Context: Determines macro regime (BULLISH_TREND / BEARISH_TREND / RANGE)
  * - 5m Filter: RSI extremes filter (avoid buying tops/selling bottoms)
  * - 1m Execution: BB + RSI signals for precise entry
  *
+ * v2.0.0 IMPROVEMENTS:
+ * - Fixed Momentum logic: Enter on pullbacks (buy dips/sell rallies), not extensions
+ * - RSI thresholds: 70/30 instead of 55/45
+ * - TP/SL ratio: 1.6:1 (0.8%/0.5%) instead of 1:1
+ * - ADX period: 10 instead of 14 (faster regime detection)
+ * - BB width filter: 0.3% min to avoid low volatility
+ *
  * Optimized for: R_100 (Volatility 100 Index)
- * Backtest Results (90 days): +$3,741.81 (50.8% WR, 1.03 PF)
+ * Backtest Results (90 days R_100):
+ * - v2.0.0: +$5,887 (45.0% WR, 1.15 PF, 17.6% DD, 797 trades)
+ * - v1.x:   +$2,437 (50.4% WR, 1.02 PF, 26.2% DD, 2698 trades)
  *
  * Usage:
  *   SYMBOL="R_100" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:hybrid-mtf
@@ -179,8 +188,8 @@ async function main() {
       mode: TRADE_MODE,
       strategyName: STRATEGY_NAME,
       binaryDuration: 1,
-      cfdTakeProfitPct: 0.005,  // 0.5% TP (from backtest)
-      cfdStopLossPct: 0.005,    // 0.5% SL (1:1 ratio)
+      cfdTakeProfitPct: 0.008,  // 0.8% TP (v2.0.0)
+      cfdStopLossPct: 0.005,    // 0.5% SL (1.6:1 ratio)
       accountLoginid: ACCOUNT_LOGINID,
       multiplierMap: {
         // Volatility indices
@@ -238,7 +247,7 @@ async function main() {
     }
   }, 30000);
 
-  // Initialize strategy
+  // Initialize strategy (uses DEFAULT_PARAMS from strategy class - v2.0.0)
   const strategy = new HybridMTFStrategy({
     name: STRATEGY_NAME.toLowerCase(),
     enabled: true,
@@ -248,51 +257,36 @@ async function main() {
     amountType: 'fixed',
     cooldownSeconds: 60,
     minConfidence: 0.7,
-    parameters: {
-      // Parameters from backtest (optimized for R_100)
-      ctxAdxPeriod: 14,
-      ctxAdxThreshold: 25,
-      ctxSmaPeriod: 50,
-      ctxSlopeThreshold: 0.0002,
-      midRsiPeriod: 14,
-      midRsiOverbought: 80,
-      midRsiOversold: 20,
-      bbPeriod: 20,
-      bbStdDev: 2,
-      rsiPeriod: 14,
-      rsiOverbought: 55,
-      rsiOversold: 45,
-      takeProfitPct: 0.005,
-      stopLossPct: 0.005,
-      cooldownSeconds: 60,
-      minCandles: 100,
-      confirmationCandles: 1,
-    },
+    // Uses DEFAULT_PARAMS v2.0.0 from strategy class
   });
 
-  console.log('📊 Strategy Configuration:');
-  console.log(`   15m Context: ADX(14) > 25 + SMA(50) slope for regime detection`);
-  console.log(`   5m Filter: RSI(14) extremes (avoid >80/<20)`);
+  console.log('📊 Strategy Configuration (v2.0.0):');
+  console.log(`   15m Context: ADX(10) > 20 + SMA(20) slope for regime detection`);
+  console.log(`   5m Filter: RSI(14) extremes (avoid >70/<30)`);
   console.log(`   1m Execution: BB(20,2) + RSI(14) for entry`);
-  console.log(`   Take Profit: 0.5%`);
+  console.log(`   BB Width Min: 0.3% (avoid low volatility)`);
+  console.log(`   RSI Thresholds: 70/30 (real overbought/oversold)`);
+  console.log(`   Take Profit: 0.8%`);
   console.log(`   Stop Loss: 0.5%`);
-  console.log(`   Cooldown: 60 seconds\n`);
+  console.log(`   TP/SL Ratio: 1.6:1`);
+  console.log(`   Cooldown: 60 seconds`);
+  console.log(`   Confirmation: 2 candles (Mean Reversion)\n`);
 
-  console.log('📈 Strategy Logic:');
-  console.log('   BULLISH_TREND (15m): Only CALL signals (Momentum)');
-  console.log('   BEARISH_TREND (15m): Only PUT signals (Momentum)');
-  console.log('   RANGE (15m): Mean Reversion (both directions, POST_CONFIRM)\n');
+  console.log('📈 Strategy Logic (v2.0.0 - FIXED):');
+  console.log('   BULLISH_TREND (15m): CALL on pullbacks (buy the dip)');
+  console.log('   BEARISH_TREND (15m): PUT on pullbacks (sell the rally)');
+  console.log('   RANGE (15m): Mean Reversion (POST_CONFIRM 2 candles)\n');
 
   console.log(`✅ Strategy "${strategy.getName()}" initialized\n`);
 
   // Load historical candles first (before setting up signal proximity)
   console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
-  // Strategy needs:
-  // - 1m candles for execution (need 100+ for indicators)
+  // Strategy needs (v2.0.0):
+  // - 1m candles for execution (need 100+ for BB/RSI indicators)
   // - 5m candles for RSI filter (need 15+ for RSI 14)
-  // - 15m candles for regime detection (need 51 for SMA 50)
+  // - 15m candles for regime detection (need 21 for SMA 20 + ADX 10)
   // Load 5m and 15m candles directly from API (much more efficient than resampling!)
-  const CANDLES_15M_NEEDED = 60; // 51 for SMA(50) + buffer
+  const CANDLES_15M_NEEDED = 30; // 21 for SMA(20) + ADX(10) + buffer
   const CANDLES_5M_NEEDED = 20; // 15 for RSI(14) + buffer
   const CANDLES_1M_NEEDED = 100; // For BB/RSI indicators on 1m
 
@@ -317,10 +311,10 @@ async function main() {
       // Pre-load direct candles into strategy (much faster than resampling!)
       strategy.loadDirectCandles(symbol, candles5m, candles15m);
       
-      if (candles15m.length >= 51 && candles5m.length >= 15) {
+      if (candles15m.length >= 21 && candles5m.length >= 15) {
         console.log(`   ✅ ${symbol}: Ready for trading! (${candles15m.length} x 15m, ${candles5m.length} x 5m)`);
       } else {
-        console.log(`   ⚠️  ${symbol}: Need ${Math.max(0, 51 - candles15m.length)} more 15m, ${Math.max(0, 15 - candles5m.length)} more 5m candles`);
+        console.log(`   ⚠️  ${symbol}: Need ${Math.max(0, 21 - candles15m.length)} more 15m, ${Math.max(0, 15 - candles5m.length)} more 5m candles`);
       }
     } catch (error: any) {
       console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
