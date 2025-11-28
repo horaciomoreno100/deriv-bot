@@ -463,6 +463,9 @@ export function createSlackAlerter(config: SlackAlertConfig): SlackAlerter {
   return new SlackAlerter(config);
 }
 
+// Track if we've already warned about missing Slack URL (avoid spam)
+let slackWarningShown = false;
+
 /**
  * Create Slack alerter from environment variables
  */
@@ -470,7 +473,11 @@ export function createSlackAlerterFromEnv(service: string): SlackAlerter | null 
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhookUrl) {
-    console.warn('SLACK_WEBHOOK_URL not set, Slack alerts disabled');
+    // Only warn once per process to avoid log spam
+    if (!slackWarningShown) {
+      console.log('ℹ️ SLACK_WEBHOOK_URL not set, Slack alerts disabled');
+      slackWarningShown = true;
+    }
     return null;
   }
 
