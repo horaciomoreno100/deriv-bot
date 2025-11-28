@@ -488,6 +488,11 @@ async function main() {
   // Signal proximity check
   const PROXIMITY_CHECK_INTERVAL = 10000;
   const proximityCheckInterval = setInterval(async () => {
+    // Check connection first - skip entire check if not connected
+    if (!gatewayClient.isConnected()) {
+      return; // Skip silently, will retry on next interval
+    }
+
     const strategyInstance = engine.getAllStrategies()[0];
     if (strategyInstance && typeof (strategyInstance as any).getSignalReadiness === 'function') {
       for (const symbol of SYMBOLS) {
@@ -495,6 +500,11 @@ async function main() {
         const buffer = engine.getCandleDataForAsset(strategyName, symbol);
         if (buffer.length >= 50) {
           try {
+            // Double-check connection before publishing
+            if (!gatewayClient.isConnected()) {
+              continue; // Skip this symbol, try next one
+            }
+
             const readiness = (strategyInstance as any).getSignalReadiness(buffer);
             if (readiness) {
               await gatewayClient.publishSignalProximity({
@@ -502,8 +512,22 @@ async function main() {
                 ...readiness,
               });
             }
-          } catch (error) {
-            // Skip silently
+          } catch (error: any) {
+            // Check connection state - if not connected, this is definitely a connection error
+            const currentlyConnected = gatewayClient.isConnected();
+            const errorMsg = error?.message || String(error || '');
+            const isConnectionError = 
+              !currentlyConnected ||
+              errorMsg.includes('Not connected to Gateway') ||
+              errorMsg.includes('Not connected') ||
+              errorMsg.includes('Connection closed') ||
+              errorMsg.includes('WebSocket');
+            
+            // Connection errors are silently ignored - will retry on next interval
+            if (!isConnectionError) {
+              // Only log real errors (not connection errors)
+              console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
+            }
           }
         }
       }

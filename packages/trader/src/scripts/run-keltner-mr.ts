@@ -307,11 +307,21 @@ async function main() {
   // Signal proximity check - publish every 10 seconds
   const PROXIMITY_CHECK_INTERVAL = 10000;
   const proximityCheckInterval = setInterval(async () => {
+    // Check connection first - skip entire check if not connected
+    if (!gatewayClient.isConnected()) {
+      return; // Skip silently, will retry on next interval
+    }
+
     if (typeof (strategy as any).getSignalReadiness === 'function') {
       for (const symbol of SYMBOLS) {
         const buffer = candleBuffers.get(symbol) || [];
         if (buffer.length >= 40) { // minCandles for Keltner MR
           try {
+            // Double-check connection before publishing
+            if (!gatewayClient.isConnected()) {
+              continue; // Skip this symbol, try next one
+            }
+
             const readiness = (strategy as any).getSignalReadiness(buffer);
             if (readiness) {
               // Convert criteria format to match Gateway expectations
@@ -334,8 +344,22 @@ async function main() {
                 missingCriteria: readiness.missingCriteria || [],
               });
             }
-          } catch (error) {
-            // Skip silently
+          } catch (error: any) {
+            // Check connection state - if not connected, this is definitely a connection error
+            const currentlyConnected = gatewayClient.isConnected();
+            const errorMsg = error?.message || String(error || '');
+            const isConnectionError = 
+              !currentlyConnected ||
+              errorMsg.includes('Not connected to Gateway') ||
+              errorMsg.includes('Not connected') ||
+              errorMsg.includes('Connection closed') ||
+              errorMsg.includes('WebSocket');
+            
+            // Connection errors are silently ignored - will retry on next interval
+            if (!isConnectionError) {
+              // Only log real errors (not connection errors)
+              console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
+            }
           }
         }
       }
