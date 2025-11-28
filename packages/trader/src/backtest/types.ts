@@ -274,9 +274,11 @@ export interface BacktestableStrategy {
 export type IndicatorName =
   | 'rsi' | 'bbUpper' | 'bbMiddle' | 'bbLower'
   | 'kcUpper' | 'kcMiddle' | 'kcLower' | 'atr'
-  | 'sma' | 'ema' | 'macd' | 'macdSignal' | 'macdHistogram'
+  | 'sma' | 'ema' | 'ema20' | 'macd' | 'macdSignal' | 'macdHistogram'
   | 'adx' | 'plusDI' | 'minusDI' | 'stochK' | 'stochD'
-  | 'obv' | 'vwap' | 'momentum' | 'squeezeOn' | 'squeezeHistogram';
+  | 'obv' | 'vwap' | 'momentum' | 'squeezeOn' | 'squeezeHistogram'
+  | 'zigzagHigh' | 'zigzagLow' | 'zigzagType' | 'lastSwingHigh' | 'lastSwingLow'
+  | 'lastSwingHighIdx' | 'lastSwingLowIdx';
 
 export interface IndicatorConfig {
   rsiPeriod?: number;
@@ -293,6 +295,8 @@ export interface IndicatorConfig {
   adxPeriod?: number;
   stochKPeriod?: number;
   stochDPeriod?: number;
+  zigzagDeviation?: number;
+  zigzagDepth?: number;
 }
 
 export const DEFAULT_INDICATOR_CONFIG: IndicatorConfig = {
@@ -310,6 +314,8 @@ export const DEFAULT_INDICATOR_CONFIG: IndicatorConfig = {
   adxPeriod: 14,
   stochKPeriod: 14,
   stochDPeriod: 3,
+  zigzagDeviation: 0.3,
+  zigzagDepth: 5,
 };
 
 // =============================================================================

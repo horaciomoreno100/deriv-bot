@@ -575,13 +575,16 @@ export function createVisualizationData(
   );
   const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : grossProfit > 0 ? Infinity : 0;
 
-  // Calculate max drawdown
+  // Calculate max drawdown (as percentage of peak equity or initial capital)
+  // Use initial capital of 10000 as reference when equity never goes positive
+  const INITIAL_CAPITAL = 10000;
   let maxDrawdown = 0;
-  let peak = 0;
-  let equity = 0;
+  let peak = INITIAL_CAPITAL; // Start from initial capital, not 0
+  let equity = INITIAL_CAPITAL;
   for (const trade of trades) {
     equity += trade.result.pnl;
     if (equity > peak) peak = equity;
+    // Drawdown is the percentage drop from peak
     const drawdown = peak > 0 ? (peak - equity) / peak : 0;
     if (drawdown > maxDrawdown) maxDrawdown = drawdown;
   }

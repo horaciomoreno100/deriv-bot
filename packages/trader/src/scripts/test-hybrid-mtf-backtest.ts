@@ -17,6 +17,8 @@ import { join } from 'path';
 
 const asset = process.env.ASSET || 'R_100';
 const days = process.env.DAYS || '90';
+const tpPct = process.env.TP_PCT ? parseFloat(process.env.TP_PCT) : undefined;
+const slPct = process.env.SL_PCT ? parseFloat(process.env.SL_PCT) : undefined;
 
 // Find data file
 const possiblePaths = [
@@ -51,7 +53,11 @@ const candles = loadCandlesFromCSV(dataFile, {
 });
 console.log(`Loaded ${candles.length} candles`);
 
-const strategy = createHybridMTFStrategy(asset);
+const strategyParams: Record<string, number> = {};
+if (tpPct !== undefined) strategyParams.takeProfitPct = tpPct;
+if (slPct !== undefined) strategyParams.stopLossPct = slPct;
+
+const strategy = createHybridMTFStrategy(asset, Object.keys(strategyParams).length > 0 ? strategyParams : undefined);
 console.log(`\nRunning backtest for: ${strategy.name} v${strategy.version}`);
 console.log('Parameters:', JSON.stringify(strategy.getDefaultConfig(), null, 2));
 
