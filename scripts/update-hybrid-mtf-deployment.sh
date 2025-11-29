@@ -35,7 +35,6 @@ ssh $SERVER << 'ENDSSH'
     pm2 start "pnpm" \
       --name "trader-hybrid-mtf-r75" \
       --cwd /opt/apps/deriv-bot \
-      --interpreter bash \
       -- \
       --filter "@deriv-bot/trader" "demo:hybrid-mtf" \
       --env SYMBOL="R_75" \
@@ -44,30 +43,29 @@ ssh $SERVER << 'ENDSSH'
       --env RISK_PERCENTAGE="0.02" \
       --env GATEWAY_WS_URL="ws://localhost:3000" || true
     
-    # Si ya existe, actualizar variables de entorno
+    # Actualizar variables de entorno si ya existe
     pm2 restart trader-hybrid-mtf-r75 --update-env 2>/dev/null || true
     echo "   ✅ Hybrid-MTF R_75 iniciado"
     echo ""
 
-    echo "🚀 3. Iniciando/Actualizando Hybrid-MTF para R_100..."
-    # Si existe trader-hybrid-mtf, renombrarlo o actualizarlo
+    echo "🚀 3. Actualizando Hybrid-MTF para R_100..."
+    # Si existe trader-hybrid-mtf, actualizarlo
     if pm2 describe trader-hybrid-mtf > /dev/null 2>&1; then
-        echo "   Actualizando trader-hybrid-mtf existente..."
-        pm2 restart trader-hybrid-mtf --update-env --env SYMBOL="R_100" --env STRATEGY_ALLOCATION="1000" || true
-        pm2 save
-    else
-        pm2 start "pnpm" \
-          --name "trader-hybrid-mtf-r100" \
-          --cwd /opt/apps/deriv-bot \
-          --interpreter bash \
-          -- \
-          --filter "@deriv-bot/trader" "demo:hybrid-mtf" \
-          --env SYMBOL="R_100" \
-          --env STRATEGY_ALLOCATION="1000" \
-          --env TRADE_MODE="cfd" \
-          --env RISK_PERCENTAGE="0.02" \
-          --env GATEWAY_WS_URL="ws://localhost:3000" || true
+        echo "   Renombrando trader-hybrid-mtf a trader-hybrid-mtf-r100..."
+        pm2 delete trader-hybrid-mtf 2>/dev/null || true
     fi
+    
+    # Crear nuevo proceso para R_100
+    pm2 start "pnpm" \
+      --name "trader-hybrid-mtf-r100" \
+      --cwd /opt/apps/deriv-bot \
+      -- \
+      --filter "@deriv-bot/trader" "demo:hybrid-mtf" \
+      --env SYMBOL="R_100" \
+      --env STRATEGY_ALLOCATION="1000" \
+      --env TRADE_MODE="cfd" \
+      --env RISK_PERCENTAGE="0.02" \
+      --env GATEWAY_WS_URL="ws://localhost:3000" || true
     echo "   ✅ Hybrid-MTF R_100 iniciado/actualizado"
     echo ""
 

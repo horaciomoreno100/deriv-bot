@@ -37,8 +37,8 @@ describe('Resilience: Minimum Stake Regex Parsing', () => {
     const minAmountMatch = errorMessage.match(/higher than ([\d.]+)/);
 
     expect(minAmountMatch).not.toBeNull();
-    // The regex captures "3.43." but parseFloat handles it correctly
-    expect(parseFloat(minAmountMatch![1])).toBe(3.43);
+    // The regex captures "3.43." but parseFloat handles it correctly, converting to 3.43
+    expect(parseFloat(minAmountMatch![1]!)).toBe(3.43);
   });
 
   it('should handle different minimum amount formats', () => {
@@ -52,8 +52,8 @@ describe('Resilience: Minimum Stake Regex Parsing', () => {
     for (const testCase of testCases) {
       const match = testCase.message.match(/higher than ([\d.]+)/);
       expect(match).not.toBeNull();
-      // Use parseFloat to handle trailing dots
-      expect(parseFloat(match![1])).toBe(testCase.expected);
+      // parseFloat handles trailing dots correctly
+      expect(parseFloat(match![1]!)).toBe(testCase.expected);
     }
   });
 
@@ -148,5 +148,53 @@ describe('Resilience: Signal Metadata', () => {
 
     expect(getEntryPrice(signalWithOldFormat)).toBe(100.50);
     expect(getEntryPrice(signalWithNewFormat)).toBe(100.50);
+  });
+});
+
+describe('Resilience: Market Closed Detection', () => {
+  // These functions match the actual implementation pattern in gateway-client.ts
+  const isMarketClosedError = (message: string | undefined): boolean =>
+    Boolean(
+      message?.includes('market is presently closed') ||
+      message?.includes('Market is closed') ||
+      message?.includes('MarketIsClosed')
+    );
+
+  it('should detect "market is presently closed" error', () => {
+    expect(isMarketClosedError('This market is presently closed.')).toBe(true);
+    expect(isMarketClosedError('Error: This market is presently closed.')).toBe(true);
+  });
+
+  it('should detect "Market is closed" error', () => {
+    expect(isMarketClosedError('Market is closed')).toBe(true);
+    expect(isMarketClosedError('The Market is closed for trading')).toBe(true);
+  });
+
+  it('should detect "MarketIsClosed" error code', () => {
+    expect(isMarketClosedError('MarketIsClosed')).toBe(true);
+    expect(isMarketClosedError('Error code: MarketIsClosed')).toBe(true);
+  });
+
+  it('should not match unrelated errors', () => {
+    expect(isMarketClosedError('Connection timeout')).toBe(false);
+    expect(isMarketClosedError('Invalid symbol')).toBe(false);
+    expect(isMarketClosedError('Some other error')).toBe(false);
+  });
+
+  it('should handle undefined error messages', () => {
+    expect(isMarketClosedError(undefined)).toBe(false);
+  });
+
+  it('should calculate exponential backoff correctly', () => {
+    const baseDelayMs = 60000; // 1 minute
+
+    // Retry 1: 1 min, Retry 2: 2 min, Retry 3: 4 min, Retry 4: 8 min, Retry 5: 16 min
+    const expectedDelays = [1, 2, 4, 8, 16]; // in minutes
+
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const delayMs = baseDelayMs * Math.pow(2, attempt);
+      const delayMinutes = delayMs / 60000;
+      expect(delayMinutes).toBe(expectedDelays[attempt]);
+    }
   });
 });

@@ -175,12 +175,63 @@ export class GatewayClient extends EventEmitter {
   /**
    * Subscribe to assets (follow)
    * Automatically re-subscribes on reconnect
+   * Handles "market closed" errors with retry and backoff
    */
-  async follow(assets: string[]): Promise<void> {
-    await this.sendCommand('follow', { assets });
-    // Track subscribed assets for auto-resubscription
-    assets.forEach(asset => this.subscribedAssets.add(asset));
-    this.log(`Subscribed to ${assets.length} asset(s), tracking for auto-resubscription`);
+  async follow(assets: string[], options?: { maxRetries?: number; retryDelayMs?: number }): Promise<void> {
+    const maxRetries = options?.maxRetries ?? 5;
+    const baseRetryDelayMs = options?.retryDelayMs ?? 60000; // 1 minute default
+
+    let lastError: Error | null = null;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        await this.sendCommand('follow', { assets });
+        // Track subscribed assets for auto-resubscription
+        assets.forEach(asset => this.subscribedAssets.add(asset));
+        this.log(`Subscribed to ${assets.length} asset(s), tracking for auto-resubscription`);
+        return; // Success
+      } catch (error: any) {
+        lastError = error;
+        const errorMessage = error?.message || String(error);
+
+        // Check if it's a "market closed" error
+        if (errorMessage.includes('market is presently closed') ||
+            errorMessage.includes('Market is closed') ||
+            errorMessage.includes('MarketIsClosed')) {
+
+          if (attempt < maxRetries) {
+            // Exponential backoff: 1min, 2min, 4min, 8min, 16min
+            const delayMs = baseRetryDelayMs * Math.pow(2, attempt);
+            const delayMinutes = Math.round(delayMs / 60000);
+            this.log(`⏸️  Market closed for ${assets.join(', ')}. Retry ${attempt + 1}/${maxRetries} in ${delayMinutes} minute(s)...`);
+
+            // Emit event so traders can handle this
+            this.emit('market:closed' as any, { assets, retryIn: delayMs, attempt: attempt + 1, maxRetries });
+
+            await this.sleep(delayMs);
+            continue;
+          } else {
+            this.log(`❌ Market still closed after ${maxRetries} retries. Giving up.`);
+            this.emit('market:closed:failed' as any, { assets, attempts: maxRetries });
+          }
+        }
+
+        // For non-market-closed errors, throw immediately
+        throw error;
+      }
+    }
+
+    // If we exhausted retries, throw the last error
+    if (lastError) {
+      throw lastError;
+    }
+  }
+
+  /**
+   * Helper to sleep for a given duration
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
@@ -691,11 +742,84 @@ export class GatewayClient extends EventEmitter {
       await this.sendCommand('follow', { assets, force });
       this.log(`Successfully re-subscribed to ${assets.length} asset(s)`);
       this.emit('resubscribed' as any, { assets });
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.message || String(error);
+
+      // Handle "market closed" gracefully - start background retry loop
+      if (errorMessage.includes('market is presently closed') ||
+          errorMessage.includes('Market is closed') ||
+          errorMessage.includes('MarketIsClosed')) {
+        this.log(`⏸️  Market closed during re-subscription. Will retry in background...`);
+        this.emit('market:closed' as any, { assets, retryIn: 60000, attempt: 1 });
+
+        // Start background retry loop for market closed
+        this.startMarketClosedRetryLoop(assets, force);
+        return; // Don't emit error for market closed - it's expected
+      }
+
       this.log('Failed to re-subscribe:', error);
       // Emit error but don't clear subscriptions - will retry on next reconnect
       this.emit('error', new Error(`Failed to re-subscribe to assets: ${error}`));
     }
+  }
+
+  /**
+   * Background retry loop for when market is closed
+   * Retries every 5 minutes until market opens or max retries reached
+   */
+  private marketClosedRetryTimer: NodeJS.Timeout | null = null;
+  private marketClosedRetryCount = 0;
+  private readonly MAX_MARKET_CLOSED_RETRIES = 60; // 5 hours of retries (60 * 5 min)
+
+  private startMarketClosedRetryLoop(assets: string[], force: boolean): void {
+    // Clear any existing retry timer
+    if (this.marketClosedRetryTimer) {
+      clearTimeout(this.marketClosedRetryTimer);
+    }
+
+    const retryIntervalMs = 5 * 60 * 1000; // 5 minutes
+
+    const attemptResubscribe = async () => {
+      this.marketClosedRetryCount++;
+
+      if (this.marketClosedRetryCount > this.MAX_MARKET_CLOSED_RETRIES) {
+        this.log(`❌ Market still closed after ${this.MAX_MARKET_CLOSED_RETRIES} retries (${Math.round(this.MAX_MARKET_CLOSED_RETRIES * 5 / 60)} hours). Giving up.`);
+        this.emit('market:closed:failed' as any, { assets, attempts: this.marketClosedRetryCount });
+        this.marketClosedRetryTimer = null;
+        return;
+      }
+
+      this.log(`🔄 Market closed retry ${this.marketClosedRetryCount}/${this.MAX_MARKET_CLOSED_RETRIES} for ${assets.join(', ')}...`);
+
+      try {
+        await this.sendCommand('follow', { assets, force });
+        this.log(`✅ Market opened! Successfully subscribed to ${assets.length} asset(s)`);
+        this.emit('resubscribed' as any, { assets });
+        this.emit('market:opened' as any, { assets });
+        this.marketClosedRetryCount = 0;
+        this.marketClosedRetryTimer = null;
+        return; // Success - stop retrying
+      } catch (error: any) {
+        const errorMessage = error?.message || String(error);
+
+        if (errorMessage.includes('market is presently closed') ||
+            errorMessage.includes('Market is closed') ||
+            errorMessage.includes('MarketIsClosed')) {
+          // Still closed, schedule next retry
+          this.log(`⏸️  Market still closed. Next retry in 5 minutes...`);
+          this.marketClosedRetryTimer = setTimeout(attemptResubscribe, retryIntervalMs);
+        } else {
+          // Different error - stop retrying and emit error
+          this.log(`❌ Unexpected error during market closed retry: ${errorMessage}`);
+          this.emit('error', error);
+          this.marketClosedRetryTimer = null;
+        }
+      }
+    };
+
+    // Start first retry after 5 minutes
+    this.log(`⏸️  Starting market closed retry loop. First retry in 5 minutes...`);
+    this.marketClosedRetryTimer = setTimeout(attemptResubscribe, retryIntervalMs);
   }
 
   /**
