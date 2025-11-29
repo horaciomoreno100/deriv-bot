@@ -140,9 +140,16 @@ export class GatewayClient extends EventEmitter {
       });
 
       this.ws.on('error', (error) => {
-        this.log('Connection error:', error);
-        this.emit('error', error);
-        reject(error);
+        // Don't reject on error if already connected - let reconnection handle it
+        if (!this.connected) {
+          this.log('Connection error:', error);
+          this.emit('error', error);
+          reject(error);
+        } else {
+          // If already connected, log but don't crash - let reconnection handle it
+          this.log('WebSocket error (will reconnect):', error.message || error);
+          this.emit('error', error);
+        }
       });
 
       this.ws.on('close', () => {
@@ -150,7 +157,18 @@ export class GatewayClient extends EventEmitter {
       });
 
       this.ws.on('message', (data: Buffer) => {
-        this.handleMessage(data.toString());
+        try {
+          this.handleMessage(data.toString());
+        } catch (error: any) {
+          // Catch any errors in message handling to prevent crashes
+          this.log('Error handling message (ignoring):', error?.message || error);
+          // Don't emit error event for message parsing errors - they're usually transient
+        }
+      });
+
+      // Add uncaught exception handler for WebSocket internal errors
+      this.ws.on('unexpected-response', (_request, response) => {
+        this.log('WebSocket unexpected response:', response.statusCode, response.statusMessage);
       });
     });
   }
