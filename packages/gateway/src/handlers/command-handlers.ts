@@ -1015,6 +1015,31 @@ export async function handleGetStatsCommand(
 }
 
 /**
+ * Handle 'get_stats_by_strategy' command
+ * Get trading statistics grouped by strategy for a date
+ */
+export async function handleGetStatsByStrategyCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer, stateManager } = context;
+  const { date } = (command.params || {}) as { date?: string };
+
+  try {
+    const stats = await stateManager.getStatsByStrategy(date);
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, stats);
+  } catch (error) {
+    console.error('[handleGetStatsByStrategyCommand] Error:', error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'GET_STATS_BY_STRATEGY_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get statistics by strategy',
+    });
+  }
+}
+
+/**
  * Handle 'get_trades' command
  * Get trade history with optional filters
  */
@@ -1123,6 +1148,9 @@ export async function handleCommand(
       break;
     case 'get_stats':
       await handleGetStatsCommand(ws, command, context);
+      break;
+    case 'get_stats_by_strategy':
+      await handleGetStatsByStrategyCommand(ws, command, context);
       break;
     case 'get_trades':
       await handleGetTradesCommand(ws, command, context);

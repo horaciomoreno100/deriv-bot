@@ -238,6 +238,37 @@ export class GatewayBridge extends EventEmitter {
   }
 
   /**
+   * Get daily stats grouped by strategy
+   */
+  async getStatsByStrategy(date?: string): Promise<{
+    date: string;
+    total: {
+      date: string;
+      totalTrades: number;
+      wins: number;
+      losses: number;
+      pending: number;
+      winRate: number;
+      totalStake: number;
+      totalPayout: number;
+      netPnL: number;
+    };
+    byStrategy: Record<string, {
+      date: string;
+      totalTrades: number;
+      wins: number;
+      losses: number;
+      pending: number;
+      winRate: number;
+      totalStake: number;
+      totalPayout: number;
+      netPnL: number;
+    }>;
+  }> {
+    return await this.sendCommand('get_stats_by_strategy', { date });
+  }
+
+  /**
    * Get monitored assets
    */
   async getAssets(): Promise<string[]> {

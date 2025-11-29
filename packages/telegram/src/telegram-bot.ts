@@ -139,11 +139,11 @@ export class TelegramBotService {
       }
     });
 
-    // /stats - Daily statistics
+    // /stats - Daily statistics (grouped by strategy)
     this.bot.onText(/\/stats/, async (msg) => {
       if (!this.isAuthorized(msg.from?.id)) return;
       try {
-        const stats = await this.gateway.getStats();
+        const stats = await this.gateway.getStatsByStrategy();
         this.sendMessage(formatStats(stats));
       } catch (error: any) {
         this.sendMessage(`Error: ${error.message}`);

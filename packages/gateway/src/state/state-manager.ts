@@ -236,6 +236,97 @@ export class StateManager extends EventEmitter {
   }
 
   /**
+   * Get daily stats grouped by strategy
+   */
+  async getStatsByStrategy(date?: string): Promise<{
+    date: string;
+    total: DailyStatsResult;
+    byStrategy: Record<string, DailyStatsResult>;
+  }> {
+    const targetDate = date || this.getTodayDate();
+
+    // Get date boundaries
+    const startOfDay = new Date(targetDate + 'T00:00:00.000Z');
+    const endOfDay = new Date(targetDate + 'T23:59:59.999Z');
+
+    // Get all trades for this day
+    const trades = await this.prisma.trade.findMany({
+      where: {
+        openedAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      },
+    });
+
+    // Group trades by strategy
+    const strategiesMap = new Map<string, Trade[]>();
+    for (const trade of trades) {
+      const strategy = trade.strategyName || 'UNKNOWN';
+      if (!strategiesMap.has(strategy)) {
+        strategiesMap.set(strategy, []);
+      }
+      strategiesMap.get(strategy)!.push(trade);
+    }
+
+    // Calculate stats per strategy
+    const byStrategy: Record<string, DailyStatsResult> = {};
+
+    for (const [strategy, strategyTrades] of strategiesMap) {
+      const totalTrades = strategyTrades.length;
+      const wins = strategyTrades.filter((t: Trade) => t.result === 'WIN').length;
+      const losses = strategyTrades.filter((t: Trade) => t.result === 'LOSS').length;
+      const pending = strategyTrades.filter((t: Trade) => t.result === 'PENDING').length;
+      const completedTrades = wins + losses;
+      const winRate = completedTrades > 0 ? (wins / completedTrades) * 100 : 0;
+
+      const totalStake = strategyTrades.reduce((sum: number, t: Trade) => sum + t.stake, 0);
+      const totalPayout = strategyTrades.reduce((sum: number, t: Trade) => sum + (t.payout || 0), 0);
+      const netPnL = strategyTrades.reduce((sum: number, t: Trade) => sum + (t.profit || 0), 0);
+
+      byStrategy[strategy] = {
+        date: targetDate,
+        totalTrades,
+        wins,
+        losses,
+        pending,
+        winRate,
+        totalStake,
+        totalPayout,
+        netPnL,
+      };
+    }
+
+    // Calculate total stats
+    const totalTrades = trades.length;
+    const wins = trades.filter((t: Trade) => t.result === 'WIN').length;
+    const losses = trades.filter((t: Trade) => t.result === 'LOSS').length;
+    const pending = trades.filter((t: Trade) => t.result === 'PENDING').length;
+    const completedTrades = wins + losses;
+    const winRate = completedTrades > 0 ? (wins / completedTrades) * 100 : 0;
+
+    const totalStake = trades.reduce((sum: number, t: Trade) => sum + t.stake, 0);
+    const totalPayout = trades.reduce((sum: number, t: Trade) => sum + (t.payout || 0), 0);
+    const netPnL = trades.reduce((sum: number, t: Trade) => sum + (t.profit || 0), 0);
+
+    return {
+      date: targetDate,
+      total: {
+        date: targetDate,
+        totalTrades,
+        wins,
+        losses,
+        pending,
+        winRate,
+        totalStake,
+        totalPayout,
+        netPnL,
+      },
+      byStrategy,
+    };
+  }
+
+  /**
    * Get trades with filters
    */
   async getTrades(params: {

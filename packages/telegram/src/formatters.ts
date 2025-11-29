@@ -91,10 +91,35 @@ export function formatProfit(profitTable: {
 }
 
 /**
- * Format daily statistics
+ * Format daily statistics - supports both old format and new by-strategy format
  */
 export function formatStats(statsResponse: {
-  stats: {
+  // New format with byStrategy
+  date?: string;
+  total?: {
+    date: string;
+    totalTrades: number;
+    wins: number;
+    losses: number;
+    pending: number;
+    winRate: number;
+    totalStake: number;
+    totalPayout: number;
+    netPnL: number;
+  };
+  byStrategy?: Record<string, {
+    date: string;
+    totalTrades: number;
+    wins: number;
+    losses: number;
+    pending: number;
+    winRate: number;
+    totalStake: number;
+    totalPayout: number;
+    netPnL: number;
+  }>;
+  // Old format (backwards compatibility)
+  stats?: {
     date: string;
     totalTrades: number;
     wins: number;
@@ -106,24 +131,75 @@ export function formatStats(statsResponse: {
     netPnL: number;
   };
 }): string {
-  const stats = statsResponse.stats;
-  const pnlEmoji = stats.netPnL >= 0 ? '🟢' : '🔴';
-  const pnlSign = stats.netPnL >= 0 ? '+' : '';
+  // Handle new format with byStrategy
+  if (statsResponse.total && statsResponse.byStrategy) {
+    const total = statsResponse.total;
+    const byStrategy = statsResponse.byStrategy;
+    const date = statsResponse.date || total.date;
 
-  return (
-    `📊 *Daily Statistics*\n` +
-    `Date: \`${stats.date}\`\n\n` +
-    `*Trades:*\n` +
-    `├ Total: \`${stats.totalTrades}\`\n` +
-    `├ Wins: \`${stats.wins}\`\n` +
-    `├ Losses: \`${stats.losses}\`\n` +
-    `├ Pending: \`${stats.pending}\`\n` +
-    `└ Win Rate: \`${stats.winRate.toFixed(1)}%\`\n\n` +
-    `*Financials:*\n` +
-    `├ Staked: \`${stats.totalStake.toFixed(2)}\`\n` +
-    `├ Payout: \`${stats.totalPayout.toFixed(2)}\`\n` +
-    `└ Net P/L: ${pnlEmoji} \`${pnlSign}${stats.netPnL.toFixed(2)}\``
-  );
+    const pnlEmoji = total.netPnL >= 0 ? '🟢' : '🔴';
+    const pnlSign = total.netPnL >= 0 ? '+' : '';
+
+    let message = `📊 *Daily Statistics*\n` +
+      `Date: \`${date}\`\n\n`;
+
+    // Per-strategy breakdown
+    const strategies = Object.keys(byStrategy);
+    if (strategies.length > 0) {
+      message += `*By Strategy:*\n`;
+
+      for (const strategyName of strategies) {
+        const s = byStrategy[strategyName];
+        if (!s) continue;
+
+        const sPnlEmoji = s.netPnL >= 0 ? '🟢' : '🔴';
+        const sPnlSign = s.netPnL >= 0 ? '+' : '';
+
+        message += `\n🎯 *${strategyName}*\n`;
+        message += `├ Trades: \`${s.totalTrades}\` (W:${s.wins}/L:${s.losses})\n`;
+        message += `├ Win Rate: \`${s.winRate.toFixed(1)}%\`\n`;
+        message += `├ Staked: \`$${s.totalStake.toFixed(2)}\`\n`;
+        message += `└ P/L: ${sPnlEmoji} \`${sPnlSign}${s.netPnL.toFixed(2)}\`\n`;
+      }
+
+      message += `\n`;
+    }
+
+    // Total summary
+    message += `*Total:*\n`;
+    message += `├ Trades: \`${total.totalTrades}\` (W:${total.wins}/L:${total.losses})\n`;
+    message += `├ Pending: \`${total.pending}\`\n`;
+    message += `├ Win Rate: \`${total.winRate.toFixed(1)}%\`\n`;
+    message += `├ Staked: \`$${total.totalStake.toFixed(2)}\`\n`;
+    message += `├ Payout: \`$${total.totalPayout.toFixed(2)}\`\n`;
+    message += `└ Net P/L: ${pnlEmoji} \`${pnlSign}${total.netPnL.toFixed(2)}\``;
+
+    return message;
+  }
+
+  // Handle old format (backwards compatibility)
+  if (statsResponse.stats) {
+    const stats = statsResponse.stats;
+    const pnlEmoji = stats.netPnL >= 0 ? '🟢' : '🔴';
+    const pnlSign = stats.netPnL >= 0 ? '+' : '';
+
+    return (
+      `📊 *Daily Statistics*\n` +
+      `Date: \`${stats.date}\`\n\n` +
+      `*Trades:*\n` +
+      `├ Total: \`${stats.totalTrades}\`\n` +
+      `├ Wins: \`${stats.wins}\`\n` +
+      `├ Losses: \`${stats.losses}\`\n` +
+      `├ Pending: \`${stats.pending}\`\n` +
+      `└ Win Rate: \`${stats.winRate.toFixed(1)}%\`\n\n` +
+      `*Financials:*\n` +
+      `├ Staked: \`${stats.totalStake.toFixed(2)}\`\n` +
+      `├ Payout: \`${stats.totalPayout.toFixed(2)}\`\n` +
+      `└ Net P/L: ${pnlEmoji} \`${pnlSign}${stats.netPnL.toFixed(2)}\``
+    );
+  }
+
+  return `📊 *Daily Statistics*\n\n_No data available_`;
 }
 
 /**
