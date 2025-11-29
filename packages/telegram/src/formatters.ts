@@ -323,10 +323,11 @@ export function formatBotInfo(info: {
 }
 
 /**
- * Format signal proximities
+ * Format signal proximities - grouped by strategy
  */
 export function formatSignalProximities(data: {
   proximities: Array<{
+    strategy?: string;
     asset: string;
     direction: 'call' | 'put' | 'neutral';
     proximity: number;
@@ -348,42 +349,57 @@ export function formatSignalProximities(data: {
     return `📡 *Signal Proximities*\n\n_No active signal data available_\n\n_Proximities are updated every 10 seconds when the trader is running._`;
   }
 
-  let message = `📡 *Signal Proximities*\n\n`;
-
+  // Group proximities by strategy
+  const byStrategy = new Map<string, typeof data.proximities>();
   for (const prox of data.proximities) {
-    // Direction emoji
-    const dirEmoji = prox.direction === 'call' ? '🟢' :
-                     prox.direction === 'put' ? '🔴' : '⚪';
+    const strategyName = prox.strategy || 'unknown';
+    if (!byStrategy.has(strategyName)) {
+      byStrategy.set(strategyName, []);
+    }
+    byStrategy.get(strategyName)!.push(prox);
+  }
 
-    // Proximity bar (0-100%) - proximity is already in 0-100 range
-    const pct = Math.min(100, Math.max(0, prox.proximity));
-    const filledBlocks = Math.round(pct / 10);
-    const emptyBlocks = 10 - filledBlocks;
-    const bar = '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
+  let message = `📡 *Signal Proximities*\n`;
 
-    // Ready indicator
-    const readyEmoji = prox.readyToSignal ? '✅' : '⏳';
+  // Format each strategy group
+  for (const [strategy, proximities] of byStrategy) {
+    message += `\n🎯 *${strategy}*\n`;
 
-    message += `${dirEmoji} *${prox.asset}*\n`;
-    message += `├ Direction: \`${prox.direction.toUpperCase()}\`\n`;
-    message += `├ Proximity: \`${bar}\` ${pct.toFixed(0)}%\n`;
-    message += `├ Ready: ${readyEmoji}\n`;
+    for (const prox of proximities) {
+      // Direction emoji
+      const dirEmoji = prox.direction === 'call' ? '🟢' :
+                       prox.direction === 'put' ? '🔴' : '⚪';
 
-    // Show criteria if available
-    if (prox.criteria && prox.criteria.length > 0) {
-      message += `├ *Criteria:*\n`;
-      for (const c of prox.criteria) {
-        const checkEmoji = c.passed ? '✅' : '❌';
-        message += `│  ${checkEmoji} ${c.name}: \`${c.current.toFixed(2)}\`/\`${c.target.toFixed(2)}\`\n`;
+      // Proximity bar (0-100%) - proximity is already in 0-100 range
+      const pct = Math.min(100, Math.max(0, prox.proximity));
+      const filledBlocks = Math.round(pct / 10);
+      const emptyBlocks = 10 - filledBlocks;
+      const bar = '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
+
+      // Ready indicator
+      const readyEmoji = prox.readyToSignal ? '✅' : '⏳';
+
+      message += `${dirEmoji} *${prox.asset}*\n`;
+      message += `├ Direction: \`${prox.direction.toUpperCase()}\`\n`;
+      message += `├ Proximity: \`${bar}\` ${pct.toFixed(0)}%\n`;
+      message += `├ Ready: ${readyEmoji}\n`;
+
+      // Show criteria if available
+      if (prox.criteria && prox.criteria.length > 0) {
+        message += `├ *Criteria:*\n`;
+        for (const c of prox.criteria) {
+          const checkEmoji = c.passed ? '✅' : '❌';
+          message += `│  ${checkEmoji} ${c.name}: \`${c.current.toFixed(2)}\`/\`${c.target.toFixed(2)}\`\n`;
+        }
       }
-    }
 
-    // Show missing criteria if not ready
-    if (!prox.readyToSignal && prox.missingCriteria && prox.missingCriteria.length > 0) {
-      message += `├ Missing: \`${prox.missingCriteria.join(', ')}\`\n`;
-    }
+      // Show missing criteria if not ready
+      if (!prox.readyToSignal && prox.missingCriteria && prox.missingCriteria.length > 0) {
+        message += `├ Missing: \`${prox.missingCriteria.join(', ')}\`\n`;
+      }
 
-    message += `└ Updated: \`${prox.ageFormatted} ago\`\n\n`;
+      message += `└ Updated: \`${prox.ageFormatted} ago\`\n\n`;
+    }
   }
 
   return message;

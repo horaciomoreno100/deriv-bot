@@ -459,6 +459,7 @@ export class GatewayClient extends EventEmitter {
    * Publish signal proximity (send signal proximity to Gateway for broadcast)
    */
   async publishSignalProximity(proximity: {
+    strategy: string;
     asset: string;
     direction: 'call' | 'put' | 'neutral';
     overallProximity: number;

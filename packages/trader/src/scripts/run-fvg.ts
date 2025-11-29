@@ -334,6 +334,7 @@ async function main() {
               }
 
               await gatewayClient.publishSignalProximity({
+                strategy: STRATEGY_NAME,
                 asset: symbol,
                 direction: readiness.direction,
                 overallProximity: readiness.overallProximity,

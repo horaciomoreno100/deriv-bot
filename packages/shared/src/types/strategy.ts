@@ -86,6 +86,8 @@ export interface StrategyMetrics {
  * Signal proximity information - how close a strategy is to generating a signal
  */
 export interface SignalProximity {
+  /** Strategy name that generated this proximity */
+  strategy: string;
   /** Asset symbol */
   asset: string;
   /** Direction the signal would be for */

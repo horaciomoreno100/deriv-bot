@@ -58,9 +58,10 @@ interface RegisteredTrader {
 const registeredTraders = new Map<WebSocket, RegisteredTrader>();
 
 /**
- * Signal Proximity Cache - stores latest proximity per asset
+ * Signal Proximity Cache - stores latest proximity per strategy+asset
  */
 interface SignalProximityEntry {
+  strategy: string;
   asset: string;
   direction: 'call' | 'put' | 'neutral';
   proximity: number;
@@ -77,7 +78,7 @@ interface SignalProximityEntry {
   timestamp: number;
 }
 
-const signalProximityCache = new Map<string, SignalProximityEntry>(); // asset -> proximity
+const signalProximityCache = new Map<string, SignalProximityEntry>(); // strategy:asset -> proximity
 
 /**
  * Trader info returned by getRegisteredTraders
@@ -1206,15 +1207,22 @@ export async function handlePublishSignalProximityCommand(
   const { gatewayServer } = context;
   const proximity = command.params;
 
+  // Extract strategy name - default to 'unknown' if not provided
+  const strategyName = proximity?.strategy || 'unknown';
+
   console.log('[handlePublishSignalProximityCommand] Received signal proximity:', {
+    strategy: strategyName,
     asset: proximity?.asset,
     proximity: proximity?.overallProximity,
     direction: proximity?.direction,
   });
 
   // Store in cache for later retrieval via get_signal_proximities command
+  // Use strategy:asset as key to allow multiple strategies per asset
   if (proximity?.asset) {
-    signalProximityCache.set(proximity.asset, {
+    const cacheKey = `${strategyName}:${proximity.asset}`;
+    signalProximityCache.set(cacheKey, {
+      strategy: strategyName,
       asset: proximity.asset,
       direction: proximity.direction || 'neutral',
       proximity: proximity.overallProximity || proximity.proximity || 0,
@@ -1775,10 +1783,23 @@ export async function handleGetLogsCommand(
   try {
     let logs: Array<{ service: string; type: string; content: string }> = [];
 
+    // Dynamically discover trader processes from PM2
+    let traderProcesses: string[] = [];
+    try {
+      const pm2List = execSync('pm2 jlist 2>/dev/null', { encoding: 'utf8', timeout: 5000 });
+      const processes = JSON.parse(pm2List);
+      traderProcesses = processes
+        .filter((p: any) => p.name.startsWith('trader-') && p.pm2_env?.status === 'online')
+        .map((p: any) => p.name);
+    } catch {
+      // Fallback to known traders if PM2 query fails
+      traderProcesses = ['trader-hybrid-mtf', 'trader-fvg', 'trader-keltner-mr'];
+    }
+
     // Map service names to PM2 process names
     const serviceMap: Record<string, string[]> = {
       'gateway': ['gateway'],
-      'trader': ['trader-squeeze-mr', 'trader-keltner-mr', 'trader-hybrid-mtf'],
+      'trader': traderProcesses.length > 0 ? traderProcesses : ['trader-hybrid-mtf', 'trader-fvg'],
       'telegram': ['telegram'],
     };
 

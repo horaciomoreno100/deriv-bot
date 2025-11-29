@@ -508,6 +508,7 @@ async function main() {
             const readiness = (strategyInstance as any).getSignalReadiness(buffer);
             if (readiness) {
               await gatewayClient.publishSignalProximity({
+                strategy: strategyName,
                 asset: symbol,
                 ...readiness,
               });
