@@ -194,14 +194,14 @@ describe('FVGLiquiditySweepStrategy', () => {
 
     it('should return forex params for frx* assets', () => {
       const params = getParamsForAsset('frxEURUSD');
-      expect(params.liquidityRangePct).toBe(0.005);
-      expect(params.takeProfitRR).toBe(2.0);
+      expect(params.liquidityRangePct).toBe(0.003);  // Updated: FOREX_PARAMS.liquidityRangePct
+      expect(params.takeProfitRR).toBe(1.5);         // Updated: FOREX_PARAMS.takeProfitRR
     });
 
     it('should return gold params for XAU assets', () => {
       const params = getParamsForAsset('frxXAUUSD');
-      expect(params.liquidityRangePct).toBe(0.008);
-      expect(params.swingLength).toBe(10);
+      expect(params.liquidityRangePct).toBe(0.005);  // Updated: GOLD_PARAMS.liquidityRangePct
+      expect(params.swingLength).toBe(5);            // Updated: GOLD_PARAMS.swingLength
     });
 
     it('should apply user overrides', () => {
