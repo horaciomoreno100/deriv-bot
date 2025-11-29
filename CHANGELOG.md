@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.1](///compare/v0.8.0...v0.8.1) (2025-11-29)
+
+### Bug Fixes
+
+* handle "already subscribed" error gracefully d1d9f46
+
 ## [0.8.0](///compare/v0.7.0...v0.8.0) (2025-11-29)
 
 ### Features
