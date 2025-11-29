@@ -194,6 +194,14 @@ export class GatewayClient extends EventEmitter {
         lastError = error;
         const errorMessage = error?.message || String(error);
 
+        // Check if already subscribed - this is OK, another trader is already following
+        if (errorMessage.includes('already subscribed')) {
+          this.log(`ℹ️  Already subscribed to ${assets.join(', ')} (shared with another trader)`);
+          // Track as subscribed since we'll receive ticks via gateway broadcast
+          assets.forEach(asset => this.subscribedAssets.add(asset));
+          return; // Success - we'll receive ticks through gateway broadcast
+        }
+
         // Check if it's a "market closed" error
         if (errorMessage.includes('market is presently closed') ||
             errorMessage.includes('Market is closed') ||

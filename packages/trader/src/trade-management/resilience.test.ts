@@ -151,6 +151,26 @@ describe('Resilience: Signal Metadata', () => {
   });
 });
 
+describe('Resilience: Already Subscribed Detection', () => {
+  // This matches the actual implementation in gateway-client.ts
+  const isAlreadySubscribedError = (message: string | undefined): boolean =>
+    Boolean(message?.includes('already subscribed'));
+
+  it('should detect "already subscribed" error', () => {
+    expect(isAlreadySubscribedError('You are already subscribed to R_75')).toBe(true);
+    expect(isAlreadySubscribedError('Error: You are already subscribed to R_100')).toBe(true);
+  });
+
+  it('should not match unrelated errors', () => {
+    expect(isAlreadySubscribedError('Connection timeout')).toBe(false);
+    expect(isAlreadySubscribedError('Market is closed')).toBe(false);
+  });
+
+  it('should handle undefined error messages', () => {
+    expect(isAlreadySubscribedError(undefined)).toBe(false);
+  });
+});
+
 describe('Resilience: Market Closed Detection', () => {
   // These functions match the actual implementation pattern in gateway-client.ts
   const isMarketClosedError = (message: string | undefined): boolean =>
