@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.1](///compare/v0.13.0...v0.13.1) (2025-11-29)
+
+### Bug Fixes
+
+* add canOpenTrade check before executing trades 5f55a22
+
 ## [0.13.0](///compare/v0.12.0...v0.13.0) (2025-11-29)
 
 ### Features
