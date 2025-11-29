@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](///compare/v0.5.3...v0.6.0) (2025-11-29)
+
+### Features
+
+* add market closed detection with auto-retry 4de162a
+* replace BB-Squeeze-MR with Hybrid-MTF for R_75 and R_100 bffb79f
+
 ## [0.5.3](///compare/v0.5.0...v0.5.3) (2025-11-29)
 
 ### Bug Fixes
