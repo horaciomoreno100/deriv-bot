@@ -104,9 +104,19 @@ export class TradeExecutionService {
    * Execute a trade from a signal
    */
   async executeTrade(signal: Signal, defaultAsset?: string): Promise<TradeExecutionResult> {
-    this.tradeCount++;
-
     const asset = (signal as any).asset || signal.symbol || defaultAsset || 'R_75';
+
+    // Check if we can open a new trade (risk management)
+    const canOpen = this.tradeManager.canOpenTrade(asset);
+    if (!canOpen.allowed) {
+      console.log(`\n❌ Trade rejected: ${canOpen.reason}`);
+      return {
+        success: false,
+        error: canOpen.reason || 'Trade not allowed by risk manager',
+      };
+    }
+
+    this.tradeCount++;
 
     console.log(`\n${'='.repeat(80)}`);
     console.log(`📊 EJECUTANDO TRADE #${this.tradeCount}`);
