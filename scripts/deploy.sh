@@ -106,7 +106,7 @@ elif [[ "$1" == "--restart-all" ]]; then
 else
     echo -e "${YELLOW}[5/5]${NC} Restarting services (gateway, traders, telegram)..."
     # Restart only processes that exist, ignore errors for missing ones
-    ssh $SERVER "for proc in gateway trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf telegram; do pm2 restart \$proc 2>/dev/null || echo \"  ⚠ Process \$proc not found, skipping...\"; done && pm2 save"
+    ssh $SERVER "for proc in gateway trader-squeeze-mr trader-hybrid-mtf trader-fvg-ls-forex telegram; do pm2 restart \$proc 2>/dev/null || echo \"  ⚠ Process \$proc not found, skipping...\"; done && pm2 save"
     echo -e "${GREEN}✓${NC} Services restarted"
 fi
 echo ""

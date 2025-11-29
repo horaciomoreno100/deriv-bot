@@ -83,16 +83,16 @@ check_recent_errors() {
     check_service_status "gateway"
     check_service_status "telegram"
     check_service_status "trader-squeeze-mr"
-    check_service_status "trader-keltner-mr"
     check_service_status "trader-hybrid-mtf"
+    check_service_status "trader-fvg-ls-forex"
     
     echo "⚠️  Recent Errors:"
     echo ""
     check_recent_errors "gateway"
     check_recent_errors "telegram"
     check_recent_errors "trader-squeeze-mr"
-    check_recent_errors "trader-keltner-mr"
     check_recent_errors "trader-hybrid-mtf"
+    check_recent_errors "trader-fvg-ls-forex"
     echo ""
     
     echo "💻 System Resources:"

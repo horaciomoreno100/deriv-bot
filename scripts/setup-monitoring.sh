@@ -64,7 +64,7 @@ REPORT_FILE="$REPORT_DIR/report-$(date +%Y%m%d-%H%M%S).txt"
     echo "⚠️  Recent Errors (last 10 minutes):"
     echo ""
     has_errors=false
-    for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
+    for service in gateway telegram trader-squeeze-mr trader-hybrid-mtf trader-fvg-ls-forex; do
         # Check if error log file exists and has content
         error_log_pm2="/root/.pm2/logs/${service}-error.log"
         error_log_app="/opt/apps/deriv-bot/logs/${service}-error.log"

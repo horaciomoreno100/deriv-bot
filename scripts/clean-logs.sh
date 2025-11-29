@@ -36,8 +36,8 @@ if [ "$1" != "--confirm" ]; then
     echo "   - gateway"
     echo "   - telegram"
     echo "   - trader-squeeze-mr"
-    echo "   - trader-keltner-mr"
     echo "   - trader-hybrid-mtf"
+    echo "   - trader-fvg-ls-forex"
     echo ""
     echo -e "${CYAN}To confirm, run:${NC}"
     echo -e "${CYAN}  ./scripts/clean-logs.sh --confirm${NC}"
@@ -52,7 +52,7 @@ ssh $SERVER << 'ENDSSH'
     echo "Clearing error logs..."
     
     # Clear PM2 error logs by truncating the log files
-    for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
+    for service in gateway telegram trader-squeeze-mr trader-hybrid-mtf trader-fvg-ls-forex; do
         echo "  → Clearing $service error log..."
         # Find and truncate error log files
         if [ -f "/root/.pm2/logs/${service}-error.log" ]; then
@@ -68,7 +68,7 @@ ssh $SERVER << 'ENDSSH'
     
     # Also clean old log files (without -mr suffix, etc.)
     echo "  → Cleaning old log files..."
-    for old_log in /root/.pm2/logs/trader-squeeze-error.log /root/.pm2/logs/trader-keltner-error.log; do
+    for old_log in /root/.pm2/logs/trader-squeeze-error.log; do
         if [ -f "$old_log" ]; then
             > "$old_log"
             echo "    ✅ Cleared $old_log"
@@ -79,7 +79,7 @@ ssh $SERVER << 'ENDSSH'
     echo "✅ Error logs cleared"
     echo ""
     echo "Current error counts (should be 0 or very low):"
-    for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
+    for service in gateway telegram trader-squeeze-mr trader-hybrid-mtf trader-fvg-ls-forex; do
         error_count=$(pm2 logs $service --err --lines 10 --nostream 2>/dev/null | grep -v "^$" | wc -l || echo "0")
         echo "  $service: $error_count errors"
     done

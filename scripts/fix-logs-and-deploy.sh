@@ -58,7 +58,7 @@ ssh $SERVER << 'ENDSSH'
     pm2 flush
     
     # Also manually clear specific log files to be sure
-    for service in gateway telegram trader-squeeze-mr trader-keltner-mr trader-hybrid-mtf; do
+    for service in gateway telegram trader-squeeze-mr trader-hybrid-mtf trader-fvg-ls-forex; do
         # Clear PM2 logs
         if [ -f "/root/.pm2/logs/${service}-error.log" ]; then
             > "/root/.pm2/logs/${service}-error.log"
@@ -111,7 +111,7 @@ echo ""
 echo -e "${CYAN}[4/4] Restarting services...${NC}"
 ssh $SERVER << 'ENDSSH'
     echo "Restarting gateway and traders..."
-    pm2 restart gateway trader-keltner-mr trader-hybrid-mtf trader-squeeze-mr
+    pm2 restart gateway trader-hybrid-mtf trader-squeeze-mr trader-fvg-ls-forex
     pm2 save
     echo "✅ Services restarted"
     
