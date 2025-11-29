@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.0](///compare/v0.12.0...v0.13.0) (2025-11-29)
+
+### Features
+
+* add run-fvg-ls.ts script for live trading e0bd18c
+
 ## [0.12.0](///compare/v0.11.2...v0.12.0) (2025-11-29)
 
 ### Features
