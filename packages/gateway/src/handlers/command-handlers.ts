@@ -771,6 +771,7 @@ export async function handleTradeCommand(
     console.log(`[handleTradeCommand] Trade recorded: ${result.contractId}`);
 
     // Broadcast trade executed event
+    const tradeStrategyName = strategyName || 'manual';
     gatewayServer.broadcast(
       createEventMessage('trade:executed', {
         id: result.contractId,
@@ -781,6 +782,7 @@ export async function handleTradeCommand(
         openPrice: result.buyPrice,
         timestamp: result.purchaseTime,
         status: 'open',
+        strategyName: tradeStrategyName,
       })
     );
 
@@ -813,6 +815,7 @@ export async function handleTradeCommand(
             profit,
             closePrice: sellPrice,
             timestamp: contract.sell_time,
+            strategyName: tradeStrategyName,
           })
         );
       }
@@ -915,6 +918,7 @@ export async function handleCFDTradeCommand(
     console.log(`[handleCFDTradeCommand] Trade recorded: ${result.contractId}`);
 
     // Broadcast trade executed event
+    const cfdStrategyName = strategyName || 'manual';
     gatewayServer.broadcast(
       createEventMessage('trade:executed', {
         id: result.contractId,
@@ -929,6 +933,7 @@ export async function handleCFDTradeCommand(
         status: 'open',
         takeProfit,
         stopLoss,
+        strategyName: cfdStrategyName,
       })
     );
 
@@ -964,6 +969,7 @@ export async function handleCFDTradeCommand(
             profit,
             closePrice: sellPrice,
             timestamp: contract.sell_time,
+            strategyName: cfdStrategyName,
           })
         );
       }

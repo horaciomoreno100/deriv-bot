@@ -225,6 +225,7 @@ export function formatTrade(
     multiplier?: number;
     takeProfit?: number;
     stopLoss?: number;
+    strategyName?: string;
   },
   action: 'opened' | 'closed'
 ): string {
@@ -232,6 +233,7 @@ export function formatTrade(
   const direction = trade.direction || trade.contract_type || '';
   // For CFDs, prefer stake over amount (amount is the nominal value)
   const stake = trade.stake || trade.amount || 0;
+  const strategy = trade.strategyName || 'manual';
 
   if (action === 'opened') {
     const price = trade.openPrice || trade.entry_price || 0;
@@ -243,6 +245,7 @@ export function formatTrade(
     // Build message with optional CFD-specific fields
     let message = (
       `${dirEmoji} *Trade Opened*\n\n` +
+      `Strategy: \`${strategy}\`\n` +
       `Symbol: \`${symbol}\`\n` +
       `Direction: \`${direction}\`\n` +
       `Stake: \`$${stake.toFixed(2)}\`\n` +
@@ -280,6 +283,7 @@ export function formatTrade(
 
     return (
       `${resultEmoji} *Trade Closed*\n\n` +
+      `Strategy: \`${strategy}\`\n` +
       `Symbol: \`${symbol}\`\n` +
       `Result: \`${result?.toUpperCase() || 'UNKNOWN'}\`\n` +
       `P/L: \`${profitSign}${profit.toFixed(2)}\`\n` +
