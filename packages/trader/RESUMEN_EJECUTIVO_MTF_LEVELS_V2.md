@@ -261,3 +261,4 @@ Se probaron múltiples mejoras individualmente, pero descubrimos overfitting:
 **Período de análisis**: 30 días
 **Versión**: 2.0 (Con Edge)
 
+

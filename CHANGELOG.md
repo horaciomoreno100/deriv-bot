@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.0](///compare/v0.11.2...v0.12.0) (2025-11-29)
+
+### Features
+
+* add FVG Liquidity Sweep strategy with hour filter optimization 1133e8d
+
 ## [0.11.2](///compare/v0.11.0...v0.11.2) (2025-11-29)
 
 ### Bug Fixes

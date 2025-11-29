@@ -391,3 +391,4 @@ Distancia desde BB Lower: $2 ✅ (dentro de $3)
 **Fecha**: $(date)
 **Versión**: 1.0
 
+
