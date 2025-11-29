@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.5.3](///compare/v0.5.0...v0.5.3) (2025-11-29)
+
+### Bug Fixes
+
+* improve system resilience for common trading errors 4d193dd
+* increase minimum stop_loss to 5.00 USD and fix balance undefined error 377e1bd
+* resolve TypeScript errors in FVG strategy 28d1bc8
+
+### Performance Improvements
+
+* optimize BB-Squeeze-MR backtest and update production config e08f6c1
+
+## [](///compare/v0.5.0...vnull) (2025-11-29)
+
+### Bug Fixes
+
+* improve system resilience for common trading errors 4d193dd
+* increase minimum stop_loss to 5.00 USD and fix balance undefined error 377e1bd
+* resolve TypeScript errors in FVG strategy 28d1bc8
+
+### Performance Improvements
+
+* optimize BB-Squeeze-MR backtest and update production config e08f6c1
+
+## [0.5.1](///compare/v0.5.0...v0.5.1) (2025-11-29)
+
+### Bug Fixes
+
+* improve system resilience for common trading errors 4d193dd
+* increase minimum stop_loss to 5.00 USD and fix balance undefined error 377e1bd
+* resolve TypeScript errors in FVG strategy 28d1bc8
+
+### Performance Improvements
+
+* optimize BB-Squeeze-MR backtest and update production config e08f6c1
+
 ## [0.5.0](///compare/v0.4.0...v0.5.0) (2025-11-28)
 
 ### Features

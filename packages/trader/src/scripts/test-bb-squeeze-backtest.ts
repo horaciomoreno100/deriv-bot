@@ -94,7 +94,7 @@ for (const config of configs) {
     const result = runBacktest(strategy, candles, {
       initialBalance: 1000,
       multiplier: mult,
-      stakeAmount: 20, // 2% of 1000
+      stakeAmount: 50, // 5% of 1000 (más agresivo para comparar)
     });
 
     const wins = result.trades.filter(t => getOutcome(t) === 'WIN');

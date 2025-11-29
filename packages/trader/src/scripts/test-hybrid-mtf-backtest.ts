@@ -61,10 +61,11 @@ const strategy = createHybridMTFStrategy(asset, Object.keys(strategyParams).leng
 console.log(`\nRunning backtest for: ${strategy.name} v${strategy.version}`);
 console.log('Parameters:', JSON.stringify(strategy.getDefaultConfig(), null, 2));
 
+// Usar mismas condiciones que BB-Squeeze-MR para comparar
 const result = runBacktest(strategy, candles, {
-  initialBalance: 10000,
-  multiplier: 100,
-  stakeAmount: 100,
+  initialBalance: 1000,
+  multiplier: 200,
+  stakeAmount: 20, // 2% de 1000 (mismo que BB-Squeeze-MR)
 });
 
 printBacktestResult(result);
