@@ -254,6 +254,13 @@ export class RiskManager {
   }
 
   /**
+   * Get minimum stake amount (for fallback when balance unavailable)
+   */
+  getMinStake(): number {
+    return this.config.minStake;
+  }
+
+  /**
    * Get configuration
    */
   getConfig(): RiskConfig {

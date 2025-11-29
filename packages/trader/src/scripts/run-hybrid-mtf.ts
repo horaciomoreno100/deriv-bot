@@ -478,12 +478,12 @@ async function main() {
     console.log(`\n✅ Signal approved | Asset: ${asset} | Direction: ${signal.direction} | Stake: $${stakeAmount.toFixed(2)} [${STRATEGY_NAME}]`);
 
     try {
-      const result = await tradeExecutionService.executeTrade({
-        symbol: asset,
-        direction: signal.direction,
-        stake: stakeAmount,
-        strategyName: STRATEGY_NAME,
-      });
+      // Pass the original signal (which contains metadata.entryPrice) to TradeExecutionService
+      // The signal from HybridMTFStrategy includes:
+      // - direction: 'CALL' | 'PUT'
+      // - confidence: number
+      // - metadata: { regime, strategy, entryPrice, takeProfit, stopLoss, tpPct, slPct }
+      const result = await tradeExecutionService.executeTrade(signal, asset);
 
       if (result.success) {
         console.log(`✅ Trade opened: ${result.contractId}`);

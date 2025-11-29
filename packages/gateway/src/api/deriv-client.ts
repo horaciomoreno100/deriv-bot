@@ -591,6 +591,7 @@ export class DerivClient {
     stopLoss?: number;
     takeProfit?: number;
     account?: string; // Optional: specific loginid or 'current' (default)
+    _retryWithMinimum?: boolean; // Internal flag to prevent infinite retry loops
   }): Promise<{
     contractId: string;
     buyPrice: number;
@@ -759,6 +760,30 @@ export class DerivClient {
         return this.buyCFD(retryOptions);
       }
 
+      const errorMessage = error.message || error.error?.message || 'Unknown error';
+
+      // AUTO-RETRY: If minimum amount error, automatically retry with the correct minimum
+      // This makes the system resilient to dynamic minimum stake requirements
+      if (errorMessage.includes('Enter an amount equal to or higher than')) {
+        const minAmountMatch = errorMessage.match(/higher than ([\d.]+)/);
+        if (minAmountMatch) {
+          const minAmount = parseFloat(minAmountMatch[1]);
+          // Add 10% buffer to avoid edge cases
+          const adjustedAmount = Math.round((minAmount * 1.1) * 100) / 100;
+
+          // Prevent infinite retry loop - only retry once
+          if (!options._retryWithMinimum) {
+            console.warn(`[DerivClient] ⚠️  Amount ${formattedAmount.toFixed(2)} below minimum ${minAmount}. Auto-retrying with ${adjustedAmount.toFixed(2)}`);
+            const retryOptions = {
+              ...options,
+              amount: adjustedAmount,
+              _retryWithMinimum: true // Flag to prevent infinite retries
+            };
+            return this.buyCFD(retryOptions as any);
+          }
+        }
+      }
+
       console.error('[DerivClient] ❌ buyCFD error:', error);
       console.error('[DerivClient] 📤 Parameters sent:', JSON.stringify(parameters, null, 2));
       console.error('[DerivClient] 🔍 Full error object:', JSON.stringify(error, null, 2));
@@ -768,12 +793,11 @@ export class DerivClient {
         errorCode: error.error?.code,
         errorDetails: error.error?.details,
       });
-      
+
       // Provide clearer error messages for common issues
-      const errorMessage = error.message || error.error?.message || 'Unknown error';
       let userFriendlyMessage = errorMessage;
-      
-      // Check for minimum amount errors
+
+      // Check for minimum amount errors (after retry failed or no match)
       if (errorMessage.includes('Enter an amount equal to or higher than')) {
         const minAmountMatch = errorMessage.match(/higher than ([\d.]+)/);
         const minAmount = minAmountMatch ? minAmountMatch[1] : '5.00';
@@ -781,7 +805,7 @@ export class DerivClient {
       } else if (errorMessage.includes('Enter an amount equal to or lower than')) {
         userFriendlyMessage = `CFD buy failed: Amount too high. ${errorMessage}`;
       }
-      
+
       throw new Error(userFriendlyMessage);
     }
   }

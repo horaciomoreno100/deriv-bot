@@ -114,9 +114,21 @@ export class TradeManager extends EventEmitter {
     mode: 'binary' | 'cfd',
     slPercentage?: number
   ): Promise<number> {
-    // Get current balance from API
-    const balanceInfo = await this.client.getBalance();
-    const balance = balanceInfo.amount;
+    // Get current balance from API with error handling
+    let balance = 0;
+    try {
+      const balanceInfo = await this.client.getBalance();
+      if (balanceInfo && typeof balanceInfo.amount === 'number') {
+        balance = balanceInfo.amount;
+      } else {
+        console.warn('[TradeManager] ⚠️  Balance not available, using minimum stake');
+        // Return minimum stake when balance unavailable
+        return this.riskManager.getMinStake();
+      }
+    } catch (error: any) {
+      console.warn(`[TradeManager] ⚠️  Error getting balance: ${error.message}, using minimum stake`);
+      return this.riskManager.getMinStake();
+    }
 
     return this.riskManager.calculateStake(mode, balance, slPercentage);
   }
