@@ -1,103 +1,137 @@
 #!/bin/bash
 #
-# Script para actualizar producción: Reemplazar BB-Squeeze-MR por Hybrid-MTF
-# 
+# Script para actualizar produccion: Consolidar traders y agregar FVG
+#
 # Cambios:
-# - Detener BB-Squeeze-MR (R_75)
-# - Iniciar Hybrid-MTF para R_75 y R_100
-# - Total: $2,000 para Hybrid-MTF ($1,000 por asset)
+# - Consolidar Hybrid-MTF: Un solo trader con R_75,R_100 ($1,000 total)
+# - Agregar FVG: Nuevo trader con R_75,R_100 ($1,000 total)
+# - Mantener Keltner-MR para frxEURUSD
+#
+# Distribucion final:
+# - HYBRID_MTF: R_75,R_100 - $1,000
+# - FVG: R_75,R_100 - $1,000
+# - KELTNER_MR: frxEURUSD - $1,000
+# Total: $3,000
 
 set -e
 
 SERVER="${DEPLOY_SERVER:-root@37.27.47.129}"
 REMOTE_PATH="/opt/apps/deriv-bot"
 
-echo "════════════════════════════════════════════════════════════"
-echo "  Actualizando Producción: Hybrid-MTF para R_75 y R_100"
-echo "════════════════════════════════════════════════════════════"
+echo "=================================================================="
+echo "  Actualizando Produccion: Consolidar Hybrid-MTF + Agregar FVG"
+echo "=================================================================="
 echo ""
 
 ssh $SERVER << 'ENDSSH'
     set -e
     cd /opt/apps/deriv-bot
 
-    echo "📋 Estado actual de PM2:"
+    echo "=========================================="
+    echo " Estado actual de PM2"
+    echo "=========================================="
     pm2 status
     echo ""
 
-    echo "🛑 1. Deteniendo BB-Squeeze-MR (R_75)..."
-    pm2 stop trader-squeeze-mr 2>/dev/null || echo "   (No estaba corriendo)"
-    pm2 delete trader-squeeze-mr 2>/dev/null || echo "   (No existía)"
-    echo "   ✅ BB-Squeeze-MR detenido"
+    echo "=========================================="
+    echo " 1. Deteniendo traders Hybrid-MTF separados"
+    echo "=========================================="
+    pm2 stop trader-hybrid-mtf-r75 2>/dev/null || echo "   (No estaba corriendo)"
+    pm2 delete trader-hybrid-mtf-r75 2>/dev/null || echo "   (No existia)"
+    pm2 stop trader-hybrid-mtf-r100 2>/dev/null || echo "   (No estaba corriendo)"
+    pm2 delete trader-hybrid-mtf-r100 2>/dev/null || echo "   (No existia)"
+    pm2 stop trader-hybrid-mtf 2>/dev/null || echo "   (No estaba corriendo)"
+    pm2 delete trader-hybrid-mtf 2>/dev/null || echo "   (No existia)"
+    echo "   OK Traders Hybrid-MTF detenidos"
     echo ""
 
-    echo "🚀 2. Iniciando Hybrid-MTF para R_75..."
+    echo "=========================================="
+    echo " 2. Iniciando Hybrid-MTF consolidado (R_75,R_100)"
+    echo "=========================================="
     pm2 start "pnpm" \
-      --name "trader-hybrid-mtf-r75" \
+      --name "trader-hybrid-mtf" \
       --cwd /opt/apps/deriv-bot \
       -- \
       --filter "@deriv-bot/trader" "demo:hybrid-mtf" \
-      --env SYMBOL="R_75" \
+      --env SYMBOL="R_75,R_100" \
       --env STRATEGY_ALLOCATION="1000" \
       --env TRADE_MODE="cfd" \
       --env RISK_PERCENTAGE="0.02" \
       --env GATEWAY_WS_URL="ws://localhost:3000" || true
-    
-    # Actualizar variables de entorno si ya existe
-    pm2 restart trader-hybrid-mtf-r75 --update-env 2>/dev/null || true
-    echo "   ✅ Hybrid-MTF R_75 iniciado"
+
+    pm2 restart trader-hybrid-mtf --update-env 2>/dev/null || true
+    echo "   OK Hybrid-MTF consolidado iniciado"
+    echo "   Symbols: R_75,R_100"
+    echo "   Allocation: $1,000"
     echo ""
 
-    echo "🚀 3. Actualizando Hybrid-MTF para R_100..."
-    # Si existe trader-hybrid-mtf, actualizarlo
-    if pm2 describe trader-hybrid-mtf > /dev/null 2>&1; then
-        echo "   Renombrando trader-hybrid-mtf a trader-hybrid-mtf-r100..."
-        pm2 delete trader-hybrid-mtf 2>/dev/null || true
-    fi
-    
-    # Crear nuevo proceso para R_100
+    echo "=========================================="
+    echo " 3. Deteniendo FVG si existe"
+    echo "=========================================="
+    pm2 stop trader-fvg 2>/dev/null || echo "   (No estaba corriendo)"
+    pm2 delete trader-fvg 2>/dev/null || echo "   (No existia)"
+    echo ""
+
+    echo "=========================================="
+    echo " 4. Iniciando FVG (R_75,R_100)"
+    echo "=========================================="
     pm2 start "pnpm" \
-      --name "trader-hybrid-mtf-r100" \
+      --name "trader-fvg" \
       --cwd /opt/apps/deriv-bot \
       -- \
-      --filter "@deriv-bot/trader" "demo:hybrid-mtf" \
-      --env SYMBOL="R_100" \
+      --filter "@deriv-bot/trader" "demo:fvg" \
+      --env SYMBOL="R_75,R_100" \
       --env STRATEGY_ALLOCATION="1000" \
       --env TRADE_MODE="cfd" \
       --env RISK_PERCENTAGE="0.02" \
+      --env FVG_TIMEFRAME="5" \
+      --env FVG_ENTRY_ZONE="middle" \
       --env GATEWAY_WS_URL="ws://localhost:3000" || true
-    echo "   ✅ Hybrid-MTF R_100 iniciado/actualizado"
+
+    pm2 restart trader-fvg --update-env 2>/dev/null || true
+    echo "   OK FVG iniciado"
+    echo "   Symbols: R_75,R_100"
+    echo "   Allocation: $1,000"
+    echo "   Timeframe: 5m"
+    echo "   Entry Zone: middle"
     echo ""
 
-    echo "💾 4. Guardando configuración PM2..."
+    echo "=========================================="
+    echo " 5. Guardando configuracion PM2"
+    echo "=========================================="
     pm2 save
-    echo "   ✅ Configuración guardada"
+    echo "   OK Configuracion guardada"
     echo ""
 
-    echo "📊 5. Estado final:"
+    echo "=========================================="
+    echo " 6. Estado final"
+    echo "=========================================="
     pm2 status
     echo ""
 
-    echo "📝 Logs de Hybrid-MTF R_75 (últimas 10 líneas):"
-    pm2 logs trader-hybrid-mtf-r75 --lines 10 --nostream || echo "   (Aún iniciando...)"
+    echo "=========================================="
+    echo " 7. Logs Hybrid-MTF (ultimas 15 lineas)"
+    echo "=========================================="
+    pm2 logs trader-hybrid-mtf --lines 15 --nostream || echo "   (Aun iniciando...)"
     echo ""
 
-    echo "📝 Logs de Hybrid-MTF R_100 (últimas 10 líneas):"
-    pm2 logs trader-hybrid-mtf-r100 --lines 10 --nostream 2>/dev/null || \
-    pm2 logs trader-hybrid-mtf --lines 10 --nostream 2>/dev/null || echo "   (Aún iniciando...)"
+    echo "=========================================="
+    echo " 8. Logs FVG (ultimas 15 lineas)"
+    echo "=========================================="
+    pm2 logs trader-fvg --lines 15 --nostream || echo "   (Aun iniciando...)"
     echo ""
 
-    echo "✅ Actualización completada!"
+    echo "=========================================="
+    echo " Actualizacion completada!"
+    echo "=========================================="
     echo ""
-    echo "📊 Resumen de cambios:"
-    echo "   - ❌ BB-Squeeze-MR (R_75): DETENIDO"
-    echo "   - ✅ Hybrid-MTF (R_75): INICIADO ($1,000)"
-    echo "   - ✅ Hybrid-MTF (R_100): INICIADO ($1,000)"
-    echo "   - ✅ Keltner-MR (frxXAUUSD): SIN CAMBIOS ($1,000)"
+    echo " Resumen de traders activos:"
+    echo "   HYBRID_MTF: R_75,R_100 ($1,000)"
+    echo "   FVG: R_75,R_100 ($1,000)"
+    echo "   KELTNER_MR: frxEURUSD ($1,000) - sin cambios"
     echo ""
-    echo "💰 Total asignado: $3,000"
+    echo " Total asignado: $3,000"
 ENDSSH
 
 echo ""
-echo "✅ Script ejecutado. Verifica los logs arriba para confirmar que todo está corriendo."
-
+echo "OK Script ejecutado. Verifica los logs arriba para confirmar que todo esta corriendo."

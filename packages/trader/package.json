@@ -41,6 +41,7 @@
     "demo:squeeze-mr": "tsx src/scripts/run-bb-squeeze-mr.ts",
     "demo:keltner-mr": "tsx src/scripts/run-keltner-mr.ts",
     "demo:hybrid-mtf": "tsx src/scripts/run-hybrid-mtf.ts",
+    "demo:fvg": "tsx src/scripts/run-fvg.ts",
     "data:fetch": "tsx src/scripts/fetch-historical-data.ts",
     "optimize:r75": "tsx src/scripts/optimize-r75.ts",
     "optimize:all": "tsx src/scripts/optimize-all-assets.ts",
