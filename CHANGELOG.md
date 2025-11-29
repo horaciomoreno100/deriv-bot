@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.0](///compare/v0.6.0...v0.7.0) (2025-11-29)
+
+### Features
+
+* add FVG strategy and consolidate Hybrid-MTF deployment b14310d
+
 ## [0.6.0](///compare/v0.5.3...v0.6.0) (2025-11-29)
 
 ### Features
