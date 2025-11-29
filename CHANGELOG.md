@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.11.0](///compare/v0.10.0...v0.11.0) (2025-11-29)
+
+### Features
+
+* show strategy name in trade notifications 5542bbf
+
+### Bug Fixes
+
+* remove unreleased fvg-liquidity-sweep exports 361cd47
+
 ## [0.10.0](///compare/v0.7.1...v0.10.0) (2025-11-29)
 
 ### Features
