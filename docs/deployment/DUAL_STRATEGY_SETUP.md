@@ -4,17 +4,17 @@ Este documento describe cómo ejecutar tres estrategias en paralelo con asignaci
 
 ## 📊 Estrategias Configuradas
 
-### 1. BB-Squeeze-MR (R_75) - Mean Reversion
+### 1. Hybrid-MTF (R_75) - Multi-Timeframe Híbrido
 - **Asset**: R_75 (Volatility 75 Index)
-- **Estrategia**: Mean Reversion puro
-- **Backtest (90 días)**: +$4,397.43 (50.9% WR, 1.03 PF)
-- **Asignación de Capital**: $1,000 (configurable)
+- **Estrategia**: Multi-timeframe híbrido (15m/5m/1m)
+- **Backtest (90 días)**: +$1,177 (45% WR, 1.15 PF) con $1,000 capital
+- **Asignación de Capital**: $1,000
 
 ### 2. Hybrid-MTF (R_100) - Multi-Timeframe Híbrido
 - **Asset**: R_100 (Volatility 100 Index)
 - **Estrategia**: Multi-timeframe híbrido (15m/5m/1m)
-- **Backtest (90 días)**: +$3,741.81 (50.8% WR, 1.03 PF)
-- **Asignación de Capital**: $1,000 (configurable)
+- **Backtest (90 días)**: +$1,177 (45% WR, 1.15 PF) con $1,000 capital
+- **Asignación de Capital**: $1,000
 
 ### 3. Keltner-MR (frxXAUUSD) - Mean Reversion para Oro
 - **Asset**: frxXAUUSD (Gold/USD)
@@ -28,7 +28,7 @@ Cada estrategia corre como un **proceso separado** con su propia asignación de 
 
 ```
 Total Account Balance: $3,000
-├── BB-Squeeze-MR (R_75): $1,000
+├── Hybrid-MTF (R_75): $1,000
 ├── Hybrid-MTF (R_100): $1,000
 └── Keltner-MR (frxXAUUSD): $1,000
 ```
@@ -44,10 +44,10 @@ Total Account Balance: $3,000
 
 ### Opción 1: Ejecutar en Terminales Separadas
 
-**Terminal 1 - BB-Squeeze-MR (R_75):**
+**Terminal 1 - Hybrid-MTF (R_75):**
 ```bash
 cd packages/trader
-SYMBOL="R_75" STRATEGY_ALLOCATION="1000" pnpm demo:squeeze-mr
+SYMBOL="R_75" STRATEGY_ALLOCATION="1000" pnpm demo:hybrid-mtf
 ```
 
 **Terminal 2 - Hybrid-MTF (R_100):**
@@ -64,14 +64,14 @@ SYMBOL="frxXAUUSD" STRATEGY_ALLOCATION="1000" pnpm demo:keltner-mr
 
 ### Opción 2: Ejecutar en Background
 
-**BB-Squeeze-MR:**
+**Hybrid-MTF (R_75):**
 ```bash
-SYMBOL="R_75" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:squeeze-mr > logs/bb-squeeze-mr.log 2>&1 &
+SYMBOL="R_75" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:hybrid-mtf > logs/hybrid-mtf-r75.log 2>&1 &
 ```
 
-**Hybrid-MTF:**
+**Hybrid-MTF (R_100):**
 ```bash
-SYMBOL="R_100" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:hybrid-mtf > logs/hybrid-mtf.log 2>&1 &
+SYMBOL="R_100" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:hybrid-mtf > logs/hybrid-mtf-r100.log 2>&1 &
 ```
 
 **Keltner-MR:**
@@ -89,9 +89,9 @@ Crear/actualizar `ecosystem.config.js`:
 module.exports = {
   apps: [
     {
-      name: 'trader-squeeze-mr',
+      name: 'trader-hybrid-mtf-r75',
       script: 'pnpm',
-      args: '--filter @deriv-bot/trader demo:squeeze-mr',
+      args: '--filter @deriv-bot/trader demo:hybrid-mtf',
       cwd: '/opt/apps/deriv-bot',
       env: {
         SYMBOL: 'R_75',
@@ -101,8 +101,8 @@ module.exports = {
         GATEWAY_WS_URL: 'ws://localhost:3000',
         ACCOUNT_LOGINID: 'your_login_id',
       },
-      error_file: './logs/trader-squeeze-mr-error.log',
-      out_file: './logs/trader-squeeze-mr-out.log',
+      error_file: './logs/trader-hybrid-mtf-r75-error.log',
+      out_file: './logs/trader-hybrid-mtf-r75-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
       autorestart: true,
@@ -110,7 +110,7 @@ module.exports = {
       min_uptime: '10s',
     },
     {
-      name: 'trader-hybrid-mtf',
+      name: 'trader-hybrid-mtf-r100',
       script: 'pnpm',
       args: '--filter @deriv-bot/trader demo:hybrid-mtf',
       cwd: '/opt/apps/deriv-bot',
@@ -122,8 +122,8 @@ module.exports = {
         GATEWAY_WS_URL: 'ws://localhost:3000',
         ACCOUNT_LOGINID: 'your_login_id',
       },
-      error_file: './logs/trader-hybrid-mtf-error.log',
-      out_file: './logs/trader-hybrid-mtf-out.log',
+      error_file: './logs/trader-hybrid-mtf-r100-error.log',
+      out_file: './logs/trader-hybrid-mtf-r100-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
       autorestart: true,
@@ -164,8 +164,8 @@ module.exports = {
 pm2 start ecosystem.config.js
 
 # O iniciar individualmente
-pm2 start ecosystem.config.js --only trader-squeeze-mr
-pm2 start ecosystem.config.js --only trader-hybrid-mtf
+pm2 start ecosystem.config.js --only trader-hybrid-mtf-r75
+pm2 start ecosystem.config.js --only trader-hybrid-mtf-r100
 ```
 
 ### 3. Monitoreo
@@ -178,8 +178,8 @@ pm2 status
 pm2 logs
 
 # Ver logs de una estrategia específica
-pm2 logs trader-squeeze-mr
-pm2 logs trader-hybrid-mtf
+pm2 logs trader-hybrid-mtf-r75
+pm2 logs trader-hybrid-mtf-r100
 
 # Ver métricas
 pm2 monit
@@ -192,13 +192,15 @@ pm2 monit
 pm2 restart all
 
 # Reiniciar una específica
-pm2 restart trader-squeeze-mr
+pm2 restart trader-hybrid-mtf-r75
+pm2 restart trader-hybrid-mtf-r100
 
 # Detener ambas
 pm2 stop all
 
 # Detener una específica
-pm2 stop trader-squeeze-mr
+pm2 stop trader-hybrid-mtf-r75
+pm2 stop trader-hybrid-mtf-r100
 
 # Eliminar procesos
 pm2 delete all
@@ -206,7 +208,7 @@ pm2 delete all
 
 ## ⚙️ Variables de Entorno
 
-### BB-Squeeze-MR (R_75)
+### Hybrid-MTF (R_75)
 
 ```bash
 SYMBOL="R_75"                    # Asset a tradear
@@ -285,7 +287,8 @@ El balance total de la cuenta se puede verificar en el Gateway o en los logs de 
 
 3. Verificar variables de entorno:
    ```bash
-   pm2 env trader-squeeze-mr
+   pm2 env trader-hybrid-mtf-r75
+   pm2 env trader-hybrid-mtf-r100
    ```
 
 ### Problema: Balance insuficiente
@@ -297,9 +300,9 @@ Si una estrategia reporta "Insufficient balance":
 ### Problema: Conflictos de suscripción
 
 Si ambas estrategias intentan suscribirse al mismo asset:
-- Verificar que `SYMBOL` sea diferente para cada estrategia
-- BB-Squeeze-MR debe usar `R_75`
-- Hybrid-MTF debe usar `R_100`
+- Verificar que `SYMBOL` sea diferente para cada proceso
+- Hybrid-MTF R_75 debe usar `R_75`
+- Hybrid-MTF R_100 debe usar `R_100`
 
 ## 📈 Optimización de Capital
 
@@ -307,7 +310,7 @@ Si ambas estrategias intentan suscribirse al mismo asset:
 
 | Estrategia | Asset | Asignación | % del Total |
 |------------|-------|------------|-------------|
-| BB-Squeeze-MR | R_75 | $1,000 | 33.33% |
+| Hybrid-MTF | R_75 | $1,000 | 33.33% |
 | Hybrid-MTF | R_100 | $1,000 | 33.33% |
 | Keltner-MR | frxXAUUSD | $1,000 | 33.33% |
 
@@ -320,10 +323,10 @@ Si ambas estrategias intentan suscribirse al mismo asset:
 Puedes ajustar la asignación según el rendimiento real:
 
 ```bash
-# Ejemplo: Si BB-Squeeze-MR está rindiendo mejor, aumentar su asignación
-pm2 restart trader-squeeze-mr --update-env --env STRATEGY_ALLOCATION=1200
-pm2 restart trader-hybrid-mtf --update-env --env STRATEGY_ALLOCATION=900
-pm2 restart trader-keltner-mr --update-env --env STRATEGY_ALLOCATION=900
+# Ejemplo: Ajustar asignaciones según rendimiento
+pm2 restart trader-hybrid-mtf-r75 --update-env --env STRATEGY_ALLOCATION=1200
+pm2 restart trader-hybrid-mtf-r100 --update-env --env STRATEGY_ALLOCATION=800
+pm2 restart trader-keltner-mr --update-env --env STRATEGY_ALLOCATION=1000
 ```
 
 **Importante**: Asegúrate de que la suma de las asignaciones no exceda el balance total disponible ($3,000).
@@ -337,7 +340,7 @@ pm2 restart trader-keltner-mr --update-env --env STRATEGY_ALLOCATION=900
 - [ ] Logs configurados y accesibles
 - [ ] Monitoreo activo (PM2 monit o similar)
 - [ ] Alertas configuradas (Slack/Telegram)
-- [ ] Verificar que cada estrategia use su asset correcto (R_75, R_100, frxXAUUSD)
+- [ ] Verificar que cada proceso use su asset correcto (R_75 para hybrid-mtf-r75, R_100 para hybrid-mtf-r100, frxXAUUSD para keltner-mr)
 
 ## 📝 Notas
 
