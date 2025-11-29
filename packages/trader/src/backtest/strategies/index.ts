@@ -54,8 +54,3 @@ export {
   FVGBacktestStrategy,
   createFVGStrategy,
 } from './fvg-backtest.strategy.js';
-
-export {
-  FVGLiquiditySweepBacktestStrategy,
-  createFVGLiquiditySweepStrategy,
-} from './fvg-liquidity-sweep-backtest.strategy.js';
