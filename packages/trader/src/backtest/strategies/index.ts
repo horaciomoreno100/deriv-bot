@@ -49,3 +49,13 @@ export {
   createMTFLevelsStrategy,
   type MTFLevelsParams,
 } from './mtf-levels-backtest.strategy.js';
+
+export {
+  FVGBacktestStrategy,
+  createFVGStrategy,
+} from './fvg-backtest.strategy.js';
+
+export {
+  FVGLiquiditySweepBacktestStrategy,
+  createFVGLiquiditySweepStrategy,
+} from './fvg-liquidity-sweep-backtest.strategy.js';

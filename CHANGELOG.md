@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0](///compare/v0.7.1...v0.10.0) (2025-11-29)
+
+### Features
+
+* add stats by strategy to /stats command f118243
+
+## [0.9.0](///compare/v0.7.1...v0.9.0) (2025-11-29)
+
+### Features
+
+* add stats by strategy to /stats command f118243
+
 ## [0.8.1](///compare/v0.8.0...v0.8.1) (2025-11-29)
 
 ### Bug Fixes
