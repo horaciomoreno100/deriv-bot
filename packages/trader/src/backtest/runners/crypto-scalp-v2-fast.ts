@@ -19,6 +19,117 @@ import { classifyTrendStrength, isTrending } from '../../strategies/crypto-scalp
 import { classifyBBZone } from '../../strategies/crypto-scalp/indicators/bollinger.js';
 
 /**
+ * Calculate EMA
+ */
+function calculateEMA(values: number[], period: number): number[] {
+  const result: number[] = [];
+  const multiplier = 2 / (period + 1);
+
+  for (let i = 0; i < values.length; i++) {
+    if (i === 0) {
+      result.push(values[i]!);
+    } else if (i < period) {
+      // Use SMA for initial period
+      let sum = 0;
+      for (let j = 0; j <= i; j++) {
+        sum += values[j]!;
+      }
+      result.push(sum / (i + 1));
+    } else {
+      const ema = (values[i]! - result[i - 1]!) * multiplier + result[i - 1]!;
+      result.push(ema);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Resample 1m candles to 15m
+ */
+function resampleTo15m(candles: Candle[]): Candle[] {
+  const resampled: Candle[] = [];
+  const intervalSeconds = 15 * 60; // 15 minutes
+
+  for (const candle of candles) {
+    const slotStartSeconds = Math.floor(candle.timestamp / intervalSeconds) * intervalSeconds;
+
+    // Find or create resampled candle for this slot
+    let resampledCandle = resampled.find(c => c.timestamp === slotStartSeconds);
+
+    if (!resampledCandle) {
+      // New slot
+      resampledCandle = {
+        timestamp: slotStartSeconds,
+        open: candle.open,
+        high: candle.high,
+        low: candle.low,
+        close: candle.close,
+        volume: candle.volume,
+      };
+      resampled.push(resampledCandle);
+    } else {
+      // Update existing slot
+      resampledCandle.high = Math.max(resampledCandle.high, candle.high);
+      resampledCandle.low = Math.min(resampledCandle.low, candle.low);
+      resampledCandle.close = candle.close; // Last close
+      resampledCandle.volume = (resampledCandle.volume ?? 0) + (candle.volume ?? 0);
+    }
+  }
+
+  return resampled.sort((a, b) => a.timestamp - b.timestamp);
+}
+
+/**
+ * Pre-calculate 15m trend direction mapping
+ * Returns array where index corresponds to 1m candle index, value is trend direction
+ */
+function precalculate15mTrend(
+  candles1m: Candle[],
+  candles15m: Candle[],
+  ema50_15m: number[]
+): ('UP' | 'DOWN' | 'NEUTRAL')[] {
+  const trendMap: ('UP' | 'DOWN' | 'NEUTRAL')[] = [];
+  const intervalSeconds = 15 * 60;
+
+  // Create mapping: 15m timestamp -> index in 15m array
+  const timestampToIndex15m = new Map<number, number>();
+  candles15m.forEach((c, i) => {
+    timestampToIndex15m.set(c.timestamp, i);
+  });
+
+  // For each 1m candle, find its 15m trend
+  for (let i = 0; i < candles1m.length; i++) {
+    const candle1m = candles1m[i]!;
+    const slotStartSeconds = Math.floor(candle1m.timestamp / intervalSeconds) * intervalSeconds;
+    
+    const index15m = timestampToIndex15m.get(slotStartSeconds);
+    
+    if (index15m === undefined || index15m < 0 || index15m >= ema50_15m.length || index15m >= candles15m.length) {
+      trendMap[i] = 'NEUTRAL';
+      continue;
+    }
+
+    const ema50 = ema50_15m[index15m]!;
+    const price15m = candles15m[index15m]!.close;
+
+    // Compare current price with EMA 50
+    const diff = ((price15m - ema50) / ema50) * 100;
+
+    // Use larger threshold (0.1%) to avoid too many NEUTRAL
+    if (diff > 0.1) {
+      trendMap[i] = 'UP'; // Price > 0.1% above EMA = uptrend
+    } else if (diff < -0.1) {
+      trendMap[i] = 'DOWN'; // Price < 0.1% below EMA = downtrend
+    } else {
+      trendMap[i] = 'NEUTRAL';
+    }
+  }
+
+  return trendMap;
+}
+
+/**
  * Pre-calculated VWAP data
  */
 interface VWAPData {
@@ -41,10 +152,17 @@ interface VolumeData {
  * Creates an optimized entry function that implements CryptoScalp v2 logic
  * using pre-calculated indicators.
  */
+export interface CryptoScalpV2EntryFnOptions {
+  /** Enable MTF filter (15m EMA 50 trend bias) */
+  enableMTF?: boolean;
+}
+
 export function createCryptoScalpV2EntryFn(
   candles: Candle[],
-  params: Partial<CryptoScalpParams> = {}
+  params: Partial<CryptoScalpParams> = {},
+  options: CryptoScalpV2EntryFnOptions = {}
 ): (index: number, indicators: Record<string, number | boolean>) => FastEntrySignal | null {
+  const { enableMTF = true } = options;
   // Store candles reference for price access
   const candlesRef = candles;
   const fullParams = { ...DEFAULT_CRYPTO_SCALP_PARAMS, ...params };
@@ -72,6 +190,35 @@ export function createCryptoScalpV2EntryFn(
 
   // Pre-calculate volume data ONCE
   const volumeData = precalculateVolume(candles, fullParams.volume.smaPeriod);
+
+  // Pre-calculate 15m EMA 50 for MTF filter (only if enabled)
+  let trend15mMap: ('UP' | 'DOWN' | 'NEUTRAL')[] = [];
+  
+  if (enableMTF) {
+    const candles15m = resampleTo15m(candles);
+    const closes15m = candles15m.map(c => c.close);
+    const ema50_15m = calculateEMA(closes15m, 50);
+    
+    // Pre-calculate 15m trend direction for each 1m candle
+    trend15mMap = precalculate15mTrend(candles, candles15m, ema50_15m);
+    
+    // Debug: Count trend directions
+    const trendCounts = { UP: 0, DOWN: 0, NEUTRAL: 0 };
+    let validTrends = 0;
+    for (let i = 50; i < Math.min(5000, trend15mMap.length); i++) {
+      const trend = trend15mMap[i];
+      if (trend) {
+        trendCounts[trend]++;
+        validTrends++;
+      }
+    }
+    const upPct = validTrends > 0 ? (trendCounts.UP / validTrends * 100).toFixed(1) : '0';
+    const downPct = validTrends > 0 ? (trendCounts.DOWN / validTrends * 100).toFixed(1) : '0';
+    const neutralPct = validTrends > 0 ? (trendCounts.NEUTRAL / validTrends * 100).toFixed(1) : '0';
+    console.log(`[MTF] Enabled - Trend distribution: UP=${upPct}%, DOWN=${downPct}%, NEUTRAL=${neutralPct}%`);
+  } else {
+    console.log(`[MTF] Disabled`);
+  }
 
   return (index: number, indicators: Record<string, number | boolean>) => {
     // Get price from candle (not from indicators)
@@ -115,6 +262,20 @@ export function createCryptoScalpV2EntryFn(
     // Calculate trend strength
     const trendStrength = classifyTrendStrength(adx, fullParams.adx);
 
+    // Get 15m trend direction for MTF filter (pre-calculated)
+    const trend15m = enableMTF ? (trend15mMap[index] ?? 'NEUTRAL') : 'NEUTRAL';
+    
+    // Adjust score thresholds based on 15m trend (only if MTF enabled)
+    // If 15m is up: easier to go LONG (score 2), harder to go SHORT (score 4)
+    // If 15m is down: easier to go SHORT (score 2), harder to go LONG (score 4)
+    // If neutral or MTF disabled: use default (score 3)
+    const longScoreThreshold = enableMTF 
+      ? (trend15m === 'UP' ? 2 : trend15m === 'DOWN' ? 4 : 3)
+      : 3;
+    const shortScoreThreshold = enableMTF
+      ? (trend15m === 'DOWN' ? 2 : trend15m === 'UP' ? 4 : 3)
+      : 3;
+
     // Check LONG conditions
     const longScore = checkLongConditions(
       {
@@ -132,7 +293,7 @@ export function createCryptoScalpV2EntryFn(
       fullParams
     );
 
-    if (longScore.score >= 3) {
+    if (longScore.score >= longScoreThreshold) {
       return {
         direction: 'CALL',
         price: 0, // Will use candle close
@@ -156,7 +317,7 @@ export function createCryptoScalpV2EntryFn(
       fullParams
     );
 
-    if (shortScore.score >= 3) {
+    if (shortScore.score >= shortScoreThreshold) {
       return {
         direction: 'PUT',
         price: 0, // Will use candle close

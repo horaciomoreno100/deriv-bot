@@ -242,8 +242,56 @@ async function main() {
       score: scoreZombieHigh,
     });
 
-    // 6. Combinación: Partial TP + Smart Zombie
-    console.log('6. Testing Partial TP + Smart Zombie...');
+    // 6. BASE sin MTF (para comparar)
+    console.log('6. Testing BASE without MTF Filter...');
+    const entryFnNoMTF = createCryptoScalpV2EntryFn(candles, preset, { enableMTF: false });
+    const resultNoMTF = backtester.run({
+      ...baseConfig,
+      entryFn: entryFnNoMTF,
+    });
+    const scoreNoMTF = resultNoMTF.profitFactor > 1
+      ? (resultNoMTF.profitFactor - 1) * Math.sqrt(resultNoMTF.trades) * (1 - resultNoMTF.maxDrawdownPct / 100)
+      : -Math.abs(resultNoMTF.netPnl);
+    
+    results.push({
+      name: 'BASE (no MTF)',
+      trades: resultNoMTF.trades,
+      wins: resultNoMTF.wins,
+      losses: resultNoMTF.losses,
+      netPnl: resultNoMTF.netPnl,
+      pf: resultNoMTF.profitFactor,
+      maxDD: resultNoMTF.maxDrawdownPct,
+      winRate: resultNoMTF.winRate,
+      expectancy: resultNoMTF.expectancy,
+      score: scoreNoMTF,
+    });
+
+    // 7. MTF Filter (15m EMA 50 trend bias)
+    console.log('7. Testing MTF Filter (15m EMA 50 trend bias)...');
+    const entryFnWithMTF = createCryptoScalpV2EntryFn(candles, preset, { enableMTF: true });
+    const resultMTF = backtester.run({
+      ...baseConfig,
+      entryFn: entryFnWithMTF,
+    });
+    const scoreMTF = resultMTF.profitFactor > 1
+      ? (resultMTF.profitFactor - 1) * Math.sqrt(resultMTF.trades) * (1 - resultMTF.maxDrawdownPct / 100)
+      : -Math.abs(resultMTF.netPnl);
+    
+    results.push({
+      name: 'MTF Filter (15m EMA)',
+      trades: resultMTF.trades,
+      wins: resultMTF.wins,
+      losses: resultMTF.losses,
+      netPnl: resultMTF.netPnl,
+      pf: resultMTF.profitFactor,
+      maxDD: resultMTF.maxDrawdownPct,
+      winRate: resultMTF.winRate,
+      expectancy: resultMTF.expectancy,
+      score: scoreMTF,
+    });
+
+    // 8. Combinación: Partial TP + Smart Zombie
+    console.log('8. Testing Partial TP + Smart Zombie...');
     const resultCombo = backtester.run({
       ...baseConfig,
       entryFn: entryFnBase,
