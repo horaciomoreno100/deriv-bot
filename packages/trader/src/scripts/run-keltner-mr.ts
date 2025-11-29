@@ -24,6 +24,93 @@ import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 // Load environment variables
 dotenv.config();
 
+/**
+ * Check if Forex market is open (24/5 - closes Friday 5PM EST, opens Sunday 5PM EST)
+ * Returns true if market is open, false if closed (weekend)
+ */
+function isForexMarketOpen(): boolean {
+  const now = new Date();
+  const utcDay = now.getUTCDay(); // 0 = Sunday, 6 = Saturday
+  const utcHour = now.getUTCHours();
+
+  // Market is closed:
+  // - All day Saturday (UTC day 6)
+  // - Sunday before 22:00 UTC (5PM EST = 22:00 UTC in winter, 21:00 UTC in summer)
+  // - Friday after 22:00 UTC
+
+  if (utcDay === 6) {
+    // Saturday - market closed all day
+    return false;
+  }
+
+  if (utcDay === 0 && utcHour < 21) {
+    // Sunday before 21:00 UTC (approximately when market opens)
+    return false;
+  }
+
+  if (utcDay === 5 && utcHour >= 22) {
+    // Friday after 22:00 UTC - market closing
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Get time until Forex market opens (in minutes)
+ */
+function getMinutesUntilForexOpen(): number {
+  const now = new Date();
+  const utcDay = now.getUTCDay();
+  const utcHour = now.getUTCHours();
+  const utcMinute = now.getUTCMinutes();
+
+  // Target: Sunday 21:00 UTC
+  let daysUntilSunday = 0;
+
+  if (utcDay === 6) {
+    // Saturday -> wait 1 day + hours until 21:00
+    daysUntilSunday = 1;
+  } else if (utcDay === 0 && utcHour < 21) {
+    // Sunday before 21:00 -> wait until 21:00 today
+    daysUntilSunday = 0;
+  } else if (utcDay === 5 && utcHour >= 22) {
+    // Friday after 22:00 -> wait 2 days until Sunday 21:00
+    daysUntilSunday = 2;
+  } else {
+    // Market should be open
+    return 0;
+  }
+
+  const targetHour = 21;
+  const targetMinute = 0;
+
+  const hoursUntil = (daysUntilSunday * 24) + (targetHour - utcHour);
+  const minutesUntil = (hoursUntil * 60) + (targetMinute - utcMinute);
+
+  return Math.max(0, minutesUntil);
+}
+
+/**
+ * Wait until Forex market opens
+ */
+async function waitForForexMarketOpen(): Promise<void> {
+  while (!isForexMarketOpen()) {
+    const minutesUntil = getMinutesUntilForexOpen();
+    const hoursUntil = Math.floor(minutesUntil / 60);
+    const minsRemaining = minutesUntil % 60;
+
+    console.log(`\n⏰ Forex market is CLOSED (weekend)`);
+    console.log(`   Waiting ${hoursUntil}h ${minsRemaining}m until market opens...`);
+    console.log(`   Next check in 30 minutes\n`);
+
+    // Wait 30 minutes before checking again
+    await new Promise(resolve => setTimeout(resolve, 30 * 60 * 1000));
+  }
+
+  console.log(`\n✅ Forex market is OPEN! Starting trader...\n`);
+}
+
 // Configuration
 const STRATEGY_NAME = 'KELTNER_MR';
 const TRADE_MODE: TradeMode = (process.env.TRADE_MODE as TradeMode) || 'cfd';
@@ -113,6 +200,11 @@ function processTick(tick: Tick): Candle | null {
 }
 
 async function main() {
+  // Check if Forex market is open before starting
+  // This prevents the "This market is presently closed" error on weekends
+  console.log('🔍 Checking Forex market status...');
+  await waitForForexMarketOpen();
+
   // Initialize Slack Alerts
   slackAlerter = initSlackAlerts(`trader-${STRATEGY_NAME.toLowerCase()}`);
 
