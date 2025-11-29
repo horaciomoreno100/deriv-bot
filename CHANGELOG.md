@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.0](///compare/v0.7.0...v0.8.0) (2025-11-29)
+
+### Features
+
+* add multi-strategy signal proximity tracking 187ab2a
+
 ## [0.7.0](///compare/v0.6.0...v0.7.0) (2025-11-29)
 
 ### Features
