@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.2](///compare/v0.11.0...v0.11.2) (2025-11-29)
+
+### Bug Fixes
+
+* remove non-existent fvg-liquidity-sweep exports 554c6ae
+
+## [0.11.1](///compare/v0.11.0...v0.11.1) (2025-11-29)
+
+### Bug Fixes
+
+* remove non-existent fvg-liquidity-sweep exports 554c6ae
+
 ## [0.11.0](///compare/v0.10.0...v0.11.0) (2025-11-29)
 
 ### Features

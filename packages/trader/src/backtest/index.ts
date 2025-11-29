@@ -101,6 +101,8 @@ export {
   createMTFLevelsStrategy,
   FVGBacktestStrategy,
   createFVGStrategy,
+  FVGLiquiditySweepBacktestStrategy,
+  createFVGLiquiditySweepStrategy,
   type DetectionMethod,
   type TrendExhaustionParams,
   type MTFLevelsParams,
