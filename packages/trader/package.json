@@ -59,7 +59,8 @@
     "data:fetch:calendar": "tsx src/scripts/fetch-economic-calendar.ts",
     "analyze:news": "tsx src/scripts/analyze-news-impact.ts",
     "compare:mr": "tsx src/scripts/compare-mr-strategies.ts",
-    "compare:mr:full": "RUN_MC=true RUN_OOS=true tsx src/scripts/compare-mr-strategies.ts"
+    "compare:mr:full": "RUN_MC=true RUN_OOS=true tsx src/scripts/compare-mr-strategies.ts",
+    "compare:all:1month": "tsx src/scripts/compare-all-strategies-1month.ts"
   },
   "dependencies": {
     "@deriv-bot/gateway": "workspace:*",

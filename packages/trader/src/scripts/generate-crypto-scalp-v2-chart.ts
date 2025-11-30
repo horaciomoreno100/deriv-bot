@@ -56,34 +56,13 @@ function loadCandles(filepath: string): Candle[] {
   return candles;
 }
 
-// Modified FastBacktester that captures trades
-class CapturingFastBacktester extends FastBacktester {
-  capturedTrades: CapturedTrade[] = [];
-
-  runWithCapture(config: any): { result: any; trades: CapturedTrade[] } {
-    this.capturedTrades = [];
-    const result = this.run(config);
-    return { result, trades: this.capturedTrades };
-  }
-
-  // Override run to capture trades - we'll need to modify the logic
-  // For now, let's create a custom run method
-}
-
-// Custom backtest that captures trades
+// Custom backtest that captures trades (simplified version matching FastBacktester logic)
 function runBacktestWithCapture(
   candles: Candle[],
+  indicatorCache: any,
   entryFn: (index: number, indicators: Record<string, number | boolean>) => any,
   config: any
 ): { result: any; trades: CapturedTrade[] } {
-  const indicatorCache = createIndicatorCache(candles, ['rsi', 'atr', 'adx', 'bb', 'vwap'], {
-    rsiPeriod: 14,
-    atrPeriod: 14,
-    adxPeriod: 14,
-    bbPeriod: 20,
-    bbStdDev: 2,
-  });
-
   const {
     tpPct,
     slPct,
@@ -130,15 +109,15 @@ function runBacktestWithCapture(
     let outcome: 'WIN' | 'LOSS' = 'LOSS';
     let exitIndex = i;
     let exitReason = 'TIMEOUT';
-    let bbMiddleTouched = false;
 
     for (let j = i + 1; j < Math.min(i + maxBarsInTrade + 1, endIndex); j++) {
       const candle = candles[j]!;
+      const barsHeld = j - i;
       const exitIndicators = indicatorCache.getSnapshot(j);
-      const bbMiddle = exitIndicators.bbMiddle as number | undefined;
-      const vwap = exitIndicators.vwap as number | undefined;
+      const currentPrice = candle.close;
 
       if (signal.direction === 'CALL') {
+        // Stop Loss
         if (candle.low <= slPrice) {
           exitPrice = slPrice;
           outcome = 'LOSS';
@@ -146,6 +125,7 @@ function runBacktestWithCapture(
           exitReason = 'SL';
           break;
         }
+        // Take Profit
         if (candle.high >= tpPrice) {
           exitPrice = tpPrice;
           outcome = 'WIN';
@@ -153,25 +133,24 @@ function runBacktestWithCapture(
           exitReason = 'TP';
           break;
         }
-        if (config.zombieKiller?.enabled) {
-          const barsHeld = j - i;
-          if (barsHeld >= config.zombieKiller.bars) {
-            const currentPnl = (candle.close - entryPrice) / entryPrice * 100;
-            const minPnl = config.zombieKiller.minPnlPct || 0.05;
-            const isReversing = config.zombieKiller.onlyIfReversing
-              ? (j > i + 1 && candle.close < candles[j - 1]!.close)
-              : true;
-            
-            if (currentPnl < minPnl && isReversing) {
-              exitPrice = candle.close;
-              outcome = currentPnl > 0 ? 'WIN' : 'LOSS';
-              exitIndex = j;
-              exitReason = 'ZOMBIE';
-              break;
-            }
+        // Zombie Killer
+        if (config.zombieKiller?.enabled && barsHeld >= config.zombieKiller.bars) {
+          const currentPnl = (currentPrice - entryPrice) / entryPrice * 100;
+          const minPnl = config.zombieKiller.minPnlPct || 0.05;
+          const isReversing = config.zombieKiller.onlyIfReversing
+            ? (j > i + 1 && currentPrice < candles[j - 1]!.close)
+            : true;
+          
+          if (currentPnl < minPnl && isReversing) {
+            exitPrice = currentPrice;
+            outcome = currentPnl >= 0 ? 'WIN' : 'LOSS';
+            exitIndex = j;
+            exitReason = 'ZOMBIE';
+            break;
           }
         }
       } else {
+        // PUT
         if (candle.high >= slPrice) {
           exitPrice = slPrice;
           outcome = 'LOSS';
@@ -186,27 +165,36 @@ function runBacktestWithCapture(
           exitReason = 'TP';
           break;
         }
-        if (config.zombieKiller?.enabled) {
-          const barsHeld = j - i;
-          if (barsHeld >= config.zombieKiller.bars) {
-            const currentPnl = (entryPrice - candle.close) / entryPrice * 100;
-            const minPnl = config.zombieKiller.minPnlPct || 0.05;
-            const isReversing = config.zombieKiller.onlyIfReversing
-              ? (j > i + 1 && candle.close > candles[j - 1]!.close)
-              : true;
-            
-            if (currentPnl < minPnl && isReversing) {
-              exitPrice = candle.close;
-              outcome = currentPnl > 0 ? 'WIN' : 'LOSS';
-              exitIndex = j;
-              exitReason = 'ZOMBIE';
-              break;
-            }
+        if (config.zombieKiller?.enabled && barsHeld >= config.zombieKiller.bars) {
+          const currentPnl = (entryPrice - currentPrice) / entryPrice * 100;
+          const minPnl = config.zombieKiller.minPnlPct || 0.05;
+          const isReversing = config.zombieKiller.onlyIfReversing
+            ? (j > i + 1 && currentPrice > candles[j - 1]!.close)
+            : true;
+          
+          if (currentPnl < minPnl && isReversing) {
+            exitPrice = currentPrice;
+            outcome = currentPnl >= 0 ? 'WIN' : 'LOSS';
+            exitIndex = j;
+            exitReason = 'ZOMBIE';
+            break;
           }
         }
       }
     }
 
+    // If no exit, use timeout
+    if (exitIndex === i) {
+      exitIndex = Math.min(i + maxBarsInTrade, endIndex - 1);
+      exitPrice = candles[exitIndex]!.close;
+      if (signal.direction === 'CALL') {
+        outcome = exitPrice >= entryPrice ? 'WIN' : 'LOSS';
+      } else {
+        outcome = exitPrice <= entryPrice ? 'WIN' : 'LOSS';
+      }
+    }
+
+    // Calculate PnL
     const priceDiff = signal.direction === 'CALL'
       ? (exitPrice - entryPrice) / entryPrice * 100
       : (entryPrice - exitPrice) / entryPrice * 100;
@@ -394,7 +382,7 @@ async function main() {
       : { enabled: true, bars: 15, minPnlPct: 0.1 },
   };
 
-  const { result, trades } = runBacktestWithCapture(candles, entryFn, baseConfig);
+  const { result, trades } = runBacktestWithCapture(candles, indicatorCache, entryFn, baseConfig);
 
   console.log(`\nBacktest Results:`);
   console.log(`  Trades: ${result.trades}`);
