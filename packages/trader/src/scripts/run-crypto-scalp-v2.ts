@@ -530,7 +530,9 @@ async function main() {
 
   // Signal proximity check - publish every 10 seconds (independent of candle completion)
   console.log(`📡 Starting signal proximity publisher (every ${PROXIMITY_CHECK_INTERVAL/1000}s)`);
-  setInterval(async () => {
+
+  // Use a regular function to publish proximities
+  const publishProximities = async () => {
     // Check connection first
     const isConnected = gatewayClient.isConnected();
     if (!isConnected) {
@@ -556,7 +558,10 @@ async function main() {
         // Get latest indicators
         const indicators = backtester.getIndicatorSnapshot(history.length - 1);
         const latestCandle = history[history.length - 1];
-        if (!latestCandle) continue;
+        if (!latestCandle) {
+          console.log(`[Proximity] ${asset}: No latest candle`);
+          continue;
+        }
 
         const proximityData = calculateSignalProximity(indicators, asset, latestCandle);
         if (proximityData) {
@@ -569,13 +574,24 @@ async function main() {
             readyToSignal: proximityData.readyToSignal,
             missingCriteria: proximityData.missingCriteria || [],
           });
-          console.log(`[Proximity] ${asset}: Published ${proximityData.direction} ${proximityData.proximity.toFixed(0)}%`);
+          console.log(`[Proximity] ${asset}: ${proximityData.direction} ${proximityData.proximity.toFixed(0)}%`);
+        } else {
+          console.log(`[Proximity] ${asset}: No proximity data calculated`);
         }
       } catch (error: any) {
         // Log all errors for debugging
         console.error(`[Proximity] ${asset} Error:`, error?.message || error);
       }
     }
+  };
+
+  // Publish immediately on startup
+  console.log(`[Proximity] Initial publish...`);
+  publishProximities().catch(err => console.error(`[Proximity] Initial error:`, err));
+
+  // Then publish every 10 seconds
+  setInterval(() => {
+    publishProximities().catch(err => console.error(`[Proximity] Interval error:`, err));
   }, PROXIMITY_CHECK_INTERVAL);
 
   // Process ticks and generate signals
