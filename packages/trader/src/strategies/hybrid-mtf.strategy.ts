@@ -596,18 +596,21 @@ export class HybridMTFStrategy extends BaseStrategy {
             }
         }
 
-        // Check RSI cross requirement
+        // Check RSI momentum requirement (v3.0.1 FIX: RSI must be moving in the right direction)
+        // Instead of requiring RSI to cross threshold (which contradicts entry condition),
+        // we check that RSI is moving favorably (improving from previous candle)
         if (this.params.requireRSICross && prevRSI !== null) {
             if (direction === 'CALL') {
-                // For CALL: RSI must cross above oversold threshold (was below, now above/equal)
-                if (!(prevRSI < this.params.rsiOversold && currentRSI >= this.params.rsiOversold)) {
-                    console.log(`[HybridMTF] ⏭️  RSI cross check failed: RSI not crossing above ${this.params.rsiOversold} (prev=${prevRSI.toFixed(1)}, curr=${currentRSI.toFixed(1)})`);
+                // For CALL: RSI must be rising (current > prev) - showing momentum recovery
+                // This is more practical than requiring cross above threshold (which contradicts rsi < oversold condition)
+                if (currentRSI <= prevRSI) {
+                    console.log(`[HybridMTF] ⏭️  RSI momentum check failed: RSI not rising (prev=${prevRSI.toFixed(1)}, curr=${currentRSI.toFixed(1)})`);
                     return false;
                 }
             } else {
-                // For PUT: RSI must cross below overbought threshold (was above, now below/equal)
-                if (!(prevRSI > this.params.rsiOverbought && currentRSI <= this.params.rsiOverbought)) {
-                    console.log(`[HybridMTF] ⏭️  RSI cross check failed: RSI not crossing below ${this.params.rsiOverbought} (prev=${prevRSI.toFixed(1)}, curr=${currentRSI.toFixed(1)})`);
+                // For PUT: RSI must be falling (current < prev) - showing momentum weakening
+                if (currentRSI >= prevRSI) {
+                    console.log(`[HybridMTF] ⏭️  RSI momentum check failed: RSI not falling (prev=${prevRSI.toFixed(1)}, curr=${currentRSI.toFixed(1)})`);
                     return false;
                 }
             }

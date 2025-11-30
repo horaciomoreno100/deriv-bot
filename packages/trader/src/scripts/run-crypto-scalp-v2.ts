@@ -555,12 +555,34 @@ async function main() {
       }
 
       try {
-        // Get latest indicators
-        const indicators = backtester.getIndicatorSnapshot(history.length - 1);
+        // Update backtester if history has grown significantly
+        // This ensures indicators are calculated for latest candles
+        let currentBacktester = backtester;
+        if (history.length > backtester.length + 5) {
+          console.log(`[Proximity] ${asset}: Updating backtester (${backtester.length} -> ${history.length})`);
+          currentBacktester = new FastBacktester(history, ['rsi', 'atr', 'adx', 'bb'], {
+            rsiPeriod: 14,
+            atrPeriod: 14,
+            adxPeriod: 14,
+            bbPeriod: 20,
+            bbStdDev: 2,
+          });
+          backtesters.set(asset, currentBacktester);
+        }
+
+        // Get latest indicators - use backtester's length since it may differ from history
+        const indicatorIndex = Math.min(history.length - 1, currentBacktester.length - 1);
+        const indicators = currentBacktester.getIndicatorSnapshot(indicatorIndex);
         const latestCandle = history[history.length - 1];
         if (!latestCandle) {
           console.log(`[Proximity] ${asset}: No latest candle`);
           continue;
+        }
+
+        // Debug: log indicator values to understand what's missing
+        const { rsi, adx, plusDI, minusDI, bbUpper, bbMiddle, bbLower } = indicators as Record<string, number>;
+        if (typeof rsi !== 'number' || typeof adx !== 'number' || typeof bbUpper !== 'number') {
+          console.log(`[Proximity] ${asset}: Indicator values - rsi=${rsi}, adx=${adx}, plusDI=${plusDI}, minusDI=${minusDI}, bbUpper=${bbUpper}, bbMiddle=${bbMiddle}, bbLower=${bbLower}`);
         }
 
         const proximityData = calculateSignalProximity(indicators, asset, latestCandle);
