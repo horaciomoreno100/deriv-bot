@@ -89,6 +89,8 @@ export {
   createKeltnerMRStrategy,
   HybridMTFBacktestStrategy,
   createHybridMTFStrategy,
+  HybridMTFBacktestMLStrategy,
+  createHybridMTFMLStrategy,
   TrendExhaustionBacktestStrategy,
   createTrendExhaustionStrategy,
   createRSIDivergenceStrategy,
@@ -107,6 +109,15 @@ export {
   type TrendExhaustionParams,
   type MTFLevelsParams,
 } from './strategies/index.js';
+
+// ML Data Collection
+export {
+  DataCollector,
+  createDataCollector,
+  FEATURE_IMPORTANCE_HINTS,
+  RECOMMENDED_XGBOOST_PARAMS,
+  type TradeFeatureRow,
+} from './data-collector.js';
 
 // Legacy exports for backward compatibility
 // These will be deprecated in future versions
