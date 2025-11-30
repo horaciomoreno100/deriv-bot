@@ -412,28 +412,27 @@ async function main() {
       // Check for entry signal
       const signal = entryFn(history.length - 1, indicators);
       
-        if (signal) {
-          const direction = signal.direction === 'CALL' ? 'CALL' : 'PUT';
-          const signalObj: Signal = {
-            asset,
-            direction,
-            confidence: 0.7,
-            timestamp: candle.timestamp,
-            price: signal.price || candle.close,
-            reason: 'CryptoScalp v2 Entry',
-          };
+      if (signal) {
+        const direction = signal.direction === 'CALL' ? 'CALL' : 'PUT';
+        const signalObj: Signal = {
+          asset,
+          direction,
+          confidence: 0.7,
+          timestamp: candle.timestamp,
+          price: signal.price || candle.close,
+          reason: 'CryptoScalp v2 Entry',
+        };
 
-          console.log(`\n🎯 Signal generated for ${asset}:`);
-          console.log(`   Direction: ${direction}`);
-          console.log(`   Price: $${signalObj.price.toFixed(2)}`);
-          console.log(`   Reason: ${signalObj.reason}`);
+        console.log(`\n🎯 Signal generated for ${asset}:`);
+        console.log(`   Direction: ${direction}`);
+        console.log(`   Price: $${signalObj.price.toFixed(2)}`);
+        console.log(`   Reason: ${signalObj.reason}`);
 
-          // Execute trade
-          try {
-            await tradeExecutionService.executeSignal(signalObj);
-          } catch (error) {
-            console.error(`❌ Error executing trade: ${error}`);
-          }
+        // Execute trade
+        try {
+          await tradeExecutionService.executeSignal(signalObj);
+        } catch (error) {
+          console.error(`❌ Error executing trade: ${error}`);
         }
       }
     } catch (error) {
