@@ -42,6 +42,7 @@
     "demo:keltner-mr": "tsx src/scripts/run-keltner-mr.ts",
     "demo:hybrid-mtf": "tsx src/scripts/run-hybrid-mtf.ts",
     "demo:fvg": "tsx src/scripts/run-fvg.ts",
+    "demo:crypto-scalp-v2": "tsx src/scripts/run-crypto-scalp-v2.ts",
     "data:fetch": "tsx src/scripts/fetch-historical-data.ts",
     "optimize:r75": "tsx src/scripts/optimize-r75.ts",
     "optimize:all": "tsx src/scripts/optimize-all-assets.ts",

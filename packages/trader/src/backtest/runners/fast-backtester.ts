@@ -72,6 +72,15 @@ export interface FastBacktestConfig {
   /** Exit on Bollinger Middle Band (mean reversion exit) */
   exitOnBBMiddle?: boolean;
   
+  /** Exit on Bollinger Upper Band (for CALL trades - take profit early) */
+  exitOnBBUpper?: boolean;
+  
+  /** Exit on Bollinger Lower Band (for PUT trades - take profit early) */
+  exitOnBBLower?: boolean;
+  
+  /** Minimum PnL % to close at BB Upper/Lower (default: 0, close even at loss) */
+  bbUpperLowerMinPnl?: number;
+  
   /** Exit on VWAP cross (mean reversion exit) */
   exitOnVWAP?: boolean;
   
@@ -285,7 +294,9 @@ export class FastBacktester {
         
         // Get indicators for exit conditions
         const exitIndicators = this.indicatorCache.getSnapshot(j);
+        const bbUpper = exitIndicators.bbUpper as number | undefined;
         const bbMiddle = exitIndicators.bbMiddle as number | undefined;
+        const bbLower = exitIndicators.bbLower as number | undefined;
         const vwap = exitIndicators.vwap as number | undefined;
         const currentPrice = candle.close;
         
@@ -308,7 +319,25 @@ export class FastBacktester {
             break;
           }
           
-          // 2a. Partial TP at BB Middle (close 50%, let 50% run)
+          // 2a. Exit on BB Upper (for CALL trades - take profit early)
+          if (config.exitOnBBUpper && typeof bbUpper === 'number') {
+            if (candle.high >= bbUpper) {
+              const exitPriceAtBB = Math.min(candle.high, bbUpper);
+              const pnlAtBB = ((exitPriceAtBB - entryPrice) / entryPrice) * 100;
+              const minPnl = config.bbUpperLowerMinPnl ?? 0;
+              
+              // Only close if PnL meets minimum threshold
+              if (pnlAtBB >= minPnl) {
+                exitPrice = exitPriceAtBB;
+                outcome = pnlAtBB > 0 ? 'WIN' : 'LOSS';
+                exitIndex = j;
+                exitReason = 'BB_UPPER';
+                break;
+              }
+            }
+          }
+          
+          // 2b. Partial TP at BB Middle (close 50%, let 50% run)
           if (config.partialTP?.enabled && config.partialTP.exitAtBBMiddle && !partialTPClosed && typeof bbMiddle === 'number') {
             if (candle.high >= bbMiddle && entryPrice < bbMiddle) {
               // Close 50% at BB Middle
@@ -318,7 +347,7 @@ export class FastBacktester {
             }
           }
           
-          // 2b. BB Middle as trailing stop (only exit if price crosses back below)
+          // 2c. BB Middle as trailing stop (only exit if price crosses back below)
           if (config.bbMiddleTrailingStop && typeof bbMiddle === 'number') {
             if (candle.high >= bbMiddle && entryPrice < bbMiddle) {
               bbMiddleTouched = true;
@@ -333,7 +362,7 @@ export class FastBacktester {
             }
           }
           
-          // 2c. Exit on BB Middle (mean reversion exit) - original
+          // 2d. Exit on BB Middle (mean reversion exit) - original
           if (config.exitOnBBMiddle && !config.bbMiddleTrailingStop && typeof bbMiddle === 'number') {
             if (candle.high >= bbMiddle && entryPrice < bbMiddle) {
               // Price touched or crossed BB Middle
@@ -394,7 +423,25 @@ export class FastBacktester {
             break;
           }
           
-          // 2a. Partial TP at BB Middle (close 50%, let 50% run)
+          // 2a. Exit on BB Lower (for PUT trades - take profit early)
+          if (config.exitOnBBLower && typeof bbLower === 'number') {
+            if (candle.low <= bbLower) {
+              const exitPriceAtBB = Math.max(candle.low, bbLower);
+              const pnlAtBB = ((entryPrice - exitPriceAtBB) / entryPrice) * 100;
+              const minPnl = config.bbUpperLowerMinPnl ?? 0;
+              
+              // Only close if PnL meets minimum threshold
+              if (pnlAtBB >= minPnl) {
+                exitPrice = exitPriceAtBB;
+                outcome = pnlAtBB > 0 ? 'WIN' : 'LOSS';
+                exitIndex = j;
+                exitReason = 'BB_LOWER';
+                break;
+              }
+            }
+          }
+          
+          // 2b. Partial TP at BB Middle (close 50%, let 50% run)
           if (config.partialTP?.enabled && config.partialTP.exitAtBBMiddle && !partialTPClosed && typeof bbMiddle === 'number') {
             if (candle.low <= bbMiddle && entryPrice > bbMiddle) {
               // Close 50% at BB Middle
@@ -404,7 +451,7 @@ export class FastBacktester {
             }
           }
           
-          // 2b. BB Middle as trailing stop (only exit if price crosses back above)
+          // 2c. BB Middle as trailing stop (only exit if price crosses back above)
           if (config.bbMiddleTrailingStop && typeof bbMiddle === 'number') {
             if (candle.low <= bbMiddle && entryPrice > bbMiddle) {
               bbMiddleTouched = true;
@@ -419,7 +466,7 @@ export class FastBacktester {
             }
           }
           
-          // 2c. Exit on BB Middle (mean reversion exit) - original
+          // 2d. Exit on BB Middle (mean reversion exit) - original
           if (config.exitOnBBMiddle && !config.bbMiddleTrailingStop && typeof bbMiddle === 'number') {
             if (candle.low <= bbMiddle && entryPrice > bbMiddle) {
               // Price touched or crossed BB Middle
