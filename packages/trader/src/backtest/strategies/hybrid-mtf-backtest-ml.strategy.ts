@@ -29,7 +29,7 @@ import { BollingerBands, ADX, SMA, RSI, ATR } from 'technicalindicators';
 import { DataCollector, createDataCollector } from '../data-collector.js';
 
 /**
- * Hybrid MTF Strategy Parameters (v3.0.0)
+ * Hybrid MTF Strategy Parameters (v3.2.0)
  */
 interface HybridMTFParams {
   // 15m Context (Macro Trend Detection) - v3.0.0: Normalized slope
@@ -48,6 +48,7 @@ interface HybridMTFParams {
   bbPeriod: number;
   bbStdDev: number;
   bbWidthMin: number;
+  bbWidthMax: number;               // v3.2.0: Max BB width to avoid high volatility
   rsiPeriod: number;
   rsiOverbought: number;
   rsiOversold: number;
@@ -69,6 +70,22 @@ interface HybridMTFParams {
   // RSI Divergence Filter (v3.0.0)
   enableRSIDivergence: boolean;
   divergenceLookback: number;
+
+  // v3.2.0: Time-based filters
+  enableTimeFilter: boolean;
+  avoidHourStart: number;
+  avoidHourEnd: number;
+
+  // v3.3.0: Additional time filter
+  avoidHourStart2: number;
+  avoidHourEnd2: number;
+
+  // v3.2.0: ADX strength filter
+  preferWeakADX: boolean;
+  maxADXForEntry: number;
+
+  // v3.3.0: Regime filter
+  avoidBullishRegime: boolean;
 }
 
 type MacroRegime = 'BULLISH_TREND' | 'BEARISH_TREND' | 'RANGE';
@@ -111,10 +128,11 @@ const DEFAULT_PARAMS: HybridMTFParams = {
   midRsiOverbought: 70,
   midRsiOversold: 30,
 
-  // 1m Execution
+  // 1m Execution - v3.2.0: Added bbWidthMax
   bbPeriod: 20,
   bbStdDev: 2,
   bbWidthMin: 0.003,
+  bbWidthMax: 0.025,                 // v3.2.0: Max BB width to avoid high volatility (24.7% WR)
   rsiPeriod: 14,
   rsiOverbought: 70,
   rsiOversold: 30,
@@ -136,14 +154,30 @@ const DEFAULT_PARAMS: HybridMTFParams = {
   // RSI Divergence Filter (v3.1.0)
   enableRSIDivergence: false,        // v3.1.0: Disabled - ML showed it hurt performance
   divergenceLookback: 10,
+
+  // v3.2.0: Time-based filters - ML showed 00-06h UTC has 25.5% WR vs 29% others
+  enableTimeFilter: true,
+  avoidHourStart: 0,
+  avoidHourEnd: 6,
+
+  // v3.3.0: Additional time filter - ML v3.2.0 showed 12-18h has 28.0% WR (worst)
+  avoidHourStart2: 12,
+  avoidHourEnd2: 18,
+
+  // v3.2.0: ADX strength filter - ML showed ADX<20 has 30.4% WR vs 25.4% strong
+  preferWeakADX: true,
+  maxADXForEntry: 35,
+
+  // v3.3.0: Regime filter - ML v3.2.0 showed BULLISH has 23.1% WR (very low)
+  avoidBullishRegime: true,
 };
 
 /**
- * Hybrid MTF Strategy v3.1.0 with ML Data Collection
+ * Hybrid MTF Strategy v3.2.0 with ML Data Collection
  */
 export class HybridMTFBacktestMLStrategy implements BacktestableStrategy {
   readonly name = 'Hybrid-MTF-ML';
-  readonly version = '3.1.0';
+  readonly version = '3.2.0';
 
   private params: HybridMTFParams;
   private asset: string;
@@ -573,7 +607,20 @@ export class HybridMTFBacktestMLStrategy implements BacktestableStrategy {
       return null;
     }
 
-    const { regime, rsi5m, bb, rsi1m: rsi, atr1m: atr } = data;
+    const { regime, rsi5m, bb, rsi1m: rsi, atr1m: atr, adx15m } = data;
+
+    // v3.2.0: Time-based filter - avoid 00-06h UTC (ML showed 25.5% WR vs 29% others)
+    if (this.params.enableTimeFilter) {
+      const hour = new Date(candle.timestamp * 1000).getUTCHours();
+      if (hour >= this.params.avoidHourStart && hour < this.params.avoidHourEnd) {
+        return null;
+      }
+    }
+
+    // v3.2.0: ADX strength filter - ML showed ADX<20 has 30.4% WR vs 25.4% strong
+    if (this.params.maxADXForEntry > 0 && adx15m !== null && adx15m > this.params.maxADXForEntry) {
+      return null;
+    }
 
     // Get previous candle and RSI for reversal confirmation
     const prevCandle = currentIndex > 0 ? candles[currentIndex - 1] : null;
@@ -583,6 +630,11 @@ export class HybridMTFBacktestMLStrategy implements BacktestableStrategy {
     // BB width filter
     const bbWidth = (bb.upper - bb.lower) / bb.middle;
     if (bbWidth < this.params.bbWidthMin) {
+      return null;
+    }
+
+    // v3.2.0: BB width max filter - avoid high volatility (ML showed 24.7% WR)
+    if (bbWidth > this.params.bbWidthMax) {
       return null;
     }
 

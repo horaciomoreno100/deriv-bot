@@ -36,6 +36,7 @@ interface HybridMTFParams {
   bbPeriod: number;
   bbStdDev: number;
   bbWidthMin: number;         // Min BB width to avoid low volatility (default: 0.003)
+  bbWidthMax: number;         // v3.2.0: Max BB width to avoid high volatility (default: 0.025)
   rsiPeriod: number;
   rsiOverbought: number;      // 1m RSI overbought (default: 70)
   rsiOversold: number;        // 1m RSI oversold (default: 30)
@@ -49,14 +50,30 @@ interface HybridMTFParams {
 
   // Confirmation
   confirmationCandles: number; // Candles to wait for MR confirmation (default: 2)
-  
+
   // Reversal Confirmation (v3.0.0)
   requireReversalCandle: boolean; // Require bullish/bearish candle
   requireRSICross: boolean;       // Require RSI cross confirmation
-  
+
   // RSI Divergence Filter (v3.0.0)
   enableRSIDivergence: boolean;   // Enable for RANGE regime
   divergenceLookback: number;     // Lookback period (default: 10)
+
+  // v3.2.0: Time-based filters (ML analysis showed 00-06h has 25.5% WR vs 29% others)
+  enableTimeFilter: boolean;      // Enable time-of-day filtering
+  avoidHourStart: number;         // Start hour to avoid (UTC)
+  avoidHourEnd: number;           // End hour to avoid (UTC)
+
+  // v3.3.0: Additional time filter (ML v3.2.0 showed 12-18h has 28.0% WR - worst)
+  avoidHourStart2: number;        // Second time window to avoid (start)
+  avoidHourEnd2: number;          // Second time window to avoid (end)
+
+  // v3.2.0: ADX strength filter (ML showed ADX<20 has 30.4% WR vs 25.4% strong)
+  preferWeakADX: boolean;         // Prefer weak ADX conditions
+  maxADXForEntry: number;         // Maximum ADX for entry (0 = disabled)
+
+  // v3.3.0: Regime filter (ML v3.2.0 showed BULLISH has 23.1% WR - very low)
+  avoidBullishRegime: boolean;    // Avoid trades in BULLISH_TREND regime
 }
 
 /**
@@ -85,6 +102,7 @@ interface PreCalculatedData {
   rsi1m: number | null;
   atr: number | null;  // v3.0.0: ATR for dynamic TP/SL
   atrPercent: number | null;  // v3.0.0: ATR as % for slope normalization
+  adx15m: number | null;  // v3.2.0: ADX for filtering
 }
 
 const DEFAULT_PARAMS: HybridMTFParams = {
@@ -101,10 +119,11 @@ const DEFAULT_PARAMS: HybridMTFParams = {
   midRsiOverbought: 70,
   midRsiOversold: 30,
 
-  // 1m Execution - 70/30 for real overbought/oversold (55/45 is neutral zone)
+  // 1m Execution - v3.2.0: Added bbWidthMax based on ML (high vol = 24.7% WR)
   bbPeriod: 20,
   bbStdDev: 2,
-  bbWidthMin: 0.003, // Min BB width to avoid low volatility environments
+  bbWidthMin: 0.003,  // Min BB width to avoid low volatility
+  bbWidthMax: 0.025,  // v3.2.0: Max BB width to avoid high volatility (24.7% WR)
   rsiPeriod: 14,
   rsiOverbought: 70,
   rsiOversold: 30,
@@ -126,6 +145,22 @@ const DEFAULT_PARAMS: HybridMTFParams = {
   // RSI Divergence Filter (v3.1.0) - ML showed it hurt performance (15% WR vs 28%)
   enableRSIDivergence: false,    // v3.1.0: Disabled based on ML analysis
   divergenceLookback: 10,
+
+  // v3.2.0: Time-based filters - ML showed 00-06h UTC has 25.5% WR vs 29% others
+  enableTimeFilter: true,        // Enable time filtering
+  avoidHourStart: 0,             // Start avoiding at midnight UTC
+  avoidHourEnd: 6,               // Stop avoiding at 6am UTC
+
+  // v3.3.0: Additional time filter - ML v3.2.0 showed 12-18h has 28.0% WR (worst)
+  avoidHourStart2: 12,           // Also avoid 12-18h UTC
+  avoidHourEnd2: 18,
+
+  // v3.2.0: ADX strength filter - ML showed ADX<20 has 30.4% WR vs 25.4% strong
+  preferWeakADX: true,           // Prefer weak ADX for better performance
+  maxADXForEntry: 35,            // Avoid very strong trends (>35)
+
+  // v3.3.0: Regime filter - ML v3.2.0 showed BULLISH has 23.1% WR (very low)
+  avoidBullishRegime: true,      // Avoid trades in BULLISH_TREND regime
 };
 
 const ASSET_CONFIGS: Record<string, Partial<HybridMTFParams>> = {
@@ -138,7 +173,7 @@ const ASSET_CONFIGS: Record<string, Partial<HybridMTFParams>> = {
  */
 export class HybridMTFBacktestStrategy implements BacktestableStrategy {
   readonly name = 'Hybrid-MTF';
-  readonly version = '3.0.0'; // v3.0.0: ATR-based TP/SL, Normalized Slope, Reversal Confirmation, RSI Divergence
+  readonly version = '3.3.0'; // v3.3.0: Avoid 12-18h + BULLISH regime based on ML v3.2.0 analysis
 
   private params: HybridMTFParams;
   private asset: string;
@@ -329,6 +364,15 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
         }
       }
 
+      // v3.2.0: Get 15m ADX for filtering
+      let adx15mVal: number | null = null;
+      if (idx15m !== undefined) {
+        const adxIdx = idx15m - adx15mOffset;
+        if (adxIdx >= 0 && adx15m[adxIdx]) {
+          adx15mVal = adx15m[adxIdx]!.adx;
+        }
+      }
+
       // Get 1m BB
       let bb: { upper: number; middle: number; lower: number } | null = null;
       const bbIdx = i - bbOffset;
@@ -363,6 +407,7 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
         rsi1m: rsi1mVal,
         atr: atr1mVal,
         atrPercent: atrPercent1m,
+        adx15m: adx15mVal,
       };
     }
 
@@ -524,8 +569,30 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
       return null;
     }
 
-    const { regime, rsi5m, bb, rsi1m: rsi, atr } = data;
-    
+    const { regime, rsi5m, bb, rsi1m: rsi, atr, adx15m } = data;
+
+    // v3.2.0: Time-based filter - avoid 00-06h UTC (ML showed 25.5% WR vs 29% others)
+    if (this.params.enableTimeFilter) {
+      const hour = new Date(candle.timestamp * 1000).getUTCHours();
+      if (hour >= this.params.avoidHourStart && hour < this.params.avoidHourEnd) {
+        return null;
+      }
+      // v3.3.0: Also avoid 12-18h UTC (ML v3.2.0 showed 28.0% WR - worst block)
+      if (hour >= this.params.avoidHourStart2 && hour < this.params.avoidHourEnd2) {
+        return null;
+      }
+    }
+
+    // v3.3.0: Regime filter - avoid BULLISH regime (ML v3.2.0 showed 23.1% WR)
+    if (this.params.avoidBullishRegime && regime === 'BULLISH_TREND') {
+      return null;
+    }
+
+    // v3.2.0: ADX strength filter - ML showed ADX<20 has 30.4% WR vs 25.4% strong
+    if (this.params.maxADXForEntry > 0 && adx15m !== null && adx15m > this.params.maxADXForEntry) {
+      return null;
+    }
+
     // Get previous candle and RSI for reversal confirmation
     const prevCandle = currentIndex > 0 ? candles[currentIndex - 1] : null;
     const prevData = currentIndex > 0 ? this.preCalculated[currentIndex - 1] : null;
@@ -534,6 +601,11 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
     // BB width filter: avoid low volatility environments
     const bbWidth = (bb.upper - bb.lower) / bb.middle;
     if (bbWidth < this.params.bbWidthMin) {
+      return null;
+    }
+
+    // v3.2.0: BB width max filter - avoid high volatility (ML showed 24.7% WR)
+    if (bbWidth > this.params.bbWidthMax) {
       return null;
     }
 

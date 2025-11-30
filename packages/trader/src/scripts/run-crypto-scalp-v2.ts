@@ -532,7 +532,9 @@ async function main() {
   console.log(`📡 Starting signal proximity publisher (every ${PROXIMITY_CHECK_INTERVAL/1000}s)`);
   setInterval(async () => {
     // Check connection first
-    if (!gatewayClient.isConnected()) {
+    const isConnected = gatewayClient.isConnected();
+    if (!isConnected) {
+      console.log(`[Proximity] Skipping - Gateway not connected`);
       return;
     }
 
