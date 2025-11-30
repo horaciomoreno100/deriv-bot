@@ -17,6 +17,7 @@ import { TradeExecutionService } from '../services/trade-execution.service.js';
 import { StrategyAccountant } from '../accounting/strategy-accountant.js';
 import { createCryptoScalpV2EntryFn } from '../backtest/runners/crypto-scalp-v2-fast.js';
 import { ETH_OPTIMIZED_PRESET, BTC_OPTIMIZED_PRESET } from '../strategies/crypto-scalp/crypto-scalp.params.js';
+import { FastBacktester } from '../backtest/runners/fast-backtester.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 import dotenv from 'dotenv';
 
@@ -66,6 +67,9 @@ const telegramAlerter = getTelegramAlerter({ serviceName: STRATEGY_NAME });
 
 // Entry functions per asset
 const entryFunctions = new Map<string, (index: number, indicators: Record<string, number | boolean>) => any>();
+
+// FastBacktester instances per asset (for indicator calculation)
+const backtesters = new Map<string, FastBacktester>();
 
 /**
  * Process tick and build candle (per asset)
@@ -212,8 +216,9 @@ async function main() {
 
   console.log(`✅ TradeManager initialized\n`);
 
-  // Entry functions will be created dynamically as candles accumulate
-  console.log(`✅ Entry functions will be initialized after warm-up`);
+  // Initialize FastBacktester instances for each asset (for indicator calculation)
+  // These will be populated with historical candles
+  console.log(`✅ FastBacktester instances will be initialized with historical data`);
   console.log();
 
   // Initialize TradeExecutionService
@@ -266,6 +271,83 @@ async function main() {
     }
   }, 30000);
 
+  // Load historical candles for warm-up
+  console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
+  
+  // Need 1m candles for indicators (50+ for RSI, BB, etc.)
+  // Need 15m candles for MTF Filter (EMA 50 needs ~50 candles = 50*15 = 750 minutes = ~12.5 hours)
+  const CANDLES_1M_NEEDED = 100; // More than needed for safety
+  const CANDLES_15M_NEEDED = 60; // For MTF EMA 50
+  
+  let totalHistoricalCandles = 0;
+  
+  for (const symbol of SYMBOLS) {
+    try {
+      // Load 1m candles (for main strategy)
+      const candles1m = await gatewayClient.getCandles(symbol, 60, CANDLES_1M_NEEDED);
+      console.log(`   ✅ ${symbol}: ${candles1m.length} x 1m candles`);
+      
+      // Load 15m candles (for MTF Filter)
+      const candles15m = await gatewayClient.getCandles(symbol, 900, CANDLES_15M_NEEDED);
+      console.log(`   ✅ ${symbol}: ${candles15m.length} x 15m candles`);
+      
+      // Store 1m candles in history
+      candleHistory.set(symbol, candles1m);
+      warmUpCandlesPerAsset.set(symbol, candles1m.length);
+      
+      // Initialize FastBacktester for indicator calculation
+      const backtester = new FastBacktester(candles1m, ['rsi', 'atr', 'adx', 'bb'], {
+        rsiPeriod: 14,
+        atrPeriod: 14,
+        adxPeriod: 14,
+        bbPeriod: 20,
+        bbStdDev: 2,
+      });
+      backtesters.set(symbol, backtester);
+      
+      // Initialize entry function with historical data
+      const preset = getPresetForAsset(symbol);
+      const entryFn = createCryptoScalpV2EntryFn(candles1m, preset, { enableMTF: true });
+      entryFunctions.set(symbol, entryFn);
+      
+      totalHistoricalCandles += candles1m.length;
+      
+      if (candles1m.length >= WARM_UP_CANDLES_REQUIRED) {
+        console.log(`   ✅ ${symbol}: Ready for trading! (${candles1m.length} x 1m candles loaded)`);
+      } else {
+        console.log(`   ⚠️  ${symbol}: Need ${WARM_UP_CANDLES_REQUIRED - candles1m.length} more 1m candles`);
+      }
+    } catch (error: any) {
+      console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
+      candleHistory.set(symbol, []);
+      warmUpCandlesPerAsset.set(symbol, 0);
+    }
+  }
+  
+  console.log(`\n✅ Historical data loaded (${totalHistoricalCandles} candles total)\n`);
+  console.log('📊 Warm-up status:');
+  SYMBOLS.forEach(symbol => {
+    const count = warmUpCandlesPerAsset.get(symbol) || 0;
+    const status = count >= WARM_UP_CANDLES_REQUIRED ? '✅' : '⏳';
+    const remaining = Math.max(0, WARM_UP_CANDLES_REQUIRED - count);
+    console.log(`   ${status} ${symbol}: ${count}/${WARM_UP_CANDLES_REQUIRED}${remaining > 0 ? ` (need ${remaining} more)` : ' - READY!'}`);
+  });
+  console.log();
+  
+  // Mark as ready if we have enough candles
+  const allReady = SYMBOLS.every(symbol => {
+    const count = warmUpCandlesPerAsset.get(symbol) || 0;
+    return count >= WARM_UP_CANDLES_REQUIRED;
+  });
+  
+  if (allReady) {
+    isInitializing = false;
+    hasReceivedRealtimeCandle = true;
+    console.log('🚀 Strategy is READY and will start trading immediately!\n');
+  } else {
+    console.log('⏳ Strategy will start trading after receiving remaining candles...\n');
+  }
+
   // Subscribe to ticks
   console.log(`📡 Subscribing to ticks for: ${SYMBOLS.join(', ')}`);
   await gatewayClient.follow(SYMBOLS);
@@ -292,20 +374,43 @@ async function main() {
         return;
       }
 
-      // Create/update entry function with current history
-      if (history.length >= WARM_UP_CANDLES_REQUIRED) {
-        const preset = getPresetForAsset(asset);
-        const entryFn = createCryptoScalpV2EntryFn(history, preset, { enableMTF: true });
+      // Get entry function (should already be initialized with historical data)
+      const entryFn = entryFunctions.get(asset);
+      if (!entryFn) {
+        continue; // Not initialized yet, skip
+      }
+      
+      // Check if we have enough candles
+      if (history.length < WARM_UP_CANDLES_REQUIRED) {
+        continue; // Still need more candles
+      }
+      
+      // Get FastBacktester for this asset
+      let backtester = backtesters.get(asset);
+      
+      // Update backtester with new candle (recreate every 10 candles for efficiency)
+      // FastBacktester pre-calculates all indicators, so we recreate periodically
+      if (!backtester || history.length > backtester.length + 10) {
+        backtester = new FastBacktester(history, ['rsi', 'atr', 'adx', 'bb'], {
+          rsiPeriod: 14,
+          atrPeriod: 14,
+          adxPeriod: 14,
+          bbPeriod: 20,
+          bbStdDev: 2,
+        });
+        backtesters.set(asset, backtester);
         
-        // Get indicators snapshot (simplified - would use FastBacktester in production)
-        // For now, create a basic indicator record
-        const indicators: Record<string, number | boolean> = {
-          // Basic indicators - in production would use indicator cache
-          price: candle.close,
-        };
+        // Recreate entry function with updated candles
+        const preset = getPresetForAsset(asset);
+        const newEntryFn = createCryptoScalpV2EntryFn(history, preset, { enableMTF: true });
+        entryFunctions.set(asset, newEntryFn);
+      }
+      
+      // Get indicators snapshot from FastBacktester
+      const indicators = backtester.getIndicatorSnapshot(history.length - 1);
 
-        // Check for entry signal
-        const signal = entryFn(history.length - 1, indicators);
+      // Check for entry signal
+      const signal = entryFn(history.length - 1, indicators);
       
         if (signal) {
           const direction = signal.direction === 'CALL' ? 'CALL' : 'PUT';
@@ -354,8 +459,7 @@ async function main() {
     console.log(`   Total: ${totalTrades} | Wins: ${wonTrades} | Losses: ${lostTrades} | WR: ${winRate.toFixed(1)}%`);
   });
 
-  console.log('🚀 CryptoScalp v2 Optimized is running...');
-  console.log('   Waiting for warm-up candles...\n');
+  console.log('🚀 CryptoScalp v2 Optimized is running...\n');
 }
 
 // Handle graceful shutdown
