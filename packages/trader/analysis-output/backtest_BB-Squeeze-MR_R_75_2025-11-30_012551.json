@@ -1,0 +1,5222 @@
+{
+  "metadata": {
+    "asset": "R_75",
+    "timeframe": 60,
+    "strategyName": "BB-Squeeze-MR",
+    "strategyVersion": "1.0.0",
+    "executedAt": "2025-11-30T01:25:51.871Z",
+    "executionTimeMs": 1854
+  },
+  "config": {
+    "asset": "R_75",
+    "timeframe": 60,
+    "initialBalance": 1000,
+    "stakeMode": "percentage",
+    "stakeAmount": 20,
+    "stakePct": 0.02,
+    "multiplier": 100,
+    "takeProfitPct": 0.006,
+    "stopLossPct": 0.004,
+    "maxBarsInTrade": 30,
+    "useTrailingStop": false,
+    "cooldownBars": 1
+  },
+  "dateRange": {
+    "from": "2025-10-25T22:46:00.000Z",
+    "to": "2025-11-24T22:46:00.000Z",
+    "candleCount": 43201
+  },
+  "metrics": {
+    "totalTrades": 41,
+    "wins": 16,
+    "losses": 25,
+    "winRate": 39.02439024390244,
+    "netPnl": -28.035253095164705,
+    "grossProfit": 148.12844899137133,
+    "grossLoss": 176.16370208653603,
+    "profitFactor": 0.8408568123676631,
+    "avgWin": 9.258028061960708,
+    "avgLoss": 7.046548083461442,
+    "avgPnl": -0.6837866608576757,
+    "maxDrawdown": 59.39370366632045,
+    "maxDrawdownPct": 5.939370366632045,
+    "maxConsecutiveWins": 4,
+    "maxConsecutiveLosses": 7,
+    "nearMisses": 5,
+    "immediateReversals": 1,
+    "avgBarsHeld": 18.365853658536587,
+    "expectancy": -0.6837866608576761,
+    "sqn": -0.5173416980229694,
+    "equityCurve": [
+      992,
+      983.9999999999999,
+      980.4303950067776,
+      976.6062963336793,
+      968.6062963336792,
+      960.6062963336791,
+      972.6062963336792,
+      964.6062963336793,
+      956.6062963336794,
+      948.6062963336796,
+      940.6062963336796,
+      944.2301078419576,
+      956.2301078419578,
+      968.2301078419578,
+      960.2301078419578,
+      952.2301078419578,
+      960.3137022740519,
+      952.313702274052,
+      964.313702274052,
+      976.3137022740519,
+      968.313702274052,
+      979.3408851306344,
+      991.3408851306344,
+      1003.3408851306344,
+      995.3408851306343,
+      987.3408851306342,
+      979.3408851306341,
+      971.340885130634,
+      977.6575001040768,
+      989.6575001040769,
+      995.3802216971538,
+      1007.3802216971537,
+      999.3802216971535,
+      991.3802216971536,
+      983.3802216971535,
+      982.8240787465237,
+      974.8240787465237,
+      974.6102232769385,
+      966.6102232769384,
+      970.0126052534748,
+      971.9647469048351
+    ],
+    "peakEquity": 1007.3802216971537
+  },
+  "trades": [
+    {
+      "id": "78400f94-1bbf-4d12-83ec-d0f5c8e3e1b4",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "de258291-840a-410f-bad4-906881d096c6",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761463140000,
+          "candle": {
+            "index": 513,
+            "timestamp": 1761463140,
+            "open": 50279.7221,
+            "high": 50289.6967,
+            "low": 50197.3273,
+            "close": 50210.2175
+          },
+          "price": 50210.2175,
+          "indicators": {
+            "bbUpper": 50592.57996624275,
+            "bbMiddle": 50427.51082499999,
+            "bbLower": 50262.44168375723,
+            "kcUpper": 50507.22867176193,
+            "kcMiddle": 50405.50858016342,
+            "kcLower": 50303.78848856491,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.002244836570753,
+            "rsi": 29.499844284150413,
+            "atr": 68.18208230794032,
+            "adx": 17.889107766846035,
+            "plusDI": 11.460615682218371,
+            "minusDI": 34.56179236036097,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (50210.22) <= BB_Lower (50262.44), RSI=29.5, ADX=17.9, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761463140000,
+          "candle": {
+            "index": 513,
+            "timestamp": 1761463140,
+            "open": 50279.7221,
+            "high": 50289.6967,
+            "low": 50197.3273,
+            "close": 50210.2175
+          },
+          "price": 50210.2175,
+          "indicators": {
+            "bbUpper": 50592.57996624275,
+            "bbMiddle": 50427.51082499999,
+            "bbLower": 50262.44168375723,
+            "kcUpper": 50507.22867176193,
+            "kcMiddle": 50405.50858016342,
+            "kcLower": 50303.78848856491,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.002244836570753,
+            "rsi": 29.499844284150413,
+            "atr": 68.18208230794032,
+            "adx": 17.889107766846035,
+            "plusDI": 11.460615682218371,
+            "minusDI": 34.56179236036097,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 50210.2175,
+        "executedPrice": 50210.2175,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 50511.478805,
+        "slPrice": 50009.37663,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761464640000,
+          "candle": {
+            "index": 538,
+            "timestamp": 1761464640,
+            "open": 50025.0055,
+            "high": 50033.9845,
+            "low": 49999.1048,
+            "close": 50012.7922
+          },
+          "price": 50012.7922,
+          "indicators": {
+            "bbUpper": 50368.312441253256,
+            "bbMiddle": 50183.003455,
+            "bbLower": 49997.69446874674,
+            "kcUpper": 50266.62055860866,
+            "kcMiddle": 50169.61642487368,
+            "kcLower": 50072.61229113871,
+            "squeezeOn": false,
+            "squeezeHistogram": 13.387030126315949,
+            "rsi": 29.829721554187515,
+            "atr": 62.77812640072458,
+            "adx": 31.716374240839812,
+            "plusDI": 12.997894582123484,
+            "minusDI": 35.497600443231455
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 50009.37663,
+        "durationMs": 1500000
+      },
+      "result": {
+        "pnl": -8,
+        "pnlPct": -0.4,
+        "outcome": "LOSS",
+        "maxFavorable": 8.956910015376994,
+        "maxFavorablePct": 0.44784550076884977,
+        "maxAdverse": 8.409152977678213,
+        "maxAdversePct": 0.42045764888391063
+      }
+    },
+    {
+      "id": "dc7e31dc-2dfd-4942-b7ce-4be53e005378",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "f65c1993-9be8-4320-a18f-56e2b0816462",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761683640000,
+          "candle": {
+            "index": 4188,
+            "timestamp": 1761683640,
+            "open": 48888.4982,
+            "high": 48972.6812,
+            "low": 48887.3136,
+            "close": 48972.6812
+          },
+          "price": 48972.6812,
+          "indicators": {
+            "bbUpper": 48935.630860043035,
+            "bbMiddle": 48799.60559500001,
+            "bbLower": 48663.58032995698,
+            "kcUpper": 48915.712636591874,
+            "kcMiddle": 48815.602050297166,
+            "kcLower": 48715.49146400246,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.996455297157809,
+            "rsi": 71.13254138497376,
+            "atr": 67.16438871827157,
+            "adx": 16.036295761776795,
+            "plusDI": 30.669584801997384,
+            "minusDI": 15.627589188000028,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (48972.68) >= BB_Upper (48935.63), RSI=71.1, ADX=16.0, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761683640000,
+          "candle": {
+            "index": 4188,
+            "timestamp": 1761683640,
+            "open": 48888.4982,
+            "high": 48972.6812,
+            "low": 48887.3136,
+            "close": 48972.6812
+          },
+          "price": 48972.6812,
+          "indicators": {
+            "bbUpper": 48935.630860043035,
+            "bbMiddle": 48799.60559500001,
+            "bbLower": 48663.58032995698,
+            "kcUpper": 48915.712636591874,
+            "kcMiddle": 48815.602050297166,
+            "kcLower": 48715.49146400246,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.996455297157809,
+            "rsi": 71.13254138497376,
+            "atr": 67.16438871827157,
+            "adx": 16.036295761776795,
+            "plusDI": 30.669584801997384,
+            "minusDI": 15.627589188000028,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 48972.6812,
+        "executedPrice": 48972.6812,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 48678.8451128,
+        "slPrice": 49168.5719248,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761685440000,
+          "candle": {
+            "index": 4218,
+            "timestamp": 1761685440,
+            "open": 49140.8663,
+            "high": 49182.9309,
+            "low": 49140.8663,
+            "close": 49161.3053
+          },
+          "price": 49161.3053,
+          "indicators": {
+            "bbUpper": 49156.60427431236,
+            "bbMiddle": 49042.602595000004,
+            "bbLower": 48928.600915687646,
+            "kcUpper": 49144.6622817301,
+            "kcMiddle": 49048.17081067463,
+            "kcLower": 48951.67933961916,
+            "squeezeOn": false,
+            "squeezeHistogram": -5.568215674626117,
+            "rsi": 67.9131104785062,
+            "atr": 61.94022673433255,
+            "adx": 12.283721950290058,
+            "plusDI": 26.482030419126087,
+            "minusDI": 15.789414428317157
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 49168.5719248,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": -8.000000000000131,
+        "pnlPct": -0.4000000000000066,
+        "outcome": "LOSS",
+        "maxFavorable": 3.916199711769133,
+        "maxFavorablePct": 0.1958099855884567,
+        "maxAdverse": 8.586407558179612,
+        "maxAdversePct": 0.42932037790898064
+      }
+    },
+    {
+      "id": "b3f94645-ed16-4034-9765-b17b401e51f5",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "5638cabb-4638-48f0-8b7f-3a8868fbe0ec",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761685560000,
+          "candle": {
+            "index": 4220,
+            "timestamp": 1761685560,
+            "open": 49135.4455,
+            "high": 49221.9374,
+            "low": 49131.0736,
+            "close": 49215.6416
+          },
+          "price": 49215.6416,
+          "indicators": {
+            "bbUpper": 49195.54896748755,
+            "bbMiddle": 49053.773845,
+            "bbLower": 48911.99872251246,
+            "kcUpper": 49175.03487688111,
+            "kcMiddle": 49072.26510987198,
+            "kcLower": 48969.49534286285,
+            "squeezeOn": false,
+            "squeezeHistogram": -18.491264871976455,
+            "rsi": 70.52739505097271,
+            "atr": 68.29642096934353,
+            "adx": 13.076144839315461,
+            "plusDI": 25.118350682025365,
+            "minusDI": 16.30320821093017,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 65,
+        "reason": "BB Squeeze MR SHORT: Price (49215.64) >= BB_Upper (49195.55), RSI=70.5, ADX=13.1, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761685560000,
+          "candle": {
+            "index": 4220,
+            "timestamp": 1761685560,
+            "open": 49135.4455,
+            "high": 49221.9374,
+            "low": 49131.0736,
+            "close": 49215.6416
+          },
+          "price": 49215.6416,
+          "indicators": {
+            "bbUpper": 49195.54896748755,
+            "bbMiddle": 49053.773845,
+            "bbLower": 48911.99872251246,
+            "kcUpper": 49175.03487688111,
+            "kcMiddle": 49072.26510987198,
+            "kcLower": 48969.49534286285,
+            "squeezeOn": false,
+            "squeezeHistogram": -18.491264871976455,
+            "rsi": 70.52739505097271,
+            "atr": 68.29642096934353,
+            "adx": 13.076144839315461,
+            "plusDI": 25.118350682025365,
+            "minusDI": 16.30320821093017,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 49215.6416,
+        "executedPrice": 49215.6416,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 48920.347750400004,
+        "slPrice": 49412.5041664,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761687360000,
+          "candle": {
+            "index": 4250,
+            "timestamp": 1761687360,
+            "open": 49260.96,
+            "high": 49303.4818,
+            "low": 49245.4718,
+            "close": 49303.4818
+          },
+          "price": 49303.4818,
+          "indicators": {
+            "bbUpper": 49341.554622423464,
+            "bbMiddle": 49226.161734999994,
+            "bbLower": 49110.768847576524,
+            "kcUpper": 49325.189603490864,
+            "kcMiddle": 49222.29141154381,
+            "kcLower": 49119.39321959676,
+            "squeezeOn": false,
+            "squeezeHistogram": 3.8703234561835416,
+            "rsi": 59.400570916786485,
+            "atr": 66.91951193097762,
+            "adx": 11.733381641796704,
+            "plusDI": 24.919373192432648,
+            "minusDI": 18.319537402548224
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 49303.4818,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": -3.569604993222266,
+        "pnlPct": -0.17848024966111328,
+        "outcome": "LOSS",
+        "maxFavorable": 4.555767083609676,
+        "maxFavorablePct": 0.2277883541804838,
+        "maxAdverse": 6.061329087702075,
+        "maxAdversePct": 0.3030664543851037
+      }
+    },
+    {
+      "id": "91d5cdde-c33f-4b7f-b2bc-d2640a9569cd",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "7f4e307d-65d9-4454-84bf-6bd6d91a4bd4",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761760140000,
+          "candle": {
+            "index": 5463,
+            "timestamp": 1761760140,
+            "open": 48695.1802,
+            "high": 48695.1802,
+            "low": 48636.4188,
+            "close": 48640.7428
+          },
+          "price": 48640.7428,
+          "indicators": {
+            "bbUpper": 49097.83093305913,
+            "bbMiddle": 48901.473470000004,
+            "bbLower": 48705.11600694088,
+            "kcUpper": 48975.90675994482,
+            "kcMiddle": 48865.56485709954,
+            "kcLower": 48755.22295425426,
+            "squeezeOn": false,
+            "squeezeHistogram": 35.908612900464504,
+            "rsi": 28.346075665790423,
+            "atr": 74.09980637036168,
+            "adx": 16.393238677408334,
+            "plusDI": 15.082892760472749,
+            "minusDI": 35.895709719518464,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (48640.74) <= BB_Lower (48705.12), RSI=28.3, ADX=16.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761760140000,
+          "candle": {
+            "index": 5463,
+            "timestamp": 1761760140,
+            "open": 48695.1802,
+            "high": 48695.1802,
+            "low": 48636.4188,
+            "close": 48640.7428
+          },
+          "price": 48640.7428,
+          "indicators": {
+            "bbUpper": 49097.83093305913,
+            "bbMiddle": 48901.473470000004,
+            "bbLower": 48705.11600694088,
+            "kcUpper": 48975.90675994482,
+            "kcMiddle": 48865.56485709954,
+            "kcLower": 48755.22295425426,
+            "squeezeOn": false,
+            "squeezeHistogram": 35.908612900464504,
+            "rsi": 28.346075665790423,
+            "atr": 74.09980637036168,
+            "adx": 16.393238677408334,
+            "plusDI": 15.082892760472749,
+            "minusDI": 35.895709719518464,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 48640.7428,
+        "executedPrice": 48640.7428,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 48932.5872568,
+        "slPrice": 48446.1798288,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761761940000,
+          "candle": {
+            "index": 5493,
+            "timestamp": 1761761940,
+            "open": 48481.6741,
+            "high": 48547.7393,
+            "low": 48470.9038,
+            "close": 48547.7393
+          },
+          "price": 48547.7393,
+          "indicators": {
+            "bbUpper": 48844.09827872707,
+            "bbMiddle": 48675.96331000001,
+            "bbLower": 48507.82834127294,
+            "kcUpper": 48751.40331753474,
+            "kcMiddle": 48646.94020434333,
+            "kcLower": 48542.477091151915,
+            "squeezeOn": false,
+            "squeezeHistogram": 29.023105656677217,
+            "rsi": 39.62592374514624,
+            "atr": 70.87076081658812,
+            "adx": 16.30952913049375,
+            "plusDI": 14.14817111737845,
+            "minusDI": 28.330777787770064
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 48547.7393,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": -3.824098673098343,
+        "pnlPct": -0.19120493365491717,
+        "outcome": "LOSS",
+        "maxFavorable": 8.944341203605102,
+        "maxFavorablePct": 0.44721706018025514,
+        "maxAdverse": 6.98340486691745,
+        "maxAdversePct": 0.3491702433458725
+      }
+    },
+    {
+      "id": "3a2a3bf1-51d2-4ac2-9674-954a38ac97c9",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "7a83bd81-ac93-4d67-b1d4-1f3d7d52ebe7",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761832440000,
+          "candle": {
+            "index": 6668,
+            "timestamp": 1761832440,
+            "open": 47816.5176,
+            "high": 47911.1503,
+            "low": 47809.1338,
+            "close": 47911.1503
+          },
+          "price": 47911.1503,
+          "indicators": {
+            "bbUpper": 47862.12836570668,
+            "bbMiddle": 47646.740690000006,
+            "bbLower": 47431.35301429333,
+            "kcUpper": 47787.99557714491,
+            "kcMiddle": 47678.88913763921,
+            "kcLower": 47569.78269813352,
+            "squeezeOn": false,
+            "squeezeHistogram": -32.148447639207006,
+            "rsi": 72.91662826757174,
+            "atr": 74.93459902872786,
+            "adx": 22.089472670250526,
+            "plusDI": 35.263859998464206,
+            "minusDI": 10.897203513024122,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (47911.15) >= BB_Upper (47862.13), RSI=72.9, ADX=22.1, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761832440000,
+          "candle": {
+            "index": 6668,
+            "timestamp": 1761832440,
+            "open": 47816.5176,
+            "high": 47911.1503,
+            "low": 47809.1338,
+            "close": 47911.1503
+          },
+          "price": 47911.1503,
+          "indicators": {
+            "bbUpper": 47862.12836570668,
+            "bbMiddle": 47646.740690000006,
+            "bbLower": 47431.35301429333,
+            "kcUpper": 47787.99557714491,
+            "kcMiddle": 47678.88913763921,
+            "kcLower": 47569.78269813352,
+            "squeezeOn": false,
+            "squeezeHistogram": -32.148447639207006,
+            "rsi": 72.91662826757174,
+            "atr": 74.93459902872786,
+            "adx": 22.089472670250526,
+            "plusDI": 35.263859998464206,
+            "minusDI": 10.897203513024122,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 47911.1503,
+        "executedPrice": 47911.1503,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 47623.6833982,
+        "slPrice": 48102.7949012,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761833940000,
+          "candle": {
+            "index": 6693,
+            "timestamp": 1761833940,
+            "open": 48081.5251,
+            "high": 48129.8886,
+            "low": 48057.1863,
+            "close": 48057.1863
+          },
+          "price": 48057.1863,
+          "indicators": {
+            "bbUpper": 48087.70950960278,
+            "bbMiddle": 48008.70395000001,
+            "bbLower": 47929.69839039724,
+            "kcUpper": 48088.561162601276,
+            "kcMiddle": 47988.797270892144,
+            "kcLower": 47889.03337918301,
+            "squeezeOn": true,
+            "squeezeHistogram": 19.906679107865784,
+            "rsi": 59.3853090097607,
+            "atr": 68.1995108157471,
+            "adx": 33.29677545188299,
+            "plusDI": 30.453811543789893,
+            "minusDI": 14.304774126619188
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 48102.7949012,
+        "durationMs": 1500000
+      },
+      "result": {
+        "pnl": -8.000000000000062,
+        "pnlPct": -0.40000000000000313,
+        "outcome": "LOSS",
+        "maxFavorable": 0.727546714736319,
+        "maxFavorablePct": 0.03637733573681595,
+        "maxAdverse": 9.130997633342034,
+        "maxAdversePct": 0.45654988166710164
+      }
+    },
+    {
+      "id": "15d586e0-d7cd-4cf8-9c86-e8bb631f08d2",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "41a67214-c934-4fbf-b1b3-a254ce15c71e",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1761909900000,
+          "candle": {
+            "index": 7959,
+            "timestamp": 1761909900,
+            "open": 49681.4184,
+            "high": 49761.4851,
+            "low": 49681.4184,
+            "close": 49735.5786
+          },
+          "price": 49735.5786,
+          "indicators": {
+            "bbUpper": 49673.17863045261,
+            "bbMiddle": 49538.98164999999,
+            "bbLower": 49404.78466954736,
+            "kcUpper": 49664.183322886725,
+            "kcMiddle": 49559.05088438691,
+            "kcLower": 49453.918445887095,
+            "squeezeOn": false,
+            "squeezeHistogram": -20.0692343869232,
+            "rsi": 70.07648747380946,
+            "atr": 70.74777244691975,
+            "adx": 14.522525856011837,
+            "plusDI": 34.4123442773588,
+            "minusDI": 16.51125471866982,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 65,
+        "reason": "BB Squeeze MR SHORT: Price (49735.58) >= BB_Upper (49673.18), RSI=70.1, ADX=14.5, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1761909900000,
+          "candle": {
+            "index": 7959,
+            "timestamp": 1761909900,
+            "open": 49681.4184,
+            "high": 49761.4851,
+            "low": 49681.4184,
+            "close": 49735.5786
+          },
+          "price": 49735.5786,
+          "indicators": {
+            "bbUpper": 49673.17863045261,
+            "bbMiddle": 49538.98164999999,
+            "bbLower": 49404.78466954736,
+            "kcUpper": 49664.183322886725,
+            "kcMiddle": 49559.05088438691,
+            "kcLower": 49453.918445887095,
+            "squeezeOn": false,
+            "squeezeHistogram": -20.0692343869232,
+            "rsi": 70.07648747380946,
+            "atr": 70.74777244691975,
+            "adx": 14.522525856011837,
+            "plusDI": 34.4123442773588,
+            "minusDI": 16.51125471866982,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 49735.5786,
+        "executedPrice": 49735.5786,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 49437.1651284,
+        "slPrice": 49934.520914400004,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1761910440000,
+          "candle": {
+            "index": 7968,
+            "timestamp": 1761910440,
+            "open": 49861.5727,
+            "high": 49949.3565,
+            "low": 49861.5727,
+            "close": 49912.3825
+          },
+          "price": 49912.3825,
+          "indicators": {
+            "bbUpper": 49971.5756777449,
+            "bbMiddle": 49675.12746,
+            "bbLower": 49378.67924225511,
+            "kcUpper": 49818.52364331998,
+            "kcMiddle": 49721.228860573574,
+            "kcLower": 49623.934077827165,
+            "squeezeOn": false,
+            "squeezeHistogram": -46.10140057357057,
+            "rsi": 78.89141484731442,
+            "atr": 64.73952157920742,
+            "adx": 27.348912424975424,
+            "plusDI": 36.71438165112565,
+            "minusDI": 11.619786412141314
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 49934.520914400004,
+        "durationMs": 540000
+      },
+      "result": {
+        "pnl": -8.000000000000117,
+        "pnlPct": -0.4000000000000059,
+        "outcome": "LOSS",
+        "maxFavorable": 0.23528026272916974,
+        "maxFavorablePct": 0.011764013136458487,
+        "maxAdverse": 8.596578385839909,
+        "maxAdversePct": 0.42982891929199546
+      }
+    },
+    {
+      "id": "40977215-586c-4f86-a475-07ebc308daec",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "04ac8461-5b13-41f1-b98f-172ec60fee4d",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762106100000,
+          "candle": {
+            "index": 11229,
+            "timestamp": 1762106100,
+            "open": 48512.1358,
+            "high": 48534.1107,
+            "low": 48435.4487,
+            "close": 48437.9444
+          },
+          "price": 48437.9444,
+          "indicators": {
+            "bbUpper": 48746.599863625364,
+            "bbMiddle": 48609.019140000004,
+            "bbLower": 48471.43841637464,
+            "kcUpper": 48711.18142406336,
+            "kcMiddle": 48604.85694097294,
+            "kcLower": 48498.53245788252,
+            "squeezeOn": false,
+            "squeezeHistogram": 4.162199027065071,
+            "rsi": 29.64220159181002,
+            "atr": 72.62880922044201,
+            "adx": 21.395185018381536,
+            "plusDI": 15.238501791098301,
+            "minusDI": 32.05190728512792,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (48437.94) <= BB_Lower (48471.44), RSI=29.6, ADX=21.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762106100000,
+          "candle": {
+            "index": 11229,
+            "timestamp": 1762106100,
+            "open": 48512.1358,
+            "high": 48534.1107,
+            "low": 48435.4487,
+            "close": 48437.9444
+          },
+          "price": 48437.9444,
+          "indicators": {
+            "bbUpper": 48746.599863625364,
+            "bbMiddle": 48609.019140000004,
+            "bbLower": 48471.43841637464,
+            "kcUpper": 48711.18142406336,
+            "kcMiddle": 48604.85694097294,
+            "kcLower": 48498.53245788252,
+            "squeezeOn": false,
+            "squeezeHistogram": 4.162199027065071,
+            "rsi": 29.64220159181002,
+            "atr": 72.62880922044201,
+            "adx": 21.395185018381536,
+            "plusDI": 15.238501791098301,
+            "minusDI": 32.05190728512792,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 48437.9444,
+        "executedPrice": 48437.9444,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 48728.572066400004,
+        "slPrice": 48244.1926224,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762107180000,
+          "candle": {
+            "index": 11247,
+            "timestamp": 1762107180,
+            "open": 48728.4101,
+            "high": 48755.4817,
+            "low": 48724.3053,
+            "close": 48755.2713
+          },
+          "price": 48755.2713,
+          "indicators": {
+            "bbUpper": 48727.7439280679,
+            "bbMiddle": 48503.528525000016,
+            "bbLower": 48279.31312193213,
+            "kcUpper": 48665.628143415284,
+            "kcMiddle": 48570.590192059404,
+            "kcLower": 48475.552240703524,
+            "squeezeOn": false,
+            "squeezeHistogram": -67.06166705938813,
+            "rsi": 67.8747944730766,
+            "atr": 61.482604659856406,
+            "adx": 20.501905701080478,
+            "plusDI": 36.699029656878494,
+            "minusDI": 17.630869933955253
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 48728.572066400004,
+        "durationMs": 1080000
+      },
+      "result": {
+        "pnl": 12.000000000000139,
+        "pnlPct": 0.600000000000007,
+        "outcome": "WIN",
+        "maxFavorable": 13.11109725787605,
+        "maxFavorablePct": 0.6555548628938025,
+        "maxAdverse": 6.168106506187616,
+        "maxAdversePct": 0.3084053253093808
+      }
+    },
+    {
+      "id": "087c0d38-81fa-44ff-85f5-e806a6cb8582",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "5be60067-8dec-45de-a648-7612641c3ae4",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762130280000,
+          "candle": {
+            "index": 11632,
+            "timestamp": 1762130280,
+            "open": 47773.4821,
+            "high": 47773.4821,
+            "low": 47664.6974,
+            "close": 47674.839
+          },
+          "price": 47674.839,
+          "indicators": {
+            "bbUpper": 47924.10256923471,
+            "bbMiddle": 47829.41619500001,
+            "bbLower": 47734.729820765315,
+            "kcUpper": 47945.45431129979,
+            "kcMiddle": 47841.523675035634,
+            "kcLower": 47737.593038771476,
+            "squeezeOn": false,
+            "squeezeHistogram": -12.107480035621847,
+            "rsi": 29.271886419128634,
+            "atr": 71.72236969656092,
+            "adx": 23.547292240371462,
+            "plusDI": 12.267277916579852,
+            "minusDI": 33.53966982998575,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (47674.84) <= BB_Lower (47734.73), RSI=29.3, ADX=23.5, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762130280000,
+          "candle": {
+            "index": 11632,
+            "timestamp": 1762130280,
+            "open": 47773.4821,
+            "high": 47773.4821,
+            "low": 47664.6974,
+            "close": 47674.839
+          },
+          "price": 47674.839,
+          "indicators": {
+            "bbUpper": 47924.10256923471,
+            "bbMiddle": 47829.41619500001,
+            "bbLower": 47734.729820765315,
+            "kcUpper": 47945.45431129979,
+            "kcMiddle": 47841.523675035634,
+            "kcLower": 47737.593038771476,
+            "squeezeOn": false,
+            "squeezeHistogram": -12.107480035621847,
+            "rsi": 29.271886419128634,
+            "atr": 71.72236969656092,
+            "adx": 23.547292240371462,
+            "plusDI": 12.267277916579852,
+            "minusDI": 33.53966982998575,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 47674.839,
+        "executedPrice": 47674.839,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 47960.888034,
+        "slPrice": 47484.139644,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762130580000,
+          "candle": {
+            "index": 11637,
+            "timestamp": 1762130580,
+            "open": 47531.1741,
+            "high": 47547.7899,
+            "low": 47476.7747,
+            "close": 47486.8641
+          },
+          "price": 47486.8641,
+          "indicators": {
+            "bbUpper": 48017.52912428981,
+            "bbMiddle": 47775.047835,
+            "bbLower": 47532.566545710186,
+            "kcUpper": 47845.23153447677,
+            "kcMiddle": 47738.32221910997,
+            "kcLower": 47631.41290374317,
+            "squeezeOn": false,
+            "squeezeHistogram": 36.72561589002726,
+            "rsi": 19.23051694012814,
+            "atr": 73.45478369783825,
+            "adx": 34.110506668841026,
+            "plusDI": 8.243048075389572,
+            "minusDI": 39.78238403535386
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 47484.139644,
+        "durationMs": 300000
+      },
+      "result": {
+        "pnl": -7.999999999999889,
+        "pnlPct": -0.39999999999999447,
+        "outcome": "LOSS",
+        "maxFavorable": 0.22585917909447883,
+        "maxFavorablePct": 0.011292958954723941,
+        "maxAdverse": 8.308965657964706,
+        "maxAdversePct": 0.41544828289823527
+      }
+    },
+    {
+      "id": "2e8317a3-f898-4ed5-9892-f329884dbc74",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "a7c3962b-64ff-4774-bf5b-16800878a35b",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762195380000,
+          "candle": {
+            "index": 12717,
+            "timestamp": 1762195380,
+            "open": 43172.4102,
+            "high": 43177.5888,
+            "low": 43104.423,
+            "close": 43110.7349
+          },
+          "price": 43110.7349,
+          "indicators": {
+            "bbUpper": 43306.8112119409,
+            "bbMiddle": 43229.340950000005,
+            "bbLower": 43151.87068805911,
+            "kcUpper": 43335.10103181988,
+            "kcMiddle": 43241.71745983866,
+            "kcLower": 43148.33388785744,
+            "squeezeOn": true,
+            "squeezeHistogram": -12.376509838657512,
+            "rsi": 29.354435061389395,
+            "atr": 62.43518800146896,
+            "adx": 22.87828221101805,
+            "plusDI": 18.681098297803935,
+            "minusDI": 33.91347372187584,
+            "isInSqueeze": true,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (43110.73) <= BB_Lower (43151.87), RSI=29.4, ADX=22.9, Squeeze=true",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762195380000,
+          "candle": {
+            "index": 12717,
+            "timestamp": 1762195380,
+            "open": 43172.4102,
+            "high": 43177.5888,
+            "low": 43104.423,
+            "close": 43110.7349
+          },
+          "price": 43110.7349,
+          "indicators": {
+            "bbUpper": 43306.8112119409,
+            "bbMiddle": 43229.340950000005,
+            "bbLower": 43151.87068805911,
+            "kcUpper": 43335.10103181988,
+            "kcMiddle": 43241.71745983866,
+            "kcLower": 43148.33388785744,
+            "squeezeOn": true,
+            "squeezeHistogram": -12.376509838657512,
+            "rsi": 29.354435061389395,
+            "atr": 62.43518800146896,
+            "adx": 22.87828221101805,
+            "plusDI": 18.681098297803935,
+            "minusDI": 33.91347372187584,
+            "isInSqueeze": true,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43110.7349,
+        "executedPrice": 43110.7349,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43369.3993094,
+        "slPrice": 42938.291960400005,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762196940000,
+          "candle": {
+            "index": 12743,
+            "timestamp": 1762196940,
+            "open": 42954.0123,
+            "high": 42954.0123,
+            "low": 42878.4447,
+            "close": 42895.1615
+          },
+          "price": 42895.1615,
+          "indicators": {
+            "bbUpper": 43223.08873763659,
+            "bbMiddle": 43057.095545,
+            "bbLower": 42891.1023523634,
+            "kcUpper": 43140.33978539292,
+            "kcMiddle": 43047.055693788214,
+            "kcLower": 42953.77160218351,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.039851211782661,
+            "rsi": 26.27643752821507,
+            "atr": 63.402023847137585,
+            "adx": 31.575198564691,
+            "plusDI": 10.418005777217745,
+            "minusDI": 35.027603494916974
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 42938.291960400005,
+        "durationMs": 1560000
+      },
+      "result": {
+        "pnl": -7.999999999999896,
+        "pnlPct": -0.3999999999999948,
+        "outcome": "LOSS",
+        "maxFavorable": 8.337269147318507,
+        "maxFavorablePct": 0.4168634573659254,
+        "maxAdverse": 10.77644352567059,
+        "maxAdversePct": 0.5388221762835296
+      }
+    },
+    {
+      "id": "2b99d21c-82d2-4f46-ba3e-8a9e8b0ebf26",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "4201a424-8d41-41c0-affa-1fdd3ff49fd9",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762279020000,
+          "candle": {
+            "index": 14111,
+            "timestamp": 1762279020,
+            "open": 42490.049,
+            "high": 42578.6149,
+            "low": 42478.0588,
+            "close": 42578.2599
+          },
+          "price": 42578.2599,
+          "indicators": {
+            "bbUpper": 42513.00032611932,
+            "bbMiddle": 42350.77091499999,
+            "bbLower": 42188.54150388065,
+            "kcUpper": 42466.002484324075,
+            "kcMiddle": 42376.44646507233,
+            "kcLower": 42286.89044582059,
+            "squeezeOn": false,
+            "squeezeHistogram": -25.675550072344777,
+            "rsi": 74.76942944096116,
+            "atr": 61.55381597825736,
+            "adx": 17.589624629073803,
+            "plusDI": 37.84104279973003,
+            "minusDI": 13.355074938038362,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (42578.26) >= BB_Upper (42513.00), RSI=74.8, ADX=17.6, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762279020000,
+          "candle": {
+            "index": 14111,
+            "timestamp": 1762279020,
+            "open": 42490.049,
+            "high": 42578.6149,
+            "low": 42478.0588,
+            "close": 42578.2599
+          },
+          "price": 42578.2599,
+          "indicators": {
+            "bbUpper": 42513.00032611932,
+            "bbMiddle": 42350.77091499999,
+            "bbLower": 42188.54150388065,
+            "kcUpper": 42466.002484324075,
+            "kcMiddle": 42376.44646507233,
+            "kcLower": 42286.89044582059,
+            "squeezeOn": false,
+            "squeezeHistogram": -25.675550072344777,
+            "rsi": 74.76942944096116,
+            "atr": 61.55381597825736,
+            "adx": 17.589624629073803,
+            "plusDI": 37.84104279973003,
+            "minusDI": 13.355074938038362,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 42578.2599,
+        "executedPrice": 42578.2599,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42322.7903406,
+        "slPrice": 42748.572939599995,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762279860000,
+          "candle": {
+            "index": 14125,
+            "timestamp": 1762279860,
+            "open": 42741.6422,
+            "high": 42759.033,
+            "low": 42687.5386,
+            "close": 42723.2479
+          },
+          "price": 42723.2479,
+          "indicators": {
+            "bbUpper": 42795.2387562865,
+            "bbMiddle": 42584.569829999986,
+            "bbLower": 42373.900903713475,
+            "kcUpper": 42682.92893296092,
+            "kcMiddle": 42591.788124769904,
+            "kcLower": 42500.64731657889,
+            "squeezeOn": false,
+            "squeezeHistogram": -7.21829476991843,
+            "rsi": 71.06469105758221,
+            "atr": 61.20484729546908,
+            "adx": 41.90831402254828,
+            "plusDI": 40.72654648225261,
+            "minusDI": 9.96967320681479
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 42748.572939599995,
+        "durationMs": 840000
+      },
+      "result": {
+        "pnl": -7.999999999999899,
+        "pnlPct": -0.39999999999999497,
+        "outcome": "LOSS",
+        "maxFavorable": 2.963836481255366,
+        "maxFavorablePct": 0.1481918240627683,
+        "maxAdverse": 8.491333390541206,
+        "maxAdversePct": 0.4245666695270603
+      }
+    },
+    {
+      "id": "a778a9b5-dc24-4c0f-9c41-3c21ec6410db",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "efefcde8-f379-4fdc-bc09-ea512f71dd21",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762286040000,
+          "candle": {
+            "index": 14228,
+            "timestamp": 1762286040,
+            "open": 43170.1955,
+            "high": 43250.3536,
+            "low": 43166.1392,
+            "close": 43231.9606
+          },
+          "price": 43231.9606,
+          "indicators": {
+            "bbUpper": 43192.07407708474,
+            "bbMiddle": 43070.14288,
+            "bbLower": 42948.21168291526,
+            "kcUpper": 43171.00111489529,
+            "kcMiddle": 43080.39948572735,
+            "kcLower": 42989.79785655941,
+            "squeezeOn": false,
+            "squeezeHistogram": -10.256605727350689,
+            "rsi": 70.42685779176927,
+            "atr": 61.168033136978835,
+            "adx": 14.493296486813703,
+            "plusDI": 34.99397663041005,
+            "minusDI": 15.182202470750884,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 65,
+        "reason": "BB Squeeze MR SHORT: Price (43231.96) >= BB_Upper (43192.07), RSI=70.4, ADX=14.5, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762286040000,
+          "candle": {
+            "index": 14228,
+            "timestamp": 1762286040,
+            "open": 43170.1955,
+            "high": 43250.3536,
+            "low": 43166.1392,
+            "close": 43231.9606
+          },
+          "price": 43231.9606,
+          "indicators": {
+            "bbUpper": 43192.07407708474,
+            "bbMiddle": 43070.14288,
+            "bbLower": 42948.21168291526,
+            "kcUpper": 43171.00111489529,
+            "kcMiddle": 43080.39948572735,
+            "kcLower": 42989.79785655941,
+            "squeezeOn": false,
+            "squeezeHistogram": -10.256605727350689,
+            "rsi": 70.42685779176927,
+            "atr": 61.168033136978835,
+            "adx": 14.493296486813703,
+            "plusDI": 34.99397663041005,
+            "minusDI": 15.182202470750884,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43231.9606,
+        "executedPrice": 43231.9606,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42972.5688364,
+        "slPrice": 43404.8884424,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762286220000,
+          "candle": {
+            "index": 14231,
+            "timestamp": 1762286220,
+            "open": 43328.7688,
+            "high": 43420.6639,
+            "low": 43308.3073,
+            "close": 43393.5081
+          },
+          "price": 43393.5081,
+          "indicators": {
+            "bbUpper": 43332.50065199239,
+            "bbMiddle": 43116.648475,
+            "bbLower": 42900.79629800761,
+            "kcUpper": 43246.864948511684,
+            "kcMiddle": 43146.325431336125,
+            "kcLower": 43045.785914160566,
+            "squeezeOn": false,
+            "squeezeHistogram": -29.676956336123112,
+            "rsi": 79.29451101369787,
+            "atr": 70.01308320057537,
+            "adx": 21.93113119783267,
+            "plusDI": 43.536196207682295,
+            "minusDI": 11.217565435636196
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 43404.8884424,
+        "durationMs": 180000
+      },
+      "result": {
+        "pnl": -8.000000000000018,
+        "pnlPct": -0.40000000000000085,
+        "outcome": "LOSS",
+        "maxFavorable": 0.9827960474222053,
+        "maxFavorablePct": 0.049139802371110264,
+        "maxAdverse": 8.729805328329293,
+        "maxAdversePct": 0.43649026641646466
+      }
+    },
+    {
+      "id": "c3ffe475-e317-4f05-952d-f7da5e1bf8bb",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "622fc419-1c2d-4e05-8437-74e2a650433e",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762320900000,
+          "candle": {
+            "index": 14809,
+            "timestamp": 1762320900,
+            "open": 44309.218,
+            "high": 44325.0789,
+            "low": 44242.1466,
+            "close": 44242.1466
+          },
+          "price": 44242.1466,
+          "indicators": {
+            "bbUpper": 44631.39677873057,
+            "bbMiddle": 44463.30109000001,
+            "bbLower": 44295.20540126945,
+            "kcUpper": 44536.35100560587,
+            "kcMiddle": 44434.57811909502,
+            "kcLower": 44332.80523258417,
+            "squeezeOn": false,
+            "squeezeHistogram": 28.72297090498614,
+            "rsi": 27.628203346647496,
+            "atr": 69.08442610609148,
+            "adx": 15.678903201371911,
+            "plusDI": 13.554722853929963,
+            "minusDI": 31.643709281236145,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (44242.15) <= BB_Lower (44295.21), RSI=27.6, ADX=15.7, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762320900000,
+          "candle": {
+            "index": 14809,
+            "timestamp": 1762320900,
+            "open": 44309.218,
+            "high": 44325.0789,
+            "low": 44242.1466,
+            "close": 44242.1466
+          },
+          "price": 44242.1466,
+          "indicators": {
+            "bbUpper": 44631.39677873057,
+            "bbMiddle": 44463.30109000001,
+            "bbLower": 44295.20540126945,
+            "kcUpper": 44536.35100560587,
+            "kcMiddle": 44434.57811909502,
+            "kcLower": 44332.80523258417,
+            "squeezeOn": false,
+            "squeezeHistogram": 28.72297090498614,
+            "rsi": 27.628203346647496,
+            "atr": 69.08442610609148,
+            "adx": 15.678903201371911,
+            "plusDI": 13.554722853929963,
+            "minusDI": 31.643709281236145,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 44242.1466,
+        "executedPrice": 44242.1466,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 44507.5994796,
+        "slPrice": 44065.1780136,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762322700000,
+          "candle": {
+            "index": 14839,
+            "timestamp": 1762322700,
+            "open": 44274.6653,
+            "high": 44331.3981,
+            "low": 44274.6653,
+            "close": 44322.3092
+          },
+          "price": 44322.3092,
+          "indicators": {
+            "bbUpper": 44418.648309392156,
+            "bbMiddle": 44335.415080000006,
+            "bbLower": 44252.181850607856,
+            "kcUpper": 44427.83589379588,
+            "kcMiddle": 44331.679044744895,
+            "kcLower": 44235.52219569391,
+            "squeezeOn": true,
+            "squeezeHistogram": 3.7360352551113465,
+            "rsi": 47.94638923503386,
+            "atr": 63.05979920434914,
+            "adx": 11.381974439112694,
+            "plusDI": 17.21473631356283,
+            "minusDI": 21.203346040555118
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 44322.3092,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 3.623811508278095,
+        "pnlPct": 0.18119057541390474,
+        "outcome": "WIN",
+        "maxFavorable": 9.266164314007353,
+        "maxFavorablePct": 0.4633082157003677,
+        "maxAdverse": 1.2048872872729406,
+        "maxAdversePct": 0.06024436436364703
+      }
+    },
+    {
+      "id": "28b49f0f-47bd-4f86-9384-b0e18d0e897e",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "a017ae38-fa98-4ddf-8fc7-4f3df174fdaa",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762456680000,
+          "candle": {
+            "index": 17072,
+            "timestamp": 1762456680,
+            "open": 46243.9507,
+            "high": 46280.4619,
+            "low": 46240.648,
+            "close": 46277.1954
+          },
+          "price": 46277.1954,
+          "indicators": {
+            "bbUpper": 46215.28611587187,
+            "bbMiddle": 46053.619380000004,
+            "bbLower": 45891.952644128134,
+            "kcUpper": 46180.945895879726,
+            "kcMiddle": 46081.44606535868,
+            "kcLower": 45981.94623483763,
+            "squeezeOn": false,
+            "squeezeHistogram": -27.826685358675604,
+            "rsi": 70.43891962689374,
+            "atr": 68.6337977937467,
+            "adx": 14.526826345845414,
+            "plusDI": 38.607087748249604,
+            "minusDI": 16.63357765877999,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 65,
+        "reason": "BB Squeeze MR SHORT: Price (46277.20) >= BB_Upper (46215.29), RSI=70.4, ADX=14.5, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762456680000,
+          "candle": {
+            "index": 17072,
+            "timestamp": 1762456680,
+            "open": 46243.9507,
+            "high": 46280.4619,
+            "low": 46240.648,
+            "close": 46277.1954
+          },
+          "price": 46277.1954,
+          "indicators": {
+            "bbUpper": 46215.28611587187,
+            "bbMiddle": 46053.619380000004,
+            "bbLower": 45891.952644128134,
+            "kcUpper": 46180.945895879726,
+            "kcMiddle": 46081.44606535868,
+            "kcLower": 45981.94623483763,
+            "squeezeOn": false,
+            "squeezeHistogram": -27.826685358675604,
+            "rsi": 70.43891962689374,
+            "atr": 68.6337977937467,
+            "adx": 14.526826345845414,
+            "plusDI": 38.607087748249604,
+            "minusDI": 16.63357765877999,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 46277.1954,
+        "executedPrice": 46277.1954,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 45999.53222759999,
+        "slPrice": 46462.3041816,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762457460000,
+          "candle": {
+            "index": 17085,
+            "timestamp": 1762457460,
+            "open": 46015.3348,
+            "high": 46018.0604,
+            "low": 45970.5578,
+            "close": 45972.8762
+          },
+          "price": 45972.8762,
+          "indicators": {
+            "bbUpper": 46294.251371909,
+            "bbMiddle": 46112.61685500001,
+            "bbLower": 45930.98233809102,
+            "kcUpper": 46175.566513217695,
+            "kcMiddle": 46084.84061901526,
+            "kcLower": 45994.114724812825,
+            "squeezeOn": false,
+            "squeezeHistogram": 27.776235984747473,
+            "rsi": 37.28424203291138,
+            "atr": 59.35829797895016,
+            "adx": 14.353149686383315,
+            "plusDI": 18.06707121389483,
+            "minusDI": 33.040471066319824
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 45999.53222759999,
+        "durationMs": 780000
+      },
+      "result": {
+        "pnl": 12.000000000000153,
+        "pnlPct": 0.6000000000000076,
+        "outcome": "WIN",
+        "maxFavorable": 13.252211909107809,
+        "maxFavorablePct": 0.6626105954553905,
+        "maxAdverse": 1.9344387495014128,
+        "maxAdversePct": 0.09672193747507063
+      }
+    },
+    {
+      "id": "828aa42b-266e-4795-a607-6ef51e619647",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "1ead263b-8b7d-401e-b824-ae757a1e7492",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762537440000,
+          "candle": {
+            "index": 18418,
+            "timestamp": 1762537440,
+            "open": 43885.9469,
+            "high": 43885.9469,
+            "low": 43808.1539,
+            "close": 43808.1539
+          },
+          "price": 43808.1539,
+          "indicators": {
+            "bbUpper": 44077.42247523071,
+            "bbMiddle": 43972.39958499999,
+            "bbLower": 43867.37669476927,
+            "kcUpper": 44036.53497873326,
+            "kcMiddle": 43951.80841227916,
+            "kcLower": 43867.081845825065,
+            "squeezeOn": false,
+            "squeezeHistogram": 20.59117272082949,
+            "rsi": 27.35066692246589,
+            "atr": 56.42821881447311,
+            "adx": 16.97764792865584,
+            "plusDI": 15.639897077455302,
+            "minusDI": 34.485164920560806,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (43808.15) <= BB_Lower (43867.38), RSI=27.4, ADX=17.0, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762537440000,
+          "candle": {
+            "index": 18418,
+            "timestamp": 1762537440,
+            "open": 43885.9469,
+            "high": 43885.9469,
+            "low": 43808.1539,
+            "close": 43808.1539
+          },
+          "price": 43808.1539,
+          "indicators": {
+            "bbUpper": 44077.42247523071,
+            "bbMiddle": 43972.39958499999,
+            "bbLower": 43867.37669476927,
+            "kcUpper": 44036.53497873326,
+            "kcMiddle": 43951.80841227916,
+            "kcLower": 43867.081845825065,
+            "squeezeOn": false,
+            "squeezeHistogram": 20.59117272082949,
+            "rsi": 27.35066692246589,
+            "atr": 56.42821881447311,
+            "adx": 16.97764792865584,
+            "plusDI": 15.639897077455302,
+            "minusDI": 34.485164920560806,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43808.1539,
+        "executedPrice": 43808.1539,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 44071.0028234,
+        "slPrice": 43632.9212844,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762537680000,
+          "candle": {
+            "index": 18422,
+            "timestamp": 1762537680,
+            "open": 44026.7452,
+            "high": 44085.2882,
+            "low": 44026.7452,
+            "close": 44083.8611
+          },
+          "price": 44083.8611,
+          "indicators": {
+            "bbUpper": 44085.49321115011,
+            "bbMiddle": 43970.91945,
+            "bbLower": 43856.34568884989,
+            "kcUpper": 44064.63992365885,
+            "kcMiddle": 43970.8597729785,
+            "kcLower": 43877.07962229816,
+            "squeezeOn": false,
+            "squeezeHistogram": 0.05967702149791876,
+            "rsi": 61.722905557438075,
+            "atr": 64.06769872514009,
+            "adx": 15.384482458066401,
+            "plusDI": 31.514945113406167,
+            "minusDI": 23.6630897936068
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 44071.0028234,
+        "durationMs": 240000
+      },
+      "result": {
+        "pnl": 12.000000000000037,
+        "pnlPct": 0.6000000000000019,
+        "outcome": "WIN",
+        "maxFavorable": 12.652178890377993,
+        "maxFavorablePct": 0.6326089445188997,
+        "maxAdverse": 0,
+        "maxAdversePct": 0
+      }
+    },
+    {
+      "id": "5ab5d694-250c-4aea-b079-b8b225a104d1",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "eec101a2-cee0-44e8-961c-f94636cdf834",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762591860000,
+          "candle": {
+            "index": 19325,
+            "timestamp": 1762591860,
+            "open": 41930.5989,
+            "high": 41931.6152,
+            "low": 41859.3871,
+            "close": 41886.5907
+          },
+          "price": 41886.5907,
+          "indicators": {
+            "bbUpper": 42214.15209107688,
+            "bbMiddle": 42072.152545,
+            "bbLower": 41930.15299892311,
+            "kcUpper": 42157.91019324882,
+            "kcMiddle": 42058.151236369195,
+            "kcLower": 41958.39227948957,
+            "squeezeOn": false,
+            "squeezeHistogram": 14.001308630802669,
+            "rsi": 29.958804998317646,
+            "atr": 69.98982593049718,
+            "adx": 20.14491726504197,
+            "plusDI": 13.364738117715067,
+            "minusDI": 37.48427627040162,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (41886.59) <= BB_Lower (41930.15), RSI=30.0, ADX=20.1, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762591860000,
+          "candle": {
+            "index": 19325,
+            "timestamp": 1762591860,
+            "open": 41930.5989,
+            "high": 41931.6152,
+            "low": 41859.3871,
+            "close": 41886.5907
+          },
+          "price": 41886.5907,
+          "indicators": {
+            "bbUpper": 42214.15209107688,
+            "bbMiddle": 42072.152545,
+            "bbLower": 41930.15299892311,
+            "kcUpper": 42157.91019324882,
+            "kcMiddle": 42058.151236369195,
+            "kcLower": 41958.39227948957,
+            "squeezeOn": false,
+            "squeezeHistogram": 14.001308630802669,
+            "rsi": 29.958804998317646,
+            "atr": 69.98982593049718,
+            "adx": 20.14491726504197,
+            "plusDI": 13.364738117715067,
+            "minusDI": 37.48427627040162,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 41886.5907,
+        "executedPrice": 41886.5907,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42137.9102442,
+        "slPrice": 41719.0443372,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762592280000,
+          "candle": {
+            "index": 19332,
+            "timestamp": 1762592280,
+            "open": 41737.3324,
+            "high": 41744.6213,
+            "low": 41685.5915,
+            "close": 41693.5315
+          },
+          "price": 41693.5315,
+          "indicators": {
+            "bbUpper": 42239.64311897086,
+            "bbMiddle": 41969.38963500001,
+            "bbLower": 41699.13615102915,
+            "kcUpper": 42029.40614922508,
+            "kcMiddle": 41930.157843436195,
+            "kcLower": 41830.90953764731,
+            "squeezeOn": false,
+            "squeezeHistogram": 39.231791563812294,
+            "rsi": 24.346772940343655,
+            "atr": 67.33289804486469,
+            "adx": 33.06110335627009,
+            "plusDI": 9.39429298999993,
+            "minusDI": 41.79448501043987
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 41719.0443372,
+        "durationMs": 420000
+      },
+      "result": {
+        "pnl": -7.999999999999988,
+        "pnlPct": -0.3999999999999994,
+        "outcome": "LOSS",
+        "maxFavorable": 3.1823883914238813,
+        "maxFavorablePct": 0.15911941957119408,
+        "maxAdverse": 9.597305325687364,
+        "maxAdversePct": 0.47986526628436815
+      }
+    },
+    {
+      "id": "b4fe82d5-5f23-4745-9a29-5f41d5a6ba84",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "5f1d0cd5-4b7a-49f5-97c9-9a7e8c29bd7b",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762613220000,
+          "candle": {
+            "index": 19681,
+            "timestamp": 1762613220,
+            "open": 42256.7483,
+            "high": 42256.7483,
+            "low": 42125.9705,
+            "close": 42132.8495
+          },
+          "price": 42132.8495,
+          "indicators": {
+            "bbUpper": 42392.867956211034,
+            "bbMiddle": 42297.1964,
+            "bbLower": 42201.52484378897,
+            "kcUpper": 42382.602724941986,
+            "kcMiddle": 42292.4304636157,
+            "kcLower": 42202.25820228942,
+            "squeezeOn": false,
+            "squeezeHistogram": 4.7659363842976745,
+            "rsi": 29.16489083196751,
+            "atr": 62.69057668554311,
+            "adx": 15.65880860099535,
+            "plusDI": 14.161700604222155,
+            "minusDI": 35.57705733904738,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (42132.85) <= BB_Lower (42201.52), RSI=29.2, ADX=15.7, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762613220000,
+          "candle": {
+            "index": 19681,
+            "timestamp": 1762613220,
+            "open": 42256.7483,
+            "high": 42256.7483,
+            "low": 42125.9705,
+            "close": 42132.8495
+          },
+          "price": 42132.8495,
+          "indicators": {
+            "bbUpper": 42392.867956211034,
+            "bbMiddle": 42297.1964,
+            "bbLower": 42201.52484378897,
+            "kcUpper": 42382.602724941986,
+            "kcMiddle": 42292.4304636157,
+            "kcLower": 42202.25820228942,
+            "squeezeOn": false,
+            "squeezeHistogram": 4.7659363842976745,
+            "rsi": 29.16489083196751,
+            "atr": 62.69057668554311,
+            "adx": 15.65880860099535,
+            "plusDI": 14.161700604222155,
+            "minusDI": 35.57705733904738,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 42132.8495,
+        "executedPrice": 42132.8495,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42385.646597,
+        "slPrice": 41964.318102,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762613880000,
+          "candle": {
+            "index": 19692,
+            "timestamp": 1762613880,
+            "open": 41999.3064,
+            "high": 42011.104,
+            "low": 41963.1259,
+            "close": 41999.2291
+          },
+          "price": 41999.2291,
+          "indicators": {
+            "bbUpper": 42417.607828869026,
+            "bbMiddle": 42162.265719999996,
+            "bbLower": 41906.923611130966,
+            "kcUpper": 42211.67237068171,
+            "kcMiddle": 42127.1250253413,
+            "kcLower": 42042.5776800009,
+            "squeezeOn": false,
+            "squeezeHistogram": 35.140694658693974,
+            "rsi": 25.81797553776127,
+            "atr": 55.487544417219524,
+            "adx": 37.93778561592106,
+            "plusDI": 7.858825270842159,
+            "minusDI": 34.3216733305759
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 41964.318102,
+        "durationMs": 660000
+      },
+      "result": {
+        "pnl": -7.999999999999963,
+        "pnlPct": -0.3999999999999981,
+        "outcome": "LOSS",
+        "maxFavorable": 2.6845276629108286,
+        "maxFavorablePct": 0.13422638314554142,
+        "maxAdverse": 8.056592516962212,
+        "maxAdversePct": 0.4028296258481106
+      }
+    },
+    {
+      "id": "13dafacc-0eef-4494-8238-88b8e6a477b1",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "122667ba-2a15-4419-a5a5-3c7dd82fcaf8",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762836840000,
+          "candle": {
+            "index": 23408,
+            "timestamp": 1762836840,
+            "open": 43038.0252,
+            "high": 43048.8085,
+            "low": 43017.9082,
+            "close": 43017.9177
+          },
+          "price": 43017.9177,
+          "indicators": {
+            "bbUpper": 43290.636783055,
+            "bbMiddle": 43175.909,
+            "bbLower": 43061.181216945,
+            "kcUpper": 43228.48264224905,
+            "kcMiddle": 43153.484871177876,
+            "kcLower": 43078.4871001067,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.42412882212375,
+            "rsi": 29.236129036153315,
+            "atr": 49.2136273601126,
+            "adx": 16.48634499792745,
+            "plusDI": 11.874549057867318,
+            "minusDI": 30.894095446566684,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (43017.92) <= BB_Lower (43061.18), RSI=29.2, ADX=16.5, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762836840000,
+          "candle": {
+            "index": 23408,
+            "timestamp": 1762836840,
+            "open": 43038.0252,
+            "high": 43048.8085,
+            "low": 43017.9082,
+            "close": 43017.9177
+          },
+          "price": 43017.9177,
+          "indicators": {
+            "bbUpper": 43290.636783055,
+            "bbMiddle": 43175.909,
+            "bbLower": 43061.181216945,
+            "kcUpper": 43228.48264224905,
+            "kcMiddle": 43153.484871177876,
+            "kcLower": 43078.4871001067,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.42412882212375,
+            "rsi": 29.236129036153315,
+            "atr": 49.2136273601126,
+            "adx": 16.48634499792745,
+            "plusDI": 11.874549057867318,
+            "minusDI": 30.894095446566684,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43017.9177,
+        "executedPrice": 43017.9177,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43276.0252062,
+        "slPrice": 42845.846029199995,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762838640000,
+          "candle": {
+            "index": 23438,
+            "timestamp": 1762838640,
+            "open": 43147.7497,
+            "high": 43191.7874,
+            "low": 43115.0516,
+            "close": 43191.7874
+          },
+          "price": 43191.7874,
+          "indicators": {
+            "bbUpper": 43177.32371669659,
+            "bbMiddle": 43061.84821499999,
+            "bbLower": 42946.37271330339,
+            "kcUpper": 43162.9702655178,
+            "kcMiddle": 43075.64957665769,
+            "kcLower": 42988.32888779759,
+            "squeezeOn": false,
+            "squeezeHistogram": -13.801361657700909,
+            "rsi": 64.34152274117982,
+            "atr": 59.38709570266697,
+            "adx": 17.76991930718168,
+            "plusDI": 30.32574404603452,
+            "minusDI": 21.606492255431473
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 43191.7874,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 8.083594432094184,
+        "pnlPct": 0.4041797216047092,
+        "outcome": "WIN",
+        "maxFavorable": 8.083594432094184,
+        "maxFavorablePct": 0.4041797216047092,
+        "maxAdverse": 4.281583345908971,
+        "maxAdversePct": 0.21407916729544854
+      }
+    },
+    {
+      "id": "24ea4de7-00c5-40cc-a404-9ef02021ebd6",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "aee2c6c5-adc6-4c2a-9e5b-fc80ae1da4d3",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762838760000,
+          "candle": {
+            "index": 23440,
+            "timestamp": 1762838760,
+            "open": 43230.1267,
+            "high": 43340.4427,
+            "low": 43230.1267,
+            "close": 43310.5236
+          },
+          "price": 43310.5236,
+          "indicators": {
+            "bbUpper": 43250.68612406479,
+            "bbMiddle": 43084.481895,
+            "bbLower": 42918.2776659352,
+            "kcUpper": 43206.642435718655,
+            "kcMiddle": 43109.526251640425,
+            "kcLower": 43012.410067562196,
+            "squeezeOn": false,
+            "squeezeHistogram": -25.044356640428305,
+            "rsi": 72.74563400743779,
+            "atr": 68.26257855000321,
+            "adx": 19.967623504660892,
+            "plusDI": 40.68655181214268,
+            "minusDI": 17.12857710019388,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (43310.52) >= BB_Upper (43250.69), RSI=72.7, ADX=20.0, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762838760000,
+          "candle": {
+            "index": 23440,
+            "timestamp": 1762838760,
+            "open": 43230.1267,
+            "high": 43340.4427,
+            "low": 43230.1267,
+            "close": 43310.5236
+          },
+          "price": 43310.5236,
+          "indicators": {
+            "bbUpper": 43250.68612406479,
+            "bbMiddle": 43084.481895,
+            "bbLower": 42918.2776659352,
+            "kcUpper": 43206.642435718655,
+            "kcMiddle": 43109.526251640425,
+            "kcLower": 43012.410067562196,
+            "squeezeOn": false,
+            "squeezeHistogram": -25.044356640428305,
+            "rsi": 72.74563400743779,
+            "atr": 68.26257855000321,
+            "adx": 19.967623504660892,
+            "plusDI": 40.68655181214268,
+            "minusDI": 17.12857710019388,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43310.5236,
+        "executedPrice": 43310.5236,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43050.6604584,
+        "slPrice": 43483.7656944,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762840260000,
+          "candle": {
+            "index": 23465,
+            "timestamp": 1762840260,
+            "open": 43441.0073,
+            "high": 43494.6908,
+            "low": 43441.0073,
+            "close": 43472.5085
+          },
+          "price": 43472.5085,
+          "indicators": {
+            "bbUpper": 43490.932163177946,
+            "bbMiddle": 43413.912115,
+            "bbLower": 43336.89206682205,
+            "kcUpper": 43476.79313095302,
+            "kcMiddle": 43391.59814230191,
+            "kcLower": 43306.403153650805,
+            "squeezeOn": false,
+            "squeezeHistogram": 22.313972698088037,
+            "rsi": 63.30180907725805,
+            "atr": 56.7690417646522,
+            "adx": 25.34279864643747,
+            "plusDI": 32.19972155053819,
+            "minusDI": 18.64985943763736
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 43483.7656944,
+        "durationMs": 1500000
+      },
+      "result": {
+        "pnl": -7.999999999999854,
+        "pnlPct": -0.3999999999999927,
+        "outcome": "LOSS",
+        "maxFavorable": 4.143039268174544,
+        "maxFavorablePct": 0.20715196340872719,
+        "maxAdverse": 8.504501201643116,
+        "maxAdversePct": 0.4252250600821557
+      }
+    },
+    {
+      "id": "b8b518e0-0881-41a9-bba5-8afdd7bfee30",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "2a6bbcbe-1ede-4b94-ba03-07a9ff198ccb",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762909260000,
+          "candle": {
+            "index": 24615,
+            "timestamp": 1762909260,
+            "open": 45506.4448,
+            "high": 45572.6982,
+            "low": 45502.122,
+            "close": 45572.3416
+          },
+          "price": 45572.3416,
+          "indicators": {
+            "bbUpper": 45503.817291447995,
+            "bbMiddle": 45324.51020999999,
+            "bbLower": 45145.20312855199,
+            "kcUpper": 45454.431740511456,
+            "kcMiddle": 45357.55430655571,
+            "kcLower": 45260.67687259996,
+            "squeezeOn": false,
+            "squeezeHistogram": -33.04409655571362,
+            "rsi": 70.36684124071358,
+            "atr": 64.84917183304978,
+            "adx": 16.325341865249847,
+            "plusDI": 40.80483053348059,
+            "minusDI": 14.603007446653956,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (45572.34) >= BB_Upper (45503.82), RSI=70.4, ADX=16.3, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762909260000,
+          "candle": {
+            "index": 24615,
+            "timestamp": 1762909260,
+            "open": 45506.4448,
+            "high": 45572.6982,
+            "low": 45502.122,
+            "close": 45572.3416
+          },
+          "price": 45572.3416,
+          "indicators": {
+            "bbUpper": 45503.817291447995,
+            "bbMiddle": 45324.51020999999,
+            "bbLower": 45145.20312855199,
+            "kcUpper": 45454.431740511456,
+            "kcMiddle": 45357.55430655571,
+            "kcLower": 45260.67687259996,
+            "squeezeOn": false,
+            "squeezeHistogram": -33.04409655571362,
+            "rsi": 70.36684124071358,
+            "atr": 64.84917183304978,
+            "adx": 16.325341865249847,
+            "plusDI": 40.80483053348059,
+            "minusDI": 14.603007446653956,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 45572.3416,
+        "executedPrice": 45572.3416,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 45298.9075504,
+        "slPrice": 45754.6309664,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762910460000,
+          "candle": {
+            "index": 24635,
+            "timestamp": 1762910460,
+            "open": 45312.3065,
+            "high": 45312.3065,
+            "low": 45266.9042,
+            "close": 45285.6967
+          },
+          "price": 45285.6967,
+          "indicators": {
+            "bbUpper": 45573.7087892676,
+            "bbMiddle": 45431.29437000001,
+            "bbLower": 45288.87995073242,
+            "kcUpper": 45509.41619167254,
+            "kcMiddle": 45400.41564008255,
+            "kcLower": 45291.41508849256,
+            "squeezeOn": false,
+            "squeezeHistogram": 30.87872991745826,
+            "rsi": 40.74654894409964,
+            "atr": 73.84984873049939,
+            "adx": 13.945536529974397,
+            "plusDI": 19.29363300290096,
+            "minusDI": 31.701504525683415
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 45298.9075504,
+        "durationMs": 1200000
+      },
+      "result": {
+        "pnl": 12.00000000000002,
+        "pnlPct": 0.600000000000001,
+        "outcome": "WIN",
+        "maxFavorable": 13.404507614767924,
+        "maxFavorablePct": 0.6702253807383962,
+        "maxAdverse": 0.4870893006734255,
+        "maxAdversePct": 0.024354465033671276
+      }
+    },
+    {
+      "id": "c30148a5-06fb-4d72-983c-80f061b6a5b1",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "08b1176b-882a-4b3d-934e-0e62b283a8ba",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1762963800000,
+          "candle": {
+            "index": 25524,
+            "timestamp": 1762963800,
+            "open": 44187.8236,
+            "high": 44204.8385,
+            "low": 44120.7273,
+            "close": 44124.2067
+          },
+          "price": 44124.2067,
+          "indicators": {
+            "bbUpper": 44431.17294042296,
+            "bbMiddle": 44311.408335,
+            "bbLower": 44191.64372957704,
+            "kcUpper": 44413.054014240166,
+            "kcMiddle": 44313.066161796996,
+            "kcLower": 44213.07830935383,
+            "squeezeOn": false,
+            "squeezeHistogram": -1.6578267969962326,
+            "rsi": 29.183667936946904,
+            "atr": 69.43640311087375,
+            "adx": 19.931362503436134,
+            "plusDI": 11.994360077930814,
+            "minusDI": 36.07987689054541,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (44124.21) <= BB_Lower (44191.64), RSI=29.2, ADX=19.9, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1762963800000,
+          "candle": {
+            "index": 25524,
+            "timestamp": 1762963800,
+            "open": 44187.8236,
+            "high": 44204.8385,
+            "low": 44120.7273,
+            "close": 44124.2067
+          },
+          "price": 44124.2067,
+          "indicators": {
+            "bbUpper": 44431.17294042296,
+            "bbMiddle": 44311.408335,
+            "bbLower": 44191.64372957704,
+            "kcUpper": 44413.054014240166,
+            "kcMiddle": 44313.066161796996,
+            "kcLower": 44213.07830935383,
+            "squeezeOn": false,
+            "squeezeHistogram": -1.6578267969962326,
+            "rsi": 29.183667936946904,
+            "atr": 69.43640311087375,
+            "adx": 19.931362503436134,
+            "plusDI": 11.994360077930814,
+            "minusDI": 36.07987689054541,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 44124.2067,
+        "executedPrice": 44124.2067,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 44388.9519402,
+        "slPrice": 43947.7098732,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1762965060000,
+          "candle": {
+            "index": 25545,
+            "timestamp": 1762965060,
+            "open": 44349.3174,
+            "high": 44396.1326,
+            "low": 44349.3174,
+            "close": 44391.6628
+          },
+          "price": 44391.6628,
+          "indicators": {
+            "bbUpper": 44371.57101576943,
+            "bbMiddle": 44239.36833500001,
+            "bbLower": 44107.16565423059,
+            "kcUpper": 44353.45939115731,
+            "kcMiddle": 44271.33979715453,
+            "kcLower": 44189.220203151744,
+            "squeezeOn": false,
+            "squeezeHistogram": -31.97146215452085,
+            "rsi": 64.5334207377436,
+            "atr": 53.164994142533544,
+            "adx": 18.108154586427027,
+            "plusDI": 27.794460937465765,
+            "minusDI": 16.443589710692024
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 44388.9519402,
+        "durationMs": 1260000
+      },
+      "result": {
+        "pnl": 11.999999999999913,
+        "pnlPct": 0.5999999999999955,
+        "outcome": "WIN",
+        "maxFavorable": 12.325474850973114,
+        "maxFavorablePct": 0.6162737425486557,
+        "maxAdverse": 0.8828759294158717,
+        "maxAdversePct": 0.044143796470793584
+      }
+    },
+    {
+      "id": "8ccecf53-e612-436f-abc1-44890e88a6b8",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "e56d7b7d-387d-4bba-befc-ad22019a91a7",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763011740000,
+          "candle": {
+            "index": 26323,
+            "timestamp": 1763011740,
+            "open": 44128.3632,
+            "high": 44219.909,
+            "low": 44128.3632,
+            "close": 44219.909
+          },
+          "price": 44219.909,
+          "indicators": {
+            "bbUpper": 44146.566581896164,
+            "bbMiddle": 44017.982195000004,
+            "bbLower": 43889.397808103844,
+            "kcUpper": 44128.95446809117,
+            "kcMiddle": 44026.77694378461,
+            "kcLower": 43924.59941947804,
+            "squeezeOn": false,
+            "squeezeHistogram": -8.794748784603144,
+            "rsi": 70.23769805468635,
+            "atr": 71.08158167347074,
+            "adx": 22.356667378443266,
+            "plusDI": 35.76612425516241,
+            "minusDI": 13.464979715145697,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (44219.91) >= BB_Upper (44146.57), RSI=70.2, ADX=22.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763011740000,
+          "candle": {
+            "index": 26323,
+            "timestamp": 1763011740,
+            "open": 44128.3632,
+            "high": 44219.909,
+            "low": 44128.3632,
+            "close": 44219.909
+          },
+          "price": 44219.909,
+          "indicators": {
+            "bbUpper": 44146.566581896164,
+            "bbMiddle": 44017.982195000004,
+            "bbLower": 43889.397808103844,
+            "kcUpper": 44128.95446809117,
+            "kcMiddle": 44026.77694378461,
+            "kcLower": 43924.59941947804,
+            "squeezeOn": false,
+            "squeezeHistogram": -8.794748784603144,
+            "rsi": 70.23769805468635,
+            "atr": 71.08158167347074,
+            "adx": 22.356667378443266,
+            "plusDI": 35.76612425516241,
+            "minusDI": 13.464979715145697,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 44219.909,
+        "executedPrice": 44219.909,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43954.589546,
+        "slPrice": 44396.788636,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763012640000,
+          "candle": {
+            "index": 26338,
+            "timestamp": 1763012640,
+            "open": 44344.4664,
+            "high": 44453.5967,
+            "low": 44344.4664,
+            "close": 44411.4828
+          },
+          "price": 44411.4828,
+          "indicators": {
+            "bbUpper": 44413.92687584656,
+            "bbMiddle": 44192.58794,
+            "bbLower": 43971.24900415343,
+            "kcUpper": 44314.54464958782,
+            "kcMiddle": 44199.69362903818,
+            "kcLower": 44084.842608488536,
+            "squeezeOn": false,
+            "squeezeHistogram": -7.1056890381805715,
+            "rsi": 69.86762432974102,
+            "atr": 79.09621358427583,
+            "adx": 27.588391468814827,
+            "plusDI": 41.95482221654903,
+            "minusDI": 14.36672532779195
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 44396.788636,
+        "durationMs": 900000
+      },
+      "result": {
+        "pnl": -7.999999999999903,
+        "pnlPct": -0.39999999999999514,
+        "outcome": "LOSS",
+        "maxFavorable": 9.135731147705318,
+        "maxFavorablePct": 0.4567865573852659,
+        "maxAdverse": 10.56934332451938,
+        "maxAdversePct": 0.528467166225969
+      }
+    },
+    {
+      "id": "0754ca90-5e88-41cb-ab59-3b9f5ad93fbd",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "d73ef65d-b5c3-47e5-8ec4-d991eb6b0ed0",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763033160000,
+          "candle": {
+            "index": 26680,
+            "timestamp": 1763033160,
+            "open": 43982.689,
+            "high": 44124.5789,
+            "low": 43982.689,
+            "close": 44124.5789
+          },
+          "price": 44124.5789,
+          "indicators": {
+            "bbUpper": 44048.83862370058,
+            "bbMiddle": 43827.484215,
+            "bbLower": 43606.12980629941,
+            "kcUpper": 43980.64636137066,
+            "kcMiddle": 43860.94547169893,
+            "kcLower": 43741.2445820272,
+            "squeezeOn": false,
+            "squeezeHistogram": -33.46125669893081,
+            "rsi": 70.38353419868042,
+            "atr": 83.9857314255261,
+            "adx": 23.157912827042498,
+            "plusDI": 41.840078959274805,
+            "minusDI": 13.529771285237425,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (44124.58) >= BB_Upper (44048.84), RSI=70.4, ADX=23.2, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763033160000,
+          "candle": {
+            "index": 26680,
+            "timestamp": 1763033160,
+            "open": 43982.689,
+            "high": 44124.5789,
+            "low": 43982.689,
+            "close": 44124.5789
+          },
+          "price": 44124.5789,
+          "indicators": {
+            "bbUpper": 44048.83862370058,
+            "bbMiddle": 43827.484215,
+            "bbLower": 43606.12980629941,
+            "kcUpper": 43980.64636137066,
+            "kcMiddle": 43860.94547169893,
+            "kcLower": 43741.2445820272,
+            "squeezeOn": false,
+            "squeezeHistogram": -33.46125669893081,
+            "rsi": 70.38353419868042,
+            "atr": 83.9857314255261,
+            "adx": 23.157912827042498,
+            "plusDI": 41.840078959274805,
+            "minusDI": 13.529771285237425,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 44124.5789,
+        "executedPrice": 44124.5789,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43859.8314266,
+        "slPrice": 44301.0772156,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763034960000,
+          "candle": {
+            "index": 26710,
+            "timestamp": 1763034960,
+            "open": 43949.0154,
+            "high": 43959.0468,
+            "low": 43881.294,
+            "close": 43881.294
+          },
+          "price": 43881.294,
+          "indicators": {
+            "bbUpper": 44305.0633643897,
+            "bbMiddle": 44096.37813499999,
+            "bbLower": 43887.69290561028,
+            "kcUpper": 44139.29261404831,
+            "kcMiddle": 44046.81558959224,
+            "kcLower": 43954.33856513617,
+            "squeezeOn": false,
+            "squeezeHistogram": 49.56254540775262,
+            "rsi": 32.21082056087273,
+            "atr": 62.53615058273351,
+            "adx": 25.368182852365685,
+            "plusDI": 16.23155423565201,
+            "minusDI": 32.906048297347134
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 43881.294,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 11.0271828565824,
+        "pnlPct": 0.55135914282912,
+        "outcome": "WIN",
+        "maxFavorable": 11.0271828565824,
+        "maxFavorablePct": 0.55135914282912,
+        "maxAdverse": 7.3073649208241696,
+        "maxAdversePct": 0.36536824604120843
+      }
+    },
+    {
+      "id": "ba74a1dc-d59f-4ea8-b6fe-547a139aa4a5",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "8727f212-fdb6-4f7a-9a8d-0fac3aa440a1",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763158980000,
+          "candle": {
+            "index": 28777,
+            "timestamp": 1763158980,
+            "open": 43782.4411,
+            "high": 43954.0267,
+            "low": 43782.4411,
+            "close": 43954.0267
+          },
+          "price": 43954.0267,
+          "indicators": {
+            "bbUpper": 43860.54569922762,
+            "bbMiddle": 43746.571585000005,
+            "bbLower": 43632.59747077239,
+            "kcUpper": 43857.7294521302,
+            "kcMiddle": 43761.62773617173,
+            "kcLower": 43665.526020213256,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.056151171724196,
+            "rsi": 70.36883350034857,
+            "atr": 68.32745664003056,
+            "adx": 13.136736548525803,
+            "plusDI": 37.89193521797882,
+            "minusDI": 15.904361139824266,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 65,
+        "reason": "BB Squeeze MR SHORT: Price (43954.03) >= BB_Upper (43860.55), RSI=70.4, ADX=13.1, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763158980000,
+          "candle": {
+            "index": 28777,
+            "timestamp": 1763158980,
+            "open": 43782.4411,
+            "high": 43954.0267,
+            "low": 43782.4411,
+            "close": 43954.0267
+          },
+          "price": 43954.0267,
+          "indicators": {
+            "bbUpper": 43860.54569922762,
+            "bbMiddle": 43746.571585000005,
+            "bbLower": 43632.59747077239,
+            "kcUpper": 43857.7294521302,
+            "kcMiddle": 43761.62773617173,
+            "kcLower": 43665.526020213256,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.056151171724196,
+            "rsi": 70.36883350034857,
+            "atr": 68.32745664003056,
+            "adx": 13.136736548525803,
+            "plusDI": 37.89193521797882,
+            "minusDI": 15.904361139824266,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43954.0267,
+        "executedPrice": 43954.0267,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43690.3025398,
+        "slPrice": 44129.8428068,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763160120000,
+          "candle": {
+            "index": 28796,
+            "timestamp": 1763160120,
+            "open": 43759.0213,
+            "high": 43765.9055,
+            "low": 43681.8506,
+            "close": 43683.1692
+          },
+          "price": 43683.1692,
+          "indicators": {
+            "bbUpper": 44134.54112913462,
+            "bbMiddle": 43912.111195,
+            "bbLower": 43689.68126086538,
+            "kcUpper": 43933.84257491217,
+            "kcMiddle": 43838.93278505755,
+            "kcLower": 43744.02299520293,
+            "squeezeOn": false,
+            "squeezeHistogram": 73.17840994244762,
+            "rsi": 32.20549275288462,
+            "atr": 63.69650859106647,
+            "adx": 16.71781620649029,
+            "plusDI": 21.539046334239856,
+            "minusDI": 31.05425192304397
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 43690.3025398,
+        "durationMs": 1140000
+      },
+      "result": {
+        "pnl": 11.999999999999975,
+        "pnlPct": 0.5999999999999988,
+        "outcome": "WIN",
+        "maxFavorable": 12.384580910308461,
+        "maxFavorablePct": 0.6192290455154231,
+        "maxAdverse": 7.062574769742297,
+        "maxAdversePct": 0.35312873848711485
+      }
+    },
+    {
+      "id": "bc1bebc6-f8b0-4788-bfab-6614bd013511",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "89229fc7-4147-4a7e-90f0-a57751ed3d9a",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763160240000,
+          "candle": {
+            "index": 28798,
+            "timestamp": 1763160240,
+            "open": 43574.3208,
+            "high": 43574.3208,
+            "low": 43510.7616,
+            "close": 43538.1716
+          },
+          "price": 43538.1716,
+          "indicators": {
+            "bbUpper": 44175.146407744876,
+            "bbMiddle": 43870.772255,
+            "bbLower": 43566.39810225513,
+            "kcUpper": 43889.91550871495,
+            "kcMiddle": 43787.153042189966,
+            "kcLower": 43684.390575664984,
+            "squeezeOn": false,
+            "squeezeHistogram": 83.61921281003742,
+            "rsi": 24.03693513753049,
+            "atr": 70.61332423062365,
+            "adx": 19.807033315363565,
+            "plusDI": 17.43067698938239,
+            "minusDI": 42.48636051085658,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 70,
+        "reason": "BB Squeeze MR LONG: Price (43538.17) <= BB_Lower (43566.40), RSI=24.0, ADX=19.8, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763160240000,
+          "candle": {
+            "index": 28798,
+            "timestamp": 1763160240,
+            "open": 43574.3208,
+            "high": 43574.3208,
+            "low": 43510.7616,
+            "close": 43538.1716
+          },
+          "price": 43538.1716,
+          "indicators": {
+            "bbUpper": 44175.146407744876,
+            "bbMiddle": 43870.772255,
+            "bbLower": 43566.39810225513,
+            "kcUpper": 43889.91550871495,
+            "kcMiddle": 43787.153042189966,
+            "kcLower": 43684.390575664984,
+            "squeezeOn": false,
+            "squeezeHistogram": 83.61921281003742,
+            "rsi": 24.03693513753049,
+            "atr": 70.61332423062365,
+            "adx": 19.807033315363565,
+            "plusDI": 17.43067698938239,
+            "minusDI": 42.48636051085658,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43538.1716,
+        "executedPrice": 43538.1716,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 43799.4006296,
+        "slPrice": 43364.018913600004,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763160540000,
+          "candle": {
+            "index": 28803,
+            "timestamp": 1763160540,
+            "open": 43754.0257,
+            "high": 43811.6205,
+            "low": 43754.0257,
+            "close": 43802.0481
+          },
+          "price": 43802.0481,
+          "indicators": {
+            "bbUpper": 44067.45508260518,
+            "bbMiddle": 43780.051335,
+            "bbLower": 43492.647587394815,
+            "kcUpper": 43856.34074587624,
+            "kcMiddle": 43746.575267637585,
+            "kcLower": 43636.80978939893,
+            "squeezeOn": false,
+            "squeezeHistogram": 33.47606736241141,
+            "rsi": 53.539511679300716,
+            "atr": 75.71645455823781,
+            "adx": 19.255525475174938,
+            "plusDI": 33.62171819129801,
+            "minusDI": 27.620041749395252
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 43799.4006296,
+        "durationMs": 300000
+      },
+      "result": {
+        "pnl": 11.999999999999963,
+        "pnlPct": 0.5999999999999981,
+        "outcome": "WIN",
+        "maxFavorable": 12.561340540997628,
+        "maxFavorablePct": 0.6280670270498814,
+        "maxAdverse": 0.723673017081917,
+        "maxAdversePct": 0.036183650854095854
+      }
+    },
+    {
+      "id": "35a4e397-c003-4286-b840-fb4461f76454",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "18f4059e-8bf4-4610-9c88-244692374bbd",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763214000000,
+          "candle": {
+            "index": 29694,
+            "timestamp": 1763214000,
+            "open": 45628.0755,
+            "high": 45652.9299,
+            "low": 45612.9369,
+            "close": 45648.4923
+          },
+          "price": 45648.4923,
+          "indicators": {
+            "bbUpper": 45616.02010370373,
+            "bbMiddle": 45443.7898,
+            "bbLower": 45271.559496296264,
+            "kcUpper": 45562.82621169332,
+            "kcMiddle": 45468.85134107954,
+            "kcLower": 45374.876470465766,
+            "squeezeOn": false,
+            "squeezeHistogram": -25.06154107954353,
+            "rsi": 70.61453180112868,
+            "atr": 63.88290265210143,
+            "adx": 23.146417204598905,
+            "plusDI": 36.56908996212945,
+            "minusDI": 12.01001319712873,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (45648.49) >= BB_Upper (45616.02), RSI=70.6, ADX=23.1, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763214000000,
+          "candle": {
+            "index": 29694,
+            "timestamp": 1763214000,
+            "open": 45628.0755,
+            "high": 45652.9299,
+            "low": 45612.9369,
+            "close": 45648.4923
+          },
+          "price": 45648.4923,
+          "indicators": {
+            "bbUpper": 45616.02010370373,
+            "bbMiddle": 45443.7898,
+            "bbLower": 45271.559496296264,
+            "kcUpper": 45562.82621169332,
+            "kcMiddle": 45468.85134107954,
+            "kcLower": 45374.876470465766,
+            "squeezeOn": false,
+            "squeezeHistogram": -25.06154107954353,
+            "rsi": 70.61453180112868,
+            "atr": 63.88290265210143,
+            "adx": 23.146417204598905,
+            "plusDI": 36.56908996212945,
+            "minusDI": 12.01001319712873,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 45648.4923,
+        "executedPrice": 45648.4923,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 45374.6013462,
+        "slPrice": 45831.0862692,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763214720000,
+          "candle": {
+            "index": 29706,
+            "timestamp": 1763214720,
+            "open": 45789.044,
+            "high": 45839.3601,
+            "low": 45773.4679,
+            "close": 45812.8575
+          },
+          "price": 45812.8575,
+          "indicators": {
+            "bbUpper": 45844.736487143346,
+            "bbMiddle": 45622.57981,
+            "bbLower": 45400.42313285666,
+            "kcUpper": 45724.902188635744,
+            "kcMiddle": 45638.28986253199,
+            "kcLower": 45551.67753642823,
+            "squeezeOn": false,
+            "squeezeHistogram": -15.71005253198382,
+            "rsi": 76.79535419246398,
+            "atr": 57.83510720264503,
+            "adx": 38.94612925811593,
+            "plusDI": 40.8642475817147,
+            "minusDI": 10.015282332812848
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 45831.0862692,
+        "durationMs": 720000
+      },
+      "result": {
+        "pnl": -8.000000000000126,
+        "pnlPct": -0.40000000000000635,
+        "outcome": "LOSS",
+        "maxFavorable": 2.2959400128970264,
+        "maxFavorablePct": 0.11479700064485132,
+        "maxAdverse": 8.362501821336167,
+        "maxAdversePct": 0.41812509106680834
+      }
+    },
+    {
+      "id": "e3d3dacf-a296-4c35-9bda-0c385dc11a55",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "49ef8398-bee5-4b2e-981c-a2e73e915ccf",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763246100000,
+          "candle": {
+            "index": 30229,
+            "timestamp": 1763246100,
+            "open": 47322.4672,
+            "high": 47402.0333,
+            "low": 47319.3642,
+            "close": 47373.2486
+          },
+          "price": 47373.2486,
+          "indicators": {
+            "bbUpper": 47312.13176315992,
+            "bbMiddle": 47117.558010000015,
+            "bbLower": 46922.98425684011,
+            "kcUpper": 47257.19471746049,
+            "kcMiddle": 47138.44053220743,
+            "kcLower": 47019.686346954375,
+            "squeezeOn": false,
+            "squeezeHistogram": -20.882522207415604,
+            "rsi": 71.84339004794835,
+            "atr": 82.92444866994586,
+            "adx": 23.972680342546525,
+            "plusDI": 37.56004987209449,
+            "minusDI": 11.005039622425201,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (47373.25) >= BB_Upper (47312.13), RSI=71.8, ADX=24.0, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763246100000,
+          "candle": {
+            "index": 30229,
+            "timestamp": 1763246100,
+            "open": 47322.4672,
+            "high": 47402.0333,
+            "low": 47319.3642,
+            "close": 47373.2486
+          },
+          "price": 47373.2486,
+          "indicators": {
+            "bbUpper": 47312.13176315992,
+            "bbMiddle": 47117.558010000015,
+            "bbLower": 46922.98425684011,
+            "kcUpper": 47257.19471746049,
+            "kcMiddle": 47138.44053220743,
+            "kcLower": 47019.686346954375,
+            "squeezeOn": false,
+            "squeezeHistogram": -20.882522207415604,
+            "rsi": 71.84339004794835,
+            "atr": 82.92444866994586,
+            "adx": 23.972680342546525,
+            "plusDI": 37.56004987209449,
+            "minusDI": 11.005039622425201,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 47373.2486,
+        "executedPrice": 47373.2486,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 47089.0091084,
+        "slPrice": 47562.7415944,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763246940000,
+          "candle": {
+            "index": 30243,
+            "timestamp": 1763246940,
+            "open": 47461.1849,
+            "high": 47566.5747,
+            "low": 47461.1849,
+            "close": 47564.5472
+          },
+          "price": 47564.5472,
+          "indicators": {
+            "bbUpper": 47541.12207683826,
+            "bbMiddle": 47336.212165000004,
+            "bbLower": 47131.302253161746,
+            "kcUpper": 47448.95614420413,
+            "kcMiddle": 47330.77337969306,
+            "kcLower": 47212.590615181995,
+            "squeezeOn": false,
+            "squeezeHistogram": 5.438785306942009,
+            "rsi": 71.8998645813358,
+            "atr": 80.97039141819126,
+            "adx": 29.22378989389511,
+            "plusDI": 37.921471454244745,
+            "minusDI": 14.12793108127823
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 47562.7415944,
+        "durationMs": 840000
+      },
+      "result": {
+        "pnl": -8.000000000000137,
+        "pnlPct": -0.40000000000000685,
+        "outcome": "LOSS",
+        "maxFavorable": 5.016696279511671,
+        "maxFavorablePct": 0.25083481397558355,
+        "maxAdverse": 8.16182574399166,
+        "maxAdversePct": 0.408091287199583
+      }
+    },
+    {
+      "id": "3c52c7a9-1bea-4a6a-95f1-4a3aff57c258",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "0b5102a2-e15b-4ce1-a0ee-41237336e998",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763250720000,
+          "candle": {
+            "index": 30306,
+            "timestamp": 1763250720,
+            "open": 47972.5739,
+            "high": 48029.6817,
+            "low": 47972.5739,
+            "close": 48023.0678
+          },
+          "price": 48023.0678,
+          "indicators": {
+            "bbUpper": 47973.81889958818,
+            "bbMiddle": 47783.03505499999,
+            "bbLower": 47592.25121041181,
+            "kcUpper": 47916.94087104795,
+            "kcMiddle": 47806.110515244545,
+            "kcLower": 47695.28015944114,
+            "squeezeOn": false,
+            "squeezeHistogram": -23.075460244552232,
+            "rsi": 71.09536915436294,
+            "atr": 74.17217106419925,
+            "adx": 22.923463435894636,
+            "plusDI": 33.271702865951724,
+            "minusDI": 9.468764805163827,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (48023.07) >= BB_Upper (47973.82), RSI=71.1, ADX=22.9, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763250720000,
+          "candle": {
+            "index": 30306,
+            "timestamp": 1763250720,
+            "open": 47972.5739,
+            "high": 48029.6817,
+            "low": 47972.5739,
+            "close": 48023.0678
+          },
+          "price": 48023.0678,
+          "indicators": {
+            "bbUpper": 47973.81889958818,
+            "bbMiddle": 47783.03505499999,
+            "bbLower": 47592.25121041181,
+            "kcUpper": 47916.94087104795,
+            "kcMiddle": 47806.110515244545,
+            "kcLower": 47695.28015944114,
+            "squeezeOn": false,
+            "squeezeHistogram": -23.075460244552232,
+            "rsi": 71.09536915436294,
+            "atr": 74.17217106419925,
+            "adx": 22.923463435894636,
+            "plusDI": 33.271702865951724,
+            "minusDI": 9.468764805163827,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 48023.0678,
+        "executedPrice": 48023.0678,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 47734.9293932,
+        "slPrice": 48215.1600712,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763251500000,
+          "candle": {
+            "index": 30319,
+            "timestamp": 1763251500,
+            "open": 48171.7997,
+            "high": 48238.7402,
+            "low": 48158.11,
+            "close": 48182.3205
+          },
+          "price": 48182.3205,
+          "indicators": {
+            "bbUpper": 48249.55372383633,
+            "bbMiddle": 48007.255730000004,
+            "bbLower": 47764.95773616368,
+            "kcUpper": 48115.07734167661,
+            "kcMiddle": 48014.31067280204,
+            "kcLower": 47913.544003927476,
+            "squeezeOn": false,
+            "squeezeHistogram": -7.054942802038568,
+            "rsi": 72.63762156899017,
+            "atr": 66.56257815797787,
+            "adx": 42.39249527827131,
+            "plusDI": 36.98384245082159,
+            "minusDI": 7.9302867267709445
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 48215.1600712,
+        "durationMs": 780000
+      },
+      "result": {
+        "pnl": -8.000000000000119,
+        "pnlPct": -0.400000000000006,
+        "outcome": "LOSS",
+        "maxFavorable": 1.9367525703969286,
+        "maxFavorablePct": 0.09683762851984642,
+        "maxAdverse": 8.98203342186328,
+        "maxAdversePct": 0.44910167109316396
+      }
+    },
+    {
+      "id": "57261768-2969-4854-bdc9-b3e8c30bde19",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "884cbdef-8531-4804-8054-b24893fd5b4e",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763286360000,
+          "candle": {
+            "index": 30900,
+            "timestamp": 1763286360,
+            "open": 47839.1117,
+            "high": 47854.4438,
+            "low": 47729.3383,
+            "close": 47729.8181
+          },
+          "price": 47729.8181,
+          "indicators": {
+            "bbUpper": 48041.93318285553,
+            "bbMiddle": 47916.528625000006,
+            "bbLower": 47791.12406714448,
+            "kcUpper": 47979.6145355796,
+            "kcMiddle": 47887.45418994708,
+            "kcLower": 47795.293844314554,
+            "squeezeOn": false,
+            "squeezeHistogram": 29.074435052927583,
+            "rsi": 29.73623175869433,
+            "atr": 62.52176721122836,
+            "adx": 15.42032637706563,
+            "plusDI": 16.531224379290308,
+            "minusDI": 34.24511993528878,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (47729.82) <= BB_Lower (47791.12), RSI=29.7, ADX=15.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763286360000,
+          "candle": {
+            "index": 30900,
+            "timestamp": 1763286360,
+            "open": 47839.1117,
+            "high": 47854.4438,
+            "low": 47729.3383,
+            "close": 47729.8181
+          },
+          "price": 47729.8181,
+          "indicators": {
+            "bbUpper": 48041.93318285553,
+            "bbMiddle": 47916.528625000006,
+            "bbLower": 47791.12406714448,
+            "kcUpper": 47979.6145355796,
+            "kcMiddle": 47887.45418994708,
+            "kcLower": 47795.293844314554,
+            "squeezeOn": false,
+            "squeezeHistogram": 29.074435052927583,
+            "rsi": 29.73623175869433,
+            "atr": 62.52176721122836,
+            "adx": 15.42032637706563,
+            "plusDI": 16.531224379290308,
+            "minusDI": 34.24511993528878,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 47729.8181,
+        "executedPrice": 47729.8181,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 48016.1970086,
+        "slPrice": 47538.898827599995,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763286720000,
+          "candle": {
+            "index": 30906,
+            "timestamp": 1763286720,
+            "open": 47554.7357,
+            "high": 47582.8044,
+            "low": 47533.1393,
+            "close": 47533.1393
+          },
+          "price": 47533.1393,
+          "indicators": {
+            "bbUpper": 48086.2326287457,
+            "bbMiddle": 47813.81934499999,
+            "bbLower": 47541.406061254274,
+            "kcUpper": 47865.577939124116,
+            "kcMiddle": 47765.540643463464,
+            "kcLower": 47665.50334780281,
+            "squeezeOn": false,
+            "squeezeHistogram": 48.27870153652475,
+            "rsi": 18.592261893512926,
+            "atr": 68.62697406815391,
+            "adx": 28.165204854811627,
+            "plusDI": 9.909488262331637,
+            "minusDI": 38.50083919870691
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 47538.898827599995,
+        "durationMs": 360000
+      },
+      "result": {
+        "pnl": -8.000000000000092,
+        "pnlPct": -0.4000000000000047,
+        "outcome": "LOSS",
+        "maxFavorable": 1.2767783835322595,
+        "maxFavorablePct": 0.06383891917661297,
+        "maxAdverse": 8.241338761774758,
+        "maxAdversePct": 0.41206693808873796
+      }
+    },
+    {
+      "id": "e78954d6-15f5-4565-a468-bbbac26824f2",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "ba5455a5-1067-48b8-bafb-4a4434797ad5",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763328000000,
+          "candle": {
+            "index": 31594,
+            "timestamp": 1763328000,
+            "open": 46623.5557,
+            "high": 46673.6347,
+            "low": 46620.0536,
+            "close": 46663.9175
+          },
+          "price": 46663.9175,
+          "indicators": {
+            "bbUpper": 46618.1649266143,
+            "bbMiddle": 46466.178355,
+            "bbLower": 46314.19178338569,
+            "kcUpper": 46594.59796321431,
+            "kcMiddle": 46504.20682662559,
+            "kcLower": 46413.81569003686,
+            "squeezeOn": false,
+            "squeezeHistogram": -38.02847162559192,
+            "rsi": 71.45142269829392,
+            "atr": 60.40908041990416,
+            "adx": 18.25356304396723,
+            "plusDI": 37.51008672805677,
+            "minusDI": 13.597753436886618,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (46663.92) >= BB_Upper (46618.16), RSI=71.5, ADX=18.3, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763328000000,
+          "candle": {
+            "index": 31594,
+            "timestamp": 1763328000,
+            "open": 46623.5557,
+            "high": 46673.6347,
+            "low": 46620.0536,
+            "close": 46663.9175
+          },
+          "price": 46663.9175,
+          "indicators": {
+            "bbUpper": 46618.1649266143,
+            "bbMiddle": 46466.178355,
+            "bbLower": 46314.19178338569,
+            "kcUpper": 46594.59796321431,
+            "kcMiddle": 46504.20682662559,
+            "kcLower": 46413.81569003686,
+            "squeezeOn": false,
+            "squeezeHistogram": -38.02847162559192,
+            "rsi": 71.45142269829392,
+            "atr": 60.40908041990416,
+            "adx": 18.25356304396723,
+            "plusDI": 37.51008672805677,
+            "minusDI": 13.597753436886618,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 46663.9175,
+        "executedPrice": 46663.9175,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 46383.933995,
+        "slPrice": 46850.57317,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763329800000,
+          "candle": {
+            "index": 31624,
+            "timestamp": 1763329800,
+            "open": 46470.2353,
+            "high": 46531.2248,
+            "low": 46441.7482,
+            "close": 46516.5385
+          },
+          "price": 46516.5385,
+          "indicators": {
+            "bbUpper": 46717.267417065494,
+            "bbMiddle": 46608.532015,
+            "bbLower": 46499.7966129345,
+            "kcUpper": 46705.069729720424,
+            "kcMiddle": 46596.33013360726,
+            "kcLower": 46487.5905374941,
+            "squeezeOn": false,
+            "squeezeHistogram": 12.201881392735231,
+            "rsi": 42.17249279110678,
+            "atr": 74.42074550473616,
+            "adx": 14.14508622148559,
+            "plusDI": 20.298372268489175,
+            "minusDI": 33.69758896794301
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 46516.5385,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 6.316614973442845,
+        "pnlPct": 0.3158307486721423,
+        "outcome": "WIN",
+        "maxFavorable": 9.522102382424338,
+        "maxFavorablePct": 0.4761051191212169,
+        "maxAdverse": 4.589400364853413,
+        "maxAdversePct": 0.22947001824267063
+      }
+    },
+    {
+      "id": "d9748562-fc04-4661-979e-f3d448b64f83",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "8c1753ca-e790-4582-a856-fafa7f13fa46",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763378280000,
+          "candle": {
+            "index": 32432,
+            "timestamp": 1763378280,
+            "open": 44003.8963,
+            "high": 44003.8963,
+            "low": 43932.6165,
+            "close": 43936.2814
+          },
+          "price": 43936.2814,
+          "indicators": {
+            "bbUpper": 44322.16809305024,
+            "bbMiddle": 44165.36315999999,
+            "bbLower": 44008.558226949746,
+            "kcUpper": 44213.4231792435,
+            "kcMiddle": 44127.06802611702,
+            "kcLower": 44040.71287299054,
+            "squeezeOn": false,
+            "squeezeHistogram": 38.29513388297346,
+            "rsi": 27.20164324384217,
+            "atr": 58.03826289444755,
+            "adx": 24.12039447808025,
+            "plusDI": 10.787963318330016,
+            "minusDI": 36.81207842526578,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (43936.28) <= BB_Lower (44008.56), RSI=27.2, ADX=24.1, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763378280000,
+          "candle": {
+            "index": 32432,
+            "timestamp": 1763378280,
+            "open": 44003.8963,
+            "high": 44003.8963,
+            "low": 43932.6165,
+            "close": 43936.2814
+          },
+          "price": 43936.2814,
+          "indicators": {
+            "bbUpper": 44322.16809305024,
+            "bbMiddle": 44165.36315999999,
+            "bbLower": 44008.558226949746,
+            "kcUpper": 44213.4231792435,
+            "kcMiddle": 44127.06802611702,
+            "kcLower": 44040.71287299054,
+            "squeezeOn": false,
+            "squeezeHistogram": 38.29513388297346,
+            "rsi": 27.20164324384217,
+            "atr": 58.03826289444755,
+            "adx": 24.12039447808025,
+            "plusDI": 10.787963318330016,
+            "minusDI": 36.81207842526578,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 43936.2814,
+        "executedPrice": 43936.2814,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 44199.8990884,
+        "slPrice": 43760.5362744,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763379960000,
+          "candle": {
+            "index": 32460,
+            "timestamp": 1763379960,
+            "open": 44130.1398,
+            "high": 44220.506,
+            "low": 44124.4471,
+            "close": 44220.506
+          },
+          "price": 44220.506,
+          "indicators": {
+            "bbUpper": 44182.34516833397,
+            "bbMiddle": 44069.552070000005,
+            "bbLower": 43956.75897166604,
+            "kcUpper": 44176.12785822599,
+            "kcMiddle": 44081.32126708297,
+            "kcLower": 43986.51467593994,
+            "squeezeOn": false,
+            "squeezeHistogram": -11.76919708296191,
+            "rsi": 67.0839910217455,
+            "atr": 63.45865021813697,
+            "adx": 20.160451644205246,
+            "plusDI": 31.277491069874632,
+            "minusDI": 13.393339643649215
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 44199.8990884,
+        "durationMs": 1680000
+      },
+      "result": {
+        "pnl": 12.000000000000068,
+        "pnlPct": 0.6000000000000034,
+        "outcome": "WIN",
+        "maxFavorable": 12.938036217147925,
+        "maxFavorablePct": 0.6469018108573963,
+        "maxAdverse": 4.685002768577491,
+        "maxAdversePct": 0.23425013842887457
+      }
+    },
+    {
+      "id": "a4064108-06b9-4f49-a649-a77aeb180acc",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "81899087-fdf4-46ef-be70-1735da4e4647",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763409840000,
+          "candle": {
+            "index": 32958,
+            "timestamp": 1763409840,
+            "open": 42563.1583,
+            "high": 42563.1583,
+            "low": 42461.5212,
+            "close": 42468.6045
+          },
+          "price": 42468.6045,
+          "indicators": {
+            "bbUpper": 42797.14772149555,
+            "bbMiddle": 42668.459814999995,
+            "bbLower": 42539.77190850444,
+            "kcUpper": 42748.480942762646,
+            "kcMiddle": 42657.47470484832,
+            "kcLower": 42566.46846693399,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.985110151676054,
+            "rsi": 29.032537928260325,
+            "atr": 61.57018565544263,
+            "adx": 20.387316732738174,
+            "plusDI": 12.671046874389553,
+            "minusDI": 35.758015760780474,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (42468.60) <= BB_Lower (42539.77), RSI=29.0, ADX=20.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763409840000,
+          "candle": {
+            "index": 32958,
+            "timestamp": 1763409840,
+            "open": 42563.1583,
+            "high": 42563.1583,
+            "low": 42461.5212,
+            "close": 42468.6045
+          },
+          "price": 42468.6045,
+          "indicators": {
+            "bbUpper": 42797.14772149555,
+            "bbMiddle": 42668.459814999995,
+            "bbLower": 42539.77190850444,
+            "kcUpper": 42748.480942762646,
+            "kcMiddle": 42657.47470484832,
+            "kcLower": 42566.46846693399,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.985110151676054,
+            "rsi": 29.032537928260325,
+            "atr": 61.57018565544263,
+            "adx": 20.387316732738174,
+            "plusDI": 12.671046874389553,
+            "minusDI": 35.758015760780474,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 42468.6045,
+        "executedPrice": 42468.6045,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42723.416127000004,
+        "slPrice": 42298.730082,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763411640000,
+          "candle": {
+            "index": 32988,
+            "timestamp": 1763411640,
+            "open": 42572.7674,
+            "high": 42590.1225,
+            "low": 42542.5886,
+            "close": 42590.1225
+          },
+          "price": 42590.1225,
+          "indicators": {
+            "bbUpper": 42635.773237713576,
+            "bbMiddle": 42570.17073999999,
+            "bbLower": 42504.5682422864,
+            "kcUpper": 42660.23767774092,
+            "kcMiddle": 42566.484008758795,
+            "kcLower": 42472.73033977667,
+            "squeezeOn": true,
+            "squeezeHistogram": 3.6867312411923194,
+            "rsi": 52.470984833301664,
+            "atr": 62.093934051804446,
+            "adx": 12.12468998285635,
+            "plusDI": 22.977169265364225,
+            "minusDI": 18.850486719077324
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 42590.1225,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 5.7227215930768995,
+        "pnlPct": 0.28613607965384497,
+        "outcome": "WIN",
+        "maxFavorable": 9.633728369859526,
+        "maxFavorablePct": 0.48168641849297633,
+        "maxAdverse": 5.819305882772691,
+        "maxAdversePct": 0.29096529413863453
+      }
+    },
+    {
+      "id": "d6010c99-2abc-41ca-ab3f-de34696edd6c",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "879e1412-8298-4bd8-b823-db268c7a0a62",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763437800000,
+          "candle": {
+            "index": 33424,
+            "timestamp": 1763437800,
+            "open": 42596.0088,
+            "high": 42656.5949,
+            "low": 42596.0088,
+            "close": 42656.5949
+          },
+          "price": 42656.5949,
+          "indicators": {
+            "bbUpper": 42602.091467496764,
+            "bbMiddle": 42511.817989999996,
+            "bbLower": 42421.54451250323,
+            "kcUpper": 42602.25519178395,
+            "kcMiddle": 42511.484263124774,
+            "kcLower": 42420.713334465596,
+            "squeezeOn": true,
+            "squeezeHistogram": 0.33372687522205524,
+            "rsi": 71.1983458232649,
+            "atr": 60.984067900273025,
+            "adx": 18.56238986037118,
+            "plusDI": 33.5777049448932,
+            "minusDI": 16.127971760630167,
+            "isInSqueeze": true,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 70,
+        "reason": "BB Squeeze MR SHORT: Price (42656.59) >= BB_Upper (42602.09), RSI=71.2, ADX=18.6, Squeeze=true",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763437800000,
+          "candle": {
+            "index": 33424,
+            "timestamp": 1763437800,
+            "open": 42596.0088,
+            "high": 42656.5949,
+            "low": 42596.0088,
+            "close": 42656.5949
+          },
+          "price": 42656.5949,
+          "indicators": {
+            "bbUpper": 42602.091467496764,
+            "bbMiddle": 42511.817989999996,
+            "bbLower": 42421.54451250323,
+            "kcUpper": 42602.25519178395,
+            "kcMiddle": 42511.484263124774,
+            "kcLower": 42420.713334465596,
+            "squeezeOn": true,
+            "squeezeHistogram": 0.33372687522205524,
+            "rsi": 71.1983458232649,
+            "atr": 60.984067900273025,
+            "adx": 18.56238986037118,
+            "plusDI": 33.5777049448932,
+            "minusDI": 16.127971760630167,
+            "isInSqueeze": true,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 42656.5949,
+        "executedPrice": 42656.5949,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 42400.6553306,
+        "slPrice": 42827.221279599995,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763438400000,
+          "candle": {
+            "index": 33434,
+            "timestamp": 1763438400,
+            "open": 42462.3598,
+            "high": 42468.935,
+            "low": 42395.7244,
+            "close": 42421.9805
+          },
+          "price": 42421.9805,
+          "indicators": {
+            "bbUpper": 42678.14044754725,
+            "bbMiddle": 42544.39706,
+            "bbLower": 42410.653672452754,
+            "kcUpper": 42624.550006193174,
+            "kcMiddle": 42531.751128537144,
+            "kcLower": 42438.95225088111,
+            "squeezeOn": false,
+            "squeezeHistogram": 12.645931462859153,
+            "rsi": 38.75903445199899,
+            "atr": 62.204584132624426,
+            "adx": 19.145307253031884,
+            "plusDI": 17.579381003194264,
+            "minusDI": 32.68937665599025
+          }
+        },
+        "reason": "TP",
+        "executedPrice": 42400.6553306,
+        "durationMs": 600000
+      },
+      "result": {
+        "pnl": 11.999999999999893,
+        "pnlPct": 0.5999999999999946,
+        "outcome": "WIN",
+        "maxFavorable": 12.23119194635938,
+        "maxFavorablePct": 0.6115595973179689,
+        "maxAdverse": 1.346563178206411,
+        "maxAdversePct": 0.06732815891032055
+      }
+    },
+    {
+      "id": "8b24d0ba-461e-47f3-9332-a1e875a4007c",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "2ee1f306-0caf-4ee7-b80c-dc38ce9e1b57",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763559900000,
+          "candle": {
+            "index": 35459,
+            "timestamp": 1763559900,
+            "open": 39726.8957,
+            "high": 39807.6933,
+            "low": 39702.6645,
+            "close": 39799.1075
+          },
+          "price": 39799.1075,
+          "indicators": {
+            "bbUpper": 39760.22692170525,
+            "bbMiddle": 39681.276455,
+            "bbLower": 39602.325988294746,
+            "kcUpper": 39759.67177930432,
+            "kcMiddle": 39680.70756100256,
+            "kcLower": 39601.74334270079,
+            "squeezeOn": false,
+            "squeezeHistogram": 0.5688939974425011,
+            "rsi": 70.75000733421918,
+            "atr": 53.36003916453635,
+            "adx": 24.784953542617654,
+            "plusDI": 30.128480884917852,
+            "minusDI": 11.935117775164619,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (39799.11) >= BB_Upper (39760.23), RSI=70.8, ADX=24.8, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763559900000,
+          "candle": {
+            "index": 35459,
+            "timestamp": 1763559900,
+            "open": 39726.8957,
+            "high": 39807.6933,
+            "low": 39702.6645,
+            "close": 39799.1075
+          },
+          "price": 39799.1075,
+          "indicators": {
+            "bbUpper": 39760.22692170525,
+            "bbMiddle": 39681.276455,
+            "bbLower": 39602.325988294746,
+            "kcUpper": 39759.67177930432,
+            "kcMiddle": 39680.70756100256,
+            "kcLower": 39601.74334270079,
+            "squeezeOn": false,
+            "squeezeHistogram": 0.5688939974425011,
+            "rsi": 70.75000733421918,
+            "atr": 53.36003916453635,
+            "adx": 24.784953542617654,
+            "plusDI": 30.128480884917852,
+            "minusDI": 11.935117775164619,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 39799.1075,
+        "executedPrice": 39799.1075,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 39560.312855,
+        "slPrice": 39958.30393,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763560200000,
+          "candle": {
+            "index": 35464,
+            "timestamp": 1763560200,
+            "open": 39880.5071,
+            "high": 39963.4615,
+            "low": 39880.5071,
+            "close": 39957.5342
+          },
+          "price": 39957.5342,
+          "indicators": {
+            "bbUpper": 39937.31279861407,
+            "bbMiddle": 39732.390244999995,
+            "bbLower": 39527.46769138592,
+            "kcUpper": 39854.23101493489,
+            "kcMiddle": 39766.0178335839,
+            "kcLower": 39677.80465223291,
+            "squeezeOn": false,
+            "squeezeHistogram": -33.62758858390589,
+            "rsi": 78.19143013052802,
+            "atr": 60.86797540809013,
+            "adx": 35.36175195852946,
+            "plusDI": 40.46332003521261,
+            "minusDI": 9.293263225164369
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 39958.30393,
+        "durationMs": 300000
+      },
+      "result": {
+        "pnl": -8.000000000000181,
+        "pnlPct": -0.400000000000009,
+        "outcome": "LOSS",
+        "maxFavorable": 0,
+        "maxFavorablePct": 0,
+        "maxAdverse": 8.259180183877207,
+        "maxAdversePct": 0.4129590091938603
+      }
+    },
+    {
+      "id": "e7a7cbdc-405b-4398-8a9a-f339e3e084d6",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "f4631233-97e6-4ab2-aef5-78223e1ec89c",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763599980000,
+          "candle": {
+            "index": 36127,
+            "timestamp": 1763599980,
+            "open": 39540.4503,
+            "high": 39625.0674,
+            "low": 39540.4503,
+            "close": 39597.5181
+          },
+          "price": 39597.5181,
+          "indicators": {
+            "bbUpper": 39558.30375609511,
+            "bbMiddle": 39471.1617,
+            "bbLower": 39384.01964390488,
+            "kcUpper": 39554.34088774821,
+            "kcMiddle": 39470.0908144374,
+            "kcLower": 39385.84074112659,
+            "squeezeOn": false,
+            "squeezeHistogram": 1.0708855625998694,
+            "rsi": 71.28157736385829,
+            "atr": 57.37956891923256,
+            "adx": 22.413430107649145,
+            "plusDI": 31.46023586052319,
+            "minusDI": 11.252186935738397,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (39597.52) >= BB_Upper (39558.30), RSI=71.3, ADX=22.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763599980000,
+          "candle": {
+            "index": 36127,
+            "timestamp": 1763599980,
+            "open": 39540.4503,
+            "high": 39625.0674,
+            "low": 39540.4503,
+            "close": 39597.5181
+          },
+          "price": 39597.5181,
+          "indicators": {
+            "bbUpper": 39558.30375609511,
+            "bbMiddle": 39471.1617,
+            "bbLower": 39384.01964390488,
+            "kcUpper": 39554.34088774821,
+            "kcMiddle": 39470.0908144374,
+            "kcLower": 39385.84074112659,
+            "squeezeOn": false,
+            "squeezeHistogram": 1.0708855625998694,
+            "rsi": 71.28157736385829,
+            "atr": 57.37956891923256,
+            "adx": 22.413430107649145,
+            "plusDI": 31.46023586052319,
+            "minusDI": 11.252186935738397,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 39597.5181,
+        "executedPrice": 39597.5181,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 39359.932991400005,
+        "slPrice": 39755.9081724,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763600940000,
+          "candle": {
+            "index": 36143,
+            "timestamp": 1763600940,
+            "open": 39752.4211,
+            "high": 39788.5663,
+            "low": 39733.0584,
+            "close": 39775.6403
+          },
+          "price": 39775.6403,
+          "indicators": {
+            "bbUpper": 39796.49782704752,
+            "bbMiddle": 39644.68313499999,
+            "bbLower": 39492.868442952466,
+            "kcUpper": 39728.177581510085,
+            "kcMiddle": 39642.563514473055,
+            "kcLower": 39556.949447436025,
+            "squeezeOn": false,
+            "squeezeHistogram": 2.1196205269370694,
+            "rsi": 70.34545048891448,
+            "atr": 57.43858566954436,
+            "adx": 36.13891859721257,
+            "plusDI": 32.75543476536522,
+            "minusDI": 11.71834873636298
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 39755.9081724,
+        "durationMs": 960000
+      },
+      "result": {
+        "pnl": -7.9999999999998845,
+        "pnlPct": -0.3999999999999943,
+        "outcome": "LOSS",
+        "maxFavorable": 1.4101590877231702,
+        "maxFavorablePct": 0.0705079543861585,
+        "maxAdverse": 9.649503765237116,
+        "maxAdversePct": 0.48247518826185587
+      }
+    },
+    {
+      "id": "ec4138f5-6257-4a17-84c2-52a6772af662",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "429562e9-0317-4dcd-9268-68eeabe1befd",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763689740000,
+          "candle": {
+            "index": 37623,
+            "timestamp": 1763689740,
+            "open": 40539.2403,
+            "high": 40632.0611,
+            "low": 40526.7102,
+            "close": 40622.0608
+          },
+          "price": 40622.0608,
+          "indicators": {
+            "bbUpper": 40580.10567545232,
+            "bbMiddle": 40414.32952,
+            "bbLower": 40248.553364547675,
+            "kcUpper": 40535.59446832095,
+            "kcMiddle": 40442.626806246415,
+            "kcLower": 40349.65914417188,
+            "squeezeOn": false,
+            "squeezeHistogram": -28.29728624641575,
+            "rsi": 72.12714067657197,
+            "atr": 63.73228915935869,
+            "adx": 19.938594888010062,
+            "plusDI": 39.56401599284792,
+            "minusDI": 12.70758936072571,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (40622.06) >= BB_Upper (40580.11), RSI=72.1, ADX=19.9, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763689740000,
+          "candle": {
+            "index": 37623,
+            "timestamp": 1763689740,
+            "open": 40539.2403,
+            "high": 40632.0611,
+            "low": 40526.7102,
+            "close": 40622.0608
+          },
+          "price": 40622.0608,
+          "indicators": {
+            "bbUpper": 40580.10567545232,
+            "bbMiddle": 40414.32952,
+            "bbLower": 40248.553364547675,
+            "kcUpper": 40535.59446832095,
+            "kcMiddle": 40442.626806246415,
+            "kcLower": 40349.65914417188,
+            "squeezeOn": false,
+            "squeezeHistogram": -28.29728624641575,
+            "rsi": 72.12714067657197,
+            "atr": 63.73228915935869,
+            "adx": 19.938594888010062,
+            "plusDI": 39.56401599284792,
+            "minusDI": 12.70758936072571,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 40622.0608,
+        "executedPrice": 40622.0608,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 40378.3284352,
+        "slPrice": 40784.5490432,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763690100000,
+          "candle": {
+            "index": 37629,
+            "timestamp": 1763690100,
+            "open": 40771.9578,
+            "high": 40792.2334,
+            "low": 40725.8824,
+            "close": 40788.0562
+          },
+          "price": 40788.0562,
+          "indicators": {
+            "bbUpper": 40842.340041484786,
+            "bbMiddle": 40510.298025,
+            "bbLower": 40178.25600851521,
+            "kcUpper": 40664.479808101656,
+            "kcMiddle": 40574.71222618316,
+            "kcLower": 40484.944644264666,
+            "squeezeOn": false,
+            "squeezeHistogram": -64.41420118316455,
+            "rsi": 80.91789817055718,
+            "atr": 60.11491246236225,
+            "adx": 35.04518370921224,
+            "plusDI": 41.60040302078467,
+            "minusDI": 8.33265935182695
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 40784.5490432,
+        "durationMs": 360000
+      },
+      "result": {
+        "pnl": -8.000000000000064,
+        "pnlPct": -0.40000000000000324,
+        "outcome": "LOSS",
+        "maxFavorable": 0.38356005808562005,
+        "maxFavorablePct": 0.019178002904281004,
+        "maxAdverse": 8.37833416861008,
+        "maxAdversePct": 0.418916708430504
+      }
+    },
+    {
+      "id": "00285ef9-42d8-4bee-b7cf-2a6f10fe9c5a",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "a35f63ef-8a62-41a2-af0f-c7e365d5caa1",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763739900000,
+          "candle": {
+            "index": 38459,
+            "timestamp": 1763739900,
+            "open": 39038.7793,
+            "high": 39066.8952,
+            "low": 39025.8389,
+            "close": 39028.8144
+          },
+          "price": 39028.8144,
+          "indicators": {
+            "bbUpper": 39293.321576315655,
+            "bbMiddle": 39174.63434,
+            "bbLower": 39055.94710368434,
+            "kcUpper": 39243.39047297505,
+            "kcMiddle": 39164.21439245266,
+            "kcLower": 39085.03831193027,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.41994754733605,
+            "rsi": 29.58803082849049,
+            "atr": 52.14352250089868,
+            "adx": 22.893824639351656,
+            "plusDI": 10.941373193712483,
+            "minusDI": 31.759018455482416,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (39028.81) <= BB_Lower (39055.95), RSI=29.6, ADX=22.9, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763739900000,
+          "candle": {
+            "index": 38459,
+            "timestamp": 1763739900,
+            "open": 39038.7793,
+            "high": 39066.8952,
+            "low": 39025.8389,
+            "close": 39028.8144
+          },
+          "price": 39028.8144,
+          "indicators": {
+            "bbUpper": 39293.321576315655,
+            "bbMiddle": 39174.63434,
+            "bbLower": 39055.94710368434,
+            "kcUpper": 39243.39047297505,
+            "kcMiddle": 39164.21439245266,
+            "kcLower": 39085.03831193027,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.41994754733605,
+            "rsi": 29.58803082849049,
+            "atr": 52.14352250089868,
+            "adx": 22.893824639351656,
+            "plusDI": 10.941373193712483,
+            "minusDI": 31.759018455482416,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 39028.8144,
+        "executedPrice": 39028.8144,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 39262.987286400006,
+        "slPrice": 38872.6991424,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763741700000,
+          "candle": {
+            "index": 38489,
+            "timestamp": 1763741700,
+            "open": 38958.7137,
+            "high": 39017.9616,
+            "low": 38943.5607,
+            "close": 39017.9616
+          },
+          "price": 39017.9616,
+          "indicators": {
+            "bbUpper": 39036.96850978943,
+            "bbMiddle": 38964.43453500001,
+            "bbLower": 38891.90056021058,
+            "kcUpper": 39055.23856723212,
+            "kcMiddle": 38972.64194988879,
+            "kcLower": 38890.045332545465,
+            "squeezeOn": true,
+            "squeezeHistogram": -8.207414888784115,
+            "rsi": 53.815236605257496,
+            "atr": 56.19284315828565,
+            "adx": 22.263833544564356,
+            "plusDI": 22.41994316574666,
+            "minusDI": 19.14285448002496
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 39017.9616,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": -0.5561429506298593,
+        "pnlPct": -0.02780714753149296,
+        "outcome": "LOSS",
+        "maxFavorable": 2.0260261864371123,
+        "maxFavorablePct": 0.1013013093218556,
+        "maxAdverse": 6.876478420517919,
+        "maxAdversePct": 0.34382392102589593
+      }
+    },
+    {
+      "id": "25324dc6-e3c7-4295-8836-7fef9e8b912d",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "3ec3137e-5d29-4e56-bee8-d39e3f1ddf8e",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763811780000,
+          "candle": {
+            "index": 39657,
+            "timestamp": 1763811780,
+            "open": 38159.6606,
+            "high": 38221.5984,
+            "low": 38158.0623,
+            "close": 38209.2961
+          },
+          "price": 38209.2961,
+          "indicators": {
+            "bbUpper": 38161.878234766875,
+            "bbMiddle": 38023.526575,
+            "bbLower": 37885.17491523313,
+            "kcUpper": 38118.95725686406,
+            "kcMiddle": 38040.65946939968,
+            "kcLower": 37962.361681935305,
+            "squeezeOn": false,
+            "squeezeHistogram": -17.132894399677753,
+            "rsi": 71.07091209229475,
+            "atr": 52.89571546391723,
+            "adx": 24.376139757746284,
+            "plusDI": 40.84758680236118,
+            "minusDI": 12.870751327633347,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 50,
+        "reason": "BB Squeeze MR SHORT: Price (38209.30) >= BB_Upper (38161.88), RSI=71.1, ADX=24.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763811780000,
+          "candle": {
+            "index": 39657,
+            "timestamp": 1763811780,
+            "open": 38159.6606,
+            "high": 38221.5984,
+            "low": 38158.0623,
+            "close": 38209.2961
+          },
+          "price": 38209.2961,
+          "indicators": {
+            "bbUpper": 38161.878234766875,
+            "bbMiddle": 38023.526575,
+            "bbLower": 37885.17491523313,
+            "kcUpper": 38118.95725686406,
+            "kcMiddle": 38040.65946939968,
+            "kcLower": 37962.361681935305,
+            "squeezeOn": false,
+            "squeezeHistogram": -17.132894399677753,
+            "rsi": 71.07091209229475,
+            "atr": 52.89571546391723,
+            "adx": 24.376139757746284,
+            "plusDI": 40.84758680236118,
+            "minusDI": 12.870751327633347,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 38209.2961,
+        "executedPrice": 38209.2961,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 37980.0403234,
+        "slPrice": 38362.1332844,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763812140000,
+          "candle": {
+            "index": 39663,
+            "timestamp": 1763812140,
+            "open": 38347.5766,
+            "high": 38363.0301,
+            "low": 38316.935,
+            "close": 38329.3177
+          },
+          "price": 38329.3177,
+          "indicators": {
+            "bbUpper": 38404.72019563572,
+            "bbMiddle": 38121.48786,
+            "bbLower": 37838.255524364286,
+            "kcUpper": 38245.40386477701,
+            "kcMiddle": 38165.423467893896,
+            "kcLower": 38085.443071010784,
+            "squeezeOn": false,
+            "squeezeHistogram": -43.935607893894485,
+            "rsi": 73.29645532776762,
+            "atr": 53.58158280867675,
+            "adx": 38.04598410034036,
+            "plusDI": 42.772058085052244,
+            "minusDI": 9.558042648011085
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 38362.1332844,
+        "durationMs": 360000
+      },
+      "result": {
+        "pnl": -7.999999999999967,
+        "pnlPct": -0.39999999999999836,
+        "outcome": "LOSS",
+        "maxFavorable": 0,
+        "maxFavorablePct": 0,
+        "maxAdverse": 8.046942272773459,
+        "maxAdversePct": 0.4023471136386729
+      }
+    },
+    {
+      "id": "8e1f3070-5e2e-4dfa-b176-d7922338665f",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "f083b1e3-865e-43c7-b6ec-6b2a3ec78e52",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763840940000,
+          "candle": {
+            "index": 40143,
+            "timestamp": 1763840940,
+            "open": 38062.9484,
+            "high": 38074.7812,
+            "low": 38038.4883,
+            "close": 38057.4788
+          },
+          "price": 38057.4788,
+          "indicators": {
+            "bbUpper": 38265.35667429679,
+            "bbMiddle": 38172.30559,
+            "bbLower": 38079.25450570322,
+            "kcUpper": 38244.37451234363,
+            "kcMiddle": 38167.87824338343,
+            "kcLower": 38091.381974423224,
+            "squeezeOn": false,
+            "squeezeHistogram": 4.42734661657596,
+            "rsi": 29.686879518664767,
+            "atr": 51.52742833172601,
+            "adx": 24.3871560948787,
+            "plusDI": 14.434476812661838,
+            "minusDI": 35.31824280029811,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 50,
+        "reason": "BB Squeeze MR LONG: Price (38057.48) <= BB_Lower (38079.25), RSI=29.7, ADX=24.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763840940000,
+          "candle": {
+            "index": 40143,
+            "timestamp": 1763840940,
+            "open": 38062.9484,
+            "high": 38074.7812,
+            "low": 38038.4883,
+            "close": 38057.4788
+          },
+          "price": 38057.4788,
+          "indicators": {
+            "bbUpper": 38265.35667429679,
+            "bbMiddle": 38172.30559,
+            "bbLower": 38079.25450570322,
+            "kcUpper": 38244.37451234363,
+            "kcMiddle": 38167.87824338343,
+            "kcLower": 38091.381974423224,
+            "squeezeOn": false,
+            "squeezeHistogram": 4.42734661657596,
+            "rsi": 29.686879518664767,
+            "atr": 51.52742833172601,
+            "adx": 24.3871560948787,
+            "plusDI": 14.434476812661838,
+            "minusDI": 35.31824280029811,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 38057.4788,
+        "executedPrice": 38057.4788,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 38285.8236728,
+        "slPrice": 37905.2488848,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763842740000,
+          "candle": {
+            "index": 40173,
+            "timestamp": 1763842740,
+            "open": 38074.7822,
+            "high": 38074.7822,
+            "low": 38022.8613,
+            "close": 38053.4094
+          },
+          "price": 38053.4094,
+          "indicators": {
+            "bbUpper": 38198.16870891996,
+            "bbMiddle": 38084.494515,
+            "bbLower": 37970.820321080035,
+            "kcUpper": 38149.820803908406,
+            "kcMiddle": 38074.095020969944,
+            "kcLower": 37998.36923803148,
+            "squeezeOn": false,
+            "squeezeHistogram": 10.399494030054484,
+            "rsi": 44.72654857220495,
+            "atr": 48.99066661749145,
+            "adx": 11.896204921543202,
+            "plusDI": 18.331282880150297,
+            "minusDI": 22.526261826290035
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 38053.4094,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": -0.21385546958514312,
+        "pnlPct": -0.010692773479257156,
+        "outcome": "LOSS",
+        "maxFavorable": 9.378592887766448,
+        "maxFavorablePct": 0.46892964438832235,
+        "maxAdverse": 4.904586585488622,
+        "maxAdversePct": 0.24522932927443114
+      }
+    },
+    {
+      "id": "20d203cb-2e96-4da4-8c0e-8aa6ee07b61b",
+      "asset": "R_75",
+      "direction": "CALL",
+      "source": "backtest",
+      "correlationId": "13826f0e-27b7-4f94-b243-3aeb9e01b3db",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763876340000,
+          "candle": {
+            "index": 40733,
+            "timestamp": 1763876340,
+            "open": 37520.4369,
+            "high": 37520.4369,
+            "low": 37435.1962,
+            "close": 37450.0559
+          },
+          "price": 37450.0559,
+          "indicators": {
+            "bbUpper": 37679.90354596533,
+            "bbMiddle": 37590.55397,
+            "bbLower": 37501.20439403467,
+            "kcUpper": 37659.46772413891,
+            "kcMiddle": 37581.437631144065,
+            "kcLower": 37503.40753814922,
+            "squeezeOn": false,
+            "squeezeHistogram": 9.116338855936192,
+            "rsi": 28.46267284186355,
+            "atr": 53.81779852215737,
+            "adx": 19.63917002206781,
+            "plusDI": 13.031061802962897,
+            "minusDI": 35.48902632714774,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "CALL",
+        "confidence": 60,
+        "reason": "BB Squeeze MR LONG: Price (37450.06) <= BB_Lower (37501.20), RSI=28.5, ADX=19.6, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763876340000,
+          "candle": {
+            "index": 40733,
+            "timestamp": 1763876340,
+            "open": 37520.4369,
+            "high": 37520.4369,
+            "low": 37435.1962,
+            "close": 37450.0559
+          },
+          "price": 37450.0559,
+          "indicators": {
+            "bbUpper": 37679.90354596533,
+            "bbMiddle": 37590.55397,
+            "bbLower": 37501.20439403467,
+            "kcUpper": 37659.46772413891,
+            "kcMiddle": 37581.437631144065,
+            "kcLower": 37503.40753814922,
+            "squeezeOn": false,
+            "squeezeHistogram": 9.116338855936192,
+            "rsi": 28.46267284186355,
+            "atr": 53.81779852215737,
+            "adx": 19.63917002206781,
+            "plusDI": 13.031061802962897,
+            "minusDI": 35.48902632714774,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 37450.0559,
+        "executedPrice": 37450.0559,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 37674.7562354,
+        "slPrice": 37300.2556764,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763877060000,
+          "candle": {
+            "index": 40745,
+            "timestamp": 1763877060,
+            "open": 37354.58,
+            "high": 37358.3394,
+            "low": 37238.8449,
+            "close": 37238.8449
+          },
+          "price": 37238.8449,
+          "indicators": {
+            "bbUpper": 37647.87719157639,
+            "bbMiddle": 37452.670555,
+            "bbLower": 37257.46391842361,
+            "kcUpper": 37528.640580779866,
+            "kcMiddle": 37433.75364650518,
+            "kcLower": 37338.8667122305,
+            "squeezeOn": false,
+            "squeezeHistogram": 18.91690849481529,
+            "rsi": 25.216998224970112,
+            "atr": 67.80221854265329,
+            "adx": 35.96915945650582,
+            "plusDI": 12.44813251978572,
+            "minusDI": 39.731915430988956
+          }
+        },
+        "reason": "SL",
+        "executedPrice": 37300.2556764,
+        "durationMs": 720000
+      },
+      "result": {
+        "pnl": -8.000000000000156,
+        "pnlPct": -0.4000000000000078,
+        "outcome": "LOSS",
+        "maxFavorable": 1.017386999414455,
+        "maxFavorablePct": 0.05086934997072276,
+        "maxAdverse": 11.279609331638033,
+        "maxAdversePct": 0.5639804665819016
+      }
+    },
+    {
+      "id": "ad3b3901-878e-4849-954f-87623a9e386a",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "e2114a94-030a-4aa3-920e-6ced7cd11b83",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763976660000,
+          "candle": {
+            "index": 42405,
+            "timestamp": 1763976660,
+            "open": 36830.5463,
+            "high": 36874.9896,
+            "low": 36819.5206,
+            "close": 36874.9896
+          },
+          "price": 36874.9896,
+          "indicators": {
+            "bbUpper": 36848.742599279794,
+            "bbMiddle": 36714.50960499999,
+            "bbLower": 36580.27661072019,
+            "kcUpper": 36811.5714599398,
+            "kcMiddle": 36734.74122336926,
+            "kcLower": 36657.91098679872,
+            "squeezeOn": false,
+            "squeezeHistogram": -20.23161836926738,
+            "rsi": 70.96044344928545,
+            "atr": 51.33607579402358,
+            "adx": 19.36170285234566,
+            "plusDI": 33.029312165430575,
+            "minusDI": 13.774426012676928,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (36874.99) >= BB_Upper (36848.74), RSI=71.0, ADX=19.4, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763976660000,
+          "candle": {
+            "index": 42405,
+            "timestamp": 1763976660,
+            "open": 36830.5463,
+            "high": 36874.9896,
+            "low": 36819.5206,
+            "close": 36874.9896
+          },
+          "price": 36874.9896,
+          "indicators": {
+            "bbUpper": 36848.742599279794,
+            "bbMiddle": 36714.50960499999,
+            "bbLower": 36580.27661072019,
+            "kcUpper": 36811.5714599398,
+            "kcMiddle": 36734.74122336926,
+            "kcLower": 36657.91098679872,
+            "squeezeOn": false,
+            "squeezeHistogram": -20.23161836926738,
+            "rsi": 70.96044344928545,
+            "atr": 51.33607579402358,
+            "adx": 19.36170285234566,
+            "plusDI": 33.029312165430575,
+            "minusDI": 13.774426012676928,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 36874.9896,
+        "executedPrice": 36874.9896,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 36653.7396624,
+        "slPrice": 37022.489558400004,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763978460000,
+          "candle": {
+            "index": 42435,
+            "timestamp": 1763978460,
+            "open": 36828.3472,
+            "high": 36864.4593,
+            "low": 36808.5344,
+            "close": 36812.2582
+          },
+          "price": 36812.2582,
+          "indicators": {
+            "bbUpper": 36952.954210366515,
+            "bbMiddle": 36839.253775,
+            "bbLower": 36725.55333963348,
+            "kcUpper": 36927.446951272985,
+            "kcMiddle": 36839.03321595796,
+            "kcLower": 36750.61948064294,
+            "squeezeOn": false,
+            "squeezeHistogram": 0.22055904203443788,
+            "rsi": 47.76411095047118,
+            "atr": 59.47538980996078,
+            "adx": 11.098995746684306,
+            "plusDI": 23.11996796089341,
+            "minusDI": 24.064294647599894
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 36812.2582,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 3.402381976536433,
+        "pnlPct": 0.17011909882682166,
+        "outcome": "WIN",
+        "maxFavorable": 9.71271324778889,
+        "maxFavorablePct": 0.48563566238944456,
+        "maxAdverse": 4.862726795182462,
+        "maxAdversePct": 0.24313633975912313
+      }
+    },
+    {
+      "id": "3bfce96a-03c4-43e2-9b90-8db98d77a9f5",
+      "asset": "R_75",
+      "direction": "PUT",
+      "source": "backtest",
+      "correlationId": "48887f02-1645-4c0c-b4e2-c39a31bc5aec",
+      "signal": {
+        "snapshot": {
+          "timestamp": 1763986140000,
+          "candle": {
+            "index": 42563,
+            "timestamp": 1763986140,
+            "open": 37201.9589,
+            "high": 37280.7786,
+            "low": 37201.9589,
+            "close": 37278.7497
+          },
+          "price": 37278.7497,
+          "indicators": {
+            "bbUpper": 37187.96062465928,
+            "bbMiddle": 37025.533825000006,
+            "bbLower": 36863.10702534073,
+            "kcUpper": 37145.725449214326,
+            "kcMiddle": 37056.45985974862,
+            "kcLower": 36967.19427028291,
+            "squeezeOn": false,
+            "squeezeHistogram": -30.926034748612437,
+            "rsi": 73.124276139688,
+            "atr": 61.43813881532755,
+            "adx": 19.154317295820725,
+            "plusDI": 38.84653174408652,
+            "minusDI": 16.5298588788225,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "direction": "PUT",
+        "confidence": 60,
+        "reason": "BB Squeeze MR SHORT: Price (37278.75) >= BB_Upper (37187.96), RSI=73.1, ADX=19.2, Squeeze=false",
+        "strategyName": "BB-Squeeze-MR",
+        "strategyVersion": "1.0.0"
+      },
+      "entry": {
+        "snapshot": {
+          "timestamp": 1763986140000,
+          "candle": {
+            "index": 42563,
+            "timestamp": 1763986140,
+            "open": 37201.9589,
+            "high": 37280.7786,
+            "low": 37201.9589,
+            "close": 37278.7497
+          },
+          "price": 37278.7497,
+          "indicators": {
+            "bbUpper": 37187.96062465928,
+            "bbMiddle": 37025.533825000006,
+            "bbLower": 36863.10702534073,
+            "kcUpper": 37145.725449214326,
+            "kcMiddle": 37056.45985974862,
+            "kcLower": 36967.19427028291,
+            "squeezeOn": false,
+            "squeezeHistogram": -30.926034748612437,
+            "rsi": 73.124276139688,
+            "atr": 61.43813881532755,
+            "adx": 19.154317295820725,
+            "plusDI": 38.84653174408652,
+            "minusDI": 16.5298588788225,
+            "isInSqueeze": false,
+            "wasRecentlyInSqueeze": true
+          }
+        },
+        "requestedPrice": 37278.7497,
+        "executedPrice": 37278.7497,
+        "latencyMs": 0,
+        "slippage": 0,
+        "slippagePct": 0,
+        "stake": 20,
+        "tpPrice": 37055.0772018,
+        "slPrice": 37427.864698800004,
+        "tpPct": 0.006,
+        "slPct": 0.004
+      },
+      "exit": {
+        "snapshot": {
+          "timestamp": 1763987940000,
+          "candle": {
+            "index": 42593,
+            "timestamp": 1763987940,
+            "open": 37185.4688,
+            "high": 37244.6447,
+            "low": 37180.1089,
+            "close": 37242.363
+          },
+          "price": 37242.363,
+          "indicators": {
+            "bbUpper": 37254.93883043708,
+            "bbMiddle": 37152.033515,
+            "bbLower": 37049.128199562925,
+            "kcUpper": 37242.98801531685,
+            "kcMiddle": 37162.12715617548,
+            "kcLower": 37081.266297034104,
+            "squeezeOn": false,
+            "squeezeHistogram": -10.09364117547375,
+            "rsi": 62.36759608407308,
+            "atr": 53.59373705271729,
+            "adx": 18.161926533506204,
+            "plusDI": 27.499125009384127,
+            "minusDI": 13.606712596031608
+          }
+        },
+        "reason": "TIMEOUT",
+        "executedPrice": 37242.363,
+        "durationMs": 1800000
+      },
+      "result": {
+        "pnl": 1.9521416513603056,
+        "pnlPct": 0.09760708256801527,
+        "outcome": "WIN",
+        "maxFavorable": 11.937782344668967,
+        "maxFavorablePct": 0.5968891172334484,
+        "maxAdverse": 4.4954887529397265,
+        "maxAdversePct": 0.2247744376469863
+      }
+    }
+  ]
+}
