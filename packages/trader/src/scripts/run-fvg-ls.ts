@@ -267,6 +267,57 @@ async function main() {
   console.log('   frxGBPUSD: Skip 1,5,7,17,19,23');
   console.log('   frxUSDCHF: Skip 4,9,21,23\n');
 
+  // Check if forex market is open (closed on weekends)
+  const isForexMarket = SYMBOLS.some(s => s.startsWith('frx'));
+  if (isForexMarket) {
+    const now = new Date();
+    const dayOfWeek = now.getUTCDay();
+    const hour = now.getUTCHours();
+
+    // Forex market is closed from Friday ~22:00 UTC to Sunday ~22:00 UTC
+    // Saturday (6) is always closed
+    // Sunday (0) before 22:00 UTC is closed
+    // Friday (5) after 22:00 UTC is effectively closed (low liquidity)
+    const isWeekend = dayOfWeek === 6 || (dayOfWeek === 0 && hour < 22) || (dayOfWeek === 5 && hour >= 22);
+
+    if (isWeekend) {
+      console.log('⏸️  Forex market is closed (weekend)');
+      console.log('   Market opens: Sunday 22:00 UTC');
+      console.log('   Waiting for market to open...\n');
+
+      // Wait and retry every 5 minutes
+      const waitForMarketOpen = async () => {
+        while (true) {
+          const checkNow = new Date();
+          const checkDay = checkNow.getUTCDay();
+          const checkHour = checkNow.getUTCHours();
+          const stillClosed = checkDay === 6 || (checkDay === 0 && checkHour < 22) || (checkDay === 5 && checkHour >= 22);
+
+          if (!stillClosed) {
+            console.log('✅ Forex market is now open!\n');
+            return;
+          }
+
+          // Calculate time until Sunday 22:00 UTC
+          const targetDay = 0; // Sunday
+          const targetHour = 22;
+          let daysUntil = (targetDay - checkDay + 7) % 7;
+          if (daysUntil === 0 && checkHour >= targetHour) {
+            daysUntil = 7;
+          }
+          const msUntil = ((daysUntil * 24 + targetHour - checkHour) * 60 - checkNow.getUTCMinutes()) * 60 * 1000;
+          const hoursUntil = Math.floor(msUntil / (1000 * 60 * 60));
+          const minsUntil = Math.floor((msUntil % (1000 * 60 * 60)) / (1000 * 60));
+
+          console.log(`⏳ Market closed. Opens in ~${hoursUntil}h ${minsUntil}m. Checking again in 5 minutes...`);
+          await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000)); // Wait 5 minutes
+        }
+      };
+
+      await waitForMarketOpen();
+    }
+  }
+
   // Load historical candles
   console.log(`📥 Loading historical candles for ${SYMBOLS.length} asset(s)...\n`);
 
@@ -281,9 +332,27 @@ async function main() {
         console.log(`   ✅ ${symbol}: Ready for trading!`);
       }
     } catch (error: any) {
-      console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
-      candleBuffers.set(symbol, []);
-      warmUpCandlesPerAsset.set(symbol, 0);
+      // Check if market is closed
+      if (error.message?.includes('market is presently closed') || error.message?.includes('MarketIsClosed')) {
+        console.log(`   ⏸️  ${symbol}: Market is closed - waiting...`);
+        // Wait 5 minutes and retry
+        await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000));
+        // Retry once
+        try {
+          const retryCandles = await gatewayClient.getCandles(symbol, 60, WARM_UP_CANDLES_REQUIRED);
+          console.log(`   ✅ ${symbol}: ${retryCandles.length} x 1m candles (after retry)`);
+          candleBuffers.set(symbol, retryCandles);
+          warmUpCandlesPerAsset.set(symbol, retryCandles.length);
+        } catch (retryError: any) {
+          console.log(`   ⚠️  ${symbol}: Still closed after retry: ${retryError.message}`);
+          candleBuffers.set(symbol, []);
+          warmUpCandlesPerAsset.set(symbol, 0);
+        }
+      } else {
+        console.log(`   ⚠️  ${symbol}: Could not load historical candles: ${error.message}`);
+        candleBuffers.set(symbol, []);
+        warmUpCandlesPerAsset.set(symbol, 0);
+      }
     }
   }
   console.log();
@@ -341,10 +410,30 @@ async function main() {
     }
   }
 
-  // Subscribe to ticks
+  // Subscribe to ticks with retry on market closed
   console.log(`📡 Subscribing to: ${SYMBOLS.join(', ')}...`);
-  await gatewayClient.follow(SYMBOLS);
-  console.log(`✅ Subscribed\n`);
+
+  const subscribeWithRetry = async (maxRetries = 10) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        await gatewayClient.follow(SYMBOLS);
+        console.log(`✅ Subscribed\n`);
+        return;
+      } catch (error: any) {
+        const isMarketClosed = error.message?.includes('market is presently closed') ||
+                               error.message?.includes('MarketIsClosed');
+
+        if (isMarketClosed && attempt < maxRetries) {
+          console.log(`⏸️  Market closed - waiting 5 minutes before retry (${attempt}/${maxRetries})...`);
+          await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000));
+        } else {
+          throw error;
+        }
+      }
+    }
+  };
+
+  await subscribeWithRetry();
 
   // Handle ticks
   gatewayClient.on('tick', async (tick: Tick) => {
