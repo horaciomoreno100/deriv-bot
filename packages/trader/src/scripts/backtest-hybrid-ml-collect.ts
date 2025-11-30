@@ -137,6 +137,12 @@ async function loadCandles(asset: string, days: number): Promise<Candle[]> {
       continue;
     }
 
+    // Convert milliseconds to seconds if needed
+    // Unix timestamps in seconds are ~10 digits, in milliseconds ~13 digits
+    if (timestamp > 1e12) {
+      timestamp = Math.floor(timestamp / 1000);
+    }
+
     candles.push({
       timestamp,
       open,

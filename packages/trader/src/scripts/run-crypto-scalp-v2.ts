@@ -58,7 +58,6 @@ const WARM_UP_CANDLES_REQUIRED = 50; // Need 50 candles for indicators
 
 // Signal proximity calculation interval (every 10 seconds)
 const PROXIMITY_CHECK_INTERVAL = 10000;
-const lastProximityCheck = new Map<string, number>();
 
 /**
  * Calculate signal proximity for CryptoScalp v2
@@ -529,6 +528,52 @@ async function main() {
   await gatewayClient.follow(SYMBOLS);
   console.log(`✅ Subscribed\n`);
 
+  // Signal proximity check - publish every 10 seconds (independent of candle completion)
+  setInterval(async () => {
+    // Check connection first
+    if (!gatewayClient.isConnected()) {
+      return;
+    }
+
+    for (const asset of SYMBOLS) {
+      const history = candleHistory.get(asset) || [];
+      if (history.length < WARM_UP_CANDLES_REQUIRED) {
+        continue; // Not enough candles yet
+      }
+
+      // Get or create backtester for indicators
+      let backtester = backtesters.get(asset);
+      if (!backtester) {
+        continue; // Not initialized yet
+      }
+
+      try {
+        // Get latest indicators
+        const indicators = backtester.getIndicatorSnapshot(history.length - 1);
+        const latestCandle = history[history.length - 1];
+        if (!latestCandle) continue;
+
+        const proximityData = calculateSignalProximity(indicators, asset, latestCandle);
+        if (proximityData) {
+          await gatewayClient.publishSignalProximity({
+            strategy: STRATEGY_NAME,
+            asset,
+            direction: proximityData.direction,
+            overallProximity: proximityData.proximity,
+            criteria: proximityData.criteria,
+            readyToSignal: proximityData.readyToSignal,
+            missingCriteria: proximityData.missingCriteria || [],
+          });
+        }
+      } catch (error: any) {
+        // Silently ignore connection errors
+        if (!error?.message?.includes('Not connected')) {
+          // Only log non-connection errors
+        }
+      }
+    }
+  }, PROXIMITY_CHECK_INTERVAL);
+
   // Process ticks and generate signals
   gatewayClient.on('tick', async (tick: Tick) => {
     try {
@@ -584,33 +629,6 @@ async function main() {
       
       // Get indicators snapshot from FastBacktester
       const indicators = backtester.getIndicatorSnapshot(history.length - 1);
-
-      // Calculate and publish signal proximity (throttled to every 10 seconds)
-      const now = Date.now();
-      const lastCheck = lastProximityCheck.get(asset) || 0;
-      if (now - lastCheck >= PROXIMITY_CHECK_INTERVAL) {
-        lastProximityCheck.set(asset, now);
-        try {
-          const proximity = calculateSignalProximity(indicators, asset, history[history.length - 1]!);
-          if (proximity) {
-            await gatewayClient.publishSignalProximity({
-              strategy: STRATEGY_NAME,
-              asset,
-              direction: proximity.direction,
-              overallProximity: proximity.proximity,
-              proximity: proximity.proximity,
-              criteria: proximity.criteria,
-              readyToSignal: proximity.readyToSignal,
-              missingCriteria: proximity.missingCriteria || [],
-            });
-          }
-        } catch (error: any) {
-          // Silently ignore connection errors
-          if (!error?.message?.includes('Not connected')) {
-            // Only log non-connection errors
-          }
-        }
-      }
 
       // Check for entry signal
       const signal = entryFn(history.length - 1, indicators);

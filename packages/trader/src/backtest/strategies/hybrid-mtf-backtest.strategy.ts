@@ -14,17 +14,18 @@
 
 import type { Candle, IndicatorSnapshot } from '@deriv-bot/shared';
 import type { BacktestableStrategy, EntrySignal, BacktestConfig, MarketSnapshot } from '../types.js';
-import { BollingerBands, ADX, SMA, RSI } from 'technicalindicators';
+import { BollingerBands, ADX, SMA, RSI, ATR } from 'technicalindicators';
 
 /**
  * Hybrid MTF Strategy Parameters
  */
 interface HybridMTFParams {
-  // 15m Context (Macro Trend Detection)
+  // 15m Context (Macro Trend Detection) - v3.0.0: Normalized slope
   ctxAdxPeriod: number;       // ADX period for trend strength (default: 10)
   ctxAdxThreshold: number;    // ADX threshold for trend (default: 20)
   ctxSmaPeriod: number;       // SMA period for trend direction (default: 20)
-  ctxSlopeThreshold: number;  // Min slope for trend confirmation
+  ctxSlopeThreshold: number;  // Normalized slope threshold (default: 0.5 = 0.5x ATR)
+  ctxSlopeRegressionPeriod: number; // Linear regression period (default: 5)
 
   // 5m Filter (Intermediate RSI)
   midRsiPeriod: number;
@@ -39,14 +40,23 @@ interface HybridMTFParams {
   rsiOverbought: number;      // 1m RSI overbought (default: 70)
   rsiOversold: number;        // 1m RSI oversold (default: 30)
 
-  // Risk Management
-  takeProfitPct: number;      // TP % (default: 0.008 = 0.8%)
-  stopLossPct: number;        // SL % (default: 0.005 = 0.5%) -> 1.6:1 ratio
+  // Risk Management - v3.0.0: ATR-based dynamic TP/SL
+  atrPeriod: number;              // ATR period (default: 14)
+  atrStopLossMultiplier: number;  // SL = ATR * multiplier (default: 2.0)
+  atrTakeProfitMultiplier: number; // TP = ATR * multiplier (default: 3.0) -> 1.5:1 ratio
   cooldownBars: number;
   minCandles: number;
 
   // Confirmation
   confirmationCandles: number; // Candles to wait for MR confirmation (default: 2)
+  
+  // Reversal Confirmation (v3.0.0)
+  requireReversalCandle: boolean; // Require bullish/bearish candle
+  requireRSICross: boolean;       // Require RSI cross confirmation
+  
+  // RSI Divergence Filter (v3.0.0)
+  enableRSIDivergence: boolean;   // Enable for RANGE regime
+  divergenceLookback: number;     // Lookback period (default: 10)
 }
 
 /**
@@ -73,14 +83,17 @@ interface PreCalculatedData {
   rsi5m: number | null;
   bb: { upper: number; middle: number; lower: number } | null;
   rsi1m: number | null;
+  atr: number | null;  // v3.0.0: ATR for dynamic TP/SL
+  atrPercent: number | null;  // v3.0.0: ATR as % for slope normalization
 }
 
 const DEFAULT_PARAMS: HybridMTFParams = {
-  // 15m Context - ADX 10 is faster than 14 for regime detection
+  // 15m Context - v3.0.0: Normalized slope
   ctxAdxPeriod: 10,
   ctxAdxThreshold: 20,
   ctxSmaPeriod: 20,
-  ctxSlopeThreshold: 0.0002,
+  ctxSlopeThreshold: 0.5,        // Normalized by ATR
+  ctxSlopeRegressionPeriod: 5,   // Linear regression on last 5 points
 
   // 5m Filter - 70/30 are useful extremes (80/20 rarely triggers)
   midRsiPeriod: 14,
@@ -95,29 +108,28 @@ const DEFAULT_PARAMS: HybridMTFParams = {
   rsiOverbought: 70,
   rsiOversold: 30,
 
-  // Risk Management - 1.6:1 ratio (TP 0.8% / SL 0.5%)
-  takeProfitPct: 0.008,
-  stopLossPct: 0.005,
+  // Risk Management - v3.0.0: ATR-based (1.5:1 ratio)
+  atrPeriod: 14,
+  atrStopLossMultiplier: 2.0,    // SL = 2.0 * ATR
+  atrTakeProfitMultiplier: 3.0,  // TP = 3.0 * ATR
   cooldownBars: 5,
   minCandles: 100,
 
-  // Confirmation - 2 candles for Mean Reversion (1 is too aggressive)
+  // Confirmation - 2 candles for Mean Reversion
   confirmationCandles: 2,
+  
+  // Reversal Confirmation (v3.0.0)
+  requireReversalCandle: true,
+  requireRSICross: true,
+  
+  // RSI Divergence Filter (v3.0.0)
+  enableRSIDivergence: true,
+  divergenceLookback: 10,
 };
 
 const ASSET_CONFIGS: Record<string, Partial<HybridMTFParams>> = {
-  'R_75': {
-    takeProfitPct: 0.008,
-    stopLossPct: 0.005,
-  },
-  'R_100': {
-    takeProfitPct: 0.008,
-    stopLossPct: 0.005,
-  },
-  'R_25': {
-    takeProfitPct: 0.006,
-    stopLossPct: 0.004,
-  },
+  // v3.0.0: ATR-based TP/SL adapts automatically, no asset-specific configs needed
+  // But we can adjust multipliers if needed
 };
 
 /**
@@ -125,7 +137,7 @@ const ASSET_CONFIGS: Record<string, Partial<HybridMTFParams>> = {
  */
 export class HybridMTFBacktestStrategy implements BacktestableStrategy {
   readonly name = 'Hybrid-MTF';
-  readonly version = '2.0.0'; // Major update: fixed logic + improved params
+  readonly version = '3.0.0'; // v3.0.0: ATR-based TP/SL, Normalized Slope, Reversal Confirmation, RSI Divergence
 
   private params: HybridMTFParams;
   private asset: string;
@@ -147,11 +159,12 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
   }
 
   getDefaultConfig(): Partial<BacktestConfig> {
+    // v3.0.0: TP/SL are calculated dynamically from ATR, so we return defaults
+    // The actual TP/SL will be calculated per-trade in checkEntry
     return {
       asset: this.asset,
-      takeProfitPct: this.params.takeProfitPct,
-      stopLossPct: this.params.stopLossPct,
       cooldownBars: this.params.cooldownBars,
+      // Note: takeProfitPct and stopLossPct are now calculated dynamically from ATR
     };
   }
 
@@ -193,8 +206,10 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
       values: closes5m,
     });
 
-    // 4. Calculate 1m indicators (BB + RSI)
+    // 4. Calculate 1m indicators (BB + RSI + ATR) - v3.0.0
     const closes1m = candles.map(c => c.close);
+    const highs1m = candles.map(c => c.high);
+    const lows1m = candles.map(c => c.low);
     const bb1m = BollingerBands.calculate({
       period: this.params.bbPeriod,
       values: closes1m,
@@ -203,6 +218,21 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
     const rsi1m = RSI.calculate({
       period: this.params.rsiPeriod,
       values: closes1m,
+    });
+    // v3.0.0: Calculate ATR for dynamic TP/SL
+    const atr1m = ATR.calculate({
+      high: highs1m,
+      low: lows1m,
+      close: closes1m,
+      period: this.params.atrPeriod,
+    });
+    
+    // v3.0.0: Calculate ATR for 15m (for slope normalization)
+    const atr15m = ATR.calculate({
+      high: highs15m,
+      low: lows15m,
+      close: closes15m,
+      period: this.params.atrPeriod,
     });
 
     // 5. Build index mappings: 1m timestamp -> 5m/15m candle index
@@ -221,6 +251,8 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
     const rsi5mOffset = candles5m.length - rsi5mAll.length;
     const bbOffset = candles.length - bb1m.length;
     const rsi1mOffset = candles.length - rsi1m.length;
+    const atr1mOffset = candles.length - atr1m.length;
+    const atr15mOffset = candles15m.length - atr15m.length;
 
     for (let i = 0; i < candles.length; i++) {
       const candle = candles[i]!;
@@ -233,24 +265,56 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
       const idx5m = ts5mToIndex.get(slot5m);
       const idx15m = ts15mToIndex.get(slot15m);
 
-      // Calculate regime from 15m
+      // Calculate regime from 15m - v3.0.0: Normalized slope
       let regime: MacroRegime | null = null;
+      let atrPercent15m: number | null = null;
       if (idx15m !== undefined) {
         const adxIdx = idx15m - adxOffset;
         const smaIdx = idx15m - smaOffset;
+        const atr15mIdx = idx15m - atr15mOffset;
 
-        if (adxIdx >= 0 && smaIdx >= 1 && adx15m[adxIdx] && sma15m[smaIdx] !== undefined && sma15m[smaIdx - 1] !== undefined) {
+        // Get ATR for normalization
+        if (atr15mIdx >= 0 && atr15m[atr15mIdx] !== undefined && candles15m[idx15m]) {
+          const atr15mVal = atr15m[atr15mIdx]!;
+          const price15m = candles15m[idx15m]!.close;
+          atrPercent15m = (atr15mVal / price15m) * 100;
+        }
+
+        if (adxIdx >= 0 && smaIdx >= this.params.ctxSlopeRegressionPeriod && adx15m[adxIdx] && atrPercent15m !== null) {
           const adx = adx15m[adxIdx]!.adx;
-          const sma = sma15m[smaIdx]!;
-          const prevSma = sma15m[smaIdx - 1]!;
-          const smaSlope = (sma - prevSma) / prevSma;
+          
+          // v3.0.0: Calculate normalized slope using linear regression
+          const smaSlice = sma15m.slice(smaIdx - this.params.ctxSlopeRegressionPeriod + 1, smaIdx + 1);
+          if (smaSlice.length === this.params.ctxSlopeRegressionPeriod) {
+            const n = this.params.ctxSlopeRegressionPeriod;
+            const x = Array.from({ length: n }, (_, i) => i);
+            const y = smaSlice;
+            
+            const xMean = x.reduce((a, b) => a + b, 0) / n;
+            const yMean = y.reduce((a, b) => a + b, 0) / n;
+            
+            let numerator = 0;
+            let denominator = 0;
+            for (let j = 0; j < n; j++) {
+              const xDiff = x[j]! - xMean;
+              const yDiff = y[j]! - yMean;
+              numerator += xDiff * yDiff;
+              denominator += xDiff * xDiff;
+            }
+            
+            if (denominator !== 0) {
+              const rawSlope = numerator / denominator;
+              const atrDecimal = atrPercent15m / 100;
+              const normalizedSlope = rawSlope / (atrDecimal * smaSlice[smaSlice.length - 1]!);
 
-          if (adx > this.params.ctxAdxThreshold) {
-            if (smaSlope > this.params.ctxSlopeThreshold) regime = 'BULLISH_TREND';
-            else if (smaSlope < -this.params.ctxSlopeThreshold) regime = 'BEARISH_TREND';
-            else regime = 'RANGE';
-          } else {
-            regime = 'RANGE';
+              if (adx > this.params.ctxAdxThreshold) {
+                if (normalizedSlope > this.params.ctxSlopeThreshold) regime = 'BULLISH_TREND';
+                else if (normalizedSlope < -this.params.ctxSlopeThreshold) regime = 'BEARISH_TREND';
+                else regime = 'RANGE';
+              } else {
+                regime = 'RANGE';
+              }
+            }
           }
         }
       }
@@ -282,17 +346,127 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
         rsi1mVal = rsi1m[rsiIdx]!;
       }
 
+      // v3.0.0: Get 1m ATR for dynamic TP/SL
+      let atr1mVal: number | null = null;
+      let atrPercent1m: number | null = null;
+      const atrIdx = i - atr1mOffset;
+      if (atrIdx >= 0 && atr1m[atrIdx] !== undefined) {
+        atr1mVal = atr1m[atrIdx]!;
+        atrPercent1m = (atr1mVal / candle.close) * 100;
+      }
+
       this.preCalculated[i] = {
         regime,
         rsi5m,
         bb,
         rsi1m: rsi1mVal,
+        atr: atr1mVal,
+        atrPercent: atrPercent1m,
       };
     }
 
     this.isPreCalculated = true;
     const elapsed = Date.now() - startTime;
     console.log(`[Hybrid-MTF] Pre-calculation completed in ${elapsed}ms`);
+  }
+
+  /**
+   * Calculate dynamic TP/SL based on ATR (v3.0.0)
+   */
+  private calculateDynamicTPSL(entryPrice: number, atr: number): { tpPct: number; slPct: number } {
+    const slDistance = atr * this.params.atrStopLossMultiplier;
+    const tpDistance = atr * this.params.atrTakeProfitMultiplier;
+    return {
+      slPct: slDistance / entryPrice,
+      tpPct: tpDistance / entryPrice,
+    };
+  }
+
+  /**
+   * Check for reversal confirmation (v3.0.0)
+   */
+  private checkReversalConfirmation(
+    currentCandle: Candle,
+    prevCandle: Candle | null,
+    currentRSI: number,
+    prevRSI: number | null,
+    direction: 'CALL' | 'PUT'
+  ): boolean {
+    if (!this.params.requireReversalCandle && !this.params.requireRSICross) {
+      return true;
+    }
+
+    if (this.params.requireReversalCandle) {
+      if (direction === 'CALL' && currentCandle.close <= currentCandle.open) return false;
+      if (direction === 'PUT' && currentCandle.close >= currentCandle.open) return false;
+    }
+
+    if (this.params.requireRSICross && prevRSI !== null) {
+      if (direction === 'CALL' && !(prevRSI < this.params.rsiOversold && currentRSI >= this.params.rsiOversold)) {
+        return false;
+      }
+      if (direction === 'PUT' && !(prevRSI > this.params.rsiOverbought && currentRSI <= this.params.rsiOverbought)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Check for RSI Divergence (v3.0.0)
+   */
+  private checkRSIDivergence(candles: Candle[], rsiValues: number[], currentIndex: number): 'BULLISH' | 'BEARISH' | null {
+    if (!this.params.enableRSIDivergence || currentIndex < this.params.divergenceLookback) {
+      return null;
+    }
+
+    const lookback = this.params.divergenceLookback;
+    const startIdx = Math.max(0, currentIndex - lookback + 1);
+    const priceSlice = candles.slice(startIdx, currentIndex + 1).map(c => c.close);
+    const rsiSlice = rsiValues.slice(startIdx, currentIndex + 1);
+
+    // Find extremes
+    let priceLowestIdx = 0;
+    let priceHighestIdx = 0;
+    for (let i = 1; i < priceSlice.length; i++) {
+      if (priceSlice[i]! < priceSlice[priceLowestIdx]!) priceLowestIdx = i;
+      if (priceSlice[i]! > priceSlice[priceHighestIdx]!) priceHighestIdx = i;
+    }
+
+    // Check bullish divergence
+    if (priceLowestIdx >= 3) {
+      const recentLow = priceSlice[priceLowestIdx]!;
+      const recentRSI = rsiSlice[priceLowestIdx]!;
+      let prevLow = priceSlice[0]!;
+      let prevLowIdx = 0;
+      for (let i = 0; i < priceLowestIdx; i++) {
+        if (priceSlice[i]! < prevLow) {
+          prevLow = priceSlice[i]!;
+          prevLowIdx = i;
+        }
+      }
+      const prevRSI = rsiSlice[prevLowIdx]!;
+      if (recentLow < prevLow && recentRSI > prevRSI) return 'BULLISH';
+    }
+
+    // Check bearish divergence
+    if (priceHighestIdx >= 3) {
+      const recentHigh = priceSlice[priceHighestIdx]!;
+      const recentRSI = rsiSlice[priceHighestIdx]!;
+      let prevHigh = priceSlice[0]!;
+      let prevHighIdx = 0;
+      for (let i = 0; i < priceHighestIdx; i++) {
+        if (priceSlice[i]! > prevHigh) {
+          prevHigh = priceSlice[i]!;
+          prevHighIdx = i;
+        }
+      }
+      const prevRSI = rsiSlice[prevHighIdx]!;
+      if (recentHigh > prevHigh && recentRSI < prevRSI) return 'BEARISH';
+    }
+
+    return null;
   }
 
   /**
@@ -345,11 +519,16 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
 
     // Get pre-calculated data for this index
     const data = this.preCalculated[currentIndex];
-    if (!data || !data.regime || data.rsi5m === null || !data.bb || data.rsi1m === null) {
+    if (!data || !data.regime || data.rsi5m === null || !data.bb || data.rsi1m === null || data.atr === null) {
       return null;
     }
 
-    const { regime, rsi5m, bb, rsi1m: rsi } = data;
+    const { regime, rsi5m, bb, rsi1m: rsi, atr } = data;
+    
+    // Get previous candle and RSI for reversal confirmation
+    const prevCandle = currentIndex > 0 ? candles[currentIndex - 1] : null;
+    const prevData = currentIndex > 0 ? this.preCalculated[currentIndex - 1] : null;
+    const prevRSI = prevData?.rsi1m ?? null;
 
     // BB width filter: avoid low volatility environments
     const bbWidth = (bb.upper - bb.lower) / bb.middle;
@@ -399,6 +578,9 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
             },
           };
 
+          // v3.0.0: Calculate dynamic TP/SL from ATR
+          const { tpPct, slPct } = this.calculateDynamicTPSL(price, atr);
+
           return {
             timestamp: candle.timestamp,
             direction: pending.direction,
@@ -408,8 +590,8 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
             strategyName: this.name,
             strategyVersion: this.version,
             snapshot,
-            suggestedTpPct: this.params.takeProfitPct,
-            suggestedSlPct: this.params.stopLossPct,
+            suggestedTpPct: tpPct,
+            suggestedSlPct: slPct,
           };
         } else {
           // Signal cancelled
@@ -424,35 +606,48 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
     let strategyUsed: 'MOMENTUM' | 'MEAN_REVERSION' = 'MOMENTUM';
 
     if (regime === 'BULLISH_TREND') {
-      // 15m BULLISH: Only CALLs (Momentum)
-      // FIXED: Enter on PULLBACKS (price near lower BB, RSI oversold), not on extensions
-      // 5m Filter: Avoid extreme overbought (trend exhaustion)
+      // 15m BULLISH: Only CALLs (Momentum) - v3.0.0: With reversal confirmation
       if (rsi5m < this.params.midRsiOverbought) {
-        // Buy the dip: price pulls back to lower BB with oversold RSI in bullish trend
         if (priceNearLowerBand && rsi < this.params.rsiOversold) {
-          signal = 'CALL';
-          strategyUsed = 'MOMENTUM';
+          // v3.0.0: Check reversal confirmation
+          if (this.checkReversalConfirmation(candle, prevCandle, rsi, prevRSI, 'CALL')) {
+            signal = 'CALL';
+            strategyUsed = 'MOMENTUM';
+          }
         }
       }
     } else if (regime === 'BEARISH_TREND') {
-      // 15m BEARISH: Only PUTs (Momentum)
-      // FIXED: Enter on PULLBACKS (price near upper BB, RSI overbought), not on extensions
-      // 5m Filter: Avoid extreme oversold (trend exhaustion)
+      // 15m BEARISH: Only PUTs (Momentum) - v3.0.0: With reversal confirmation
       if (rsi5m > this.params.midRsiOversold) {
-        // Sell the rally: price pulls back to upper BB with overbought RSI in bearish trend
         if (priceNearUpperBand && rsi > this.params.rsiOverbought) {
-          signal = 'PUT';
-          strategyUsed = 'MOMENTUM';
+          // v3.0.0: Check reversal confirmation
+          if (this.checkReversalConfirmation(candle, prevCandle, rsi, prevRSI, 'PUT')) {
+            signal = 'PUT';
+            strategyUsed = 'MOMENTUM';
+          }
         }
       }
     } else {
-      // RANGE: Mean Reversion with POST_CONFIRM
+      // RANGE: Mean Reversion with POST_CONFIRM + RSI Divergence (v3.0.0)
       strategyUsed = 'MEAN_REVERSION';
 
+      // v3.0.0: Check for RSI divergence
+      const startIdx = Math.max(0, currentIndex - this.params.divergenceLookback + 1);
+      const candlesSlice = candles.slice(startIdx, currentIndex + 1);
+      const rsiSlice = this.preCalculated.slice(startIdx, currentIndex + 1)
+        .map(d => d.rsi1m).filter((r): r is number => r !== null);
+      const divergence = candlesSlice.length >= this.params.divergenceLookback && rsiSlice.length >= this.params.divergenceLookback
+        ? this.checkRSIDivergence(candlesSlice, rsiSlice, rsiSlice.length - 1)
+        : null;
+
       if (breakoutAbove && rsi > this.params.rsiOverbought) {
-        signal = 'PUT'; // Expect reversal DOWN
+        if (!this.params.enableRSIDivergence || divergence === 'BEARISH' || divergence === null) {
+          signal = 'PUT';
+        }
       } else if (breakoutBelow && rsi < this.params.rsiOversold) {
-        signal = 'CALL'; // Expect reversal UP
+        if (!this.params.enableRSIDivergence || divergence === 'BULLISH' || divergence === null) {
+          signal = 'CALL';
+        }
       }
     }
 
@@ -479,20 +674,22 @@ export class HybridMTFBacktestStrategy implements BacktestableStrategy {
       },
     };
 
-    // For Momentum: Execute immediately
+    // For Momentum: Execute immediately - v3.0.0: Use dynamic ATR-based TP/SL
     if (strategyUsed === 'MOMENTUM') {
       this.lastTradeIndex = currentIndex;
+      const { tpPct, slPct } = this.calculateDynamicTPSL(price, atr);
+      
       return {
         timestamp: candle.timestamp,
         direction: signal,
         price,
         confidence: 85,
-        reason: `Hybrid-MTF MOMENTUM: ${signal} in ${regime}, RSI(1m)=${rsi.toFixed(1)}, RSI(5m)=${rsi5m.toFixed(1)}`,
+        reason: `Hybrid-MTF MOMENTUM v3.0.0: ${signal} in ${regime}, RSI(1m)=${rsi.toFixed(1)}, RSI(5m)=${rsi5m.toFixed(1)}, ATR=${atr.toFixed(4)}`,
         strategyName: this.name,
         strategyVersion: this.version,
         snapshot,
-        suggestedTpPct: this.params.takeProfitPct,
-        suggestedSlPct: this.params.stopLossPct,
+        suggestedTpPct: tpPct,
+        suggestedSlPct: slPct,
       };
     }
 
