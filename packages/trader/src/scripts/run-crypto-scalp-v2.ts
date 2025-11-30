@@ -54,7 +54,7 @@ let lostTrades = 0;
 let isInitializing = true;
 const warmUpCandlesPerAsset = new Map<string, number>();
 let hasReceivedRealtimeCandle = false;
-const WARM_UP_CANDLES_REQUIRED = 50; // Need 50 candles for indicators
+const WARM_UP_CANDLES_REQUIRED = 30; // Need 30 candles for indicators (reduced for crypto availability)
 
 // Signal proximity calculation interval (every 10 seconds)
 const PROXIMITY_CHECK_INTERVAL = 10000;

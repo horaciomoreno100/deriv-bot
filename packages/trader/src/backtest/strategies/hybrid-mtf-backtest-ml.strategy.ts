@@ -173,11 +173,11 @@ const DEFAULT_PARAMS: HybridMTFParams = {
 };
 
 /**
- * Hybrid MTF Strategy v3.2.0 with ML Data Collection
+ * Hybrid MTF Strategy v3.3.0 with ML Data Collection
  */
 export class HybridMTFBacktestMLStrategy implements BacktestableStrategy {
   readonly name = 'Hybrid-MTF-ML';
-  readonly version = '3.2.0';
+  readonly version = '3.3.0';
 
   private params: HybridMTFParams;
   private asset: string;
@@ -615,6 +615,15 @@ export class HybridMTFBacktestMLStrategy implements BacktestableStrategy {
       if (hour >= this.params.avoidHourStart && hour < this.params.avoidHourEnd) {
         return null;
       }
+      // v3.3.0: Also avoid 12-18h UTC (ML v3.2.0 showed 28.0% WR - worst block)
+      if (hour >= this.params.avoidHourStart2 && hour < this.params.avoidHourEnd2) {
+        return null;
+      }
+    }
+
+    // v3.3.0: Regime filter - avoid BULLISH regime (ML v3.2.0 showed 23.1% WR)
+    if (this.params.avoidBullishRegime && regime === 'BULLISH_TREND') {
+      return null;
     }
 
     // v3.2.0: ADX strength filter - ML showed ADX<20 has 30.4% WR vs 25.4% strong

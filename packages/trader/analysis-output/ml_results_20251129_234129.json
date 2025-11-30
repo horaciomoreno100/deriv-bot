@@ -1,0 +1,505 @@
+{
+  "timestamp": "20251129_234129",
+  "data_file": "analysis-output/ml_training_R_100_2025-11-30T02-41-16.csv",
+  "samples": 353,
+  "features_used": [
+    "hourOfDay",
+    "dayOfWeek",
+    "minuteOfHour",
+    "timeBlock6h",
+    "directionEncoded",
+    "rsi1m",
+    "rsi5m",
+    "adx15m",
+    "bbWidth",
+    "bbWidthPct",
+    "pricePositionInBB",
+    "distToUpperBB",
+    "distToLowerBB",
+    "rsiDelta1m",
+    "rsiDelta5m",
+    "rsiDivergence",
+    "smaSlope15m",
+    "distToSma15m",
+    "atr1m",
+    "candleBodyPct",
+    "upperWickPct",
+    "lowerWickPct",
+    "atrPercent",
+    "dynamicTpPct",
+    "dynamicSlPct",
+    "tpSlRatio",
+    "normalizedSlope",
+    "slopeStrength",
+    "rsiDivergenceEncoded",
+    "regimeEncoded",
+    "strategyEncoded",
+    "confidence",
+    "priceChange1",
+    "priceChange5",
+    "priceChange15"
+  ],
+  "metrics": {
+    "accuracy": 0.6338028169014085,
+    "precision": 0.3,
+    "recall": 0.13636363636363635,
+    "f1": 0.1875,
+    "roc_auc": 0.5380333951762524,
+    "confusion_matrix": [
+      [
+        42,
+        7
+      ],
+      [
+        19,
+        3
+      ]
+    ]
+  },
+  "cv_results": {
+    "accuracy": {
+      "mean": 0.6117505030181086,
+      "std": 0.06219427531517681,
+      "scores": [
+        0.647887323943662,
+        0.5633802816901409,
+        0.676056338028169,
+        0.5142857142857142,
+        0.6571428571428571
+      ]
+    },
+    "precision": {
+      "mean": 0.3420779220779221,
+      "std": 0.10663152285504303,
+      "scores": [
+        0.42857142857142855,
+        0.2,
+        0.45454545454545453,
+        0.22727272727272727,
+        0.4
+      ]
+    },
+    "recall": {
+      "mean": 0.2067193675889328,
+      "std": 0.04323684322616436,
+      "scores": [
+        0.2608695652173913,
+        0.13636363636363635,
+        0.22727272727272727,
+        0.22727272727272727,
+        0.18181818181818182
+      ]
+    },
+    "f1": {
+      "mean": 0.25335790335790337,
+      "std": 0.05746643425965136,
+      "scores": [
+        0.32432432432432434,
+        0.16216216216216217,
+        0.30303030303030304,
+        0.22727272727272727,
+        0.25
+      ]
+    },
+    "roc_auc": {
+      "mean": 0.5650629520582936,
+      "std": 0.07356186853610552,
+      "scores": [
+        0.5271739130434783,
+        0.6029684601113172,
+        0.6771799628942485,
+        0.45738636363636365,
+        0.5606060606060606
+      ]
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "dynamicSlPct",
+      "importance": 0.04692547395825386,
+      "cumulative": 0.04692547395825386,
+      "rank": 1
+    },
+    {
+      "feature": "rsi5m",
+      "importance": 0.04354121908545494,
+      "cumulative": 0.0904666930437088,
+      "rank": 2
+    },
+    {
+      "feature": "dayOfWeek",
+      "importance": 0.0427328385412693,
+      "cumulative": 0.1331995278596878,
+      "rank": 3
+    },
+    {
+      "feature": "normalizedSlope",
+      "importance": 0.042079389095306396,
+      "cumulative": 0.1752789169549942,
+      "rank": 4
+    },
+    {
+      "feature": "atrPercent",
+      "importance": 0.04128396511077881,
+      "cumulative": 0.216562882065773,
+      "rank": 5
+    },
+    {
+      "feature": "priceChange5",
+      "importance": 0.04097668081521988,
+      "cumulative": 0.2575395703315735,
+      "rank": 6
+    },
+    {
+      "feature": "lowerWickPct",
+      "importance": 0.0397302471101284,
+      "cumulative": 0.2972698211669922,
+      "rank": 7
+    },
+    {
+      "feature": "distToSma15m",
+      "importance": 0.038783859461545944,
+      "cumulative": 0.33605366945266724,
+      "rank": 8
+    },
+    {
+      "feature": "dynamicTpPct",
+      "importance": 0.03820081427693367,
+      "cumulative": 0.3742544949054718,
+      "rank": 9
+    },
+    {
+      "feature": "rsiDelta1m",
+      "importance": 0.03767584264278412,
+      "cumulative": 0.4119303226470947,
+      "rank": 10
+    },
+    {
+      "feature": "minuteOfHour",
+      "importance": 0.037591367959976196,
+      "cumulative": 0.4495216906070709,
+      "rank": 11
+    },
+    {
+      "feature": "rsiDelta5m",
+      "importance": 0.03692534193396568,
+      "cumulative": 0.4864470362663269,
+      "rank": 12
+    },
+    {
+      "feature": "smaSlope15m",
+      "importance": 0.03594797104597092,
+      "cumulative": 0.5223950147628784,
+      "rank": 13
+    },
+    {
+      "feature": "atr1m",
+      "importance": 0.03587093949317932,
+      "cumulative": 0.5582659244537354,
+      "rank": 14
+    },
+    {
+      "feature": "pricePositionInBB",
+      "importance": 0.035849686712026596,
+      "cumulative": 0.5941156148910522,
+      "rank": 15
+    },
+    {
+      "feature": "bbWidthPct",
+      "importance": 0.035491008311510086,
+      "cumulative": 0.6296066045761108,
+      "rank": 16
+    },
+    {
+      "feature": "priceChange15",
+      "importance": 0.03548930957913399,
+      "cumulative": 0.6650959253311157,
+      "rank": 17
+    },
+    {
+      "feature": "slopeStrength",
+      "importance": 0.034743532538414,
+      "cumulative": 0.6998394727706909,
+      "rank": 18
+    },
+    {
+      "feature": "distToUpperBB",
+      "importance": 0.03365236148238182,
+      "cumulative": 0.733491837978363,
+      "rank": 19
+    },
+    {
+      "feature": "hourOfDay",
+      "importance": 0.03288048133254051,
+      "cumulative": 0.7663723230361938,
+      "rank": 20
+    },
+    {
+      "feature": "bbWidth",
+      "importance": 0.030007215216755867,
+      "cumulative": 0.796379566192627,
+      "rank": 21
+    },
+    {
+      "feature": "candleBodyPct",
+      "importance": 0.029094010591506958,
+      "cumulative": 0.8254735469818115,
+      "rank": 22
+    },
+    {
+      "feature": "rsi1m",
+      "importance": 0.026727011427283287,
+      "cumulative": 0.8522005677223206,
+      "rank": 23
+    },
+    {
+      "feature": "upperWickPct",
+      "importance": 0.026625629514455795,
+      "cumulative": 0.8788262009620667,
+      "rank": 24
+    },
+    {
+      "feature": "priceChange1",
+      "importance": 0.0253539327532053,
+      "cumulative": 0.904180109500885,
+      "rank": 25
+    },
+    {
+      "feature": "distToLowerBB",
+      "importance": 0.024810317903757095,
+      "cumulative": 0.9289904236793518,
+      "rank": 26
+    },
+    {
+      "feature": "adx15m",
+      "importance": 0.024108028039336205,
+      "cumulative": 0.953098475933075,
+      "rank": 27
+    },
+    {
+      "feature": "rsiDivergence",
+      "importance": 0.0239791888743639,
+      "cumulative": 0.9770776629447937,
+      "rank": 28
+    },
+    {
+      "feature": "directionEncoded",
+      "importance": 0.018238982185721397,
+      "cumulative": 0.9953166246414185,
+      "rank": 29
+    },
+    {
+      "feature": "timeBlock6h",
+      "importance": 0.004683252889662981,
+      "cumulative": 0.9999998807907104,
+      "rank": 30
+    },
+    {
+      "feature": "rsiDivergenceEncoded",
+      "importance": 0.0,
+      "cumulative": 0.9999998807907104,
+      "rank": 31
+    },
+    {
+      "feature": "regimeEncoded",
+      "importance": 0.0,
+      "cumulative": 0.9999998807907104,
+      "rank": 32
+    },
+    {
+      "feature": "strategyEncoded",
+      "importance": 0.0,
+      "cumulative": 0.9999998807907104,
+      "rank": 33
+    },
+    {
+      "feature": "confidence",
+      "importance": 0.0,
+      "cumulative": 0.9999998807907104,
+      "rank": 34
+    },
+    {
+      "feature": "tpSlRatio",
+      "importance": 0.0,
+      "cumulative": 0.9999998807907104,
+      "rank": 35
+    }
+  ],
+  "correlations": [
+    {
+      "feature": "lowerWickPct",
+      "correlation": 0.12103122508156763
+    },
+    {
+      "feature": "hourOfDay",
+      "correlation": -0.08840584467334031
+    },
+    {
+      "feature": "candleBodyPct",
+      "correlation": -0.08824552217721919
+    },
+    {
+      "feature": "normalizedSlope",
+      "correlation": 0.07777060465126383
+    },
+    {
+      "feature": "dynamicTpPct",
+      "correlation": 0.0745072685325434
+    },
+    {
+      "feature": "atrPercent",
+      "correlation": 0.07445071072706236
+    },
+    {
+      "feature": "dynamicSlPct",
+      "correlation": 0.07423129679399115
+    },
+    {
+      "feature": "slopeStrength",
+      "correlation": -0.0668545187457194
+    },
+    {
+      "feature": "dayOfWeek",
+      "correlation": 0.06113062634218746
+    },
+    {
+      "feature": "smaSlope15m",
+      "correlation": 0.05807144264661902
+    },
+    {
+      "feature": "adx15m",
+      "correlation": -0.05704391923333718
+    },
+    {
+      "feature": "timeBlock6h",
+      "correlation": -0.05033563423864954
+    },
+    {
+      "feature": "strategyEncoded",
+      "correlation": -0.03212905647727336
+    },
+    {
+      "feature": "confidence",
+      "correlation": -0.03212905647727335
+    },
+    {
+      "feature": "rsi1m",
+      "correlation": 0.024158933380409604
+    },
+    {
+      "feature": "atr1m",
+      "correlation": 0.02319012907411716
+    },
+    {
+      "feature": "pricePositionInBB",
+      "correlation": 0.01928278158245416
+    },
+    {
+      "feature": "directionEncoded",
+      "correlation": -0.019199404838394267
+    },
+    {
+      "feature": "rsi5m",
+      "correlation": 0.018797374710905167
+    },
+    {
+      "feature": "rsiDivergence",
+      "correlation": 0.017985062396624618
+    },
+    {
+      "feature": "distToSma15m",
+      "correlation": 0.01642374124819077
+    },
+    {
+      "feature": "regimeEncoded",
+      "correlation": 0.016115227711105202
+    },
+    {
+      "feature": "distToUpperBB",
+      "correlation": -0.013053667782215957
+    },
+    {
+      "feature": "distToLowerBB",
+      "correlation": 0.011478535803327476
+    },
+    {
+      "feature": "upperWickPct",
+      "correlation": -0.011447601430975158
+    },
+    {
+      "feature": "rsiDelta1m",
+      "correlation": -0.009152055431569425
+    },
+    {
+      "feature": "rsiDelta5m",
+      "correlation": 0.006027354835430306
+    },
+    {
+      "feature": "priceChange1",
+      "correlation": -0.004552454345700396
+    },
+    {
+      "feature": "priceChange15",
+      "correlation": -0.003271274223763044
+    },
+    {
+      "feature": "priceChange5",
+      "correlation": 0.002460649021296149
+    },
+    {
+      "feature": "minuteOfHour",
+      "correlation": 0.0022423422736075017
+    },
+    {
+      "feature": "bbWidthPct",
+      "correlation": -0.0017142549014127872
+    },
+    {
+      "feature": "bbWidth",
+      "correlation": -0.0017120175186215612
+    },
+    {
+      "feature": "tpSlRatio",
+      "correlation": NaN
+    },
+    {
+      "feature": "rsiDivergenceEncoded",
+      "correlation": NaN
+    }
+  ],
+  "insights": {
+    "model_quality": "poor",
+    "top_features": [
+      "dynamicSlPct",
+      "rsi5m",
+      "dayOfWeek",
+      "normalizedSlope",
+      "atrPercent"
+    ],
+    "regime_insights": {
+      "RANGE": 31.57894736842105,
+      "BEARISH": 27.27272727272727
+    },
+    "time_insights": {
+      "06-12h": 33.939393939393945,
+      "18-24h": 29.25531914893617
+    },
+    "indicator_insights": {
+      "rsi_oversold_winrate": 22.22222222222222,
+      "rsi_overbought_winrate": 21.21212121212121,
+      "bb_low_winrate": 31.61764705882353,
+      "bb_high_winrate": 32.70440251572327,
+      "MOMENTUM_winrate": 22.22222222222222,
+      "MEAN_REVERSION_winrate": 31.686046511627907,
+      "low_volatility_winrate": 29.914529914529915,
+      "medium_volatility_winrate": 32.773109243697476,
+      "high_volatility_winrate": 31.62393162393162
+    },
+    "recommendations": [
+      "Consider DISABLING trades in BEARISH regime",
+      "Consider AVOIDING 18-24h block",
+      "Add more features or collect more data - current features have low predictive power",
+      "Consider removing low-impact features: timeBlock6h, rsiDivergenceEncoded, regimeEncoded"
+    ]
+  }
+}
