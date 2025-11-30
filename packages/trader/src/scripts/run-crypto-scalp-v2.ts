@@ -377,12 +377,12 @@ async function main() {
       // Get entry function (should already be initialized with historical data)
       const entryFn = entryFunctions.get(asset);
       if (!entryFn) {
-        continue; // Not initialized yet, skip
+        return; // Not initialized yet, skip
       }
       
       // Check if we have enough candles
       if (history.length < WARM_UP_CANDLES_REQUIRED) {
-        continue; // Still need more candles
+        return; // Still need more candles
       }
       
       // Get FastBacktester for this asset
