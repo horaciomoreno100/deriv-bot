@@ -55,6 +55,182 @@ let isInitializing = true;
 const warmUpCandlesPerAsset = new Map<string, number>();
 let hasReceivedRealtimeCandle = false;
 const WARM_UP_CANDLES_REQUIRED = 50; // Need 50 candles for indicators
+
+// Signal proximity calculation interval (every 10 seconds)
+const PROXIMITY_CHECK_INTERVAL = 10000;
+const lastProximityCheck = new Map<string, number>();
+
+/**
+ * Calculate signal proximity for CryptoScalp v2
+ */
+function calculateSignalProximity(
+  indicators: Record<string, number | boolean>,
+  asset: string,
+  candle: Candle
+): {
+  direction: 'call' | 'put' | 'neutral';
+  proximity: number;
+  criteria: Array<{
+    name: string;
+    current: number;
+    target: number;
+    unit: string;
+    passed: boolean;
+    distance: number;
+  }>;
+  readyToSignal: boolean;
+  missingCriteria?: string[];
+} | null {
+  const rsi = indicators.rsi as number;
+  const adx = indicators.adx as number;
+  const plusDI = indicators.plusDI as number;
+  const minusDI = indicators.minusDI as number;
+  const bbUpper = indicators.bbUpper as number;
+  const bbMiddle = indicators.bbMiddle as number;
+  const bbLower = indicators.bbLower as number;
+  const price = candle.close;
+
+  if (
+    typeof rsi !== 'number' ||
+    typeof adx !== 'number' ||
+    typeof plusDI !== 'number' ||
+    typeof minusDI !== 'number' ||
+    typeof bbUpper !== 'number' ||
+    typeof bbMiddle !== 'number' ||
+    typeof bbLower !== 'number'
+  ) {
+    return null;
+  }
+
+  const preset = getPresetForAsset(asset);
+  
+  // Calculate proximity for CALL (long) signals
+  const callCriteria: Array<{
+    name: string;
+    current: number;
+    target: number;
+    unit: string;
+    passed: boolean;
+    distance: number;
+  }> = [];
+  
+  // RSI should be oversold (< 30) for CALL
+  const rsiTarget = 30;
+  const rsiDistance = Math.max(0, rsi - rsiTarget) / (100 - rsiTarget); // 0-1, 0 = at target
+  callCriteria.push({
+    name: 'RSI',
+    current: rsi,
+    target: rsiTarget,
+    unit: '',
+    passed: rsi < rsiTarget,
+    distance: rsiDistance,
+  });
+
+  // Price should be near BB Lower for CALL
+  const bbLowerDistance = Math.max(0, price - bbLower) / (bbUpper - bbLower);
+  callCriteria.push({
+    name: 'BB Lower',
+    current: price,
+    target: bbLower,
+    unit: '',
+    passed: price <= bbLower * 1.001, // Within 0.1% of lower band
+    distance: bbLowerDistance,
+  });
+
+  // ADX should indicate trend strength (> 20)
+  const adxTarget = 20;
+  const adxDistance = Math.max(0, adxTarget - adx) / adxTarget;
+  callCriteria.push({
+    name: 'ADX',
+    current: adx,
+    target: adxTarget,
+    unit: '',
+    passed: adx > adxTarget,
+    distance: adxDistance,
+  });
+
+  // Calculate proximity for PUT (short) signals
+  const putCriteria: Array<{
+    name: string;
+    current: number;
+    target: number;
+    unit: string;
+    passed: boolean;
+    distance: number;
+  }> = [];
+  
+  // RSI should be overbought (> 70) for PUT
+  const rsiTargetPut = 70;
+  const rsiDistancePut = Math.max(0, rsiTargetPut - rsi) / rsiTargetPut;
+  putCriteria.push({
+    name: 'RSI',
+    current: rsi,
+    target: rsiTargetPut,
+    unit: '',
+    passed: rsi > rsiTargetPut,
+    distance: rsiDistancePut,
+  });
+
+  // Price should be near BB Upper for PUT
+  const bbUpperDistance = Math.max(0, bbUpper - price) / (bbUpper - bbLower);
+  putCriteria.push({
+    name: 'BB Upper',
+    current: price,
+    target: bbUpper,
+    unit: '',
+    passed: price >= bbUpper * 0.999, // Within 0.1% of upper band
+    distance: bbUpperDistance,
+  });
+
+  // ADX should indicate trend strength (> 20)
+  putCriteria.push({
+    name: 'ADX',
+    current: adx,
+    target: adxTarget,
+    unit: '',
+    passed: adx > adxTarget,
+    distance: adxDistance,
+  });
+
+  // Calculate overall proximity (0-100%)
+  const callProximity = Math.max(0, Math.min(100, (1 - callCriteria.reduce((sum, c) => sum + c.distance, 0) / callCriteria.length) * 100));
+  const putProximity = Math.max(0, Math.min(100, (1 - putCriteria.reduce((sum, c) => sum + c.distance, 0) / putCriteria.length) * 100));
+
+  // Determine direction and proximity
+  let direction: 'call' | 'put' | 'neutral';
+  let proximity: number;
+  let criteria: typeof callCriteria;
+  let readyToSignal: boolean;
+  let missingCriteria: string[] = [];
+
+  if (callProximity > putProximity && callProximity > 30) {
+    direction = 'call';
+    proximity = callProximity;
+    criteria = callCriteria;
+    readyToSignal = callCriteria.every(c => c.passed);
+    missingCriteria = callCriteria.filter(c => !c.passed).map(c => c.name);
+  } else if (putProximity > callProximity && putProximity > 30) {
+    direction = 'put';
+    proximity = putProximity;
+    criteria = putCriteria;
+    readyToSignal = putCriteria.every(c => c.passed);
+    missingCriteria = putCriteria.filter(c => !c.passed).map(c => c.name);
+  } else {
+    direction = 'neutral';
+    proximity = Math.max(callProximity, putProximity);
+    criteria = callProximity > putProximity ? callCriteria : putCriteria;
+    readyToSignal = false;
+    missingCriteria = criteria.filter(c => !c.passed).map(c => c.name);
+  }
+
+  return {
+    direction,
+    proximity,
+    criteria,
+    readyToSignal,
+    missingCriteria: missingCriteria.length > 0 ? missingCriteria : undefined,
+  };
+}
 const processedTradeResults = new Set<string>();
 
 // Trade Manager instance
@@ -408,6 +584,33 @@ async function main() {
       
       // Get indicators snapshot from FastBacktester
       const indicators = backtester.getIndicatorSnapshot(history.length - 1);
+
+      // Calculate and publish signal proximity (throttled to every 10 seconds)
+      const now = Date.now();
+      const lastCheck = lastProximityCheck.get(asset) || 0;
+      if (now - lastCheck >= PROXIMITY_CHECK_INTERVAL) {
+        lastProximityCheck.set(asset, now);
+        try {
+          const proximity = calculateSignalProximity(indicators, asset, history[history.length - 1]!);
+          if (proximity) {
+            await gatewayClient.publishSignalProximity({
+              strategy: STRATEGY_NAME,
+              asset,
+              direction: proximity.direction,
+              overallProximity: proximity.proximity,
+              proximity: proximity.proximity,
+              criteria: proximity.criteria,
+              readyToSignal: proximity.readyToSignal,
+              missingCriteria: proximity.missingCriteria || [],
+            });
+          }
+        } catch (error: any) {
+          // Silently ignore connection errors
+          if (!error?.message?.includes('Not connected')) {
+            // Only log non-connection errors
+          }
+        }
+      }
 
       // Check for entry signal
       const signal = entryFn(history.length - 1, indicators);
