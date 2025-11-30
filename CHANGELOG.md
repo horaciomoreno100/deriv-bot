@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.14.0](///compare/v0.13.1...v0.14.0) (2025-11-30)
+
+### Features
+
+* add signal proximity publishing for CryptoScalp v2 c7517b8
+* deploy CryptoScalp v2 optimized strategy cb43be5
+* load historical candles for instant warm-up in CryptoScalp v2 d2ca3e4
+
+### Bug Fixes
+
+* add signal proximity publishing for CryptoScalp v2 9959209
+* correct indentation and remove extra closing brace 1857867
+* handle missing PM2 processes gracefully in deploy script 7e2eb32
+* improve WebSocket error handling in GatewayClient 512405a
+* reduce crypto warm-up requirement to 30 candles f7d4e2d
+* replace continue with return in callback function 5245e62
+* update test expectations to match current parameter values aa7656b
+
 ## [0.13.1](///compare/v0.13.0...v0.13.1) (2025-11-29)
 
 ### Bug Fixes
