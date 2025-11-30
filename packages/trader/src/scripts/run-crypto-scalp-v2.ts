@@ -529,6 +529,7 @@ async function main() {
   console.log(`✅ Subscribed\n`);
 
   // Signal proximity check - publish every 10 seconds (independent of candle completion)
+  console.log(`📡 Starting signal proximity publisher (every ${PROXIMITY_CHECK_INTERVAL/1000}s)`);
   setInterval(async () => {
     // Check connection first
     if (!gatewayClient.isConnected()) {
@@ -538,13 +539,15 @@ async function main() {
     for (const asset of SYMBOLS) {
       const history = candleHistory.get(asset) || [];
       if (history.length < WARM_UP_CANDLES_REQUIRED) {
-        continue; // Not enough candles yet
+        console.log(`[Proximity] ${asset}: Not enough candles (${history.length}/${WARM_UP_CANDLES_REQUIRED})`);
+        continue;
       }
 
       // Get or create backtester for indicators
-      let backtester = backtesters.get(asset);
+      const backtester = backtesters.get(asset);
       if (!backtester) {
-        continue; // Not initialized yet
+        console.log(`[Proximity] ${asset}: No backtester initialized`);
+        continue;
       }
 
       try {
@@ -564,12 +567,11 @@ async function main() {
             readyToSignal: proximityData.readyToSignal,
             missingCriteria: proximityData.missingCriteria || [],
           });
+          console.log(`[Proximity] ${asset}: Published ${proximityData.direction} ${proximityData.proximity.toFixed(0)}%`);
         }
       } catch (error: any) {
-        // Silently ignore connection errors
-        if (!error?.message?.includes('Not connected')) {
-          // Only log non-connection errors
-        }
+        // Log all errors for debugging
+        console.error(`[Proximity] ${asset} Error:`, error?.message || error);
       }
     }
   }, PROXIMITY_CHECK_INTERVAL);

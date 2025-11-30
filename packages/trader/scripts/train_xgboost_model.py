@@ -51,7 +51,7 @@ FEATURE_COLUMNS = [
     'hourOfDay',
     'dayOfWeek',
     'minuteOfHour',
-    # 'isMarketOpen',  # May not be relevant for synthetic indices
+    'timeBlock6h',  # v3.0.0: 6-hour blocks for synthetic indices
 
     # Direction
     'directionEncoded',
@@ -82,6 +82,19 @@ FEATURE_COLUMNS = [
     'candleBodyPct',
     'upperWickPct',
     'lowerWickPct',
+
+    # v3.0.0 Features - ATR-based dynamic TP/SL
+    'atrPercent',
+    'dynamicTpPct',
+    'dynamicSlPct',
+    'tpSlRatio',
+
+    # v3.0.0 Features - Normalized Slope
+    'normalizedSlope',
+    'slopeStrength',
+
+    # v3.0.0 Features - RSI Divergence Detection
+    'rsiDivergenceEncoded',
 
     # Regime & Strategy
     'regimeEncoded',
@@ -485,6 +498,65 @@ def generate_insights(
                 win_rate = y[mask].mean() * 100
                 indicator = "✅" if win_rate > 50 else "❌"
                 print(f"    {indicator} {name}: {win_rate:.1f}% win rate ({mask.sum()} trades)")
+
+    # v3.0.0: Normalized Slope Analysis
+    if 'normalizedSlope' in X.columns:
+        print("\n🔟  v3.0.0 - Normalized Slope Analysis:")
+        slope_negative = X['normalizedSlope'] < -0.5
+        slope_neutral = (X['normalizedSlope'] >= -0.5) & (X['normalizedSlope'] <= 0.5)
+        slope_positive = X['normalizedSlope'] > 0.5
+
+        for name, mask in [('Strong Down (<-0.5)', slope_negative), ('Neutral (-0.5 to 0.5)', slope_neutral), ('Strong Up (>0.5)', slope_positive)]:
+            if mask.sum() > 0:
+                win_rate = y[mask].mean() * 100
+                indicator = "✅" if win_rate > 50 else "❌"
+                print(f"    {indicator} {name}: {win_rate:.1f}% win rate ({mask.sum()} trades)")
+
+    # v3.0.0: ATR Percent Analysis
+    if 'atrPercent' in X.columns:
+        print("\n1️⃣1️⃣  v3.0.0 - ATR Volatility Analysis:")
+        low_atr = X['atrPercent'].quantile(0.33)
+        high_atr = X['atrPercent'].quantile(0.67)
+
+        atr_low_mask = X['atrPercent'] <= low_atr
+        atr_mid_mask = (X['atrPercent'] > low_atr) & (X['atrPercent'] <= high_atr)
+        atr_high_mask = X['atrPercent'] > high_atr
+
+        for name, mask in [('Low ATR%', atr_low_mask), ('Medium ATR%', atr_mid_mask), ('High ATR%', atr_high_mask)]:
+            if mask.sum() > 0:
+                win_rate = y[mask].mean() * 100
+                indicator = "✅" if win_rate > 50 else "❌"
+                print(f"    {indicator} {name}: {win_rate:.1f}% win rate ({mask.sum()} trades)")
+
+    # v3.0.0: RSI Divergence Analysis
+    if 'rsiDivergenceEncoded' in X.columns:
+        print("\n1️⃣2️⃣  v3.0.0 - RSI Divergence Analysis:")
+        bullish_div = X['rsiDivergenceEncoded'] == 1
+        bearish_div = X['rsiDivergenceEncoded'] == -1
+        no_div = X['rsiDivergenceEncoded'] == 0
+
+        for name, mask in [('Bullish Divergence', bullish_div), ('Bearish Divergence', bearish_div), ('No Divergence', no_div)]:
+            if mask.sum() > 0:
+                win_rate = y[mask].mean() * 100
+                indicator = "✅" if win_rate > 50 else "❌"
+                print(f"    {indicator} {name}: {win_rate:.1f}% win rate ({mask.sum()} trades)")
+
+    # v3.0.0: TP/SL Ratio Analysis
+    if 'tpSlRatio' in X.columns:
+        print("\n1️⃣3️⃣  v3.0.0 - TP/SL Ratio Analysis:")
+        low_ratio = X['tpSlRatio'].quantile(0.33)
+        high_ratio = X['tpSlRatio'].quantile(0.67)
+
+        ratio_low_mask = X['tpSlRatio'] <= low_ratio
+        ratio_mid_mask = (X['tpSlRatio'] > low_ratio) & (X['tpSlRatio'] <= high_ratio)
+        ratio_high_mask = X['tpSlRatio'] > high_ratio
+
+        for name, mask in [('Low R:R', ratio_low_mask), ('Medium R:R', ratio_mid_mask), ('High R:R', ratio_high_mask)]:
+            if mask.sum() > 0:
+                win_rate = y[mask].mean() * 100
+                indicator = "✅" if win_rate > 50 else "❌"
+                avg_ratio = X.loc[mask, 'tpSlRatio'].mean()
+                print(f"    {indicator} {name} (avg {avg_ratio:.2f}): {win_rate:.1f}% win rate ({mask.sum()} trades)")
 
     # 9. Recommendations
     print("\n9️⃣  Recommendations:")

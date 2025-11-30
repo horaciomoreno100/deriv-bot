@@ -88,11 +88,12 @@ interface PreCalculatedData {
 }
 
 const DEFAULT_PARAMS: HybridMTFParams = {
-  // 15m Context - v3.0.0: Normalized slope
+  // 15m Context - v3.1.0: Reduced slope threshold based on ML analysis
+  // ML showed 100% trades were RANGE because 0.5 was too strict
   ctxAdxPeriod: 10,
   ctxAdxThreshold: 20,
   ctxSmaPeriod: 20,
-  ctxSlopeThreshold: 0.5,        // Normalized by ATR
+  ctxSlopeThreshold: 0.15,       // v3.1.0: Reduced from 0.5 to detect more trends
   ctxSlopeRegressionPeriod: 5,   // Linear regression on last 5 points
 
   // 5m Filter - 70/30 are useful extremes (80/20 rarely triggers)
@@ -108,22 +109,22 @@ const DEFAULT_PARAMS: HybridMTFParams = {
   rsiOverbought: 70,
   rsiOversold: 30,
 
-  // Risk Management - v3.0.0: ATR-based (1.5:1 ratio)
+  // Risk Management - v3.1.0: Adjusted ATR multipliers for better R:R
   atrPeriod: 14,
-  atrStopLossMultiplier: 2.0,    // SL = 2.0 * ATR
-  atrTakeProfitMultiplier: 3.0,  // TP = 3.0 * ATR
+  atrStopLossMultiplier: 1.5,    // v3.1.0: Tighter SL (was 2.0)
+  atrTakeProfitMultiplier: 2.5,  // v3.1.0: Adjusted TP (was 3.0) -> 1.67:1 ratio
   cooldownBars: 5,
   minCandles: 100,
 
   // Confirmation - 2 candles for Mean Reversion
   confirmationCandles: 2,
-  
-  // Reversal Confirmation (v3.0.0)
+
+  // Reversal Confirmation (v3.1.0) - ML showed RSI cross was too restrictive
   requireReversalCandle: true,
-  requireRSICross: true,
-  
-  // RSI Divergence Filter (v3.0.0)
-  enableRSIDivergence: true,
+  requireRSICross: false,        // v3.1.0: Disabled - was filtering too many trades
+
+  // RSI Divergence Filter (v3.1.0) - ML showed it hurt performance (15% WR vs 28%)
+  enableRSIDivergence: false,    // v3.1.0: Disabled based on ML analysis
   divergenceLookback: 10,
 };
 

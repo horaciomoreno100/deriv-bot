@@ -31,6 +31,7 @@ export interface TradeFeatureRow {
   dayOfWeek: number;           // 0-6 (Sunday = 0)
   minuteOfHour: number;        // 0-59
   isMarketOpen: boolean;       // For forex: Asian/London/NY sessions
+  timeBlock6h: number;         // v3.0.0: 6-hour block (0-3) for synthetic indices
 
   // Direction
   direction: 'CALL' | 'PUT';
@@ -80,6 +81,20 @@ export interface TradeFeatureRow {
   candleBodyPct: number | null;     // |Close - Open| / (High - Low)
   upperWickPct: number | null;      // Upper wick as % of range
   lowerWickPct: number | null;      // Lower wick as % of range
+
+  // v3.0.0 Features - ATR-based
+  atrPercent: number | null;        // ATR as percentage of price
+  dynamicTpPct: number | null;      // Dynamic TP calculated from ATR
+  dynamicSlPct: number | null;      // Dynamic SL calculated from ATR
+  tpSlRatio: number | null;         // TP/SL ratio (reward/risk)
+
+  // v3.0.0 Features - Normalized Slope
+  normalizedSlope: number | null;   // Linear regression slope normalized by ATR
+  slopeStrength: number | null;     // Absolute value of normalized slope
+
+  // v3.0.0 Features - RSI Divergence Detection
+  rsiDivergenceType: 'BULLISH' | 'BEARISH' | null; // Detected divergence type
+  rsiDivergenceEncoded: number | null; // 1 = BULLISH, -1 = BEARISH, 0 = none
 
   // Regime
   regime: 'BULLISH_TREND' | 'BEARISH_TREND' | 'RANGE' | null;
@@ -148,6 +163,12 @@ export class DataCollector {
       sma15m?: number | null;
       sma15mPrev?: number | null;
       atr1m?: number | null;
+      // v3.0.0 additions
+      atrPercent?: number | null;
+      normalizedSlope?: number | null;
+      rsiDivergence?: 'BULLISH' | 'BEARISH' | null;
+      dynamicTpPct?: number | null;
+      dynamicSlPct?: number | null;
     };
   }): string {
     const tradeId = this.generateTradeId();
@@ -235,11 +256,30 @@ export class DataCollector {
     const isNYSession = hour >= 13 && hour < 22;
     const isMarketOpen = isAsianSession || isLondonSession || isNYSession;
 
+    // v3.0.0: 6-hour time blocks for synthetic indices (24/7 markets)
+    const timeBlock6h = Math.floor(hour / 6); // 0=00-06h, 1=06-12h, 2=12-18h, 3=18-24h
+
     // Encode categorical variables
     const regimeEncoded = params.regime === 'BULLISH_TREND' ? 2
       : params.regime === 'RANGE' ? 1
       : params.regime === 'BEARISH_TREND' ? 0
       : null;
+
+    // v3.0.0: Process new features
+    const atrPercent = indicators.atrPercent ?? null;
+    const normalizedSlope = indicators.normalizedSlope ?? null;
+    const slopeStrength = normalizedSlope !== null ? Math.abs(normalizedSlope) : null;
+    const dynamicTpPct = indicators.dynamicTpPct ?? null;
+    const dynamicSlPct = indicators.dynamicSlPct ?? null;
+    const tpSlRatio = (dynamicTpPct !== null && dynamicSlPct !== null && dynamicSlPct !== 0)
+      ? dynamicTpPct / dynamicSlPct
+      : null;
+
+    // v3.0.0: RSI Divergence encoding
+    const rsiDivergenceType = indicators.rsiDivergence ?? null;
+    const rsiDivergenceEncoded = rsiDivergenceType === 'BULLISH' ? 1
+      : rsiDivergenceType === 'BEARISH' ? -1
+      : 0;
 
     const row: TradeFeatureRow = {
       // Identification
@@ -253,6 +293,7 @@ export class DataCollector {
       dayOfWeek: date.getUTCDay(),
       minuteOfHour: date.getUTCMinutes(),
       isMarketOpen,
+      timeBlock6h,
 
       // Direction
       direction: params.direction,
@@ -302,6 +343,20 @@ export class DataCollector {
       candleBodyPct,
       upperWickPct,
       lowerWickPct,
+
+      // v3.0.0 Features - ATR-based
+      atrPercent,
+      dynamicTpPct,
+      dynamicSlPct,
+      tpSlRatio,
+
+      // v3.0.0 Features - Normalized Slope
+      normalizedSlope,
+      slopeStrength,
+
+      // v3.0.0 Features - RSI Divergence Detection
+      rsiDivergenceType,
+      rsiDivergenceEncoded,
 
       // Regime
       regime: params.regime,
