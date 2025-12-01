@@ -129,13 +129,18 @@ export class TradeExecutionService {
     console.log(`   Timestamp: ${new Date().toISOString()}`);
 
     try {
-      // Get entry price from signal metadata
-      // Support both 'price' and 'entryPrice' for backwards compatibility
-      const entryPrice = typeof signal.metadata?.price === 'number'
-        ? signal.metadata.price
-        : (typeof signal.metadata?.entryPrice === 'number' ? signal.metadata.entryPrice : 0);
+      // Get entry price from signal - check multiple locations for compatibility
+      // Priority: signal.price > signal.metadata.price > signal.metadata.entryPrice
+      let entryPrice = 0;
+      if (typeof (signal as any).price === 'number' && (signal as any).price > 0) {
+        entryPrice = (signal as any).price;
+      } else if (typeof signal.metadata?.price === 'number' && signal.metadata.price > 0) {
+        entryPrice = signal.metadata.price;
+      } else if (typeof signal.metadata?.entryPrice === 'number' && signal.metadata.entryPrice > 0) {
+        entryPrice = signal.metadata.entryPrice;
+      }
       if (entryPrice === 0 && this.config.mode === 'cfd') {
-        throw new Error('Entry price not available in signal metadata for CFD trade');
+        throw new Error('Entry price not available in signal for CFD trade');
       }
 
       // Calculate dynamic stake using TradeManager
