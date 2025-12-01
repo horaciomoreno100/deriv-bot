@@ -434,6 +434,187 @@ describe('TradeManager', () => {
     });
   });
 
+  describe('PurchaseTime Handling', () => {
+    /**
+     * Tests for purchaseTime validation during position recovery
+     * Addresses production issue with "Invalid purchaseTime" warnings
+     */
+
+    it('should handle purchaseTime as a number (timestamp)', async () => {
+      const now = Date.now();
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: now - 60000, // 1 minute ago as number
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      const trade = tradeManager.getOpenTrades()[0];
+      expect(trade.timestamp).toBe(now - 60000);
+    });
+
+    it('should handle purchaseTime as a valid Date object', async () => {
+      const validDate = new Date(Date.now() - 60000);
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: validDate,
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      const trade = tradeManager.getOpenTrades()[0];
+      expect(trade.timestamp).toBe(validDate.getTime());
+    });
+
+    it('should fallback to current time when purchaseTime is invalid Date (NaN)', async () => {
+      const invalidDate = new Date('invalid');
+      const beforeTest = Date.now();
+
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: invalidDate,
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      const trade = tradeManager.getOpenTrades()[0];
+      // Should be approximately now (within 1 second)
+      expect(trade.timestamp).toBeGreaterThanOrEqual(beforeTest);
+      expect(trade.timestamp).toBeLessThanOrEqual(Date.now() + 1000);
+    });
+
+    it('should fallback to current time when purchaseTime is undefined', async () => {
+      const beforeTest = Date.now();
+
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: undefined as any,
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      const trade = tradeManager.getOpenTrades()[0];
+      expect(trade.timestamp).toBeGreaterThanOrEqual(beforeTest);
+    });
+
+    it('should fallback to current time when purchaseTime is 0', async () => {
+      const beforeTest = Date.now();
+
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: 0,
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      const trade = tradeManager.getOpenTrades()[0];
+      expect(trade.timestamp).toBeGreaterThanOrEqual(beforeTest);
+    });
+
+    it('should fallback to current time when purchaseTime is negative', async () => {
+      const beforeTest = Date.now();
+
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: -1000,
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      const trade = tradeManager.getOpenTrades()[0];
+      expect(trade.timestamp).toBeGreaterThanOrEqual(beforeTest);
+    });
+
+    it('should not log warning for valid purchaseTime', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn');
+
+      const mockPositions = [
+        {
+          contractId: '1',
+          symbol: 'R_100',
+          contractType: 'MULTUP',
+          buyPrice: 10,
+          profit: 0,
+          profitPercentage: 0,
+          purchaseTime: Date.now() - 60000, // Valid timestamp
+        },
+      ];
+
+      const positionMonitor = tradeManager.getManagers().positionMonitor;
+      vi.spyOn(positionMonitor, 'recoverPositions').mockResolvedValue(mockPositions);
+
+      await tradeManager.start();
+
+      // Should not have called console.warn with purchaseTime message
+      const purchaseTimeWarnings = consoleSpy.mock.calls.filter(
+        call => call[0]?.includes?.('purchaseTime')
+      );
+      expect(purchaseTimeWarnings).toHaveLength(0);
+
+      consoleSpy.mockRestore();
+    });
+  });
+
   describe('Direction Inference', () => {
     it('should infer CALL direction from MULTUP contract type', async () => {
       const mockPositions = [

@@ -195,7 +195,7 @@ describe('FVGLiquiditySweepStrategy', () => {
     it('should return forex params for frx* assets', () => {
       const params = getParamsForAsset('frxEURUSD');
       expect(params.liquidityRangePct).toBe(0.003);  // Updated: FOREX_PARAMS.liquidityRangePct
-      expect(params.takeProfitRR).toBe(1.5);         // Updated: FOREX_PARAMS.takeProfitRR
+      expect(params.takeProfitRR).toBe(1.0);         // Updated: FOREX_PARAMS optimized (was 1.5)
     });
 
     it('should return gold params for XAU assets', () => {
