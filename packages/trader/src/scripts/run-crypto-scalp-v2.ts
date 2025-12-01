@@ -555,35 +555,29 @@ async function main() {
       }
 
       try {
-        // Update backtester if history has grown significantly
-        // This ensures indicators are calculated for latest candles
-        let currentBacktester = backtester;
-        if (history.length > backtester.length + 5) {
-          console.log(`[Proximity] ${asset}: Updating backtester (${backtester.length} -> ${history.length})`);
-          currentBacktester = new FastBacktester(history, ['rsi', 'atr', 'adx', 'bb'], {
-            rsiPeriod: 14,
-            atrPeriod: 14,
-            adxPeriod: 14,
-            bbPeriod: 20,
-            bbStdDev: 2,
-          });
-          backtesters.set(asset, currentBacktester);
-        }
+        // CRITICAL FIX: Always recreate backtester to ensure indicators are current
+        // The backtester pre-calculates all indicators for its candles array
+        // When new candles arrive, we must recalculate to get updated indicator values
+        const currentBacktester = new FastBacktester(history, ['rsi', 'atr', 'adx', 'bb'], {
+          rsiPeriod: 14,
+          atrPeriod: 14,
+          adxPeriod: 14,
+          bbPeriod: 20,
+          bbStdDev: 2,
+        });
+        backtesters.set(asset, currentBacktester);
 
-        // Get latest indicators - use backtester's length since it may differ from history
-        const indicatorIndex = Math.min(history.length - 1, currentBacktester.length - 1);
-        const indicators = currentBacktester.getIndicatorSnapshot(indicatorIndex);
+        // Get latest indicators for the last candle
+        const indicators = currentBacktester.getIndicatorSnapshot(history.length - 1);
         const latestCandle = history[history.length - 1];
         if (!latestCandle) {
           console.log(`[Proximity] ${asset}: No latest candle`);
           continue;
         }
 
-        // Debug: log indicator values to understand what's missing
-        const { rsi, adx, plusDI, minusDI, bbUpper, bbMiddle, bbLower } = indicators as Record<string, number>;
-        if (typeof rsi !== 'number' || typeof adx !== 'number' || typeof bbUpper !== 'number') {
-          console.log(`[Proximity] ${asset}: Indicator values - rsi=${rsi}, adx=${adx}, plusDI=${plusDI}, minusDI=${minusDI}, bbUpper=${bbUpper}, bbMiddle=${bbMiddle}, bbLower=${bbLower}`);
-        }
+        // Debug: Always log indicator values to verify they're updating
+        const { rsi, adx, bbUpper, bbLower } = indicators as Record<string, number>;
+        console.log(`[Proximity] ${asset}: RSI=${rsi?.toFixed(1)}, ADX=${adx?.toFixed(1)}, Price=${latestCandle.close.toFixed(2)}, BB=${bbLower?.toFixed(2)}-${bbUpper?.toFixed(2)}, Candles=${history.length}`);
 
         const proximityData = calculateSignalProximity(indicators, asset, latestCandle);
         if (proximityData) {
@@ -596,7 +590,7 @@ async function main() {
             readyToSignal: proximityData.readyToSignal,
             missingCriteria: proximityData.missingCriteria || [],
           });
-          console.log(`[Proximity] ${asset}: ${proximityData.direction} ${proximityData.proximity.toFixed(0)}%`);
+          console.log(`[Proximity] ${asset}: → ${proximityData.direction} ${proximityData.proximity.toFixed(0)}%`);
         } else {
           console.log(`[Proximity] ${asset}: No proximity data calculated`);
         }
