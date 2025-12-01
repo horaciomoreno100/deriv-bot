@@ -610,14 +610,30 @@ async function main() {
     publishProximities().catch(err => console.error(`[Proximity] Interval error:`, err));
   }, PROXIMITY_CHECK_INTERVAL);
 
+  // Track tick count for debugging
+  let tickCount = 0;
+  let lastTickLog = Date.now();
+
   // Process ticks and generate signals
   gatewayClient.on('tick', async (tick: Tick) => {
     try {
+      tickCount++;
+      // Log tick receipt every 30 seconds
+      const now = Date.now();
+      if (now - lastTickLog > 30000) {
+        console.log(`[Ticks] Received ${tickCount} ticks in last 30s for ${tick.asset}`);
+        tickCount = 0;
+        lastTickLog = now;
+      }
+
       const candle = processTick(tick);
       if (!candle) return;
 
       const asset = candle.asset;
       const history = candleHistory.get(asset) || [];
+
+      // Log when candle completes
+      console.log(`[Candle] ${asset} completed: O=${candle.open.toFixed(2)} H=${candle.high.toFixed(2)} L=${candle.low.toFixed(2)} C=${candle.close.toFixed(2)}, History=${history.length}`);
       
       // Check warm-up
       const warmUpCount = warmUpCandlesPerAsset.get(asset) || 0;
