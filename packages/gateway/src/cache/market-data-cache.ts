@@ -1,6 +1,7 @@
 import type { Tick, Candle } from '@deriv-bot/shared';
 import { CandleBuilder } from './candle-builder.js';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 const { PrismaClient } = require('@prisma/client');
 import type { EventBus } from '../events/event-bus.js';
 

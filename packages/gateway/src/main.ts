@@ -10,7 +10,8 @@
  * - Command Handlers: Process Trader commands
  */
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 const { PrismaClient } = require('@prisma/client');
 import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
