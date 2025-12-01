@@ -109,12 +109,44 @@ export class TradeExecutionService {
   }
 
   /**
+   * Global position limit - maximum positions across ALL symbols
+   * This prevents any trader from opening more than this limit, regardless of local state
+   */
+  private static readonly GLOBAL_MAX_POSITIONS = 4;
+
+  /**
    * Execute a trade from a signal
    */
   async executeTrade(signal: Signal, defaultAsset?: string): Promise<TradeExecutionResult> {
     const asset = (signal as any).asset || signal.symbol || defaultAsset || 'R_75';
 
-    // Check if we can open a new trade (risk management)
+    // CRITICAL: Check REAL positions from API first (prevents issues after restarts)
+    try {
+      const portfolio = await this.gatewayClient.getPortfolio();
+      const openPositionCount = portfolio?.length || 0;
+
+      if (openPositionCount >= TradeExecutionService.GLOBAL_MAX_POSITIONS) {
+        console.log(`\n❌ Trade rejected: Global position limit reached (${openPositionCount}/${TradeExecutionService.GLOBAL_MAX_POSITIONS} positions open)`);
+        return {
+          success: false,
+          error: `Global limit: ${openPositionCount} positions already open (max: ${TradeExecutionService.GLOBAL_MAX_POSITIONS})`,
+        };
+      }
+
+      // Check if already have a position for this asset
+      const existingForAsset = portfolio?.filter(p => p.symbol === asset) || [];
+      if (existingForAsset.length > 0) {
+        console.log(`\n❌ Trade rejected: Already have ${existingForAsset.length} position(s) for ${asset}`);
+        return {
+          success: false,
+          error: `Already have position for ${asset} (contract: ${existingForAsset[0]?.contractId})`,
+        };
+      }
+    } catch (error: any) {
+      console.warn(`⚠️  Could not verify portfolio: ${error.message} - proceeding with caution`);
+    }
+
+    // Check if we can open a new trade (risk management - local check)
     const canOpen = this.tradeManager.canOpenTrade(asset);
     if (!canOpen.allowed) {
       console.log(`\n❌ Trade rejected: ${canOpen.reason}`);
