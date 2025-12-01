@@ -431,6 +431,11 @@ async function main() {
   await gatewayClient.connect();
   console.log('✅ Connected to Gateway\n');
 
+  // Start TradeManager (recovers existing positions and starts monitoring)
+  console.log('🔄 Starting TradeManager (position recovery + monitoring)...');
+  await tradeManager.start();
+  console.log('✅ TradeManager started\n');
+
   // Register trader
   try {
     const registration = await gatewayClient.registerTrader({
