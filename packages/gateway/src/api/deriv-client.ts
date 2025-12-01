@@ -955,6 +955,21 @@ export class DerivClient {
         const profit = parseFloat(contract.profit || '0');
         const profitPercentage = buyPrice > 0 ? (profit / buyPrice) * 100 : 0;
 
+        // Safely parse purchaseTime - handle missing/invalid timestamps
+        const purchaseTimeValue = contract.purchase_time || contract.date_start;
+        let purchaseTime: Date;
+        if (purchaseTimeValue && typeof purchaseTimeValue === 'number' && purchaseTimeValue > 0) {
+          purchaseTime = new Date(purchaseTimeValue * 1000);
+          // Validate the Date is not invalid (NaN)
+          if (isNaN(purchaseTime.getTime())) {
+            console.warn(`[DerivClient] Invalid purchaseTime value for contract ${contract.contract_id}: ${purchaseTimeValue}, using current time`);
+            purchaseTime = new Date();
+          }
+        } else {
+          console.warn(`[DerivClient] Missing purchaseTime for contract ${contract.contract_id}, using current time`);
+          purchaseTime = new Date();
+        }
+
         return {
           contractId: contract.contract_id?.toString() || '',
           symbol: contract.underlying || contract.symbol || '',
@@ -963,7 +978,7 @@ export class DerivClient {
           currentPrice,
           profit,
           profitPercentage,
-          purchaseTime: new Date((contract.purchase_time || contract.date_start) * 1000),
+          purchaseTime,
           duration: contract.duration || 0,
           durationUnit: contract.duration_unit || 's',
           status: 'open' as const, // We already filtered out sold contracts
