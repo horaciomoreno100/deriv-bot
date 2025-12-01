@@ -10,9 +10,9 @@
  * - Command Handlers: Process Trader commands
  */
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { PrismaClient } = require('@prisma/client');
+// PrismaClient is loaded dynamically to avoid ESM/CJS conflicts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let PrismaClient: any;
 import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
@@ -129,11 +129,11 @@ class Gateway {
       eventBus: this.eventBus,
     });
 
-    // Initialize Prisma Client
-    this.prisma = new PrismaClient();
+    // Prisma will be initialized in start() after dynamic import
+    this.prisma = null as any;
 
-    // Initialize State Manager
-    this.stateManager = new StateManager(this.prisma);
+    // State Manager will be initialized in start() after Prisma
+    this.stateManager = null as any;
 
     // Create handler context
     this.handlerContext = {
@@ -182,6 +182,11 @@ class Gateway {
    */
   async start(): Promise<void> {
     this.logger.info('🚀 Starting Gateway...');
+
+    // 0. Initialize Prisma (dynamic import already done in main())
+    this.prisma = new PrismaClient();
+    this.stateManager = new StateManager(this.prisma);
+    this.handlerContext.stateManager = this.stateManager;
 
     // 1. Initialize State Manager
     this.logger.info('Initializing State Manager...');
@@ -263,6 +268,10 @@ class Gateway {
  * Main entry point
  */
 async function main() {
+  // Load PrismaClient dynamically to avoid ESM/CJS conflicts
+  const prismaModule = await import('@prisma/client');
+  PrismaClient = prismaModule.PrismaClient;
+
   // Load configuration
   const config = loadConfig();
 

@@ -1,8 +1,9 @@
 import type { Tick, Candle } from '@deriv-bot/shared';
 import { CandleBuilder } from './candle-builder.js';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { PrismaClient } = require('@prisma/client');
+
+// PrismaClient will be set when connect() is called
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let PrismaClient: any;
 import type { EventBus } from '../events/event-bus.js';
 
 /**
@@ -63,9 +64,18 @@ export class MarketDataCache {
     };
 
     this.eventBus = config.eventBus || null;
+    // Note: Prisma will be initialized in connect() if persistence is enabled
+  }
 
-    if (this.config.enablePersistence) {
+  /**
+   * Initialize connection (for persistence)
+   */
+  async connect(): Promise<void> {
+    if (this.config.enablePersistence && !this.prisma) {
+      const prismaModule = await import('@prisma/client');
+      PrismaClient = prismaModule.PrismaClient;
       this.prisma = new PrismaClient();
+      await this.prisma.$connect();
     }
   }
 
