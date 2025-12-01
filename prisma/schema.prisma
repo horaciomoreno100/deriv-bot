@@ -46,3 +46,46 @@ model Candle {
   @@index([timestamp])
   @@map("candles")
 }
+
+// Trade records for Gateway
+model Trade {
+  id           Int      @id @default(autoincrement())
+  contractId   String   @unique
+  type         String   // CALL, PUT, MULTUP, MULTDOWN
+  tradeMode    String   // binary, cfd
+  asset        String
+  stake        Float
+  entryPrice   Float
+  exitPrice    Float?
+  profit       Float    @default(0)
+  status       String   @default("open") // open, won, lost
+  openedAt     DateTime @default(now())
+  closedAt     DateTime?
+  duration     Int?
+  strategy     String?
+  notes        String?
+
+  @@index([asset])
+  @@index([status])
+  @@index([openedAt])
+  @@map("trades")
+}
+
+// Daily statistics for Gateway
+model DailyStats {
+  id           Int      @id @default(autoincrement())
+  date         String   @unique // YYYY-MM-DD format
+  totalTrades  Int      @default(0)
+  wonTrades    Int      @default(0)
+  lostTrades   Int      @default(0)
+  totalProfit  Float    @default(0)
+  totalLoss    Float    @default(0)
+  netPnL       Float    @default(0)
+  maxDrawdown  Float    @default(0)
+  winRate      Float    @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([date])
+  @@map("daily_stats")
+}
