@@ -17,7 +17,7 @@
  *   SYMBOL="frxAUDUSD,frxEURUSD,frxGBPUSD,frxUSDCHF" pnpm --filter @deriv-bot/trader demo:fvg-ls
  */
 
-import { GatewayClient, initSlackAlerts, getTelegramAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
+import { GatewayClient, initSlackAlerts, TelegramAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
 import { FVGLiquiditySweepStrategy } from '../strategies/fvg-liquidity-sweep.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
@@ -66,8 +66,8 @@ let tradeExecutionService: TradeExecutionService;
 let slackAlerter: ReturnType<typeof initSlackAlerts> | null = null;
 let strategyAccountant: StrategyAccountant;
 
-// Telegram Alerter
-const telegramAlerter = getTelegramAlerter({ serviceName: STRATEGY_NAME });
+// Telegram Alerter (created after loadEnvFromRoot to ensure env vars are loaded)
+const telegramAlerter = new TelegramAlerter({ serviceName: STRATEGY_NAME });
 
 // Strategies per symbol
 const strategies = new Map<string, FVGLiquiditySweepStrategy>();

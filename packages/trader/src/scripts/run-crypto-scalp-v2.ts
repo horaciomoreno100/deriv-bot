@@ -10,7 +10,7 @@
  * - BTC: $3,847 net PnL, 1.27 PF, 51% WR
  */
 
-import { GatewayClient, loadEnvFromRoot, getTelegramAlerter } from '@deriv-bot/shared';
+import { GatewayClient, loadEnvFromRoot, TelegramAlerter } from '@deriv-bot/shared';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
@@ -235,8 +235,8 @@ let tradeManager: TradeManager;
 let tradeExecutionService: TradeExecutionService;
 let strategyAccountant: StrategyAccountant;
 
-// Telegram Alerter
-const telegramAlerter = getTelegramAlerter({ serviceName: STRATEGY_NAME });
+// Telegram Alerter (created after loadEnvFromRoot to ensure env vars are loaded)
+const telegramAlerter = new TelegramAlerter({ serviceName: STRATEGY_NAME });
 
 // Entry functions per asset
 const entryFunctions = new Map<string, (index: number, indicators: Record<string, number | boolean>) => any>();

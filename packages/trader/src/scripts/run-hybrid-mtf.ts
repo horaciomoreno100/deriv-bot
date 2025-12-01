@@ -28,7 +28,7 @@
  *   SYMBOL="R_100" STRATEGY_ALLOCATION="1000" pnpm --filter @deriv-bot/trader demo:hybrid-mtf
  */
 
-import { GatewayClient, loadEnvFromRoot, getTelegramAlerter, initSlackAlerts } from '@deriv-bot/shared';
+import { GatewayClient, loadEnvFromRoot, TelegramAlerter, initSlackAlerts } from '@deriv-bot/shared';
 import { HybridMTFStrategy } from '../strategies/hybrid-mtf.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
@@ -76,8 +76,8 @@ let tradeExecutionService: TradeExecutionService;
 let slackAlerter: ReturnType<typeof initSlackAlerts> | null = null;
 let strategyAccountant: StrategyAccountant;
 
-// Telegram Alerter
-const telegramAlerter = getTelegramAlerter({ serviceName: STRATEGY_NAME });
+// Telegram Alerter (created after loadEnvFromRoot to ensure env vars are loaded)
+const telegramAlerter = new TelegramAlerter({ serviceName: STRATEGY_NAME });
 
 /**
  * Process tick and build candle (per asset)
