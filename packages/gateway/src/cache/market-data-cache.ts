@@ -1,7 +1,7 @@
 import type { Tick, Candle } from '@deriv-bot/shared';
 import { CandleBuilder } from './candle-builder.js';
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { PrismaClient } = require('@prisma/client');
 import type { EventBus } from '../events/event-bus.js';
 
 /**
@@ -50,7 +50,8 @@ export class MarketDataCache {
   private config: Required<Omit<MarketDataCacheConfig, 'eventBus'>>;
   private ticks = new Map<string, Tick[]>(); // asset -> ticks[]
   private candleBuilders = new Map<string, Map<number, CandleBuilder>>(); // asset -> timeframe -> builder
-  private prisma: InstanceType<typeof PrismaClient> | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private prisma: any = null;
   private eventBus: EventBus | null = null;
 
   constructor(config: MarketDataCacheConfig) {

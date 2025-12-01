@@ -5,9 +5,9 @@
  * Handles persistence, stats calculation, and event emission.
  */
 
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
-type Trade = pkg.Trade;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Trade = any;
+// Note: PrismaClient is passed in constructor, not imported here
 import { EventEmitter } from 'events';
 
 export interface TradeInput {
@@ -85,10 +85,12 @@ export interface DailyStatsResult {
  * State Manager - Central state and persistence
  */
 export class StateManager extends EventEmitter {
-  private prisma: InstanceType<typeof PrismaClient>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private prisma: any;
   private initialized = false;
 
-  constructor(prisma: InstanceType<typeof PrismaClient>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(prisma: any) {
     super();
     this.prisma = prisma;
   }

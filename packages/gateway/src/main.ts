@@ -10,8 +10,8 @@
  * - Command Handlers: Process Trader commands
  */
 
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { PrismaClient } = require('@prisma/client');
 import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
@@ -83,7 +83,8 @@ class Gateway {
   private gatewayServer: GatewayServer;
   private marketCache: MarketDataCache;
   private eventBus: EventBus;
-  private prisma: InstanceType<typeof PrismaClient>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private prisma: any;
   private stateManager: StateManager;
   private handlerContext: CommandHandlerContext;
 
