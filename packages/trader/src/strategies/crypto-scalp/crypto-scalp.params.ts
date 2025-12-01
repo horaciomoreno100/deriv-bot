@@ -342,11 +342,14 @@ export const ETH_CONFIG: Partial<CryptoScalpParams> = {
  *
  * Best preset: AGGRESSIVE
  * Key: More trades, wider RSI thresholds, faster cooldown
+ *
+ * Live Adjustment (Dec 2025):
+ * - SL widened from 0.2% to 0.4% to reduce whipsaws in volatile crypto markets
  */
 export const ETH_OPTIMIZED_PRESET: Partial<CryptoScalpParams> = {
   ...AGGRESSIVE_PRESET,
   takeProfitLevels: [{ profitPercent: 0.5, exitPercent: 100 }],
-  baseStopLossPct: 0.2,
+  baseStopLossPct: 0.4, // Widened from 0.2% to 0.4% - crypto needs room to breathe
   cooldownBars: 5,
   maxBarsInTrade: 45,
   minConfidence: 0.5,
@@ -364,11 +367,14 @@ export const ETH_OPTIMIZED_PRESET: Partial<CryptoScalpParams> = {
  *
  * Best preset: AGGRESSIVE
  * Key: More trades, wider RSI thresholds, faster cooldown
+ *
+ * Live Adjustment (Dec 2025):
+ * - SL widened from 0.2% to 0.4% to reduce whipsaws in volatile crypto markets
  */
 export const BTC_OPTIMIZED_PRESET: Partial<CryptoScalpParams> = {
   ...AGGRESSIVE_PRESET,
   takeProfitLevels: [{ profitPercent: 0.5, exitPercent: 100 }],
-  baseStopLossPct: 0.2,
+  baseStopLossPct: 0.4, // Widened from 0.2% to 0.4% - crypto needs room to breathe
   cooldownBars: 5,
   maxBarsInTrade: 45,
   minConfidence: 0.5,
