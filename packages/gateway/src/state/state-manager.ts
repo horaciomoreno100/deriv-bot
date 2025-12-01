@@ -5,7 +5,9 @@
  * Handles persistence, stats calculation, and event emission.
  */
 
-import { PrismaClient, Trade } from '@prisma/client';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
+type Trade = pkg.Trade;
 import { EventEmitter } from 'events';
 
 export interface TradeInput {
@@ -83,10 +85,10 @@ export interface DailyStatsResult {
  * State Manager - Central state and persistence
  */
 export class StateManager extends EventEmitter {
-  private prisma: PrismaClient;
+  private prisma: InstanceType<typeof PrismaClient>;
   private initialized = false;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: InstanceType<typeof PrismaClient>) {
     super();
     this.prisma = prisma;
   }

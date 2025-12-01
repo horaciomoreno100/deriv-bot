@@ -10,7 +10,8 @@
  * - Command Handlers: Process Trader commands
  */
 
-import { PrismaClient } from '@prisma/client';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
@@ -82,7 +83,7 @@ class Gateway {
   private gatewayServer: GatewayServer;
   private marketCache: MarketDataCache;
   private eventBus: EventBus;
-  private prisma: PrismaClient;
+  private prisma: InstanceType<typeof PrismaClient>;
   private stateManager: StateManager;
   private handlerContext: CommandHandlerContext;
 
