@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.15.1](///compare/v0.15.0...v0.15.1) (2025-12-01)
+
+### Bug Fixes
+
+* add global position limit check via API before opening trades 5929202
+* remove duplicate purchaseTime warning from TradeManager aeecc22
+* simplify position limit to 1 per asset (remove global cap) ef5c0e2
+* widen crypto SL from 0.2% to 0.4% to reduce whipsaws 9a6ed95
+
 ## [0.15.0](///compare/v0.14.0...v0.15.0) (2025-12-01)
 
 ### Features
