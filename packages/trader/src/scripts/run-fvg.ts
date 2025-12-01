@@ -514,14 +514,14 @@ async function main() {
   gatewayClient.on('connected', () => {
     console.log('✅ Gateway connected');
     if (slackAlerter) {
-      slackAlerter.sendAlert(`✅ ${STRATEGY_NAME} Trader connected to Gateway`);
+      slackAlerter.info(`${STRATEGY_NAME} Trader connected to Gateway`);
     }
   });
 
   gatewayClient.on('disconnected', () => {
     console.log('⚠️  Gateway disconnected');
     if (slackAlerter) {
-      slackAlerter.sendAlert(`⚠️  ${STRATEGY_NAME} Trader disconnected from Gateway`);
+      slackAlerter.warning(`${STRATEGY_NAME} Trader disconnected from Gateway`);
     }
   });
 
