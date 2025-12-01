@@ -319,10 +319,16 @@ function getPresetForAsset(asset: string) {
 function getOptimizedConfig(asset: string) {
   const preset = getPresetForAsset(asset);
   const isETH = asset.includes('ETH');
-  
+
+  // NOTE: preset values are in "human-readable" percentages (0.5 = 0.5%, not 50%)
+  // but TradeExecutionService expects decimals (0.005 = 0.5%)
+  // So we need to divide by 100 to convert
+  const rawTp = preset.takeProfitLevels?.[0]?.profitPercent ?? 0.5;
+  const rawSl = preset.baseStopLossPct ?? 0.2;
+
   return {
-    tpPct: preset.takeProfitLevels?.[0]?.profitPercent ?? 0.5,
-    slPct: preset.baseStopLossPct ?? 0.2,
+    tpPct: rawTp / 100, // 0.5 -> 0.005 (0.5%)
+    slPct: rawSl / 100, // 0.2 -> 0.002 (0.2%)
     cooldown: preset.cooldownBars ?? 20,
     maxBarsInTrade: preset.maxBarsInTrade ?? 60,
     zombieKiller: isETH
