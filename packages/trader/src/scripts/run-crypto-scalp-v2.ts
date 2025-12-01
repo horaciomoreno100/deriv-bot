@@ -424,7 +424,9 @@ async function main() {
     }
   );
 
-  console.log(`✅ TradeExecutionService initialized\n`);
+  // Connect Telegram alerter to TradeExecutionService
+  tradeExecutionService.setTelegramAlerter(telegramAlerter);
+  console.log(`✅ TradeExecutionService initialized (Telegram: ${telegramAlerter.isReady() ? 'enabled' : 'disabled'})\n`);
 
   // Connect to gateway
   console.log('🔌 Connecting to Gateway...');

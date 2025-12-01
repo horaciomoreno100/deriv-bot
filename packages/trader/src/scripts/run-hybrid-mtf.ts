@@ -78,6 +78,9 @@ let tradeExecutionService: TradeExecutionService;
 let slackAlerter: ReturnType<typeof initSlackAlerts> | null = null;
 let strategyAccountant: StrategyAccountant;
 
+// Telegram Alerter
+const telegramAlerter = getTelegramAlerter({ serviceName: STRATEGY_NAME });
+
 /**
  * Process tick and build candle (per asset)
  */
@@ -208,7 +211,9 @@ async function main() {
     }
   );
 
-  console.log('✅ TradeExecutionService initialized\n');
+  // Connect Telegram alerter to TradeExecutionService
+  tradeExecutionService.setTelegramAlerter(telegramAlerter);
+  console.log(`✅ TradeExecutionService initialized (Telegram: ${telegramAlerter.isReady() ? 'enabled' : 'disabled'})\n`);
 
   // Connect to gateway
   console.log('🔌 Connecting to Gateway...');

@@ -13,7 +13,7 @@
  * - Comprehensive logging
  */
 
-import type { GatewayClient } from '@deriv-bot/shared';
+import type { GatewayClient, TelegramAlerter } from '@deriv-bot/shared';
 import type { UnifiedTradeAdapter, TradeMode } from '../adapters/trade-adapter.js';
 import type { TradeManager } from '../trade-management/index.js';
 import type { Signal } from '@deriv-bot/shared';
@@ -87,6 +87,7 @@ export interface TradeExecutionResult {
 export class TradeExecutionService {
   private config: TradeExecutionConfig;
   private tradeCount = 0;
+  private telegramAlerter: TelegramAlerter | null = null;
 
   constructor(
     private gatewayClient: GatewayClient,
@@ -98,6 +99,13 @@ export class TradeExecutionService {
       ...DEFAULT_CONFIG,
       ...config,
     };
+  }
+
+  /**
+   * Set Telegram alerter for trade notifications
+   */
+  setTelegramAlerter(alerter: TelegramAlerter): void {
+    this.telegramAlerter = alerter;
   }
 
   /**
@@ -208,6 +216,15 @@ export class TradeExecutionService {
       // Register trade with TradeManager
       this.registerTrade(result, signal, asset, stake);
 
+      // Send Telegram alert for executed trade
+      if (this.telegramAlerter?.isReady()) {
+        this.telegramAlerter.sendTradeAlert('executed', {
+          asset,
+          direction: signal.direction,
+          stake,
+        }).catch((err) => console.warn('[Telegram] Failed to send trade alert:', err.message));
+      }
+
       return {
         success: true,
         contractId: result.contractId,
@@ -218,6 +235,15 @@ export class TradeExecutionService {
     } catch (error: any) {
       console.error(`   ❌ Error executing trade: ${error.message}`);
       console.log(`${'='.repeat(80)}\n`);
+
+      // Send Telegram alert for trade error
+      if (this.telegramAlerter?.isReady()) {
+        this.telegramAlerter.sendTradeAlert('error', {
+          asset,
+          direction: signal.direction,
+          error: error.message,
+        }).catch((err) => console.warn('[Telegram] Failed to send error alert:', err.message));
+      }
 
       return {
         success: false,
