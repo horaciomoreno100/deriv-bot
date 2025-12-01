@@ -47,27 +47,74 @@ model Candle {
   @@map("candles")
 }
 
-// Trade records for Gateway
+// Trades (binary options & CFD contracts) - matches gateway schema
 model Trade {
-  id           Int      @id @default(autoincrement())
-  contractId   String   @unique
-  type         String   // CALL, PUT, MULTUP, MULTDOWN
-  tradeMode    String   // binary, cfd
-  asset        String
-  stake        Float
-  entryPrice   Float
-  exitPrice    Float?
-  profit       Float    @default(0)
-  status       String   @default("open") // open, won, lost
-  openedAt     DateTime @default(now())
-  closedAt     DateTime?
-  duration     Int?
-  strategy     String?
-  notes        String?
+  id          String   @id @default(cuid())
+  contractId  String   @unique
 
-  @@index([asset])
-  @@index([status])
+  // Trade info
+  type        String   // CALL or PUT (or MULTUP/MULTDOWN for CFDs)
+  tradeMode   String   // "binary" or "cfd"
+  asset       String
+  timeframe   Int?     // seconds (for binary options)
+
+  // Prices & Money
+  entryPrice  Float
+  exitPrice   Float?
+  stake       Float
+  payout      Float?
+
+  // CFD-specific fields
+  multiplier  Int?     // CFD multiplier (e.g., 50x, 100x)
+  takeProfit  Float?   // TP price level
+  stopLoss    Float?   // SL price level
+  takeProfitAmount  Float?  // TP in dollars
+  stopLossAmount    Float?  // SL in dollars
+
+  // Result
+  result      String?  // WIN, LOSS, or PENDING
+  profit      Float?   // payout - stake (negative if loss)
+  profitPct   Float?   // profit percentage
+
+  // Timestamps
+  openedAt    DateTime @default(now())
+  closedAt    DateTime?
+  expiryTime  DateTime?
+
+  // Signal that triggered trade
+  signalType  String?  // RSI_OVERSOLD, RSI_OVERBOUGHT, BB_LOWER, BB_UPPER
+  confidence  Float?   // Signal confidence (0-1)
+
+  // Indicators at entry
+  rsi         Float?
+  bbUpper     Float?
+  bbMiddle    Float?
+  bbLower     Float?
+  atr         Float?
+
+  // Additional context
+  bbDistancePct Float?  // Distance to BB band (%)
+  priceVsMiddle Float?  // Price vs BB middle
+
+  // Market context at entry
+  volumeAtEntry Int?
+  spreadAtEntry Float?
+
+  // Balance tracking
+  balanceBefore Float?
+  balanceAfter  Float?
+
+  // Strategy
+  strategyName String  // e.g., "mean-reversion-v2"
+
+  // Metadata (JSON string for flexible additional data)
+  metadata     String?  // JSON string with extra context
+
   @@index([openedAt])
+  @@index([asset])
+  @@index([strategyName])
+  @@index([result])
+  @@index([tradeMode])
   @@map("trades")
 }
 
