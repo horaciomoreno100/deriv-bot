@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.15.0](///compare/v0.14.0...v0.15.0) (2025-12-01)
+
+### Features
+
+* add Telegram trade alerts to TradeExecutionService 7d7a660
+* add Trade and DailyStats models to Prisma schema d39e2f6
+
+### Bug Fixes
+
+* add tick logging to debug candle reception 44391a6
+* add tradeManager.start() to all trading scripts for position recovery 84410a7
+* always recreate backtester in proximity calculation to ensure updated indicators f73e612
+* correct TP/SL percentage conversion in CryptoScalp v2 b0c2bb0
+* dynamically import Prisma to fix ESM compatibility f12d1ed
+* handle forex market closed gracefully in FVG-LS trader a50eb1d
+* improve proximity logging in CryptoScalp v2 1cc065f
+* improve purchaseTime parsing with validation fallback 373f3a0
+* recreate entryFn on every candle to prevent index mismatch in CryptoScalp v2 a765729
+* resolve critical trading bugs in CryptoScalp and Hybrid-MTF strategies 8f9f211
+* support signal.price in TradeExecutionService for CFD trades 4fc4587
+* sync root Prisma schema Trade model with gateway schema 8ac1bc3
+* use CommonJS import for Prisma client in all ESM files 82c7d87
+* use CommonJS import for Prisma client in ESM context edeb8d2
+* use correct SlackAlerter methods (info/warning instead of sendAlert) e4c84da
+* use createRequire for Prisma in ESM context ea6d491
+* use direct TelegramAlerter instance instead of singleton b95eca2
+* use executeTrade instead of executeSignal in CryptoScalp v2 e270fd0
+* use loadEnvFromRoot for proper env loading in trading scripts b22f223
+* use require for Prisma client to fix ESM compatibility c71fd2f
+
 ## [0.14.0](///compare/v0.13.1...v0.14.0) (2025-11-30)
 
 ### Features
