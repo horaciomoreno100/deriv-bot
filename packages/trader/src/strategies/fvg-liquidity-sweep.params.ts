@@ -69,6 +69,11 @@ export const SYNTHETIC_INDEX_PARAMS: Partial<FVGLiquiditySweepParams> = {
  *
  * Forex moves much less than synthetics - need smaller gap thresholds
  * EUR/USD typical daily range: 0.5-1%, 1-min ATR: ~0.005%
+ *
+ * ML Optimization Results (Dec 2025, 90 days):
+ * - Best PF: 1.41 with RR=1.0, SL=0.15%
+ * - Lower RR (1.0-1.2) outperforms higher RR (2.0+)
+ * - Wider SL buffer (0.15%) reduces whipsaws
  */
 export const FOREX_PARAMS: Partial<FVGLiquiditySweepParams> = {
   swingLength: 5,                    // Faster swings
@@ -78,8 +83,8 @@ export const FOREX_PARAMS: Partial<FVGLiquiditySweepParams> = {
   maxBarsAfterSweep: 30,
   maxBarsForEntry: 20,
   fvgSearchBars: 15,
-  stopLossBufferPct: 0.001,          // 0.1% buffer (~10 pips)
-  takeProfitRR: 1.5,                 // 1.5:1 R:R
+  stopLossBufferPct: 0.0015,         // 0.15% buffer (optimized from 0.1%)
+  takeProfitRR: 1.0,                 // 1:1 R:R (optimized from 1.5)
   cooldownSeconds: 60,               // 1 min cooldown
   minConfidence: 0.65,
   maxZoneAgeBars: 300,
