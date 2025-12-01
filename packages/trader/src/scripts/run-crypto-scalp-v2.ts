@@ -637,12 +637,6 @@ async function main() {
         return;
       }
 
-      // Get entry function (should already be initialized with historical data)
-      const entryFn = entryFunctions.get(asset);
-      if (!entryFn) {
-        return; // Not initialized yet, skip
-      }
-      
       // Check if we have enough candles
       if (history.length < WARM_UP_CANDLES_REQUIRED) {
         return; // Still need more candles
@@ -650,31 +644,34 @@ async function main() {
       
       // Get FastBacktester for this asset
       let backtester = backtesters.get(asset);
-      
-      // Update backtester with new candle (recreate every 10 candles for efficiency)
-      // FastBacktester pre-calculates all indicators, so we recreate periodically
-      if (!backtester || history.length > backtester.length + 10) {
-        backtester = new FastBacktester(history, ['rsi', 'atr', 'adx', 'bb'], {
-          rsiPeriod: 14,
-          atrPeriod: 14,
-          adxPeriod: 14,
-          bbPeriod: 20,
-          bbStdDev: 2,
-        });
-        backtesters.set(asset, backtester);
-        
-        // Recreate entry function with updated candles
-        const preset = getPresetForAsset(asset);
-        const newEntryFn = createCryptoScalpV2EntryFn(history, preset, { enableMTF: true });
-        entryFunctions.set(asset, newEntryFn);
-      }
-      
+
+      // CRITICAL FIX: Always recreate entry function when processing new candle
+      // The entry function uses pre-calculated data (VWAP, volume, 15m trend) that must match
+      // the current history size, otherwise index will be out of bounds
+      backtester = new FastBacktester(history, ['rsi', 'atr', 'adx', 'bb'], {
+        rsiPeriod: 14,
+        atrPeriod: 14,
+        adxPeriod: 14,
+        bbPeriod: 20,
+        bbStdDev: 2,
+      });
+      backtesters.set(asset, backtester);
+
+      // Recreate entry function with updated candles for each new candle
+      const preset = getPresetForAsset(asset);
+      const updatedEntryFn = createCryptoScalpV2EntryFn(history, preset, { enableMTF: true });
+      entryFunctions.set(asset, updatedEntryFn);
+
       // Get indicators snapshot from FastBacktester
       const indicators = backtester.getIndicatorSnapshot(history.length - 1);
 
-      // Check for entry signal
-      const signal = entryFn(history.length - 1, indicators);
-      
+      // Check for entry signal - use LAST index of the newly created entry function
+      const signal = updatedEntryFn(history.length - 1, indicators);
+
+      // Debug: Log indicator values on each candle
+      const { rsi, adx, plusDI, minusDI, bbUpper, bbLower } = indicators as Record<string, number>;
+      console.log(`[${asset}] Candle #${history.length} - RSI: ${rsi?.toFixed(1)}, ADX: ${adx?.toFixed(1)}, +DI: ${plusDI?.toFixed(1)}, -DI: ${minusDI?.toFixed(1)}, BB: ${bbLower?.toFixed(2)}-${bbUpper?.toFixed(2)}, Price: ${candle.close.toFixed(2)}`);
+
       if (signal) {
         const direction = signal.direction === 'CALL' ? 'CALL' : 'PUT';
         const signalObj: Signal = {
