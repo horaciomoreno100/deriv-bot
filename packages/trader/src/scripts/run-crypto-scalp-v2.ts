@@ -19,11 +19,9 @@ import { createCryptoScalpV2EntryFn } from '../backtest/runners/crypto-scalp-v2-
 import { ETH_OPTIMIZED_PRESET, BTC_OPTIMIZED_PRESET } from '../strategies/crypto-scalp/crypto-scalp.params.js';
 import { FastBacktester } from '../backtest/runners/fast-backtester.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
-import dotenv from 'dotenv';
 
 // Load environment variables from project root
 loadEnvFromRoot();
-dotenv.config();
 
 // Configuration
 const STRATEGY_NAME = 'CRYPTOSCALP-V2';

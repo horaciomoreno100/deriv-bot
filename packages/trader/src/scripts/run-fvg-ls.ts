@@ -17,17 +17,15 @@
  *   SYMBOL="frxAUDUSD,frxEURUSD,frxGBPUSD,frxUSDCHF" pnpm --filter @deriv-bot/trader demo:fvg-ls
  */
 
-import { GatewayClient, initSlackAlerts, getTelegramAlerter } from '@deriv-bot/shared';
+import { GatewayClient, initSlackAlerts, getTelegramAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
 import { FVGLiquiditySweepStrategy } from '../strategies/fvg-liquidity-sweep.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
 import { StrategyAccountant } from '../accounting/strategy-accountant.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+loadEnvFromRoot();
 
 // Configuration
 const STRATEGY_NAME = 'FVG-LS';

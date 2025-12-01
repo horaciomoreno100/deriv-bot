@@ -35,10 +35,8 @@ import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
 import { StrategyAccountant } from '../accounting/strategy-accountant.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+loadEnvFromRoot();
 
 // Configuration
 const STRATEGY_NAME = 'HYBRID_MTF';
