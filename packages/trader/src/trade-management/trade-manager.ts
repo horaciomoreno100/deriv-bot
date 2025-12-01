@@ -418,14 +418,17 @@ export class TradeManager extends EventEmitter {
         direction,
         entryPrice: position.buyPrice,
         timestamp: (() => {
-          if (typeof position.purchaseTime === 'number') {
+          if (typeof position.purchaseTime === 'number' && position.purchaseTime > 0) {
             return position.purchaseTime;
           }
           if (position.purchaseTime instanceof Date) {
-            return position.purchaseTime.getTime();
+            const time = position.purchaseTime.getTime();
+            // Check if the Date is valid (not NaN)
+            if (!isNaN(time) && time > 0) {
+              return time;
+            }
           }
-          // Fallback: try to parse or use current time
-          console.warn(`⚠️  Invalid purchaseTime for ${position.contractId}, using current time`);
+          // Fallback: use current time (warning removed - DerivClient handles this now)
           return Date.now();
         })(),
         closed: false,
