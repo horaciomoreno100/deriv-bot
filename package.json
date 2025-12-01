@@ -60,6 +60,12 @@
   "dependencies": {
     "@deriv/deriv-api": "^1.0.15",
     "ml-matrix": "^6.12.1",
-    "ml-random-forest": "^2.1.0"
+    "ml-random-forest": "^2.1.0",
+    "tsx": "^3.14.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "tsx": "^3.14.0"
+    }
   }
 }
