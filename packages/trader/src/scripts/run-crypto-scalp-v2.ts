@@ -700,7 +700,7 @@ async function main() {
 
         // Execute trade
         try {
-          await tradeExecutionService.executeSignal(signalObj);
+          await tradeExecutionService.executeTrade(signalObj);
         } catch (error) {
           console.error(`❌ Error executing trade: ${error}`);
         }
