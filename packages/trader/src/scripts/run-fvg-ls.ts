@@ -373,6 +373,14 @@ async function main() {
       return;
     }
 
+    // CRITICAL: Check position limits BEFORE processing signal
+    // This prevents multiple trades opening for the same asset
+    const canOpen = tradeManager.canOpenTrade(asset);
+    if (!canOpen.allowed) {
+      console.log(`\n❌ Signal rejected for ${asset}: ${canOpen.reason}`);
+      return;
+    }
+
     const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
     const strategyContext = strategyAccountant.getRiskContext(STRATEGY_NAME);
 

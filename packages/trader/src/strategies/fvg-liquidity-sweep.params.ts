@@ -83,8 +83,8 @@ export const FOREX_PARAMS: Partial<FVGLiquiditySweepParams> = {
   maxBarsAfterSweep: 30,
   maxBarsForEntry: 20,
   fvgSearchBars: 15,
-  stopLossBufferPct: 0.0015,         // 0.15% buffer (optimized from 0.1%)
-  takeProfitRR: 1.0,                 // 1:1 R:R (optimized from 1.5)
+  stopLossBufferPct: 0.001,          // 0.10% buffer - tighter for faster trades
+  takeProfitRR: 0.5,                 // 0.5:1 R:R - smaller targets, faster exits
   cooldownSeconds: 60,               // 1 min cooldown
   minConfidence: 0.65,
   maxZoneAgeBars: 300,
