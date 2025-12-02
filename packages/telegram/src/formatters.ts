@@ -469,7 +469,10 @@ export function formatSignalProximities(data: {
         message += `├ *Criteria:*\n`;
         for (const c of prox.criteria) {
           const checkEmoji = c.passed ? '✅' : '❌';
-          message += `│  ${checkEmoji} ${c.name}: \`${c.current.toFixed(2)}\`/\`${c.target.toFixed(2)}\`\n`;
+          // Handle both numeric and string current/target values
+          const currentVal = typeof c.current === 'number' ? c.current.toFixed(2) : String(c.current);
+          const targetVal = typeof c.target === 'number' ? c.target.toFixed(2) : String(c.target);
+          message += `│  ${checkEmoji} ${c.name}: \`${currentVal}\`/\`${targetVal}\`\n`;
         }
       }
 
