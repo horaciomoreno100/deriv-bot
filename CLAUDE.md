@@ -165,3 +165,70 @@ docs/
 ### Enforcement
 
 If you see a .md file in the wrong location, immediately move it to the correct `docs/` subdirectory and update any references to it.
+
+## Strategy Runner Script Rules (CRITICAL)
+
+**When creating or modifying strategy runner scripts (`run-*.ts`), you MUST follow these rules to prevent duplicate trades and race conditions.**
+
+### Required Pattern for Signal Processing
+
+Every `processStrategySignal()` function MUST include these checks in this exact order:
+
+```typescript
+async function processStrategySignal(signal: Signal | null, asset: string) {
+  if (!signal) return;
+
+  // 1. Skip during initialization
+  if (isInitializing || !hasReceivedRealtimeCandle) {
+    console.log(`\n⏸️  Signal ignored during initialization`);
+    return;
+  }
+
+  // 2. CRITICAL: Check position limits BEFORE processing
+  const canOpen = tradeManager.canOpenTrade(asset);
+  if (!canOpen.allowed) {
+    console.log(`\n❌ Signal rejected for ${asset}: ${canOpen.reason}`);
+    return;
+  }
+
+  // 3. CRITICAL: Acquire trade lock to prevent race conditions
+  if (!tradeManager.acquireTradeLock(asset)) {
+    console.log(`\n❌ Signal rejected for ${asset}: Trade already in progress`);
+    return;
+  }
+
+  // 4. Validate balance, reserve stake, etc.
+  // ... validation code ...
+  // If ANY validation fails, MUST call: tradeManager.releaseTradeLock(asset);
+
+  // 5. Execute trade in try/finally block
+  try {
+    const result = await tradeExecutionService.executeTrade(signal, asset);
+    // ... handle result ...
+  } catch (error) {
+    // ... handle error ...
+  } finally {
+    // 6. CRITICAL: ALWAYS release lock after execution
+    tradeManager.releaseTradeLock(asset);
+  }
+}
+```
+
+### Why This Pattern is Required
+
+1. **`canOpenTrade()`** - Checks if there's already an open position for this asset
+2. **`acquireTradeLock()`** - Prevents race conditions when two signals arrive in milliseconds
+3. **`releaseTradeLock()` in finally** - Guarantees lock is released even if trade fails
+
+### Common Mistakes to Avoid
+
+❌ **DON'T** process signals without checking `canOpenTrade()` first
+❌ **DON'T** skip the trade lock mechanism
+❌ **DON'T** forget to release lock on early returns (validation failures)
+❌ **DON'T** put `releaseTradeLock()` only in catch block (use finally)
+
+### Reference Implementations
+
+See these files for correct implementation:
+- `packages/trader/src/scripts/run-hybrid-mtf.ts`
+- `packages/trader/src/scripts/run-fvg-ls.ts`

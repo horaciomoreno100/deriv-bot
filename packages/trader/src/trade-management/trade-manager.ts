@@ -40,6 +40,11 @@ export class TradeManager extends EventEmitter {
   // This is updated from proposal_open_contract updates and used when trade closes externally
   private lastKnownProfit: Map<string, number> = new Map();
 
+  // CRITICAL: Pending trade locks to prevent race conditions
+  // When a trade is being executed, we lock the asset to prevent duplicate trades
+  // This solves the issue where two signals arrive within milliseconds
+  private pendingTradeLocks: Map<string, number> = new Map(); // asset -> timestamp
+
   // Sub-managers
   private smartExitManager: SmartExitManager;
   private trailingStopManager: TrailingStopManager;
@@ -102,9 +107,59 @@ export class TradeManager extends EventEmitter {
 
   /**
    * Check if a new trade can be opened
+   * Also checks pending trade locks to prevent race conditions
    */
   canOpenTrade(asset: string): { allowed: boolean; reason?: string } {
+    // CRITICAL: Check pending trade lock first (prevents race conditions)
+    const lockTime = this.pendingTradeLocks.get(asset);
+    if (lockTime) {
+      const lockAge = Date.now() - lockTime;
+      // Lock expires after 30 seconds (in case of failed trade that didn't release)
+      if (lockAge < 30000) {
+        console.log(`[TradeManager] ⏳ Trade pending for ${asset} (locked ${lockAge}ms ago)`);
+        return {
+          allowed: false,
+          reason: `Trade already pending for ${asset} (locked ${lockAge}ms ago)`,
+        };
+      } else {
+        // Stale lock, remove it
+        console.log(`[TradeManager] 🔓 Removing stale lock for ${asset} (${lockAge}ms old)`);
+        this.pendingTradeLocks.delete(asset);
+      }
+    }
+
     return this.riskManager.canOpenTrade(asset, this.tradeHistory);
+  }
+
+  /**
+   * Acquire a pending trade lock for an asset
+   * Call this BEFORE starting trade execution to prevent race conditions
+   * Returns true if lock acquired, false if already locked
+   */
+  acquireTradeLock(asset: string): boolean {
+    const existingLock = this.pendingTradeLocks.get(asset);
+    if (existingLock) {
+      const lockAge = Date.now() - existingLock;
+      if (lockAge < 30000) {
+        console.log(`[TradeManager] ❌ Cannot acquire lock for ${asset} - already locked`);
+        return false;
+      }
+    }
+
+    this.pendingTradeLocks.set(asset, Date.now());
+    console.log(`[TradeManager] 🔒 Lock acquired for ${asset}`);
+    return true;
+  }
+
+  /**
+   * Release a pending trade lock for an asset
+   * Call this AFTER trade execution completes (success or failure)
+   */
+  releaseTradeLock(asset: string): void {
+    if (this.pendingTradeLocks.has(asset)) {
+      this.pendingTradeLocks.delete(asset);
+      console.log(`[TradeManager] 🔓 Lock released for ${asset}`);
+    }
   }
 
   /**

@@ -381,11 +381,19 @@ async function main() {
       return;
     }
 
+    // CRITICAL: Acquire trade lock to prevent race conditions
+    // If two signals arrive within milliseconds, only the first one should proceed
+    if (!tradeManager.acquireTradeLock(asset)) {
+      console.log(`\n❌ Signal rejected for ${asset}: Trade already in progress`);
+      return;
+    }
+
     const strategyBalance = strategyAccountant.getBalance(STRATEGY_NAME);
     const strategyContext = strategyAccountant.getRiskContext(STRATEGY_NAME);
 
     if (!strategyContext) {
       console.log(`❌ Signal rejected: Strategy context not available`);
+      tradeManager.releaseTradeLock(asset); // Release lock on early exit
       return;
     }
 
@@ -399,12 +407,14 @@ async function main() {
 
     if (stakeAmount > strategyBalance) {
       console.log(`❌ Signal rejected: Insufficient balance`);
+      tradeManager.releaseTradeLock(asset); // Release lock on early exit
       return;
     }
 
     const reserved = strategyAccountant.reserveStake(STRATEGY_NAME, stakeAmount);
     if (!reserved) {
       console.log(`❌ Signal rejected: Could not reserve stake`);
+      tradeManager.releaseTradeLock(asset); // Release lock on early exit
       return;
     }
 
@@ -423,6 +433,9 @@ async function main() {
     } catch (error: any) {
       console.error(`❌ Trade execution error:`, error.message);
       strategyAccountant.releaseStake(STRATEGY_NAME, stakeAmount);
+    } finally {
+      // CRITICAL: Always release the trade lock after execution completes
+      tradeManager.releaseTradeLock(asset);
     }
   }
 
