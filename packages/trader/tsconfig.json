@@ -29,7 +29,8 @@
     "src/backtest/**/*",
     "src/strategies/pivot-reversal.strategy.ts",
     "src/strategies/validation-test.strategy.ts",
-    "src/strategies/vdubus-binary-pro.strategy.ts"
+    "src/strategies/vdubus-binary-pro.strategy.ts",
+    "src/strategies/nfi/**/*"
   ],
   "references": [
     { "path": "../shared" },

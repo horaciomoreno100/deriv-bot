@@ -754,4 +754,301 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
   getParams(): FVGLiquiditySweepParams {
     return { ...this.params };
   }
+
+  /**
+   * Get signal readiness for proximity display
+   * Shows how close the strategy is to generating a signal
+   */
+  getSignalReadiness(
+    candles: Candle[],
+    asset: string
+  ): {
+    asset: string;
+    direction: 'call' | 'put' | 'neutral';
+    overallProximity: number;
+    criteria: Array<{
+      name: string;
+      current: number | string;
+      target: number | string;
+      unit: string;
+      passed: boolean;
+      distance: number;
+    }>;
+    readyToSignal: boolean;
+    missingCriteria: string[];
+  } | null {
+    if (!candles || candles.length < 50) {
+      return null;
+    }
+
+    // Initialize state if needed
+    this.initializeState(asset);
+    const state = this.states[asset]!;
+    const params = getParamsForAsset(asset, this.params);
+
+    const criteria: Array<{
+      name: string;
+      current: number | string;
+      target: number | string;
+      unit: string;
+      passed: boolean;
+      distance: number;
+    }> = [];
+    const missingCriteria: string[] = [];
+
+    // Check cooldown
+    const now = Date.now();
+    const lastTrade = this.lastTradeTime[asset] ?? 0;
+    const cooldownMs = params.cooldownSeconds * 1000;
+    const timeSinceTrade = now - lastTrade;
+    const cooldownOk = timeSinceTrade >= cooldownMs;
+
+    criteria.push({
+      name: 'Cooldown',
+      current: Math.round(timeSinceTrade / 1000),
+      target: params.cooldownSeconds,
+      unit: 's',
+      passed: cooldownOk,
+      distance: cooldownOk ? 0 : Math.round((cooldownMs - timeSinceTrade) / 1000),
+    });
+
+    if (!cooldownOk) {
+      missingCriteria.push(`Cooldown: ${Math.round((cooldownMs - timeSinceTrade) / 1000)}s remaining`);
+    }
+
+    // Check hour filter
+    const candleHour = new Date().getUTCHours();
+    const hourFilterOk = !params.hourFilterEnabled || !params.badHoursUTC.includes(candleHour);
+
+    criteria.push({
+      name: 'Hour Filter',
+      current: `${candleHour}:00 UTC`,
+      target: hourFilterOk ? 'OK' : 'Bad Hour',
+      unit: '',
+      passed: hourFilterOk,
+      distance: hourFilterOk ? 0 : 1,
+    });
+
+    if (!hourFilterOk) {
+      missingCriteria.push(`Hour ${candleHour}:00 UTC is filtered`);
+    }
+
+    // Check liquidity zones
+    const activeZones = state.liquidityZones.filter(z => !z.swept);
+    const hasZones = activeZones.length > 0;
+
+    criteria.push({
+      name: 'Liquidity Zones',
+      current: activeZones.length,
+      target: 1,
+      unit: 'zones',
+      passed: hasZones,
+      distance: hasZones ? 0 : 1,
+    });
+
+    if (!hasZones) {
+      missingCriteria.push('No active liquidity zones detected');
+    }
+
+    // Determine direction based on state and zones
+    let direction: 'call' | 'put' | 'neutral' = 'neutral';
+    let phaseProgress = 0;
+
+    // State machine progress
+    if (state.phase === 'SCANNING') {
+      phaseProgress = 33;
+      // Check proximity to nearest zone for potential sweep
+      if (activeZones.length > 0 && candles.length > 0) {
+        const currentPrice = candles[candles.length - 1]!.close;
+        const sslZones = activeZones.filter(z => z.type === 'SSL');
+        const bslZones = activeZones.filter(z => z.type === 'BSL');
+
+        // Find nearest SSL (below price) and BSL (above price)
+        let nearestSSL: typeof sslZones[0] | null = null;
+        let nearestBSL: typeof bslZones[0] | null = null;
+        let minSSLDist = Infinity;
+        let minBSLDist = Infinity;
+
+        for (const zone of sslZones) {
+          const dist = currentPrice - zone.level;
+          if (dist > 0 && dist < minSSLDist) {
+            minSSLDist = dist;
+            nearestSSL = zone;
+          }
+        }
+
+        for (const zone of bslZones) {
+          const dist = zone.level - currentPrice;
+          if (dist > 0 && dist < minBSLDist) {
+            minBSLDist = dist;
+            nearestBSL = zone;
+          }
+        }
+
+        // Calculate proximity to sweep
+        const priceRange = Math.max(...candles.slice(-50).map(c => c.high)) -
+                          Math.min(...candles.slice(-50).map(c => c.low));
+
+        if (nearestSSL && nearestBSL) {
+          // Both zones exist - show proximity to nearest
+          if (minSSLDist < minBSLDist) {
+            direction = 'call'; // SSL sweep would lead to CALL
+            const proximityPct = Math.max(0, 100 - (minSSLDist / priceRange) * 100);
+            criteria.push({
+              name: 'Distance to SSL',
+              current: minSSLDist.toFixed(5),
+              target: nearestSSL.level.toFixed(5),
+              unit: '',
+              passed: minSSLDist < priceRange * 0.01,
+              distance: Math.round(100 - proximityPct),
+            });
+          } else {
+            direction = 'put'; // BSL sweep would lead to PUT
+            const proximityPct = Math.max(0, 100 - (minBSLDist / priceRange) * 100);
+            criteria.push({
+              name: 'Distance to BSL',
+              current: minBSLDist.toFixed(5),
+              target: nearestBSL.level.toFixed(5),
+              unit: '',
+              passed: minBSLDist < priceRange * 0.01,
+              distance: Math.round(100 - proximityPct),
+            });
+          }
+        } else if (nearestSSL) {
+          direction = 'call';
+          const proximityPct = Math.max(0, 100 - (minSSLDist / priceRange) * 100);
+          criteria.push({
+            name: 'Distance to SSL',
+            current: minSSLDist.toFixed(5),
+            target: nearestSSL.level.toFixed(5),
+            unit: '',
+            passed: minSSLDist < priceRange * 0.01,
+            distance: Math.round(100 - proximityPct),
+          });
+        } else if (nearestBSL) {
+          direction = 'put';
+          const proximityPct = Math.max(0, 100 - (minBSLDist / priceRange) * 100);
+          criteria.push({
+            name: 'Distance to BSL',
+            current: minBSLDist.toFixed(5),
+            target: nearestBSL.level.toFixed(5),
+            unit: '',
+            passed: minBSLDist < priceRange * 0.01,
+            distance: Math.round(100 - proximityPct),
+          });
+        }
+      }
+
+      criteria.push({
+        name: 'Phase',
+        current: 'SCANNING',
+        target: 'SWEEP_DETECTED',
+        unit: '',
+        passed: false,
+        distance: 67,
+      });
+      missingCriteria.push('Waiting for liquidity sweep');
+
+    } else if (state.phase === 'SWEEP_DETECTED') {
+      phaseProgress = 66;
+      direction = state.activeSweep?.expectedDirection === 'CALL' ? 'call' : 'put';
+
+      criteria.push({
+        name: 'Phase',
+        current: 'SWEEP_DETECTED',
+        target: 'WAITING_ENTRY',
+        unit: '',
+        passed: true,
+        distance: 34,
+      });
+
+      criteria.push({
+        name: 'Sweep Type',
+        current: state.activeSweep?.type || 'N/A',
+        target: state.activeSweep?.expectedDirection || 'N/A',
+        unit: '',
+        passed: true,
+        distance: 0,
+      });
+
+      criteria.push({
+        name: 'Bars Since Sweep',
+        current: state.activeSweep?.barsSinceSweep || 0,
+        target: params.fvgSearchBars,
+        unit: 'bars',
+        passed: (state.activeSweep?.barsSinceSweep || 0) <= params.fvgSearchBars,
+        distance: 0,
+      });
+
+      missingCriteria.push('Waiting for FVG formation after sweep');
+
+    } else if (state.phase === 'WAITING_ENTRY') {
+      phaseProgress = 90;
+      direction = state.activeSweep?.expectedDirection === 'CALL' ? 'call' : 'put';
+
+      criteria.push({
+        name: 'Phase',
+        current: 'WAITING_ENTRY',
+        target: 'SIGNAL',
+        unit: '',
+        passed: true,
+        distance: 10,
+      });
+
+      if (state.activeFVG) {
+        const currentPrice = candles[candles.length - 1]?.close || 0;
+        const fvgMid = state.activeFVG.midpoint;
+        const distToFVG = Math.abs(currentPrice - fvgMid);
+        const fvgSize = state.activeFVG.top - state.activeFVG.bottom;
+
+        criteria.push({
+          name: 'FVG Zone',
+          current: `${state.activeFVG.bottom.toFixed(5)} - ${state.activeFVG.top.toFixed(5)}`,
+          target: fvgMid.toFixed(5),
+          unit: '',
+          passed: true,
+          distance: 0,
+        });
+
+        criteria.push({
+          name: 'Distance to FVG',
+          current: distToFVG.toFixed(5),
+          target: '0',
+          unit: '',
+          passed: distToFVG <= fvgSize,
+          distance: Math.round((distToFVG / fvgSize) * 100),
+        });
+
+        if (distToFVG > fvgSize) {
+          missingCriteria.push(`Price needs to enter FVG zone (${distToFVG.toFixed(5)} away)`);
+        }
+      }
+
+      criteria.push({
+        name: 'Bars Waiting',
+        current: state.barsInState,
+        target: params.maxBarsForEntry,
+        unit: 'bars',
+        passed: state.barsInState <= params.maxBarsForEntry,
+        distance: 0,
+      });
+
+      missingCriteria.push('Waiting for price to enter FVG zone');
+    }
+
+    // Calculate overall proximity
+    const passedCriteria = criteria.filter(c => c.passed).length;
+    const totalCriteria = criteria.length;
+    const baseProximity = (passedCriteria / totalCriteria) * 100;
+    const overallProximity = Math.round(Math.min(100, (baseProximity + phaseProgress) / 2));
+
+    return {
+      asset,
+      direction,
+      overallProximity,
+      criteria,
+      readyToSignal: state.phase === 'WAITING_ENTRY' && cooldownOk && hourFilterOk,
+      missingCriteria,
+    };
+  }
 }

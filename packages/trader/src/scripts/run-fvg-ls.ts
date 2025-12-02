@@ -464,6 +464,67 @@ async function main() {
 
   await subscribeWithRetry();
 
+  // Signal proximity check - publish every 10 seconds
+  const PROXIMITY_CHECK_INTERVAL = 10000;
+  setInterval(async () => {
+    // Check connection first - skip entire check if not connected
+    const isConnected = gatewayClient.isConnected();
+    if (!isConnected) {
+      return;
+    }
+
+    for (const symbol of SYMBOLS) {
+      const strategy = strategies.get(symbol);
+      const buffer = candleBuffers.get(symbol) || [];
+
+      if (!strategy || buffer.length < 50) {
+        continue;
+      }
+
+      try {
+        const readiness = strategy.getSignalReadiness(buffer, symbol);
+        if (readiness) {
+          // Double-check connection before publishing
+          if (!gatewayClient.isConnected()) {
+            continue;
+          }
+
+          // Convert criteria format to match Gateway expectations
+          const criteria = readiness.criteria.map((c) => ({
+            name: c.name,
+            current: c.current,
+            target: c.target,
+            unit: c.unit || '',
+            passed: c.passed,
+            distance: c.distance || 0,
+          }));
+
+          await gatewayClient.publishSignalProximity({
+            strategy: STRATEGY_NAME,
+            asset: symbol,
+            direction: readiness.direction,
+            overallProximity: readiness.overallProximity,
+            proximity: readiness.overallProximity,
+            criteria,
+            readyToSignal: readiness.readyToSignal,
+            missingCriteria: readiness.missingCriteria || [],
+          });
+          console.log(`[Signal Proximity] Published for ${symbol}: ${readiness.direction} ${readiness.overallProximity}%`);
+        }
+      } catch (error: any) {
+        // Silently ignore connection errors
+        const errorMsg = error?.message || '';
+        if (errorMsg.includes('Not connected') || errorMsg.includes('Connection closed')) {
+          return;
+        }
+        // Only log real errors
+        if (gatewayClient.isConnected()) {
+          console.error(`[Signal Proximity] Error for ${symbol}:`, errorMsg);
+        }
+      }
+    }
+  }, PROXIMITY_CHECK_INTERVAL);
+
   // Handle ticks
   gatewayClient.on('tick', async (tick: Tick) => {
     const candle = processTick(tick);
