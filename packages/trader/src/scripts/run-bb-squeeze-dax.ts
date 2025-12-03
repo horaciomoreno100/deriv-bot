@@ -1,5 +1,5 @@
 /**
- * BB Squeeze Strategy for DAX (OTC_GDAXI)
+ * BB Squeeze Strategy for DAX (OTC_GDAXI) - Optimized
  *
  * Optimized configuration found via grid search (16,200 combinations):
  * - BB(15,2.5) KC(2) RSI(7,25/60) TP/SL(0.20%/0.80%)
@@ -25,6 +25,7 @@ dotenv.config();
 // Configuration
 const TRADE_MODE: TradeMode = (process.env.TRADE_MODE as TradeMode) || 'cfd';
 const SYMBOL = 'OTC_GDAXI'; // DAX Germany 40
+const SYMBOLS = [SYMBOL];
 const INITIAL_BALANCE = parseFloat(process.env.INITIAL_CAPITAL || '1000');
 const ACCOUNT_LOGINID = process.env.ACCOUNT_LOGINID;
 
@@ -46,7 +47,6 @@ let isInitializing = true;
 const warmUpCandlesPerAsset = new Map<string, number>();
 let hasReceivedRealtimeCandle = false;
 const WARM_UP_CANDLES_REQUIRED = 50; // Need 50 candles for BB and KC calculations
-// Track processed trades to avoid double-counting
 const processedTradeResults = new Set<string>();
 
 // Trade Manager instance
@@ -59,13 +59,13 @@ let tradeExecutionService: TradeExecutionService;
 let slackAlerter: SlackAlerter | null = null;
 
 /**
- * Process tick and build candle (per asset)
+ * Process tick and build candle
  */
 function processTick(tick: Tick): Candle | null {
   const asset = tick.asset;
   const tickTime = tick.timestamp;
   const candleTimeMs = Math.floor(tickTime / (TIMEFRAME * 1000)) * (TIMEFRAME * 1000);
-  const candleTime = Math.floor(candleTimeMs / 1000); // Convert to seconds
+  const candleTime = Math.floor(candleTimeMs / 1000);
 
   const lastCandleTime = lastCandleTimes.get(asset) || 0;
   const currentCandle = currentCandles.get(asset);
@@ -74,7 +74,6 @@ function processTick(tick: Tick): Candle | null {
     const completedCandle = currentCandle;
     lastCandleTimes.set(asset, candleTime);
 
-    // Start new candle
     const newCandle: Partial<Candle> = {
       asset: tick.asset,
       timeframe: TIMEFRAME,
@@ -87,12 +86,10 @@ function processTick(tick: Tick): Candle | null {
     };
     currentCandles.set(asset, newCandle);
 
-    // Return completed candle if valid
     if (completedCandle && completedCandle.open && completedCandle.close) {
       return completedCandle as Candle;
     }
   } else if (currentCandle) {
-    // Update current candle
     currentCandle.high = Math.max(currentCandle.high || tick.price, tick.price);
     currentCandle.low = Math.min(currentCandle.low || tick.price, tick.price);
     currentCandle.close = tick.price;
@@ -108,20 +105,17 @@ function processTick(tick: Tick): Candle | null {
 async function processStrategySignal(signal: Signal | null, asset: string) {
   if (!signal) return;
 
-  // Skip during initialization
   if (isInitializing || !hasReceivedRealtimeCandle) {
     console.log(`\n⏸️  Signal ignored during initialization`);
     return;
   }
 
-  // CRITICAL: Check position limits BEFORE processing
   const canOpen = tradeManager.canOpenTrade(asset);
   if (!canOpen.allowed) {
     console.log(`\n❌ Signal rejected for ${asset}: ${canOpen.reason}`);
     return;
   }
 
-  // CRITICAL: Acquire trade lock to prevent race conditions
   if (!tradeManager.acquireTradeLock(asset)) {
     console.log(`\n❌ Signal rejected for ${asset}: Trade already in progress`);
     return;
@@ -129,7 +123,6 @@ async function processStrategySignal(signal: Signal | null, asset: string) {
 
   console.log(`\n⚡ Signal detected for ${asset}:`, signal);
 
-  // Check if we have enough balance to open a trade
   const currentBalance = tradeManager.getAvailableBalance();
   if (currentBalance < INITIAL_BALANCE * 0.1) {
     console.log(`\n❌ Insufficient balance: $${currentBalance.toFixed(2)}`);
@@ -137,32 +130,26 @@ async function processStrategySignal(signal: Signal | null, asset: string) {
     return;
   }
 
-  // Calculate stake based on current balance and risk percentage
   const riskPercentage = TRADE_MODE === 'binary' ? 0.01 : RISK_PERCENTAGE_CFD;
   const calculatedStake = currentBalance * riskPercentage;
 
-  // Reserve stake amount before opening trade
   if (!tradeManager.reserveStake(asset, calculatedStake)) {
     console.log(`\n❌ Cannot reserve stake: $${calculatedStake.toFixed(2)}`);
     tradeManager.releaseTradeLock(asset);
     return;
   }
 
-  // Execute trade via TradeExecutionService
   try {
     const result = await tradeExecutionService.executeTrade(signal, asset);
     console.log(`\n${result.success ? '✅' : '❌'} ${result.message}`);
 
     if (!result.success) {
-      // Release reserved stake if trade failed
       tradeManager.releaseStake(asset);
     }
   } catch (error) {
     console.error(`\n❌ Trade execution failed:`, error);
-    // Release reserved stake on error
     tradeManager.releaseStake(asset);
   } finally {
-    // CRITICAL: ALWAYS release lock after execution
     tradeManager.releaseTradeLock(asset);
   }
 }
@@ -215,16 +202,22 @@ async function main() {
   await gatewayClient.connect();
   console.log('✅ Connected to gateway\n');
 
-  // Initialize Trade Manager
-  tradeManager = new TradeManager({
-    initialBalance: INITIAL_BALANCE,
-    maxTradesPerSymbol: MAX_TRADES_PER_SYMBOL,
-    reserveBalanceEnabled: true,
-    maxBalanceReservePercentage: 50, // Max 50% of balance reserved
-  });
-
   // Initialize Trade Adapter
   const tradeAdapter = new UnifiedTradeAdapter(TRADE_MODE, gatewayClient);
+
+  // Initialize Trade Manager
+  tradeManager = new TradeManager(gatewayClient, tradeAdapter, SYMBOLS, {
+    pollingInterval: 30000,
+    smartExit: {
+      maxTradeDuration: 30 * 60 * 1000,      // 30 min max for DAX
+      extremeMaxDuration: 45 * 60 * 1000,    // 45 min extreme max
+      minTradeDuration: 60 * 1000,           // 1 min minimum
+      earlyExitTpPct: 0.75,                  // Exit at 75% TP
+    },
+    trailingStop: {
+      enabled: false,
+    },
+  });
 
   // Initialize Trade Execution Service
   tradeExecutionService = new TradeExecutionService(
@@ -276,44 +269,37 @@ async function main() {
 
   // Initialize Strategy with optimized DAX parameters
   const strategy = new BBSqueezeStrategy(SYMBOL, {
-    // Optimized parameters from grid search
-    bbPeriod: 15,           // Shorter period for faster signals
-    bbStdDev: 2.5,          // Wider bands for DAX volatility
-    kcPeriod: 20,           // Standard KC period
-    kcMultiplier: 2.0,      // Wider KC for squeeze detection
-    rsiPeriod: 7,           // Fast RSI for scalping
+    bbPeriod: 15,
+    bbStdDev: 2.5,
+    kcPeriod: 20,
+    kcMultiplier: 2.0,
+    rsiPeriod: 7,
     takeProfitPct: 0.002,   // 0.20% TP
-    stopLossPct: 0.008,     // 0.80% SL (1:4 ratio - tight TP, wide SL)
-    cooldownSeconds: 60,    // 1 minute cooldown
+    stopLossPct: 0.008,     // 0.80% SL
+    cooldownSeconds: 60,
     minCandles: 50,
-    // Filters
-    skipSaturday: false,    // DAX doesn't trade weekends anyway
-    enableTimeFilter: false,// Disabled - DAX has limited trading hours
-    enableRSIFilter: false, // Disabled - using custom RSI thresholds
+    skipSaturday: false,
+    enableTimeFilter: false,
+    enableRSIFilter: false,
     enableNewsFilter: false,
-    assetType: 'commodities', // Treat as commodities (indices)
+    assetType: 'commodities',
   }, {
-    // RSI thresholds for mean reversion
-    rsiOversold: 25,  // Optimized: More aggressive than default
-    rsiOverbought: 60, // Optimized: Asymmetric (25/60 vs 45/55)
+    rsiOversold: 25,
+    rsiOverbought: 60,
   });
 
   // Initialize Strategy Engine
   const strategyEngine = new StrategyEngine();
   strategyEngine.registerStrategy(SYMBOL, strategy);
 
-  // Subscribe to symbol
   console.log(`📡 Subscribing to ${SYMBOL}...\n`);
   await gatewayClient.subscribeTicks([SYMBOL]);
 
   // Listen to ticks
   gatewayClient.on('tick', async (tick: Tick) => {
-    // Build candle from tick
     const completedCandle = processTick(tick);
-
     if (!completedCandle) return;
 
-    // Count warm-up candles
     if (isInitializing) {
       const currentCount = warmUpCandlesPerAsset.get(tick.asset) || 0;
       warmUpCandlesPerAsset.set(tick.asset, currentCount + 1);
@@ -327,13 +313,8 @@ async function main() {
       }
     }
 
-    // Add candle to strategy engine
     strategyEngine.addCandle(completedCandle);
-
-    // Get signal from strategy
     const signal = await strategyEngine.getSignal(tick.asset);
-
-    // Process signal
     await processStrategySignal(signal, tick.asset);
   });
 
