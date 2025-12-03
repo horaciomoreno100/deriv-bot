@@ -289,7 +289,7 @@ async function main() {
   });
 
   console.log(`📡 Subscribing to ${SYMBOL}...\n`);
-  await gatewayClient.subscribeTicks([SYMBOL]);
+  await gatewayClient.follow(SYMBOLS);
 
   // Listen to ticks
   gatewayClient.on('tick', async (tick: Tick) => {
