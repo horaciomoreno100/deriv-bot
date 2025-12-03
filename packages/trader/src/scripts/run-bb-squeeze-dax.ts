@@ -12,7 +12,6 @@
 
 import dotenv from 'dotenv';
 import { GatewayClient, initSlackAlerts, type SlackAlerter } from '@deriv-bot/shared';
-import { StrategyEngine } from '../strategy/strategy-engine.js';
 import { BBSqueezeStrategy } from '../strategies/bb-squeeze.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
@@ -48,6 +47,7 @@ const warmUpCandlesPerAsset = new Map<string, number>();
 let hasReceivedRealtimeCandle = false;
 const WARM_UP_CANDLES_REQUIRED = 50; // Need 50 candles for BB and KC calculations
 const processedTradeResults = new Set<string>();
+const candleBuffers = new Map<string, Candle[]>();
 
 // Trade Manager instance
 let tradeManager: TradeManager;
@@ -288,10 +288,6 @@ async function main() {
     rsiOverbought: 60,
   });
 
-  // Initialize Strategy Engine
-  const strategyEngine = new StrategyEngine();
-  strategyEngine.registerStrategy(SYMBOL, strategy);
-
   console.log(`📡 Subscribing to ${SYMBOL}...\n`);
   await gatewayClient.subscribeTicks([SYMBOL]);
 
@@ -300,22 +296,50 @@ async function main() {
     const completedCandle = processTick(tick);
     if (!completedCandle) return;
 
-    if (isInitializing) {
-      const currentCount = warmUpCandlesPerAsset.get(tick.asset) || 0;
-      warmUpCandlesPerAsset.set(tick.asset, currentCount + 1);
+    const asset = completedCandle.asset;
+    const buffer = candleBuffers.get(asset) || [];
+    buffer.push(completedCandle);
 
-      if (currentCount + 1 >= WARM_UP_CANDLES_REQUIRED) {
-        console.log(`\n✅ Warm-up complete for ${tick.asset} (${currentCount + 1} candles)`);
+    // Keep buffer size manageable (keep last 200 candles)
+    if (buffer.length > 200) {
+      buffer.shift();
+    }
+    candleBuffers.set(asset, buffer);
+
+    // Track warm-up
+    const warmUpCount = warmUpCandlesPerAsset.get(asset) || 0;
+    if (warmUpCount < WARM_UP_CANDLES_REQUIRED) {
+      warmUpCandlesPerAsset.set(asset, warmUpCount + 1);
+      if (warmUpCount + 1 === WARM_UP_CANDLES_REQUIRED) {
+        console.log(`\n✅ Warm-up complete for ${asset} (${warmUpCount + 1} candles)`);
         isInitializing = false;
         hasReceivedRealtimeCandle = true;
       } else {
-        process.stdout.write(`\r🔄 Warming up ${tick.asset}: ${currentCount + 1}/${WARM_UP_CANDLES_REQUIRED} candles`);
+        process.stdout.write(`\r🔄 Warming up ${asset}: ${warmUpCount + 1}/${WARM_UP_CANDLES_REQUIRED} candles`);
       }
+      return;
     }
 
-    strategyEngine.addCandle(completedCandle);
-    const signal = await strategyEngine.getSignal(tick.asset);
-    await processStrategySignal(signal, tick.asset);
+    if (!hasReceivedRealtimeCandle) {
+      hasReceivedRealtimeCandle = true;
+    }
+
+    if (isInitializing) {
+      isInitializing = false;
+      console.log('\n🚀 Strategy is LIVE and ready to trade!\n');
+    }
+
+    // Process strategy signal
+    try {
+      const signal = await strategy.onCandle(completedCandle, {
+        candles: buffer,
+        balance: balance,
+      });
+
+      await processStrategySignal(signal, asset);
+    } catch (error: any) {
+      console.error(`❌ Strategy error for ${asset}:`, error.message);
+    }
   });
 
   // Error handling
