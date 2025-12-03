@@ -133,7 +133,9 @@ export class TradeExecutionService {
     }
 
     // Check if we can open a new trade (risk management - local check)
-    const canOpen = this.tradeManager.canOpenTrade(asset);
+    // Note: skipLockCheck=true because the calling runner already acquired the lock
+    // This prevents double-lock rejection when runner calls acquireTradeLock() before executeTrade()
+    const canOpen = this.tradeManager.canOpenTrade(asset, true);
     if (!canOpen.allowed) {
       console.log(`\n❌ Trade rejected: ${canOpen.reason}`);
       return {

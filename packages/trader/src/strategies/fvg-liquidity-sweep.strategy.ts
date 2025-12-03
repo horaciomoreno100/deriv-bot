@@ -482,9 +482,12 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
     // Get asset-specific params
     const params = getParamsForAsset(asset, this.params);
 
-    // Increment bar counter
+    // Use array index (not absolute counter) - critical for rotating buffers
+    // currentIndex is the position of the CURRENT candle in the candles array
+    const currentIndex = candles.length - 1;
+
+    // Increment bar counter (only for logging/cooldown purposes)
     this.barIndex[asset] = (this.barIndex[asset] ?? 0) + 1;
-    const currentIndex = this.barIndex[asset]!;
 
     const state = this.states[asset]!;
     state.barsInState++;
@@ -501,7 +504,7 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
       const candleHour = new Date(candle.timestamp * 1000).getUTCHours();
       if (params.badHoursUTC.includes(candleHour)) {
         // Only log occasionally to avoid spam
-        if (currentIndex % 60 === 0) {
+        if (this.barIndex[asset]! % 60 === 0) {
           console.log(`[FVG-LS] ${asset} | Hour ${candleHour}:00 UTC filtered - skipping`);
         }
         return null;
@@ -515,7 +518,7 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
     }
 
     // Update swings and zones periodically
-    if (currentIndex % 5 === 0 || state.swings.length === 0) {
+    if (this.barIndex[asset]! % 5 === 0 || state.swings.length === 0) {
       state.swings = this.detectSwings(candles, params.swingLength);
       state.liquidityZones = this.detectLiquidityZones(
         state.swings,

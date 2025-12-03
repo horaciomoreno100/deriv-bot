@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.17.0](///compare/v0.15.1...v0.17.0) (2025-12-03)
+
+### Features
+
+* add signal proximity to FVG-LS strategy df91498
+
+### Bug Fixes
+
+* add trade lock mechanism to prevent race condition duplicates f1433b0
+* add trade lock pattern to CryptoScalp v2 to prevent race conditions 744fb58
+* handle string values in signal proximity criteria display f4c6a89
+* prevent multiple trades per asset in FVG-LS forex strategy 860c828
+
+## [0.16.0](///compare/v0.15.1...v0.16.0) (2025-12-03)
+
+### Features
+
+* add signal proximity to FVG-LS strategy df91498
+
+### Bug Fixes
+
+* add trade lock mechanism to prevent race condition duplicates f1433b0
+* add trade lock pattern to CryptoScalp v2 to prevent race conditions 744fb58
+* handle string values in signal proximity criteria display f4c6a89
+* prevent multiple trades per asset in FVG-LS forex strategy 860c828
+
 ## [0.15.1](///compare/v0.15.0...v0.15.1) (2025-12-01)
 
 ### Bug Fixes

@@ -108,23 +108,29 @@ export class TradeManager extends EventEmitter {
   /**
    * Check if a new trade can be opened
    * Also checks pending trade locks to prevent race conditions
+   *
+   * @param asset - The asset symbol
+   * @param skipLockCheck - Skip lock check (use when caller already holds the lock)
    */
-  canOpenTrade(asset: string): { allowed: boolean; reason?: string } {
+  canOpenTrade(asset: string, skipLockCheck = false): { allowed: boolean; reason?: string } {
     // CRITICAL: Check pending trade lock first (prevents race conditions)
-    const lockTime = this.pendingTradeLocks.get(asset);
-    if (lockTime) {
-      const lockAge = Date.now() - lockTime;
-      // Lock expires after 30 seconds (in case of failed trade that didn't release)
-      if (lockAge < 30000) {
-        console.log(`[TradeManager] ⏳ Trade pending for ${asset} (locked ${lockAge}ms ago)`);
-        return {
-          allowed: false,
-          reason: `Trade already pending for ${asset} (locked ${lockAge}ms ago)`,
-        };
-      } else {
-        // Stale lock, remove it
-        console.log(`[TradeManager] 🔓 Removing stale lock for ${asset} (${lockAge}ms old)`);
-        this.pendingTradeLocks.delete(asset);
+    // Skip if caller already holds the lock (e.g., TradeExecutionService called from runner)
+    if (!skipLockCheck) {
+      const lockTime = this.pendingTradeLocks.get(asset);
+      if (lockTime) {
+        const lockAge = Date.now() - lockTime;
+        // Lock expires after 30 seconds (in case of failed trade that didn't release)
+        if (lockAge < 30000) {
+          console.log(`[TradeManager] ⏳ Trade pending for ${asset} (locked ${lockAge}ms ago)`);
+          return {
+            allowed: false,
+            reason: `Trade already pending for ${asset} (locked ${lockAge}ms ago)`,
+          };
+        } else {
+          // Stale lock, remove it
+          console.log(`[TradeManager] 🔓 Removing stale lock for ${asset} (${lockAge}ms old)`);
+          this.pendingTradeLocks.delete(asset);
+        }
       }
     }
 
