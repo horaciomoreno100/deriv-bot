@@ -16,9 +16,10 @@ module.exports = {
   apps: [
     {
       name: 'trader-pullback-window',
-      script: 'dist/scripts/run-pullback-window.js',
+      script: 'src/scripts/run-pullback-window.ts',
       cwd: '/opt/apps/deriv-bot/packages/trader',
-      interpreter: 'node',
+      interpreter: 'npx',
+      interpreter_args: 'tsx',
 
       env: {
         NODE_ENV: 'production',
