@@ -205,7 +205,12 @@ async function main() {
   }
 
   // Initialize Gateway Client
-  const gatewayClient = new GatewayClient('ws://localhost:3002');
+  const gatewayClient = new GatewayClient({
+    url: process.env.GATEWAY_WS_URL || 'ws://localhost:3000',
+    autoReconnect: true,
+    reconnectInterval: 5000,
+    enableLogging: false,
+  });
 
   await gatewayClient.connect();
   console.log('✅ Connected to gateway\n');
