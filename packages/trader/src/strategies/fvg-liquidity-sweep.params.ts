@@ -234,6 +234,54 @@ export const AGGRESSIVE_PARAMS: Partial<FVGLiquiditySweepParams> = {
 };
 
 /**
+ * SCALPING AGGRESSIVE preset (5-10 min max duration)
+ *
+ * Ultra-fast scalping for forex with tight TP/SL
+ * - Max trade duration: 10 minutes
+ * - TP: 0.2% | SL: 0.15%
+ * - Early exit at 40% TP
+ */
+export const SCALPING_AGGRESSIVE_PARAMS: Partial<FVGLiquiditySweepParams> = {
+  swingLength: 3,                    // Fast swing detection
+  liquidityRangePct: 0.003,          // 0.3% range (tight zones)
+  minSwingsForZone: 2,
+  minFVGSizePct: 0.00003,            // 0.003% minimum gap (3 pips)
+  maxBarsAfterSweep: 10,             // Quick entry window
+  maxBarsForEntry: 5,                // 5 bars max to enter
+  fvgSearchBars: 8,                  // Search less bars
+  stopLossBufferPct: 0.0015,         // 0.15% SL buffer
+  takeProfitRR: 1.33,                // 0.2% TP / 0.15% SL = 1.33:1
+  minConfidence: 0.60,               // Lower threshold for more trades
+  cooldownSeconds: 30,               // 30 seconds between trades
+  hourFilterEnabled: true,
+  badHoursUTC: [4, 5, 9, 17, 21, 23],
+};
+
+/**
+ * ULTRA SCALPING preset (3-5 min max duration)
+ *
+ * Hyper-fast scalping for maximum frequency
+ * - Max trade duration: 5 minutes
+ * - TP: 0.15% | SL: 0.10%
+ * - Early exit at 30% TP
+ */
+export const ULTRA_SCALPING_PARAMS: Partial<FVGLiquiditySweepParams> = {
+  swingLength: 3,                    // Fast swing detection
+  liquidityRangePct: 0.002,          // 0.2% range (very tight)
+  minSwingsForZone: 2,
+  minFVGSizePct: 0.00002,            // 0.002% minimum gap (2 pips)
+  maxBarsAfterSweep: 8,              // Very quick entry window
+  maxBarsForEntry: 3,                // 3 bars max to enter
+  fvgSearchBars: 5,                  // Search very few bars
+  stopLossBufferPct: 0.001,          // 0.10% SL buffer
+  takeProfitRR: 1.5,                 // 0.15% TP / 0.10% SL = 1.5:1
+  minConfidence: 0.55,               // Even lower threshold
+  cooldownSeconds: 20,               // 20 seconds between trades
+  hourFilterEnabled: true,
+  badHoursUTC: [4, 5, 9, 17, 21, 23],
+};
+
+/**
  * Conservative preset (higher quality setups)
  */
 export const CONSERVATIVE_PARAMS: Partial<FVGLiquiditySweepParams> = {

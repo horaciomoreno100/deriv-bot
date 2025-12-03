@@ -19,6 +19,12 @@ import {
   quickExportChart,
   createFVGLiquiditySweepStrategy,
 } from '../backtest/index.js';
+import {
+  SCALPING_AGGRESSIVE_PARAMS,
+  ULTRA_SCALPING_PARAMS,
+  FOREX_PARAMS,
+  type FVGLiquiditySweepParams,
+} from '../strategies/fvg-liquidity-sweep.params.js';
 
 // Configuration from environment
 const ASSETS = (process.env.ASSET ?? 'R_75,R_100').split(',').map(a => a.trim());
@@ -26,11 +32,27 @@ const DAYS = parseInt(process.env.DAYS ?? '7', 10);
 const INITIAL_BALANCE = parseFloat(process.env.INITIAL_BALANCE ?? '1000');
 const MULTIPLIER = parseFloat(process.env.MULTIPLIER ?? '100');
 const STAKE_PCT = parseFloat(process.env.STAKE_PCT ?? '0.02');
+const PRESET = process.env.PRESET ?? 'default'; // default, scalping_aggressive, ultra_scalping
 
 // Analysis flags
 const RUN_MONTE_CARLO = process.env.MONTE_CARLO !== 'false';
 const EXPORT_CHART = process.env.CHART !== 'false';
 const EXPORT_JSON = process.env.JSON !== 'false';
+
+// Preset mapping
+function getPresetParams(preset: string): Partial<FVGLiquiditySweepParams> | undefined {
+  switch (preset.toLowerCase()) {
+    case 'scalping_aggressive':
+      return SCALPING_AGGRESSIVE_PARAMS;
+    case 'ultra_scalping':
+      return ULTRA_SCALPING_PARAMS;
+    case 'forex':
+      return FOREX_PARAMS;
+    case 'default':
+    default:
+      return undefined; // Use asset-specific defaults
+  }
+}
 
 interface AssetResult {
   asset: string;
@@ -120,7 +142,9 @@ async function runBacktestForAsset(asset: string): Promise<AssetResult | null> {
 
   // Create strategy
   console.log(`\n📊 Strategy: FVG-Liquidity-Sweep for ${asset}`);
-  const strategy = createFVGLiquiditySweepStrategy(asset);
+  const presetParams = getPresetParams(PRESET);
+  const strategy = createFVGLiquiditySweepStrategy(asset, presetParams);
+  console.log(`   Preset: ${PRESET}${presetParams ? ' (custom params)' : ' (asset defaults)'}`);
   console.log(`   Required indicators: ${strategy.requiredIndicators().join(', ')}`);
 
   // Run backtest
@@ -191,6 +215,7 @@ async function main() {
   console.log();
   console.log(`Assets: ${ASSETS.join(', ')}`);
   console.log(`Days: ${DAYS}`);
+  console.log(`Preset: ${PRESET}`);
   console.log(`Initial Balance: $${INITIAL_BALANCE}`);
   console.log(`Stake: ${(STAKE_PCT * 100).toFixed(1)}%`);
   console.log(`Multiplier: x${MULTIPLIER}`);

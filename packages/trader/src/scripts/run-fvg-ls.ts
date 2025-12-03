@@ -1,11 +1,18 @@
 /**
- * FVG Liquidity Sweep Strategy v1.0.0 - Live Trading
+ * FVG Liquidity Sweep Strategy v2.0.0 - SCALPING MODE
  *
- * Strategy: Combine Liquidity Sweep detection with FVG entry
+ * Strategy: Fast scalping combining Liquidity Sweep detection with FVG entry
  * - Detects liquidity sweeps (stop hunts)
  * - Finds FVG formed after sweep
  * - Enters when price returns to FVG
  * - Hour-based filtering to avoid low win-rate periods
+ *
+ * SCALPING CONFIGURATION:
+ * - Max Trade Duration: 10 minutes (was 60 min)
+ * - Extreme Max Duration: 15 minutes (was 120 min)
+ * - TP: 0.2% (was 0.5%)
+ * - SL: 0.15% (was 0.3%)
+ * - Early Exit: 60% TP (was 75%)
  *
  * Optimized for Forex pairs with specific hour filters:
  * - frxAUDUSD: +11% improvement with hour filter
@@ -153,10 +160,10 @@ async function main() {
   tradeManager = new TradeManager(gatewayClient, adapter, SYMBOLS, {
     pollingInterval: 30000,
     smartExit: {
-      maxTradeDuration: 60 * 60 * 1000,
-      extremeMaxDuration: 120 * 60 * 1000,
+      maxTradeDuration: 10 * 60 * 1000,      // 10 min (SCALPING: was 60 min)
+      extremeMaxDuration: 15 * 60 * 1000,    // 15 min (SCALPING: was 120 min)
       minTradeDuration: 60 * 1000,
-      earlyExitTpPct: 0.75,
+      earlyExitTpPct: 0.60,                  // 60% TP exit (SCALPING: was 75%)
     },
     trailingStop: {
       activationThreshold: 0.20,
@@ -183,8 +190,8 @@ async function main() {
       mode: TRADE_MODE,
       strategyName: STRATEGY_NAME,
       binaryDuration: 1,
-      cfdTakeProfitPct: 0.005,  // 0.5% TP
-      cfdStopLossPct: 0.003,    // 0.3% SL
+      cfdTakeProfitPct: 0.002,  // 0.2% TP (SCALPING: was 0.5%)
+      cfdStopLossPct: 0.0015,   // 0.15% SL (SCALPING: was 0.3%)
       accountLoginid: ACCOUNT_LOGINID,
       multiplierMap: {
         // Forex pairs
