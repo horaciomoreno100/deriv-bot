@@ -338,6 +338,48 @@ function getOptimizedConfig(asset: string) {
   };
 }
 
+/**
+ * Process strategy signal with trade locks to prevent race conditions
+ * CRITICAL: Follows pattern from CLAUDE.md to prevent duplicate trades
+ */
+async function processStrategySignal(signal: Signal | null, asset: string) {
+  if (!signal) return;
+
+  // 1. Skip during initialization
+  if (isInitializing || !hasReceivedRealtimeCandle) {
+    console.log(`\n⏸️  Signal ignored during initialization`);
+    return;
+  }
+
+  // 2. CRITICAL: Check position limits BEFORE processing
+  const canOpen = tradeManager.canOpenTrade(asset);
+  if (!canOpen.allowed) {
+    console.log(`\n❌ Signal rejected for ${asset}: ${canOpen.reason}`);
+    return;
+  }
+
+  // 3. CRITICAL: Acquire trade lock to prevent race conditions
+  if (!tradeManager.acquireTradeLock(asset)) {
+    console.log(`\n❌ Signal rejected for ${asset}: Trade already in progress`);
+    return;
+  }
+
+  console.log(`\n🎯 Signal generated for ${asset}:`);
+  console.log(`   Direction: ${signal.direction}`);
+  console.log(`   Price: $${signal.price.toFixed(2)}`);
+  console.log(`   Reason: ${signal.reason}`);
+
+  // 4. Execute trade in try/finally block
+  try {
+    await tradeExecutionService.executeTrade(signal);
+  } catch (error) {
+    console.error(`❌ Error executing trade: ${error}`);
+  } finally {
+    // 5. CRITICAL: ALWAYS release lock after execution
+    tradeManager.releaseTradeLock(asset);
+  }
+}
+
 async function main() {
   console.log('='.repeat(80));
   console.log(`🎯 ${STRATEGY_NAME} - OPTIMIZED CRYPTO SCALPING`);
@@ -693,6 +735,7 @@ async function main() {
       const { rsi, adx, plusDI, minusDI, bbUpper, bbLower } = indicators as Record<string, number>;
       console.log(`[${asset}] Candle #${history.length} - RSI: ${rsi?.toFixed(1)}, ADX: ${adx?.toFixed(1)}, +DI: ${plusDI?.toFixed(1)}, -DI: ${minusDI?.toFixed(1)}, BB: ${bbLower?.toFixed(2)}-${bbUpper?.toFixed(2)}, Price: ${candle.close.toFixed(2)}`);
 
+      // Process signal with trade locks (prevents race conditions and duplicates)
       if (signal) {
         const direction = signal.direction === 'CALL' ? 'CALL' : 'PUT';
         const signalObj: Signal = {
@@ -704,17 +747,7 @@ async function main() {
           reason: 'CryptoScalp v2 Entry',
         };
 
-        console.log(`\n🎯 Signal generated for ${asset}:`);
-        console.log(`   Direction: ${direction}`);
-        console.log(`   Price: $${signalObj.price.toFixed(2)}`);
-        console.log(`   Reason: ${signalObj.reason}`);
-
-        // Execute trade
-        try {
-          await tradeExecutionService.executeTrade(signalObj);
-        } catch (error) {
-          console.error(`❌ Error executing trade: ${error}`);
-        }
+        await processStrategySignal(signalObj, asset);
       }
     } catch (error) {
       console.error(`❌ Error processing tick: ${error}`);
