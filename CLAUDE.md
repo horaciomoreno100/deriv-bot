@@ -232,3 +232,6 @@ async function processStrategySignal(signal: Signal | null, asset: string) {
 See these files for correct implementation:
 - `packages/trader/src/scripts/run-hybrid-mtf.ts`
 - `packages/trader/src/scripts/run-fvg-ls.ts`
+- `packages/trader/src/scripts/run-bb-squeeze-dax.ts`
+- `packages/trader/src/scripts/run-crypto-scalp-v2.ts`
+- `packages/trader/src/scripts/run-pullback-window.ts`
