@@ -288,6 +288,18 @@ async function main() {
     rsiOverbought: 60,
   });
 
+  // Register trader with Gateway
+  try {
+    const registration = await gatewayClient.registerTrader({
+      name: 'BB-SQUEEZE-DAX Trader',
+      strategy: 'BB-SQUEEZE-DAX',
+      symbols: SYMBOLS,
+    });
+    console.log(`📝 Registered with Gateway: ${registration.traderId}\n`);
+  } catch {
+    console.log('⚠️  Could not register with Gateway (older version?)\n');
+  }
+
   console.log(`📡 Subscribing to ${SYMBOL}...\n`);
   await gatewayClient.follow(SYMBOLS);
 
