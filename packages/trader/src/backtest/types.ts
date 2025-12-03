@@ -48,6 +48,7 @@ export interface BacktestConfig {
     newsFilter?: boolean;
     dayHourFilter?: boolean;
   };
+  indicators?: Partial<IndicatorConfig>;
 }
 
 export const DEFAULT_BACKTEST_CONFIG: BacktestConfig = {
@@ -289,6 +290,7 @@ export interface IndicatorConfig {
   atrPeriod?: number;
   smaPeriod?: number;
   emaPeriod?: number;
+  emaPeriods?: number[];  // Multiple EMA periods
   macdFast?: number;
   macdSlow?: number;
   macdSignal?: number;

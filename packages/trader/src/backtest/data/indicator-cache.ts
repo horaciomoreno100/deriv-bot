@@ -587,6 +587,13 @@ export function createIndicatorCache(
     series.set('ema', calculateEMA(closes, opts.emaPeriod!));
   }
 
+  // Multiple EMAs (for strategies that need multiple periods)
+  if (opts.emaPeriods && opts.emaPeriods.length > 0) {
+    for (const period of opts.emaPeriods) {
+      series.set(`ema${period}`, calculateEMA(closes, period));
+    }
+  }
+
   // EMA20 specifically for trend exhaustion strategy
   if (requiredIndicators.includes('ema20')) {
     series.set('ema20', calculateEMA(closes, 20));

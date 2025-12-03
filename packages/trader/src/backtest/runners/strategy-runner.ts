@@ -77,7 +77,7 @@ export function runBacktest(
   const indicatorCache = createIndicatorCache(
     candles,
     strategy.requiredIndicators(),
-    {}
+    fullConfig.indicators ?? {}
   );
 
   // Reset strategy state before running
