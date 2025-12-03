@@ -41,6 +41,7 @@ export class CryptoScalpStrategy {
   private params: CryptoScalpParams;
   private _asset: string;
   private state: CryptoScalpStrategyState;
+  private _lastVolatilityRejection: string | null = null;
 
   constructor(asset: string, customParams?: Partial<CryptoScalpParams>) {
     this._asset = asset;
@@ -53,6 +54,13 @@ export class CryptoScalpStrategy {
    */
   get asset(): string {
     return this._asset;
+  }
+
+  /**
+   * Get last volatility rejection reason (for logging)
+   */
+  get lastVolatilityRejection(): string | null {
+    return this._lastVolatilityRejection;
   }
 
   /**
@@ -148,6 +156,60 @@ export class CryptoScalpStrategy {
   }
 
   /**
+   * Check if volatility is too extreme for trading
+   * Returns rejection reason if volatility is too high, null if OK to trade
+   */
+  private checkVolatilityFilter(
+    candles: Candle[],
+    indicators: CryptoScalpIndicators
+  ): string | null {
+    if (!this.params.volatilityFilter.enabled) return null;
+
+    const config = this.params.volatilityFilter;
+
+    // 1. Check BB Width
+    if (indicators.bbWidth > config.maxBBWidthPct) {
+      return `BB Width ${indicators.bbWidth.toFixed(2)}% > max ${config.maxBBWidthPct}%`;
+    }
+
+    // 2. Check ATR ratio vs average
+    if (candles.length >= config.atrAvgPeriod + this.params.atr.period) {
+      const avgATR = this.calculateAverageATR(candles, config.atrAvgPeriod);
+      if (avgATR > 0) {
+        const currentATRRatio = indicators.atr / avgATR;
+        if (currentATRRatio > config.maxATRRatio) {
+          return `ATR ratio ${currentATRRatio.toFixed(2)}x > max ${config.maxATRRatio}x`;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Calculate average ATR over a period for volatility comparison
+   */
+  private calculateAverageATR(candles: Candle[], period: number): number {
+    const atrPeriod = this.params.atr.period;
+    if (candles.length < period + atrPeriod) return 0;
+
+    let sumATR = 0;
+    let count = 0;
+
+    // Calculate ATR at multiple points in history
+    for (let i = candles.length - period; i < candles.length; i++) {
+      const slice = candles.slice(0, i + 1);
+      const atrResult = calculateATR(slice, this.params.atr);
+      if (atrResult) {
+        sumATR += atrResult.atr;
+        count++;
+      }
+    }
+
+    return count > 0 ? sumATR / count : 0;
+  }
+
+  /**
    * Check for entry signal
    */
   checkEntry(
@@ -171,8 +233,18 @@ export class CryptoScalpStrategy {
     }
 
     // Calculate indicators
-    const indicators = this.calculateIndicators(candles.slice(0, currentIndex + 1));
+    const candleSlice = candles.slice(0, currentIndex + 1);
+    const indicators = this.calculateIndicators(candleSlice);
     if (!indicators) return null;
+
+    // ⚠️ VOLATILITY FILTER: Skip trading during extreme volatility
+    const volatilityRejection = this.checkVolatilityFilter(candleSlice, indicators);
+    if (volatilityRejection) {
+      // Log rejection for monitoring (will show in runner logs)
+      this._lastVolatilityRejection = volatilityRejection;
+      return null;
+    }
+    this._lastVolatilityRejection = null;
 
     // Store for later use
     this.state.indicatorValues = {

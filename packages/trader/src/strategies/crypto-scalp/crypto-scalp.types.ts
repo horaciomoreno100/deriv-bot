@@ -217,6 +217,21 @@ export interface RSIConfig {
 }
 
 /**
+ * Volatility filter configuration
+ * Prevents trading during extreme volatility spikes
+ */
+export interface VolatilityFilterConfig {
+  /** Whether volatility filter is enabled */
+  enabled: boolean;
+  /** Maximum BB Width percent to allow trading (e.g., 2.0 = 2%) */
+  maxBBWidthPct: number;
+  /** Maximum ATR ratio vs average to allow trading (e.g., 2.0 = 2x average) */
+  maxATRRatio: number;
+  /** Period to calculate average ATR for comparison */
+  atrAvgPeriod: number;
+}
+
+/**
  * Main strategy parameters
  */
 export interface CryptoScalpParams {
@@ -235,6 +250,8 @@ export interface CryptoScalpParams {
   volume: VolumeConfig;
   /** Trailing stop configuration */
   trailingStop: TrailingStopConfig;
+  /** Volatility filter configuration */
+  volatilityFilter: VolatilityFilterConfig;
 
   // Entry configuration
   /** DCA entry levels */

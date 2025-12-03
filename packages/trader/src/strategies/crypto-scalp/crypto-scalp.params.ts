@@ -14,6 +14,7 @@ import type {
   BBConfig,
   VolumeConfig,
   TrailingStopConfig,
+  VolatilityFilterConfig,
   DCALevel,
   TakeProfitLevel,
   TrendStrength,
@@ -97,6 +98,17 @@ export const DEFAULT_TRAILING_STOP_CONFIG: TrailingStopConfig = {
 };
 
 /**
+ * Default volatility filter configuration
+ * Prevents trading during extreme volatility spikes (e.g., flash crashes)
+ */
+export const DEFAULT_VOLATILITY_FILTER_CONFIG: VolatilityFilterConfig = {
+  enabled: true,
+  maxBBWidthPct: 3.0, // Skip if BB width > 3% (extreme volatility)
+  maxATRRatio: 2.5, // Skip if current ATR > 2.5x average ATR
+  atrAvgPeriod: 50, // Use 50 periods for average ATR calculation
+};
+
+/**
  * Default DCA levels
  */
 export const DEFAULT_DCA_LEVELS: DCALevel[] = [
@@ -126,6 +138,7 @@ export const DEFAULT_CRYPTO_SCALP_PARAMS: CryptoScalpParams = {
   bb: DEFAULT_BB_CONFIG,
   volume: DEFAULT_VOLUME_CONFIG,
   trailingStop: DEFAULT_TRAILING_STOP_CONFIG,
+  volatilityFilter: DEFAULT_VOLATILITY_FILTER_CONFIG,
 
   // Entry
   dcaLevels: DEFAULT_DCA_LEVELS,
@@ -435,6 +448,7 @@ export function mergeParams(
     bb: { ...DEFAULT_BB_CONFIG, ...customParams.bb },
     volume: { ...DEFAULT_VOLUME_CONFIG, ...customParams.volume },
     trailingStop: { ...DEFAULT_TRAILING_STOP_CONFIG, ...customParams.trailingStop },
+    volatilityFilter: { ...DEFAULT_VOLATILITY_FILTER_CONFIG, ...customParams.volatilityFilter },
     dcaLevels: customParams.dcaLevels ?? DEFAULT_DCA_LEVELS,
     takeProfitLevels: customParams.takeProfitLevels ?? DEFAULT_TP_LEVELS,
     tradingHours: customParams.tradingHours ?? [],
