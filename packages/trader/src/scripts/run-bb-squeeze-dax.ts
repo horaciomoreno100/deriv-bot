@@ -303,6 +303,66 @@ async function main() {
   console.log(`📡 Subscribing to ${SYMBOL}...\n`);
   await gatewayClient.follow(SYMBOLS);
 
+  // Signal proximity check - publish every 10 seconds
+  const PROXIMITY_CHECK_INTERVAL = 10000;
+  setInterval(async () => {
+    // Check connection first - skip entire check if not connected
+    const isConnected = gatewayClient.isConnected();
+    if (!isConnected) {
+      return; // Skip silently, will retry on next interval
+    }
+
+    if (typeof (strategy as any).getSignalReadiness === 'function') {
+      const buffer = candleBuffers.get(SYMBOL) || [];
+      if (buffer.length >= 50) { // minCandles for BB Squeeze
+        try {
+          const readiness = (strategy as any).getSignalReadiness(buffer);
+          if (readiness) {
+            // Double-check connection before publishing
+            const stillConnected = gatewayClient.isConnected();
+            if (!stillConnected) {
+              return;
+            }
+
+            // Convert criteria format to match Gateway expectations
+            // BBSqueezeStrategy returns Record<string, { met: boolean; value: string }>
+            // Gateway expects Array<{ name, current, target, unit, passed, distance }>
+            const criteria = Object.entries(readiness.criteria).map(([name, criterion]: [string, any]) => ({
+              name,
+              current: criterion.value || '',
+              target: criterion.met ? 'Met' : 'Not Met',
+              unit: '',
+              passed: criterion.met,
+              distance: 0,
+            }));
+
+            await gatewayClient.publishSignalProximity({
+              strategy: 'BB-SQUEEZE-DAX',
+              asset: SYMBOL,
+              direction: readiness.direction.toUpperCase() as 'CALL' | 'PUT' | 'NEUTRAL',
+              overallProximity: readiness.overallProximity,
+              proximity: readiness.overallProximity,
+              criteria,
+              readyToSignal: readiness.readyToSignal,
+              missingCriteria: readiness.missingCriteria || [],
+            });
+          }
+        } catch (error: any) {
+          // Extract error message first
+          const errorMsg = error?.message || String(error || '');
+
+          // Silently ignore connection errors
+          if (errorMsg.includes('Not connected') || !gatewayClient.isConnected()) {
+            return;
+          }
+
+          // Log real errors only
+          console.error(`[Signal Proximity] Error:`, errorMsg);
+        }
+      }
+    }
+  }, PROXIMITY_CHECK_INTERVAL);
+
   // Listen to ticks
   gatewayClient.on('tick', async (tick: Tick) => {
     const completedCandle = processTick(tick);
