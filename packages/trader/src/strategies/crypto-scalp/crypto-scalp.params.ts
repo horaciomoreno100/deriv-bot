@@ -356,16 +356,19 @@ export const ETH_CONFIG: Partial<CryptoScalpParams> = {
  * Best preset: AGGRESSIVE
  * Key: More trades, wider RSI thresholds, faster cooldown
  *
- * Live Adjustment (Dec 2025):
- * - SL widened from 0.2% to 0.4% to reduce whipsaws in volatile crypto markets
+ * Live Adjustment v2 (Dec 3, 2025):
+ * - TP: 0.5% → 0.8% (wider target to capture larger moves)
+ * - SL: 0.4% → 0.6% (more room to breathe, reduce whipsaws)
+ * - minConfidence: 0.5 → 0.6 (more selective entries)
+ * - cooldownBars: 5 → 8 (reduce overtrading)
  */
 export const ETH_OPTIMIZED_PRESET: Partial<CryptoScalpParams> = {
   ...AGGRESSIVE_PRESET,
-  takeProfitLevels: [{ profitPercent: 0.5, exitPercent: 100 }],
-  baseStopLossPct: 0.4, // Widened from 0.2% to 0.4% - crypto needs room to breathe
-  cooldownBars: 5,
-  maxBarsInTrade: 45,
-  minConfidence: 0.5,
+  takeProfitLevels: [{ profitPercent: 0.8, exitPercent: 100 }],
+  baseStopLossPct: 0.6, // Widened from 0.4% to 0.6% - less whipsaws
+  cooldownBars: 8,
+  maxBarsInTrade: 50,
+  minConfidence: 0.6,
 };
 
 /**
@@ -393,13 +396,31 @@ export const BTC_OPTIMIZED_PRESET: Partial<CryptoScalpParams> = {
   minConfidence: 0.5,
 };
 
+/**
+ * ETH Wider TP/SL Preset - Testing doubled TP/SL
+ *
+ * Experimental config to reduce whipsaw losses:
+ * - TP: 1.0% (doubled from 0.5%)
+ * - SL: 0.8% (doubled from 0.4%)
+ * - Higher confidence threshold for selectivity
+ * - Longer cooldown to avoid overtrading
+ */
+export const ETH_WIDER_PRESET: Partial<CryptoScalpParams> = {
+  ...AGGRESSIVE_PRESET,
+  takeProfitLevels: [{ profitPercent: 1.0, exitPercent: 100 }],
+  baseStopLossPct: 0.8,
+  cooldownBars: 10,
+  maxBarsInTrade: 60,
+  minConfidence: 0.6,
+};
+
 // ============== HELPERS ==============
 
 /**
  * Get preset by name
  */
 export function getPreset(
-  name: 'aggressive' | 'conservative' | 'scalp' | 'swing' | 'highPF' | 'ethOptimized' | 'btcOptimized'
+  name: 'aggressive' | 'conservative' | 'scalp' | 'swing' | 'highPF' | 'ethOptimized' | 'btcOptimized' | 'ethWider'
 ): Partial<CryptoScalpParams> {
   switch (name) {
     case 'aggressive':
@@ -416,6 +437,8 @@ export function getPreset(
       return ETH_OPTIMIZED_PRESET;
     case 'btcOptimized':
       return BTC_OPTIMIZED_PRESET;
+    case 'ethWider':
+      return ETH_WIDER_PRESET;
     default:
       return {};
   }
