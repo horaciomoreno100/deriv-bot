@@ -1,5 +1,47 @@
 # Changelog
 
+## [0.22.0](///compare/v0.19.0...v0.22.0) (2025-12-03)
+
+### Features
+
+* add Gateway registration to DAX strategy 8033b46
+* add signal proximity to DAX BB Squeeze strategy f22c816
+
+### Bug Fixes
+
+* remove StrategyEngine and use strategy.onCandle() directly in DAX script 945860e
+* rewrite DAX strategy with correct TradeManager API a7fc9fa
+* use correct GatewayClient API in DAX strategy c4906bc
+* use gatewayClient.follow() instead of subscribeTicks() b49b99f
+
+## [0.21.0](///compare/v0.19.0...v0.21.0) (2025-12-03)
+
+### Features
+
+* add Gateway registration to DAX strategy 8033b46
+* add signal proximity to DAX BB Squeeze strategy f22c816
+
+### Bug Fixes
+
+* remove StrategyEngine and use strategy.onCandle() directly in DAX script 945860e
+* rewrite DAX strategy with correct TradeManager API a7fc9fa
+* use correct GatewayClient API in DAX strategy c4906bc
+* use gatewayClient.follow() instead of subscribeTicks() b49b99f
+
+## [0.20.0](///compare/v0.19.0...v0.20.0) (2025-12-03)
+
+### Features
+
+* add Gateway registration to DAX strategy 8033b46
+* add signal proximity to DAX BB Squeeze strategy f22c816
+
+### Bug Fixes
+
+* remove StrategyEngine and use strategy.onCandle() directly in DAX script 945860e
+* rewrite DAX strategy with correct TradeManager API a7fc9fa
+* use correct GatewayClient API in DAX strategy c4906bc
+* use gatewayClient.follow() instead of subscribeTicks() b49b99f
+
 ## [0.19.0](///compare/v0.17.0...v0.19.0) (2025-12-03)
 
 ### Features
