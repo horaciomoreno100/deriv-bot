@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.19.0](///compare/v0.17.0...v0.19.0) (2025-12-03)
+
+### Features
+
+* add optimized BB Squeeze strategy for DAX (OTC_GDAXI) 43bd3c4
+* add Pullback Window strategy for Gold/Silver (AGGRESSIVE B+C) 21b0624
+* add volatility filter to CryptoScalp v2 c349362
+* convert FVG-LS to fast scalping mode f357bff
+
+### Bug Fixes
+
+* use tsx interpreter for pullback window PM2 config 9950171
+
+## [0.18.0](///compare/v0.17.0...v0.18.0) (2025-12-03)
+
+### Features
+
+* add optimized BB Squeeze strategy for DAX (OTC_GDAXI) 43bd3c4
+* add Pullback Window strategy for Gold/Silver (AGGRESSIVE B+C) 21b0624
+* add volatility filter to CryptoScalp v2 c349362
+* convert FVG-LS to fast scalping mode f357bff
+
+### Bug Fixes
+
+* use tsx interpreter for pullback window PM2 config 9950171
+
 ## [0.17.0](///compare/v0.15.1...v0.17.0) (2025-12-03)
 
 ### Features
