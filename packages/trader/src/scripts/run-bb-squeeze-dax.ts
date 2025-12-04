@@ -311,6 +311,15 @@ async function main() {
     // Don't crash - trader will stay registered and can handle manual commands
   }
 
+  // Start heartbeat
+  setInterval(async () => {
+    try {
+      await gatewayClient.heartbeat();
+    } catch {
+      // Ignore heartbeat errors
+    }
+  }, 30000);
+
   // Signal proximity check - publish every 10 seconds
   const PROXIMITY_CHECK_INTERVAL = 10000;
   setInterval(async () => {
