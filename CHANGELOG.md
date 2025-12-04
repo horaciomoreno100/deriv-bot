@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.25.0](///compare/v0.24.0...v0.25.0) (2025-12-04)
+
+### Features
+
+* add flexible time periods and asset breakdown to /stats command 77dfcab
+
 ## [0.24.0](///compare/v0.22.0...v0.24.0) (2025-12-04)
 
 ### Features
