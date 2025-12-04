@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.26.0](///compare/v0.25.4...v0.26.0) (2025-12-04)
+
+### Features
+
+* add historical candles loading to DAX trader for instant warm-up a026954
+
 ## [0.25.4](///compare/v0.25.3...v0.25.4) (2025-12-04)
 
 ### Bug Fixes
