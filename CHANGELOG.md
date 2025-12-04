@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.24.0](///compare/v0.22.0...v0.24.0) (2025-12-04)
+
+### Features
+
+* add advanced metrics to /stats command (Profit Factor, Expectancy, ROI) 9c684ab
+
+### Bug Fixes
+
+* widen ETH TP/SL to reduce whipsaws f54ce2e
+
+## [0.23.0](///compare/v0.22.0...v0.23.0) (2025-12-04)
+
+### Features
+
+* add advanced metrics to /stats command (Profit Factor, Expectancy, ROI) 9c684ab
+
+### Bug Fixes
+
+* widen ETH TP/SL to reduce whipsaws f54ce2e
+
 ## [0.22.0](///compare/v0.19.0...v0.22.0) (2025-12-03)
 
 ### Features
