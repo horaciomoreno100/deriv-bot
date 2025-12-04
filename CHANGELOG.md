@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.25.4](///compare/v0.25.3...v0.25.4) (2025-12-04)
+
+### Bug Fixes
+
+* add heartbeat to DAX trader to appear in /info command 39aa69d
+
 ## [0.25.3](///compare/v0.25.1...v0.25.3) (2025-12-04)
 
 ### Bug Fixes
