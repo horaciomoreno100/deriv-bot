@@ -7,7 +7,7 @@
 
 import TelegramBot from 'node-telegram-bot-api';
 import type { GatewayBridge } from './gateway-bridge.js';
-import { formatBalance, formatStatus, formatProfit, formatStats, formatTrade, formatBotInfo, formatSignalProximities, formatServerStatus, formatLogs } from './formatters.js';
+import { formatBalance, formatStatus, formatProfit, formatStatsGrouped, formatTrade, formatBotInfo, formatSignalProximities, formatServerStatus, formatLogs } from './formatters.js';
 
 export interface TelegramBotConfig {
   token: string;
@@ -139,12 +139,28 @@ export class TelegramBotService {
       }
     });
 
-    // /stats - Daily statistics (grouped by strategy)
-    this.bot.onText(/\/stats/, async (msg) => {
+    // /stats [period] [assets] - Statistics grouped by strategy
+    // Periods: daily (default), weekly, monthly, total
+    // Add 'assets' to see breakdown by asset within each strategy
+    this.bot.onText(/\/stats(\s+\w+)?(\s+\w+)?/, async (msg) => {
       if (!this.isAuthorized(msg.from?.id)) return;
       try {
-        const stats = await this.gateway.getStatsByStrategy();
-        this.sendMessage(formatStats(stats));
+        const args = msg.text?.split(/\s+/).slice(1) || []; // Skip /stats itself
+        let period: 'daily' | 'weekly' | 'monthly' | 'total' = 'total'; // Default to total
+        let groupByAsset = false;
+
+        // Parse arguments
+        for (const arg of args) {
+          const lowerArg = arg.toLowerCase();
+          if (['daily', 'weekly', 'monthly', 'total'].includes(lowerArg)) {
+            period = lowerArg as 'daily' | 'weekly' | 'monthly' | 'total';
+          } else if (lowerArg === 'assets' || lowerArg === 'asset') {
+            groupByAsset = true;
+          }
+        }
+
+        const stats = await this.gateway.getStatsGrouped({ period, groupByAsset });
+        this.sendMessage(formatStatsGrouped(stats));
       } catch (error: any) {
         this.sendMessage(`Error: ${error.message}`);
       }

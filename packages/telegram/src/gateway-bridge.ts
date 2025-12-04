@@ -269,6 +269,54 @@ export class GatewayBridge extends EventEmitter {
   }
 
   /**
+   * Get stats grouped by strategy (and optionally by asset) with flexible time periods
+   */
+  async getStatsGrouped(params: {
+    period?: 'daily' | 'weekly' | 'monthly' | 'total';
+    date?: string;
+    groupByAsset?: boolean;
+  }): Promise<{
+    period: string;
+    periodLabel: string;
+    dateRange: { start: string; end: string };
+    total: {
+      date: string;
+      totalTrades: number;
+      wins: number;
+      losses: number;
+      pending: number;
+      winRate: number;
+      totalStake: number;
+      totalPayout: number;
+      netPnL: number;
+    };
+    byStrategy: Record<string, {
+      date: string;
+      totalTrades: number;
+      wins: number;
+      losses: number;
+      pending: number;
+      winRate: number;
+      totalStake: number;
+      totalPayout: number;
+      netPnL: number;
+      byAsset?: Record<string, {
+        date: string;
+        totalTrades: number;
+        wins: number;
+        losses: number;
+        pending: number;
+        winRate: number;
+        totalStake: number;
+        totalPayout: number;
+        netPnL: number;
+      }>;
+    }>;
+  }> {
+    return await this.sendCommand('get_stats_grouped', params);
+  }
+
+  /**
    * Get monitored assets
    */
   async getAssets(): Promise<string[]> {

@@ -1046,6 +1046,39 @@ export async function handleGetStatsByStrategyCommand(
 }
 
 /**
+ * Handle 'get_stats_grouped' command
+ * Get statistics grouped by strategy (and optionally asset) with flexible time periods
+ */
+export async function handleGetStatsGroupedCommand(
+  ws: WebSocket,
+  command: CommandMessage,
+  context: CommandHandlerContext
+): Promise<void> {
+  const { gatewayServer, stateManager } = context;
+  const { period, date, groupByAsset } = (command.params || {}) as {
+    period?: 'daily' | 'weekly' | 'monthly' | 'total';
+    date?: string;
+    groupByAsset?: boolean;
+  };
+
+  try {
+    const stats = await stateManager.getStatsGrouped({
+      period: period || 'daily',
+      date,
+      groupByAsset: groupByAsset || false,
+    });
+
+    gatewayServer.respondToCommand(ws, command.requestId!, true, stats);
+  } catch (error) {
+    console.error('[handleGetStatsGroupedCommand] Error:', error);
+    gatewayServer.respondToCommand(ws, command.requestId!, false, undefined, {
+      code: 'GET_STATS_GROUPED_ERROR',
+      message: error instanceof Error ? error.message : 'Failed to get grouped statistics',
+    });
+  }
+}
+
+/**
  * Handle 'get_trades' command
  * Get trade history with optional filters
  */
@@ -1157,6 +1190,9 @@ export async function handleCommand(
       break;
     case 'get_stats_by_strategy':
       await handleGetStatsByStrategyCommand(ws, command, context);
+      break;
+    case 'get_stats_grouped':
+      await handleGetStatsGroupedCommand(ws, command, context);
       break;
     case 'get_trades':
       await handleGetTradesCommand(ws, command, context);

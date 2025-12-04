@@ -331,6 +331,188 @@ export class StateManager extends EventEmitter {
   }
 
   /**
+   * Get stats grouped by strategy and optionally by asset
+   * Supports multiple time periods: daily, weekly, monthly, total
+   */
+  async getStatsGrouped(params: {
+    period: 'daily' | 'weekly' | 'monthly' | 'total';
+    date?: string; // For daily, weekly, monthly - defaults to today
+    groupByAsset?: boolean; // If true, also groups by asset within each strategy
+  }): Promise<{
+    period: string;
+    periodLabel: string;
+    dateRange: { start: string; end: string };
+    total: DailyStatsResult;
+    byStrategy: Record<string, DailyStatsResult & { byAsset?: Record<string, DailyStatsResult> }>;
+  }> {
+    const targetDate = params.date || this.getTodayDate();
+
+    // Calculate date range based on period
+    let startDate: Date;
+    let endDate: Date;
+    let periodLabel: string;
+
+    if (params.period === 'total') {
+      // Get first trade ever
+      const firstTrade = await this.prisma.trade.findFirst({
+        orderBy: { openedAt: 'asc' },
+      });
+      startDate = firstTrade ? firstTrade.openedAt : new Date();
+      endDate = new Date();
+      periodLabel = 'All Time';
+    } else if (params.period === 'weekly') {
+      const refDate = new Date(targetDate);
+      const dayOfWeek = refDate.getUTCDay();
+      const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Monday = 0
+      startDate = new Date(refDate);
+      startDate.setUTCDate(refDate.getUTCDate() - diff);
+      startDate.setUTCHours(0, 0, 0, 0);
+      endDate = new Date(startDate);
+      endDate.setUTCDate(startDate.getUTCDate() + 6);
+      endDate.setUTCHours(23, 59, 59, 999);
+      periodLabel = `Week of ${this.formatDate(startDate)}`;
+    } else if (params.period === 'monthly') {
+      const refDate = new Date(targetDate);
+      startDate = new Date(Date.UTC(refDate.getUTCFullYear(), refDate.getUTCMonth(), 1, 0, 0, 0, 0));
+      endDate = new Date(Date.UTC(refDate.getUTCFullYear(), refDate.getUTCMonth() + 1, 0, 23, 59, 59, 999));
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      periodLabel = `${monthNames[refDate.getUTCMonth()]} ${refDate.getUTCFullYear()}`;
+    } else {
+      // daily
+      startDate = new Date(targetDate + 'T00:00:00.000Z');
+      endDate = new Date(targetDate + 'T23:59:59.999Z');
+      periodLabel = targetDate;
+    }
+
+    // Get all trades in the period
+    const trades = await this.prisma.trade.findMany({
+      where: {
+        openedAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    // Group trades by strategy (and optionally by asset)
+    const strategiesMap = new Map<string, Map<string, Trade[]>>();
+
+    for (const trade of trades) {
+      const strategy = trade.strategyName || 'UNKNOWN';
+      const asset = trade.asset || 'UNKNOWN';
+
+      if (!strategiesMap.has(strategy)) {
+        strategiesMap.set(strategy, new Map());
+      }
+
+      const assetsMap = strategiesMap.get(strategy)!;
+      if (!assetsMap.has(asset)) {
+        assetsMap.set(asset, []);
+      }
+      assetsMap.get(asset)!.push(trade);
+    }
+
+    // Calculate stats per strategy
+    const byStrategy: Record<string, DailyStatsResult & { byAsset?: Record<string, DailyStatsResult> }> = {};
+
+    for (const [strategy, assetsMap] of strategiesMap) {
+      // Aggregate all trades for this strategy
+      const allStrategyTrades: Trade[] = [];
+      for (const assetTrades of assetsMap.values()) {
+        allStrategyTrades.push(...assetTrades);
+      }
+
+      const totalTrades = allStrategyTrades.length;
+      const wins = allStrategyTrades.filter((t: Trade) => t.result === 'WIN').length;
+      const losses = allStrategyTrades.filter((t: Trade) => t.result === 'LOSS').length;
+      const pending = allStrategyTrades.filter((t: Trade) => t.result === 'PENDING').length;
+      const completedTrades = wins + losses;
+      const winRate = completedTrades > 0 ? (wins / completedTrades) * 100 : 0;
+
+      const totalStake = allStrategyTrades.reduce((sum: number, t: Trade) => sum + t.stake, 0);
+      const totalPayout = allStrategyTrades.reduce((sum: number, t: Trade) => sum + (t.payout || 0), 0);
+      const netPnL = allStrategyTrades.reduce((sum: number, t: Trade) => sum + (t.profit || 0), 0);
+
+      byStrategy[strategy] = {
+        date: periodLabel,
+        totalTrades,
+        wins,
+        losses,
+        pending,
+        winRate,
+        totalStake,
+        totalPayout,
+        netPnL,
+      };
+
+      // If groupByAsset is true, also calculate per-asset stats
+      if (params.groupByAsset) {
+        const byAsset: Record<string, DailyStatsResult> = {};
+
+        for (const [asset, assetTrades] of assetsMap) {
+          const assetTotalTrades = assetTrades.length;
+          const assetWins = assetTrades.filter((t: Trade) => t.result === 'WIN').length;
+          const assetLosses = assetTrades.filter((t: Trade) => t.result === 'LOSS').length;
+          const assetPending = assetTrades.filter((t: Trade) => t.result === 'PENDING').length;
+          const assetCompletedTrades = assetWins + assetLosses;
+          const assetWinRate = assetCompletedTrades > 0 ? (assetWins / assetCompletedTrades) * 100 : 0;
+
+          const assetTotalStake = assetTrades.reduce((sum: number, t: Trade) => sum + t.stake, 0);
+          const assetTotalPayout = assetTrades.reduce((sum: number, t: Trade) => sum + (t.payout || 0), 0);
+          const assetNetPnL = assetTrades.reduce((sum: number, t: Trade) => sum + (t.profit || 0), 0);
+
+          byAsset[asset] = {
+            date: periodLabel,
+            totalTrades: assetTotalTrades,
+            wins: assetWins,
+            losses: assetLosses,
+            pending: assetPending,
+            winRate: assetWinRate,
+            totalStake: assetTotalStake,
+            totalPayout: assetTotalPayout,
+            netPnL: assetNetPnL,
+          };
+        }
+
+        byStrategy[strategy].byAsset = byAsset;
+      }
+    }
+
+    // Calculate total stats
+    const totalTrades = trades.length;
+    const wins = trades.filter((t: Trade) => t.result === 'WIN').length;
+    const losses = trades.filter((t: Trade) => t.result === 'LOSS').length;
+    const pending = trades.filter((t: Trade) => t.result === 'PENDING').length;
+    const completedTrades = wins + losses;
+    const winRate = completedTrades > 0 ? (wins / completedTrades) * 100 : 0;
+
+    const totalStake = trades.reduce((sum: number, t: Trade) => sum + t.stake, 0);
+    const totalPayout = trades.reduce((sum: number, t: Trade) => sum + (t.payout || 0), 0);
+    const netPnL = trades.reduce((sum: number, t: Trade) => sum + (t.profit || 0), 0);
+
+    return {
+      period: params.period,
+      periodLabel,
+      dateRange: {
+        start: this.formatDate(startDate),
+        end: this.formatDate(endDate),
+      },
+      total: {
+        date: periodLabel,
+        totalTrades,
+        wins,
+        losses,
+        pending,
+        winRate,
+        totalStake,
+        totalPayout,
+        netPnL,
+      },
+      byStrategy,
+    };
+  }
+
+  /**
    * Get trades with filters
    */
   async getTrades(params: {
