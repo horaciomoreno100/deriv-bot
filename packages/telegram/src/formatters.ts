@@ -155,23 +155,61 @@ export function formatStats(statsResponse: {
         const sPnlEmoji = s.netPnL >= 0 ? '🟢' : '🔴';
         const sPnlSign = s.netPnL >= 0 ? '+' : '';
 
+        // Calculate additional metrics
+        const completedTrades = s.wins + s.losses;
+        const expectancy = completedTrades > 0 ? s.netPnL / completedTrades : 0;
+        const roi = s.totalStake > 0 ? (s.netPnL / s.totalStake) * 100 : 0;
+
+        // Calculate Profit Factor (gross wins / gross losses)
+        // Approximation: assume avg win = avg loss based on win rate
+        const avgWin = s.wins > 0 ? (s.totalPayout) / s.wins : 0;
+        const avgLoss = s.losses > 0 ? (s.totalStake - s.totalPayout) / s.losses : 0;
+        const grossWins = s.wins * avgWin;
+        const grossLosses = s.losses * avgLoss;
+        const profitFactor = grossLosses > 0 ? grossWins / grossLosses : 0;
+
         message += `\n🎯 *${strategyName}*\n`;
         message += `├ Trades: \`${s.totalTrades}\` (W:${s.wins}/L:${s.losses})\n`;
         message += `├ Win Rate: \`${s.winRate.toFixed(1)}%\`\n`;
+
+        if (completedTrades > 0 && profitFactor > 0) {
+          message += `├ Profit Factor: \`${profitFactor.toFixed(2)}\`\n`;
+          message += `├ Expectancy: \`$${expectancy.toFixed(2)}\`\n`;
+        }
+
         message += `├ Staked: \`$${s.totalStake.toFixed(2)}\`\n`;
+        message += `├ ROI: \`${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%\`\n`;
         message += `└ P/L: ${sPnlEmoji} \`${sPnlSign}${s.netPnL.toFixed(2)}\`\n`;
       }
 
       message += `\n`;
     }
 
-    // Total summary
+    // Total summary with metrics
+    const totalCompleted = total.wins + total.losses;
+    const totalExpectancy = totalCompleted > 0 ? total.netPnL / totalCompleted : 0;
+    const totalROI = total.totalStake > 0 ? (total.netPnL / total.totalStake) * 100 : 0;
+
+    // Calculate total Profit Factor
+    const totalAvgWin = total.wins > 0 ? (total.totalPayout) / total.wins : 0;
+    const totalAvgLoss = total.losses > 0 ? (total.totalStake - total.totalPayout) / total.losses : 0;
+    const totalGrossWins = total.wins * totalAvgWin;
+    const totalGrossLosses = total.losses * totalAvgLoss;
+    const totalProfitFactor = totalGrossLosses > 0 ? totalGrossWins / totalGrossLosses : 0;
+
     message += `*Total:*\n`;
     message += `├ Trades: \`${total.totalTrades}\` (W:${total.wins}/L:${total.losses})\n`;
     message += `├ Pending: \`${total.pending}\`\n`;
     message += `├ Win Rate: \`${total.winRate.toFixed(1)}%\`\n`;
+
+    if (totalCompleted > 0 && totalProfitFactor > 0) {
+      message += `├ Profit Factor: \`${totalProfitFactor.toFixed(2)}\`\n`;
+      message += `├ Expectancy: \`$${totalExpectancy.toFixed(2)}\`\n`;
+    }
+
     message += `├ Staked: \`$${total.totalStake.toFixed(2)}\`\n`;
     message += `├ Payout: \`$${total.totalPayout.toFixed(2)}\`\n`;
+    message += `├ ROI: \`${totalROI >= 0 ? '+' : ''}${totalROI.toFixed(1)}%\`\n`;
     message += `└ Net P/L: ${pnlEmoji} \`${pnlSign}${total.netPnL.toFixed(2)}\``;
 
     return message;
