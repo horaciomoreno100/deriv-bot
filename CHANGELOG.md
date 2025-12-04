@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.3](///compare/v0.25.1...v0.25.3) (2025-12-04)
+
+### Bug Fixes
+
+* handle market closed error in DAX trader subscription c27b9f8
+
+## [0.25.2](///compare/v0.25.1...v0.25.2) (2025-12-04)
+
+### Bug Fixes
+
+* handle market closed error in DAX trader subscription c27b9f8
+
 ## [0.25.1](///compare/v0.25.0...v0.25.1) (2025-12-04)
 
 ### Bug Fixes
