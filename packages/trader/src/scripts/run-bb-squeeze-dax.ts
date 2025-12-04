@@ -320,6 +320,28 @@ async function main() {
     }
   }, 30000);
 
+  // Load historical candles for warm-up
+  console.log(`📥 Loading historical candles for ${SYMBOL}...\n`);
+  try {
+    const CANDLES_NEEDED = 100; // More than 50 needed for safety
+    const candles = await gatewayClient.getCandles(SYMBOL, 60, CANDLES_NEEDED);
+    console.log(`   ✅ ${SYMBOL}: ${candles.length} x 1m candles loaded\n`);
+
+    // Store candles in buffer
+    candleBuffers.set(SYMBOL, candles);
+    warmUpCandlesPerAsset.set(SYMBOL, candles.length);
+
+    // Mark as initialized if we have enough candles
+    if (candles.length >= WARM_UP_CANDLES_REQUIRED) {
+      isInitializing = false;
+      hasReceivedRealtimeCandle = true;
+      console.log(`✅ ${SYMBOL} ready! (${candles.length} candles)\n`);
+    }
+  } catch (error: any) {
+    console.error(`⚠️  Failed to load historical candles: ${error.message}`);
+    console.log(`   Will accumulate candles in real-time...\n`);
+  }
+
   // Signal proximity check - publish every 10 seconds
   const PROXIMITY_CHECK_INTERVAL = 10000;
   setInterval(async () => {
