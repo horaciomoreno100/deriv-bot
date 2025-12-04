@@ -302,7 +302,14 @@ async function main() {
   }
 
   console.log(`📡 Subscribing to ${SYMBOL}...\n`);
-  await gatewayClient.follow(SYMBOLS);
+  try {
+    await gatewayClient.follow(SYMBOLS);
+    console.log(`✅ Subscribed to ${SYMBOL}\n`);
+  } catch (error: any) {
+    console.error(`❌ Failed to subscribe to ${SYMBOL}: ${error.message}`);
+    console.log(`⏸️  Market may be closed. Trader will wait for market to open...\n`);
+    // Don't crash - trader will stay registered and can handle manual commands
+  }
 
   // Signal proximity check - publish every 10 seconds
   const PROXIMITY_CHECK_INTERVAL = 10000;
