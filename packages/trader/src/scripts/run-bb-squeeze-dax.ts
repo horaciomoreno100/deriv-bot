@@ -243,7 +243,8 @@ async function main() {
     processedTradeResults.add(tradeId);
 
     totalTrades++;
-    if (data.result === 'WIN') {
+    const result = data.result?.toUpperCase();
+    if (result === 'WIN' || result === 'WON') {
       wonTrades++;
     } else {
       lostTrades++;
@@ -254,7 +255,7 @@ async function main() {
 
     if (slackAlerter) {
       slackAlerter.sendAlert({
-        level: data.result === 'WIN' ? 'success' : 'error',
+        level: (result === 'WIN' || result === 'WON') ? 'success' : 'error',
         message: `Trade ${data.result}`,
         data: {
           symbol: data.asset || SYMBOL,
