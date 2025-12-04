@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.25.1](///compare/v0.25.0...v0.25.1) (2025-12-04)
+
+### Bug Fixes
+
+* correct win rate calculation in DAX trader (case-insensitive) 15b5ce7
+
 ## [0.25.0](///compare/v0.24.0...v0.25.0) (2025-12-04)
 
 ### Features
