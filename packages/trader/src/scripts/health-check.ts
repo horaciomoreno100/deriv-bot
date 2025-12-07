@@ -73,14 +73,14 @@ async function checkHealth(): Promise<HealthStatus> {
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Balance request timeout')), 5000)
         ),
-      ]) as { balance?: number; currency?: string; error?: string };
+      ]) as { amount?: number; currency?: string; error?: string };
 
       if (balanceResponse.error) {
         status.deriv.error = balanceResponse.error;
         status.alerts.push(`Deriv auth error: ${balanceResponse.error}`);
-      } else if (balanceResponse.balance !== undefined) {
+      } else if (balanceResponse.amount !== undefined) {
         status.deriv.authenticated = true;
-        status.deriv.balance = balanceResponse.balance;
+        status.deriv.balance = balanceResponse.amount;
         status.deriv.currency = balanceResponse.currency;
       }
     } catch (error) {

@@ -111,7 +111,7 @@ async function checkDerivAuth(): Promise<{ authenticated: boolean; balance?: num
     const response = await Promise.race([
       client.getBalance(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000)),
-    ]) as { balance?: number; currency?: string; error?: string };
+    ]) as { amount?: number; currency?: string; error?: string };
 
     client.disconnect();
 
@@ -119,7 +119,7 @@ async function checkDerivAuth(): Promise<{ authenticated: boolean; balance?: num
       return { authenticated: false, error: response.error };
     }
 
-    return { authenticated: true, balance: response.balance };
+    return { authenticated: true, balance: response.amount };
   } catch (error) {
     return { authenticated: false, error: error instanceof Error ? error.message : 'Unknown' };
   }
