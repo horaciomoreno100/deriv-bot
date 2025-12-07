@@ -11,7 +11,7 @@
  *   R_50: 265 trades, WR: 47.2%, PF: 1.13, Score: 43.1
  */
 
-import { loadEnvFromRoot } from '../utils/load-env.js';
+import dotenv from 'dotenv';
 import { GatewayClient, initSlackAlerts, type SlackAlerter } from '@deriv-bot/shared';
 import { BBSqueezeStrategy } from '../strategies/bb-squeeze.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
@@ -20,8 +20,8 @@ import { TradeExecutionService } from '../services/trade-execution.service.js';
 import { StrategyAccountant } from '../accounting/strategy-accountant.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 
-// Load environment variables from project root
-loadEnvFromRoot();
+// Load environment variables
+dotenv.config();
 
 // Configuration
 const SYMBOL = process.env.SYMBOL || 'R_100'; // Default to R_100, can override with env
