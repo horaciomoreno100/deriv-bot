@@ -231,6 +231,13 @@ async function main() {
     gatewayClient,
     tradeAdapter,
     tradeManager,
+    {
+      mode: TRADE_MODE,
+      strategyName: STRATEGY_NAME,
+      cfdTakeProfitPct: 0.005,  // 0.5% TP
+      cfdStopLossPct: 0.003,    // 0.3% SL
+      accountLoginid: ACCOUNT_LOGINID,
+    },
     slackAlerter || undefined
   );
 
