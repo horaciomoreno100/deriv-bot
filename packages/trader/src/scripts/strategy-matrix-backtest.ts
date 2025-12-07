@@ -200,11 +200,11 @@ async function runStrategyBacktest(
       asset,
       strategy: strategy.shortName,
       trades: totalTrades,
-      winRate,
-      profitFactor: profitFactor === Infinity ? 10 : (profitFactor || 0),
-      netPnl: netPnl || 0,
-      maxDD: maxDrawdownPct || 0,
-      sharpe: sharpeRatio || 0,
+      winRate: winRate || 0,
+      profitFactor: profitFactor === Infinity ? 10 : (isNaN(profitFactor) ? 0 : (profitFactor || 0)),
+      netPnl: isNaN(netPnl) ? 0 : (netPnl || 0),
+      maxDD: isNaN(maxDrawdownPct) ? 0 : (maxDrawdownPct || 0),
+      sharpe: isNaN(sharpeRatio) ? 0 : (sharpeRatio || 0),
     };
 
     return {
