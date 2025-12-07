@@ -25,9 +25,9 @@ import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 loadEnvFromRoot();
 
 // Configuration
-const STRATEGY_NAME = 'BB-SQUEEZE-MR-R50';
+const SYMBOL = process.env.SYMBOL || 'R_50'; // Default to R_50, can override with env
+const STRATEGY_NAME = `BB-SQUEEZE-MR-${SYMBOL}`;
 const TRADE_MODE: TradeMode = (process.env.TRADE_MODE as TradeMode) || 'cfd';
-const SYMBOL = 'R_50'; // Volatility 50 Index
 const SYMBOLS = [SYMBOL];
 const ACCOUNT_LOGINID = process.env.ACCOUNT_LOGINID;
 
