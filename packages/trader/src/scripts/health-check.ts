@@ -69,7 +69,7 @@ async function checkHealth(): Promise<HealthStatus> {
     // Test Deriv authentication by requesting balance
     try {
       const balanceResponse = await Promise.race([
-        client.send({ command: 'get_balance' }),
+        client.getBalance(),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Balance request timeout')), 5000)
         ),

@@ -109,9 +109,9 @@ async function checkDerivAuth(): Promise<{ authenticated: boolean; balance?: num
   try {
     await client.connect();
     const response = await Promise.race([
-      client.send({ command: 'get_balance' }),
+      client.getBalance(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000)),
-    ]) as { balance?: number; error?: string };
+    ]) as { balance?: number; currency?: string; error?: string };
 
     client.disconnect();
 
@@ -162,11 +162,6 @@ async function runHealthCheck() {
 
     if (service.status !== 'online') {
       issues.push(`Service ${service.name} is ${service.status}`);
-    }
-
-    // Check for excessive restarts (indicates a problem)
-    if (service.restarts && service.restarts > 10) {
-      issues.push(`Service ${service.name} has ${service.restarts} restarts`);
     }
   }
 
