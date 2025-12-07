@@ -16,6 +16,7 @@ import { BBSqueezeStrategy } from '../strategies/bb-squeeze.strategy.js';
 import { UnifiedTradeAdapter, type TradeMode } from '../adapters/trade-adapter.js';
 import { TradeManager } from '../trade-management/index.js';
 import { TradeExecutionService } from '../services/trade-execution.service.js';
+import { StrategyAccountant } from '../accounting/strategy-accountant.js';
 import type { Candle, Tick, Signal } from '@deriv-bot/shared';
 
 // Load environment variables
@@ -54,6 +55,10 @@ let tradeManager: TradeManager;
 
 // Trade Execution Service
 let tradeExecutionService: TradeExecutionService;
+
+// Strategy Accountant for balance tracking
+let strategyAccountant: StrategyAccountant;
+const STRATEGY_NAME = 'BB_SQUEEZE_DAX';
 
 // Slack Alerter
 let slackAlerter: SlackAlerter | null = null;
@@ -123,7 +128,7 @@ async function processStrategySignal(signal: Signal | null, asset: string) {
 
   console.log(`\n⚡ Signal detected for ${asset}:`, signal);
 
-  const currentBalance = tradeManager.getAvailableBalance();
+  const currentBalance = strategyAccountant.getAvailableBalance(STRATEGY_NAME);
   if (currentBalance < INITIAL_BALANCE * 0.1) {
     console.log(`\n❌ Insufficient balance: $${currentBalance.toFixed(2)}`);
     tradeManager.releaseTradeLock(asset);
@@ -133,7 +138,7 @@ async function processStrategySignal(signal: Signal | null, asset: string) {
   const riskPercentage = TRADE_MODE === 'binary' ? 0.01 : RISK_PERCENTAGE_CFD;
   const calculatedStake = currentBalance * riskPercentage;
 
-  if (!tradeManager.reserveStake(asset, calculatedStake)) {
+  if (!strategyAccountant.reserveStake(STRATEGY_NAME, asset, calculatedStake)) {
     console.log(`\n❌ Cannot reserve stake: $${calculatedStake.toFixed(2)}`);
     tradeManager.releaseTradeLock(asset);
     return;
@@ -144,11 +149,11 @@ async function processStrategySignal(signal: Signal | null, asset: string) {
     console.log(`\n${result.success ? '✅' : '❌'} ${result.message}`);
 
     if (!result.success) {
-      tradeManager.releaseStake(asset);
+      strategyAccountant.releaseStake(STRATEGY_NAME, asset);
     }
   } catch (error) {
     console.error(`\n❌ Trade execution failed:`, error);
-    tradeManager.releaseStake(asset);
+    strategyAccountant.releaseStake(STRATEGY_NAME, asset);
   } finally {
     tradeManager.releaseTradeLock(asset);
   }
@@ -174,6 +179,11 @@ async function main() {
   console.log(`🔹 Initial Balance: $${INITIAL_BALANCE.toLocaleString()}`);
   console.log(`🔹 Risk per trade: ${(RISK_PERCENTAGE_CFD * 100).toFixed(1)}%`);
   console.log();
+
+  // Initialize Strategy Accountant
+  strategyAccountant = new StrategyAccountant();
+  strategyAccountant.allocate(STRATEGY_NAME, INITIAL_BALANCE);
+  console.log(`💰 Allocated $${INITIAL_BALANCE} to ${STRATEGY_NAME}\n`);
 
   // Initialize Slack alerts
   slackAlerter = await initSlackAlerts('trader-bb-squeeze-dax');
