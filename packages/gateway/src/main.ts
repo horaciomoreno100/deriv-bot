@@ -171,9 +171,9 @@ class Gateway {
       this.logger.info('Trader client connected');
     });
 
-    // Handle client disconnections
+    // Handle client disconnections (debug level - no alerts for normal health checks)
     this.gatewayServer.on('client:disconnected', () => {
-      this.logger.warn('Trader client disconnected');
+      this.logger.debug('Trader client disconnected');
     });
   }
 
