@@ -38,7 +38,7 @@ const INITIAL_BALANCE = parseFloat(process.env.INITIAL_CAPITAL || '10000');
 // Risk parameters
 const RISK_PERCENTAGE_CFD = parseFloat(process.env.RISK_PERCENTAGE || '0.02'); // 2% per trade
 const MAX_TRADES_PER_SYMBOL = 1;
-const MULTIPLIER = parseInt(process.env.MULTIPLIER || '100');
+const MULTIPLIER = parseInt(process.env.MULTIPLIER || '200'); // R_50 accepts: 80, 200, 400, 600, 800
 
 // Tick processing state
 const TIMEFRAME = 60; // 1 minute
