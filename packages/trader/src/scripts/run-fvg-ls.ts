@@ -190,8 +190,8 @@ async function main() {
       mode: TRADE_MODE,
       strategyName: STRATEGY_NAME,
       binaryDuration: 1,
-      cfdTakeProfitPct: 0.002,  // 0.2% TP (SCALPING: was 0.5%)
-      cfdStopLossPct: 0.0015,   // 0.15% SL (SCALPING: was 0.3%)
+      cfdTakeProfitPct: 0.0008,  // 0.08% TP (~8 pips) - TIGHT SCALPING
+      cfdStopLossPct: 0.0006,   // 0.06% SL (~6 pips) - TIGHT SCALPING
       accountLoginid: ACCOUNT_LOGINID,
       multiplierMap: {
         // Forex pairs

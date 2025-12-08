@@ -178,8 +178,8 @@ async function main() {
       mode: TRADE_MODE,
       strategyName: STRATEGY_NAME,
       binaryDuration: 1,
-      cfdTakeProfitPct: 0.003,  // 0.3% TP for indices
-      cfdStopLossPct: 0.002,    // 0.2% SL for indices
+      cfdTakeProfitPct: 0.001,  // 0.1% TP (~21 puntos DAX) - TIGHT SCALPING
+      cfdStopLossPct: 0.0008,   // 0.08% SL (~17 puntos DAX) - TIGHT SCALPING
       accountLoginid: ACCOUNT_LOGINID,
       multiplierMap: {
         'OTC_GDAXI': MULTIPLIER,
