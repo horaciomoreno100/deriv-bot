@@ -13,6 +13,10 @@ export interface TelegramBotConfig {
   token: string;
   chatId: string;
   authorizedUsers?: number[]; // User IDs allowed to send commands
+  /** Interval for automatic health reports in ms (default: 4 hours, 0 to disable) */
+  autoReportInterval?: number;
+  /** Interval for health checks in ms (default: 60 seconds) */
+  healthCheckInterval?: number;
 }
 
 export class TelegramBotService {
@@ -20,6 +24,13 @@ export class TelegramBotService {
   private config: TelegramBotConfig;
   private gateway: GatewayBridge;
   private isRunning = false;
+
+  // Auto-reporting and health monitoring
+  private autoReportTimer: NodeJS.Timeout | null = null;
+  private healthCheckTimer: NodeJS.Timeout | null = null;
+  private lastHealthStatus: 'healthy' | 'degraded' | 'critical' = 'healthy';
+  private consecutiveFailures = 0;
+  private startTime = Date.now();
 
   constructor(config: TelegramBotConfig, gateway: GatewayBridge) {
     this.config = config;
@@ -407,6 +418,7 @@ export class TelegramBotService {
     await this.gateway.connect();
 
     this.isRunning = true;
+    this.startTime = Date.now();
     console.log('[TelegramBot] Bot is running');
 
     // Send startup message
@@ -415,6 +427,10 @@ export class TelegramBotService {
       `Trading bot is now online.\n` +
       `Use /help to see available commands.`
     );
+
+    // Start auto-reporting and health monitoring
+    this.startAutoReporting();
+    this.startHealthMonitoring();
   }
 
   /**
@@ -424,6 +440,10 @@ export class TelegramBotService {
     if (!this.isRunning) return;
 
     console.log('[TelegramBot] Stopping...');
+
+    // Stop timers
+    this.stopAutoReporting();
+    this.stopHealthMonitoring();
 
     // Send shutdown message
     await this.sendMessage(`*Bot Stopped*\nTrading bot is now offline.`);
@@ -436,5 +456,261 @@ export class TelegramBotService {
 
     this.isRunning = false;
     console.log('[TelegramBot] Bot stopped');
+  }
+
+  // ============================================
+  // Auto-Reporting System
+  // ============================================
+
+  /**
+   * Start automatic health reporting
+   * Sends periodic status reports to keep you informed
+   */
+  private startAutoReporting(): void {
+    const interval = this.config.autoReportInterval ?? 4 * 60 * 60 * 1000; // Default: 4 hours
+
+    if (interval <= 0) {
+      console.log('[TelegramBot] Auto-reporting disabled');
+      return;
+    }
+
+    console.log(`[TelegramBot] Auto-reporting enabled (every ${interval / 1000 / 60} minutes)`);
+
+    this.autoReportTimer = setInterval(async () => {
+      await this.sendAutoReport();
+    }, interval);
+
+    // Send first report after 5 minutes
+    setTimeout(() => this.sendAutoReport(), 5 * 60 * 1000);
+  }
+
+  /**
+   * Stop automatic reporting
+   */
+  private stopAutoReporting(): void {
+    if (this.autoReportTimer) {
+      clearInterval(this.autoReportTimer);
+      this.autoReportTimer = null;
+    }
+  }
+
+  /**
+   * Send automatic status report
+   */
+  private async sendAutoReport(): Promise<void> {
+    try {
+      const start = Date.now();
+      await this.gateway.ping();
+      const latency = Date.now() - start;
+
+      const status = await this.gateway.getServerStatus();
+      const botInfo = await this.gateway.getBotInfo();
+      const balance = await this.gateway.getBalance();
+
+      // Calculate uptime
+      const uptimeMs = Date.now() - this.startTime;
+      const uptimeHours = Math.floor(uptimeMs / (1000 * 60 * 60));
+      const uptimeMins = Math.floor((uptimeMs % (1000 * 60 * 60)) / (1000 * 60));
+
+      // Check for issues
+      const issues: string[] = [];
+
+      if (latency > 1000) issues.push(`High latency: ${latency}ms`);
+      if (status.memory.usagePct > 80) issues.push(`High memory: ${status.memory.usagePct.toFixed(0)}%`);
+      if (status.disk.usagePct > 85) issues.push(`High disk: ${status.disk.usagePct.toFixed(0)}%`);
+
+      const offlineProcesses = status.processes.filter(p => p.status !== 'online');
+      if (offlineProcesses.length > 0) {
+        issues.push(`Offline: ${offlineProcesses.map(p => p.name).join(', ')}`);
+      }
+
+      const highRestarts = status.processes.filter(p => p.restarts > 10);
+      if (highRestarts.length > 0) {
+        issues.push(`High restarts: ${highRestarts.map(p => `${p.name}(${p.restarts})`).join(', ')}`);
+      }
+
+      // Build report
+      const statusEmoji = issues.length === 0 ? '🟢' : issues.length <= 2 ? '🟡' : '🔴';
+      const tradersActive = botInfo.traders.filter(t => t.isActive).length;
+
+      let report = `${statusEmoji} *Auto Status Report*\n\n`;
+      report += `*System:*\n`;
+      report += `├ Gateway: ${latency}ms\n`;
+      report += `├ Traders: ${tradersActive}/${botInfo.traders.length}\n`;
+      report += `├ Memory: ${status.memory.usagePct.toFixed(0)}%\n`;
+      report += `├ Disk: ${status.disk.usagePct.toFixed(0)}%\n`;
+      report += `└ Uptime: ${uptimeHours}h ${uptimeMins}m\n\n`;
+
+      report += `*Account:*\n`;
+      report += `└ Balance: ${balance.currency} ${balance.amount.toFixed(2)}\n\n`;
+
+      // Today's performance
+      if (botInfo.todayStats && botInfo.todayStats.totalTrades > 0) {
+        const stats = botInfo.todayStats;
+        const pnlEmoji = stats.netPnL >= 0 ? '📈' : '📉';
+        report += `*Today:*\n`;
+        report += `├ Trades: ${stats.totalTrades} (${stats.wins}W/${stats.losses}L)\n`;
+        report += `├ Win Rate: ${stats.winRate.toFixed(1)}%\n`;
+        report += `└ ${pnlEmoji} P/L: $${stats.netPnL.toFixed(2)}\n\n`;
+      }
+
+      // PM2 Processes summary
+      report += `*Processes:*\n`;
+      for (const proc of status.processes.slice(0, 6)) {
+        const icon = proc.status === 'online' ? '✅' : '❌';
+        report += `${icon} ${proc.name} (${proc.uptimeFormatted}, ↻${proc.restarts})\n`;
+      }
+      if (status.processes.length > 6) {
+        report += `_...and ${status.processes.length - 6} more_\n`;
+      }
+
+      // Issues
+      if (issues.length > 0) {
+        report += `\n⚠️ *Issues:*\n`;
+        for (const issue of issues) {
+          report += `• ${issue}\n`;
+        }
+      }
+
+      report += `\n_${new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })}_`;
+
+      await this.sendNotification(report);
+      console.log('[TelegramBot] Auto-report sent');
+    } catch (error: any) {
+      console.error('[TelegramBot] Failed to send auto-report:', error.message);
+    }
+  }
+
+  // ============================================
+  // Health Monitoring System
+  // ============================================
+
+  /**
+   * Start continuous health monitoring
+   * Sends alerts when issues are detected
+   */
+  private startHealthMonitoring(): void {
+    const interval = this.config.healthCheckInterval ?? 60 * 1000; // Default: 60 seconds
+
+    console.log(`[TelegramBot] Health monitoring enabled (every ${interval / 1000}s)`);
+
+    this.healthCheckTimer = setInterval(async () => {
+      await this.checkHealth();
+    }, interval);
+  }
+
+  /**
+   * Stop health monitoring
+   */
+  private stopHealthMonitoring(): void {
+    if (this.healthCheckTimer) {
+      clearInterval(this.healthCheckTimer);
+      this.healthCheckTimer = null;
+    }
+  }
+
+  /**
+   * Check system health and send alerts if needed
+   */
+  private async checkHealth(): Promise<void> {
+    try {
+      const start = Date.now();
+      await this.gateway.ping();
+      const latency = Date.now() - start;
+
+      // Determine health status
+      let newStatus: 'healthy' | 'degraded' | 'critical' = 'healthy';
+
+      if (latency > 5000) {
+        newStatus = 'critical';
+      } else if (latency > 2000) {
+        newStatus = 'degraded';
+      }
+
+      // Check server status for additional issues
+      try {
+        const status = await this.gateway.getServerStatus();
+
+        if (status.memory.usagePct > 90 || status.disk.usagePct > 95) {
+          newStatus = 'critical';
+        } else if (status.memory.usagePct > 80 || status.disk.usagePct > 85) {
+          if (newStatus === 'healthy') newStatus = 'degraded';
+        }
+
+        const offlineCount = status.processes.filter(p => p.status !== 'online').length;
+        if (offlineCount > 0) {
+          newStatus = 'critical';
+        }
+      } catch {
+        // Server status check failed - don't change status just for this
+      }
+
+      // Reset consecutive failures on success
+      this.consecutiveFailures = 0;
+
+      // Alert on status change
+      if (newStatus !== this.lastHealthStatus) {
+        await this.sendHealthAlert(newStatus, this.lastHealthStatus);
+        this.lastHealthStatus = newStatus;
+      }
+    } catch (error: any) {
+      this.consecutiveFailures++;
+
+      // Alert after 3 consecutive failures
+      if (this.consecutiveFailures === 3) {
+        await this.sendMessage(
+          `🔴 *CRITICAL: Gateway Unreachable*\n\n` +
+          `The gateway has been unreachable for 3 consecutive checks.\n\n` +
+          `Error: ${error.message}\n\n` +
+          `_Please check the server immediately._`
+        );
+        this.lastHealthStatus = 'critical';
+      }
+
+      // Send periodic reminders every 10 failures
+      if (this.consecutiveFailures > 0 && this.consecutiveFailures % 10 === 0) {
+        await this.sendMessage(
+          `🔴 *Gateway Still Unreachable*\n\n` +
+          `Failed checks: ${this.consecutiveFailures}\n` +
+          `Duration: ~${this.consecutiveFailures} minutes\n\n` +
+          `_Automatic monitoring continues..._`
+        );
+      }
+    }
+  }
+
+  /**
+   * Send health status change alert
+   */
+  private async sendHealthAlert(
+    newStatus: 'healthy' | 'degraded' | 'critical',
+    oldStatus: 'healthy' | 'degraded' | 'critical'
+  ): Promise<void> {
+    const icons = {
+      healthy: '🟢',
+      degraded: '🟡',
+      critical: '🔴',
+    };
+
+    if (newStatus === 'healthy' && oldStatus !== 'healthy') {
+      // Recovery
+      await this.sendMessage(
+        `${icons.healthy} *System Recovered*\n\n` +
+        `Status: ${oldStatus} → ${newStatus}\n\n` +
+        `All systems are now operating normally.`
+      );
+    } else if (newStatus === 'degraded') {
+      await this.sendNotification(
+        `${icons.degraded} *System Degraded*\n\n` +
+        `Performance issues detected.\n` +
+        `Monitoring continues...`
+      );
+    } else if (newStatus === 'critical') {
+      await this.sendMessage(
+        `${icons.critical} *CRITICAL: System Issues*\n\n` +
+        `Serious problems detected!\n\n` +
+        `Use /health to check details.`
+      );
+    }
   }
 }

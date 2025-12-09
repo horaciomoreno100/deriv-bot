@@ -26,14 +26,18 @@ const execAsync = promisify(exec);
 
 // Configuration
 const CHECK_INTERVAL = parseInt(process.env.WATCHDOG_INTERVAL || '60000', 10);
-const MAX_ERRORS_BEFORE_RESTART = parseInt(process.env.WATCHDOG_MAX_ERRORS || '5', 10);
-const AUTO_RESTART = process.env.WATCHDOG_AUTO_RESTART === 'true';
+const MAX_ERRORS_BEFORE_RESTART = parseInt(process.env.WATCHDOG_MAX_ERRORS || '3', 10); // Default to 3 (more aggressive)
+const AUTO_RESTART = process.env.WATCHDOG_AUTO_RESTART !== 'false'; // Default to TRUE
 const GATEWAY_URL = process.env.GATEWAY_WS_URL || 'ws://localhost:3000';
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '';
 
 // State
 let consecutiveErrors = 0;
 let lastSuccessfulCheck = Date.now();
 let slackAlerter: SlackAlerter | null = null;
+let lastTelegramAlert = 0;
+const TELEGRAM_COOLDOWN = 5 * 60 * 1000; // 5 minutes between telegram alerts
 
 interface ServiceStatus {
   name: string;
@@ -136,11 +140,50 @@ async function restartService(serviceName: string): Promise<boolean> {
   }
 }
 
+async function sendTelegramAlert(message: string): Promise<void> {
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+  // Rate limit telegram alerts
+  const now = Date.now();
+  if (now - lastTelegramAlert < TELEGRAM_COOLDOWN) {
+    console.log('[Watchdog] Telegram alert skipped (cooldown)');
+    return;
+  }
+  lastTelegramAlert = now;
+
+  try {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown',
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('[Watchdog] Failed to send Telegram alert:', await response.text());
+    } else {
+      console.log('[Watchdog] Telegram alert sent');
+    }
+  } catch (error) {
+    console.error('[Watchdog] Error sending Telegram alert:', error);
+  }
+}
+
 async function sendAlert(level: 'info' | 'warning' | 'error', message: string, data?: Record<string, unknown>) {
   console.log(`[${level.toUpperCase()}] ${message}`);
 
   if (slackAlerter) {
     await slackAlerter.sendAlert({ level, message, data });
+  }
+
+  // Send critical alerts to Telegram
+  if (level === 'error') {
+    const telegramMsg = `🔴 *WATCHDOG ALERT*\n\n${message}\n\n${data ? JSON.stringify(data, null, 2).slice(0, 500) : ''}`;
+    await sendTelegramAlert(telegramMsg);
   }
 }
 

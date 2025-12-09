@@ -20,6 +20,10 @@ const config = {
     authorizedUsers: process.env.TELEGRAM_AUTHORIZED_USERS
       ? process.env.TELEGRAM_AUTHORIZED_USERS.split(',').map(Number)
       : [],
+    // Auto-report every 4 hours by default (can override with env var)
+    autoReportInterval: parseInt(process.env.TELEGRAM_AUTO_REPORT_INTERVAL || String(4 * 60 * 60 * 1000), 10),
+    // Health check every 60 seconds by default
+    healthCheckInterval: parseInt(process.env.TELEGRAM_HEALTH_CHECK_INTERVAL || '60000', 10),
   },
   gateway: {
     url: process.env.GATEWAY_URL || 'ws://localhost:3000',
