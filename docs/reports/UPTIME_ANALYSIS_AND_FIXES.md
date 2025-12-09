@@ -1,6 +1,7 @@
 # Análisis de Uptime y Soluciones Implementadas
 
 **Fecha:** 2025-12-09
+**Actualizado:** 2025-12-09 (fix de Deriv API)
 **Problema:** Bot no mantiene uptime de más de 4 horas
 
 ## Diagnóstico
@@ -192,6 +193,21 @@ Para máxima confiabilidad, considera:
 | `packages/telegram/src/telegram-bot.ts` | +220 líneas: auto-reporting, health monitoring |
 | `packages/telegram/src/main.ts` | +4 líneas: nuevas config vars |
 | `packages/trader/src/scripts/watchdog.ts` | +40 líneas: telegram alerts, defaults mejorados |
+| `packages/gateway/src/api/deriv-client.ts` | Fix keepAlive 60s→30s, auto re-auth on "Please log in" |
+
+## Fix Deriv API (2025-12-09)
+
+Según la [documentación oficial de Deriv](https://developers.deriv.com/docs/websockets):
+
+- **Session timeout:** 2 minutos de inactividad
+- **Ping recomendado:** cada 30 segundos
+
+### Cambios realizados
+
+1. **keepAliveInterval:** 60000ms → 30000ms (30 segundos)
+2. **Auto re-auth:** Cuando se detecta error "Please log in" o `AuthorizationRequired`, el sistema intenta re-autenticarse automáticamente
+3. **Request timeout:** 30s → 15s para detectar fallos más rápido
+4. **Validación de conexión:** Verificación doble del estado del WebSocket antes de enviar requests
 
 ## Contacto
 

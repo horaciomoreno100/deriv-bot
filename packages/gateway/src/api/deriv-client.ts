@@ -71,13 +71,15 @@ export class DerivClient {
   private reconnectDelay = 5000; // Start with 5 seconds
   private reconnectTimer: NodeJS.Timeout | null = null;
   private activeSubscriptions: Array<{ type: string; symbol?: string; account?: string }> = [];
+  private isReauthorizing = false; // Prevent multiple simultaneous re-auth attempts
 
   constructor(config: DerivClientConfig) {
     this.config = {
       appId: config.appId,
       endpoint: config.endpoint || 'wss://ws.derivws.com/websockets/v3',
       apiToken: config.apiToken || '',
-      keepAliveInterval: config.keepAliveInterval || 60000, // 60 seconds
+      // Deriv API docs recommend 30 seconds - session times out after 2 minutes of inactivity
+      keepAliveInterval: config.keepAliveInterval || 30000, // 30 seconds (was 60s)
     };
     this.defaultAccount = config.defaultAccount || 'current';
   }
@@ -1263,8 +1265,19 @@ export class DerivClient {
    * @returns Response data
    */
   private async request(payload: any): Promise<any> {
+    // Double-check connection state
     if (!this.isConnected()) {
+      // Try to wait for reconnection if it's in progress
+      if (this.reconnectTimer) {
+        throw new Error('Not connected - reconnection in progress');
+      }
       throw new Error('Not connected');
+    }
+
+    // Also verify WebSocket state directly
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      console.warn('[DerivClient] WebSocket not in OPEN state, current state:', this.ws?.readyState);
+      throw new Error('WebSocket not ready');
     }
 
     return new Promise((resolve, reject) => {
@@ -1273,15 +1286,21 @@ export class DerivClient {
 
       this.pendingRequests.set(reqId.toString(), { resolve, reject });
 
-      this.send(requestPayload);
+      try {
+        this.send(requestPayload);
+      } catch (sendError) {
+        this.pendingRequests.delete(reqId.toString());
+        reject(sendError);
+        return;
+      }
 
-      // Timeout after 30 seconds
+      // Timeout after 15 seconds (reduced from 30s for faster failure detection)
       setTimeout(() => {
         if (this.pendingRequests.has(reqId.toString())) {
           this.pendingRequests.delete(reqId.toString());
           reject(new Error('Request timeout'));
         }
-      }, 30000);
+      }, 15000);
     });
   }
 
@@ -1362,6 +1381,13 @@ export class DerivClient {
    */
   private handleError(message: any): void {
     const error = new Error(message.error.message);
+    const errorCode = message.error.code;
+
+    // Check for authorization errors - attempt re-auth
+    if (errorCode === 'AuthorizationRequired' || message.error.message?.includes('log in')) {
+      console.warn('[DerivClient] ⚠️ Authorization error detected, attempting re-authentication...');
+      this.handleAuthorizationError();
+    }
 
     // Reject pending request if has req_id
     if (message.req_id) {
@@ -1370,6 +1396,37 @@ export class DerivClient {
         pending.reject(error);
         this.pendingRequests.delete(message.req_id.toString());
       }
+    }
+  }
+
+  /**
+   * Handle authorization errors by re-authenticating
+   */
+  private async handleAuthorizationError(): Promise<void> {
+    if (!this.config.apiToken) {
+      console.error('[DerivClient] Cannot re-authenticate: no API token configured');
+      return;
+    }
+
+    // Prevent multiple simultaneous re-auth attempts
+    if (this.isReauthorizing) {
+      console.log('[DerivClient] Re-authorization already in progress, skipping...');
+      return;
+    }
+
+    this.isReauthorizing = true;
+
+    try {
+      console.log('[DerivClient] 🔄 Re-authorizing...');
+      await this.authorize(this.config.apiToken);
+      console.log('[DerivClient] ✅ Re-authorization successful');
+    } catch (error) {
+      console.error('[DerivClient] ❌ Re-authorization failed:', error);
+      // If re-auth fails, schedule a full reconnect
+      console.log('[DerivClient] Scheduling full reconnect...');
+      this.scheduleReconnect();
+    } finally {
+      this.isReauthorizing = false;
     }
   }
 
