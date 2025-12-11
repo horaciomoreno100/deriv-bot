@@ -536,6 +536,9 @@ async function main() {
 
   // Handle ticks
   gatewayClient.on('tick', async (tick: Tick) => {
+    // Filter: only process ticks for configured symbols
+    if (!SYMBOLS.includes(tick.asset)) return;
+
     const candle = processTick(tick);
     if (!candle) return;
 

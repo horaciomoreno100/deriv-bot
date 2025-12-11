@@ -669,6 +669,9 @@ async function main() {
 
   // Process ticks and generate signals
   gatewayClient.on('tick', async (tick: Tick) => {
+    // Filter: only process ticks for configured symbols
+    if (!SYMBOLS.includes(tick.asset)) return;
+
     try {
       tickCount++;
       // Log tick receipt every 30 seconds
