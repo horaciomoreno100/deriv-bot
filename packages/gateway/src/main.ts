@@ -260,7 +260,8 @@ class Gateway {
       } else {
         // Reset counter on healthy check
         if (unhealthyCount > 0) {
-          this.logger.info(`🟢 Deriv connection recovered (ticks: ${health.totalTicksReceived}, subs: ${health.activeSubscriptionsCount})`);
+          // Send recovery alert to Telegram (using error level to trigger Telegram notification)
+          this.logger.error(`✅ GATEWAY CONNECTION RECOVERED after ${unhealthyCount} unhealthy check(s). Ticks: ${health.totalTicksReceived}, Subscriptions: ${health.activeSubscriptionsCount}`);
         }
         unhealthyCount = 0;
       }
