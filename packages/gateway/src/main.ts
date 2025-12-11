@@ -211,7 +211,62 @@ class Gateway {
     // 4. Print configuration
     this.printConfig();
 
+    // 5. Start connection health monitor
+    this.startHealthMonitor();
+
     this.logger.info('✨ Gateway is ready!');
+  }
+
+  /**
+   * Start connection health monitor
+   * Checks Deriv connection health every 30 seconds
+   * If unhealthy for 2 consecutive checks, triggers process exit for PM2 restart
+   */
+  private startHealthMonitor(): void {
+    const HEALTH_CHECK_INTERVAL = 30000; // 30 seconds
+    const MAX_UNHEALTHY_CHECKS = 2; // Exit after 2 consecutive unhealthy checks (1 minute)
+    let unhealthyCount = 0;
+
+    setInterval(async () => {
+      const health = this.derivClient.getConnectionHealth();
+
+      if (!health.isHealthy) {
+        unhealthyCount++;
+
+        const reason = !health.isConnected
+          ? 'WebSocket disconnected'
+          : health.secondsSinceLastTick > 120
+            ? `No ticks for ${health.secondsSinceLastTick}s`
+            : `No pong for ${health.secondsSinceLastPong}s`;
+
+        this.logger.warn(`🔴 Deriv connection unhealthy (${unhealthyCount}/${MAX_UNHEALTHY_CHECKS}): ${reason}`, {
+          health,
+        });
+
+        // Send Telegram alert on first unhealthy check
+        if (unhealthyCount === 1) {
+          this.logger.error(`⚠️ GATEWAY CONNECTION DEGRADED: ${reason}. Will restart if not recovered.`);
+        }
+
+        // Exit process after MAX_UNHEALTHY_CHECKS - PM2 will restart
+        if (unhealthyCount >= MAX_UNHEALTHY_CHECKS) {
+          this.logger.error(`🚨 GATEWAY UNHEALTHY - Exiting for PM2 restart. Reason: ${reason}`, {
+            health,
+          });
+
+          // Force exit - PM2 will restart automatically
+          process.exit(1);
+        }
+      } else {
+        // Reset counter on healthy check
+        if (unhealthyCount > 0) {
+          this.logger.info(`🟢 Deriv connection recovered (ticks: ${health.totalTicksReceived}, subs: ${health.activeSubscriptionsCount})`);
+        }
+        unhealthyCount = 0;
+      }
+    }, HEALTH_CHECK_INTERVAL);
+
+    this.logger.info('✅ Health monitor started (30s interval, auto-restart after 1 min unhealthy)');
   }
 
   /**

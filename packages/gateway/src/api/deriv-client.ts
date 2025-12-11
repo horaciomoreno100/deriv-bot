@@ -73,6 +73,13 @@ export class DerivClient {
   private activeSubscriptions: Array<{ type: string; symbol?: string; account?: string }> = [];
   private isReauthorizing = false; // Prevent multiple simultaneous re-auth attempts
 
+  // Connection health tracking
+  private lastTickTime: number = 0;
+  private lastPingTime: number = 0;
+  private lastPongTime: number = 0;
+  private totalTicksReceived: number = 0;
+  private connectionStartTime: number = 0;
+
   constructor(config: DerivClientConfig) {
     this.config = {
       appId: config.appId,
@@ -110,6 +117,7 @@ export class DerivClient {
 
       this.ws.on('open', async () => {
         this.connected = true;
+        this.connectionStartTime = Date.now();
         this.startKeepAlive();
 
         // Auto-authorize if token is provided
@@ -279,7 +287,11 @@ export class DerivClient {
       throw new Error('Not connected');
     }
 
-    this.send({ ping: 1 });
+    this.lastPingTime = Date.now();
+    const response = await this.request({ ping: 1 });
+    if (response.pong) {
+      this.lastPongTime = Date.now();
+    }
   }
 
   /**
@@ -1437,6 +1449,12 @@ export class DerivClient {
     const subscriptionId = message.subscription.id;
     const subscription = this.subscriptions.get(subscriptionId);
 
+    // Track tick timestamps for health monitoring
+    if (message.tick) {
+      this.lastTickTime = Date.now();
+      this.totalTicksReceived++;
+    }
+
     if (subscription) {
       subscription.callback(message);
     }
@@ -1468,6 +1486,49 @@ export class DerivClient {
       pending.resolve(message);
       this.pendingRequests.delete(reqId);
     }
+  }
+
+  /**
+   * Get connection health status for monitoring
+   * @returns Health status object with timestamps and counts
+   */
+  getConnectionHealth(): {
+    isConnected: boolean;
+    lastTickTime: number;
+    lastPingTime: number;
+    lastPongTime: number;
+    totalTicksReceived: number;
+    connectionStartTime: number;
+    secondsSinceLastTick: number;
+    secondsSinceLastPong: number;
+    activeSubscriptionsCount: number;
+    isHealthy: boolean;
+  } {
+    const now = Date.now();
+    const secondsSinceLastTick = this.lastTickTime > 0 ? Math.floor((now - this.lastTickTime) / 1000) : -1;
+    const secondsSinceLastPong = this.lastPongTime > 0 ? Math.floor((now - this.lastPongTime) / 1000) : -1;
+
+    // Consider unhealthy if:
+    // - Not connected
+    // - No ticks received for more than 2 minutes (when we have subscriptions)
+    // - No pong received for more than 2 minutes
+    const hasSubscriptions = this.activeSubscriptions.length > 0;
+    const ticksStale = hasSubscriptions && secondsSinceLastTick > 120;
+    const pongStale = secondsSinceLastPong > 120;
+    const isHealthy = this.isConnected() && !ticksStale && !pongStale;
+
+    return {
+      isConnected: this.isConnected(),
+      lastTickTime: this.lastTickTime,
+      lastPingTime: this.lastPingTime,
+      lastPongTime: this.lastPongTime,
+      totalTicksReceived: this.totalTicksReceived,
+      connectionStartTime: this.connectionStartTime,
+      secondsSinceLastTick,
+      secondsSinceLastPong,
+      activeSubscriptionsCount: this.activeSubscriptions.length,
+      isHealthy,
+    };
   }
 
   /**

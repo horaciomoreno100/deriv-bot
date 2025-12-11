@@ -1708,7 +1708,7 @@ export async function handleGetServerStatusCommand(
   command: CommandMessage,
   context: CommandHandlerContext
 ): Promise<void> {
-  const { gatewayServer } = context;
+  const { gatewayServer, derivClient } = context;
   const os = await import('os');
   const { execSync } = await import('child_process');
 
@@ -1778,6 +1778,9 @@ export async function handleGetServerStatusCommand(
       // PM2 not available or not running
     }
 
+    // Get Deriv connection health
+    const derivHealth = derivClient.getConnectionHealth();
+
     const status = {
       cpu: {
         count: cpuCount,
@@ -1808,6 +1811,15 @@ export async function handleGetServerStatusCommand(
         uptime,
         uptimeFormatted: formatUptime(uptime * 1000),
         loadAvg: loadAvg.map(l => Math.round(l * 100) / 100),
+      },
+      derivConnection: {
+        isConnected: derivHealth.isConnected,
+        isHealthy: derivHealth.isHealthy,
+        secondsSinceLastTick: derivHealth.secondsSinceLastTick,
+        secondsSinceLastPong: derivHealth.secondsSinceLastPong,
+        totalTicksReceived: derivHealth.totalTicksReceived,
+        activeSubscriptionsCount: derivHealth.activeSubscriptionsCount,
+        uptimeMs: derivHealth.connectionStartTime > 0 ? Date.now() - derivHealth.connectionStartTime : 0,
       },
       processes: pm2Processes.map(p => ({
         ...p,
