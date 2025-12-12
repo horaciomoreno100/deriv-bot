@@ -48,6 +48,48 @@ export const DEFAULT_FVG_LIQUIDITY_SWEEP_PARAMS: FVGLiquiditySweepParams = {
   // Hour Filter (disabled by default)
   hourFilterEnabled: false,
   badHoursUTC: [],
+
+  // Session Filter (Killzones) - disabled by default
+  useSessionFilter: false,
+  sessionStartHour: 7,        // 7 UTC = London pre-market
+  sessionEndHour: 20,         // 20 UTC = NY close
+
+  // RSI Divergence Filter - disabled by default
+  useRsiDivergence: false,
+  rsiPeriod: 14,
+  minRsiDivergence: 5,        // Minimum 5 points difference
+
+  // Sweep Quality Filters
+  minSweepDepthPct: 0.0002,   // 0.02% minimum penetration (slightly deeper)
+  requireStrongRejection: true,  // Close must be in opposite half of candle
+
+  // Market Structure Shift (MSS) - CRITICAL ICT ELEMENT
+  requireMSS: true,           // ENABLED by default - this is the key fix!
+  mssLookbackBars: 15,        // Look back 15 bars for swing to break (wider)
+  maxBarsForMSS: 20,          // Max 20 bars after sweep to confirm MSS
+
+  // Entry Confirmation Filters
+  requireEntryConfirmation: false,  // Disabled - too restrictive for forex
+  minRejectionWickRatio: 1.0,       // Wick must be 1x body for rejection
+
+  // Momentum/Impulse Filters
+  requireImpulsiveFVG: false,       // Disabled - too restrictive for forex
+  minImpulseBodyAtrMultiple: 0.5,   // Body must be 0.5x ATR
+  atrPeriod: 14,                    // 14-period ATR
+
+  // Dynamic TP/SL based on Support/Resistance
+  useDynamicTPSL: false,            // Disabled by default - use fixed R:R
+  minDynamicRR: 1.5,                // Minimum 1.5:1 R:R even with dynamic
+  maxDynamicRR: 5.0,                // Maximum 5:1 R:R to avoid unrealistic targets
+  targetZoneBufferPct: 0.0005,      // 0.05% buffer before zone (5 pips for forex)
+
+  // Multi-Timeframe (MTF) Analysis
+  useMTF: false,                    // Disabled by default
+  htfMultiplier: 60,                // H1 from M1 data (60 candles = 1 H1 candle)
+  htfSwingLength: 5,                // 5 H1 candles for swing detection
+  htfConfluenceDistancePct: 0.002,  // 0.2% max distance for confluence
+  htfMinSwingsForZone: 2,           // 2+ swings for HTF zone
+  htfConfluenceConfidenceBoost: 10, // +10% confidence when HTF aligns
 };
 
 /**
@@ -70,27 +112,32 @@ export const SYNTHETIC_INDEX_PARAMS: Partial<FVGLiquiditySweepParams> = {
  * Forex moves much less than synthetics - need smaller gap thresholds
  * EUR/USD typical daily range: 0.5-1%, 1-min ATR: ~0.005%
  *
- * ML Optimization Results (Dec 2025, 90 days):
- * - Best PF: 1.41 with RR=1.0, SL=0.15%
- * - Lower RR (1.0-1.2) outperforms higher RR (2.0+)
- * - Wider SL buffer (0.15%) reduces whipsaws
+ * Win Rate Optimization Results (Dec 2025, 365 days EUR/USD):
+ * - Baseline: 55.7% WR, PF 1.43, $81.37
+ * - fib_lrr (2:1 RR): 58.9% WR, PF 1.46, $50.23, MaxDD 2.1%
+ * - tight_1to1 (1:1 RR): 60.6% WR, PF 1.51, $50.29, MaxDD 1.2% ← BEST
+ *
+ * tight_1to1 wins: +1.7% WR, +3% PF, -43% drawdown, faster trades
  */
 export const FOREX_PARAMS: Partial<FVGLiquiditySweepParams> = {
   swingLength: 5,                    // Faster swings
   liquidityRangePct: 0.003,          // 0.3% range (tighter)
-  minSwingsForZone: 2,
-  minFVGSizePct: 0.00005,            // 0.005% minimum gap (5 pips for EUR/USD)
+  minSwingsForZone: 3,               // 3+ swings = stronger liquidity zone (WR+)
+  minFVGSizePct: 0.00008,            // 0.008% minimum gap - larger FVGs (WR+)
   maxBarsAfterSweep: 30,
   maxBarsForEntry: 20,
   fvgSearchBars: 15,
-  stopLossBufferPct: 0.001,          // 0.10% buffer - tighter for faster trades
-  takeProfitRR: 0.5,                 // 0.5:1 R:R - smaller targets, faster exits
+  stopLossBufferPct: 0.0005,         // 0.05% SL (~5 pips) - TIGHT for scalping
+  takeProfitRR: 1.0,                 // 1:1 R:R - max WR, same TP as SL (~5 pips)
   cooldownSeconds: 60,               // 1 min cooldown
-  minConfidence: 0.65,
+  minConfidence: 0.75,               // Higher confidence threshold
   maxZoneAgeBars: 300,
   // Hour filter enabled for forex
   hourFilterEnabled: true,
   badHoursUTC: [4, 5, 9, 17, 21, 23], // Common bad hours across forex pairs
+  // Sweep Quality Filters (WR+)
+  requireStrongRejection: true,      // Strong rejection = better reversals
+  minSweepDepthPct: 0.0003,          // Deeper sweep = more significant
 };
 
 /**

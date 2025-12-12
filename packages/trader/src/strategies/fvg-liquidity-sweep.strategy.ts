@@ -255,6 +255,21 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
         const closedAbove = !params.requireCloseBack || currentCandle.close > zone.level;
 
         if (brokeBelow && closedAbove) {
+          // Check minimum sweep depth
+          const sweepDepth = (zone.level - currentCandle.low) / zone.level;
+          if (sweepDepth < params.minSweepDepthPct) {
+            continue; // Sweep not deep enough
+          }
+
+          // Check for strong rejection (close in upper half of candle for bullish rejection)
+          if (params.requireStrongRejection) {
+            const candleRange = currentCandle.high - currentCandle.low;
+            const candleMidpoint = currentCandle.low + candleRange / 2;
+            if (currentCandle.close < candleMidpoint) {
+              continue; // Not a strong rejection - close in lower half
+            }
+          }
+
           // Mark zone as swept
           zone.swept = true;
           zone.sweptIndex = currentIndex;
@@ -276,6 +291,21 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
         const closedBelow = !params.requireCloseBack || currentCandle.close < zone.level;
 
         if (brokeAbove && closedBelow) {
+          // Check minimum sweep depth
+          const sweepDepth = (currentCandle.high - zone.level) / zone.level;
+          if (sweepDepth < params.minSweepDepthPct) {
+            continue; // Sweep not deep enough
+          }
+
+          // Check for strong rejection (close in lower half of candle for bearish rejection)
+          if (params.requireStrongRejection) {
+            const candleRange = currentCandle.high - currentCandle.low;
+            const candleMidpoint = currentCandle.low + candleRange / 2;
+            if (currentCandle.close > candleMidpoint) {
+              continue; // Not a strong rejection - close in upper half
+            }
+          }
+
           // Mark zone as swept
           zone.swept = true;
           zone.sweptIndex = currentIndex;
@@ -298,7 +328,133 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
   }
 
   /**
-   * Scan for FVG formed after a sweep
+   * Detect Market Structure Shift (MSS) after sweep
+   *
+   * MSS is the CRITICAL ICT element that confirms the reversal:
+   * - For SSL sweep (bullish): Price must break a recent swing HIGH (break of bearish structure)
+   * - For BSL sweep (bearish): Price must break a recent swing LOW (break of bullish structure)
+   *
+   * This confirms that the sweep was indeed a "stop hunt" and price is reversing
+   */
+  private detectMarketStructureShift(
+    candles: Candle[],
+    sweep: ActiveSweep,
+    currentIndex: number,
+    params: FVGLiquiditySweepParams
+  ): { confirmed: boolean; level: number; index: number } | null {
+    // Find recent swings between sweep and current candle
+    const sweepIndex = sweep.sweepIndex;
+    const lookbackStart = Math.max(0, sweepIndex - params.mssLookbackBars);
+
+    if (sweep.type === 'SSL') {
+      // SSL sweep (bullish) - need to break a recent swing HIGH
+      // Find the most recent swing high between lookbackStart and sweep
+      let nearestSwingHigh = -Infinity;
+      let swingHighIndex = -1;
+
+      for (let i = lookbackStart; i < sweepIndex; i++) {
+        // Check if this is a swing high (simple check: higher than neighbors)
+        if (i > 0 && i < candles.length - 1) {
+          const prevHigh = candles[i - 1]?.high ?? 0;
+          const currHigh = candles[i]?.high ?? 0;
+          const nextHigh = candles[i + 1]?.high ?? 0;
+
+          if (currHigh > prevHigh && currHigh > nextHigh) {
+            // This is a swing high - take the most recent one
+            if (i > swingHighIndex) {
+              nearestSwingHigh = currHigh;
+              swingHighIndex = i;
+            }
+          }
+        }
+      }
+
+      // If no swing high found, use the high of the sweep candle area
+      if (swingHighIndex === -1) {
+        // Find highest high in lookback period
+        for (let i = lookbackStart; i < sweepIndex; i++) {
+          const high = candles[i]?.high ?? 0;
+          if (high > nearestSwingHigh) {
+            nearestSwingHigh = high;
+            swingHighIndex = i;
+          }
+        }
+      }
+
+      if (nearestSwingHigh === -Infinity) return null;
+
+      // Check if any candle after sweep breaks this swing high
+      for (let i = sweepIndex + 1; i <= currentIndex; i++) {
+        const candle = candles[i];
+        if (!candle) continue;
+
+        // MSS confirmed when HIGH breaks above the swing high AND close is above
+        if (candle.high > nearestSwingHigh && candle.close > nearestSwingHigh) {
+          return {
+            confirmed: true,
+            level: nearestSwingHigh,
+            index: i,
+          };
+        }
+      }
+    } else {
+      // BSL sweep (bearish) - need to break a recent swing LOW
+      // Find the most recent swing low between lookbackStart and sweep
+      let nearestSwingLow = Infinity;
+      let swingLowIndex = -1;
+
+      for (let i = lookbackStart; i < sweepIndex; i++) {
+        // Check if this is a swing low (simple check: lower than neighbors)
+        if (i > 0 && i < candles.length - 1) {
+          const prevLow = candles[i - 1]?.low ?? Infinity;
+          const currLow = candles[i]?.low ?? Infinity;
+          const nextLow = candles[i + 1]?.low ?? Infinity;
+
+          if (currLow < prevLow && currLow < nextLow) {
+            // This is a swing low - take the most recent one
+            if (i > swingLowIndex) {
+              nearestSwingLow = currLow;
+              swingLowIndex = i;
+            }
+          }
+        }
+      }
+
+      // If no swing low found, use the low of the sweep candle area
+      if (swingLowIndex === -1) {
+        // Find lowest low in lookback period
+        for (let i = lookbackStart; i < sweepIndex; i++) {
+          const low = candles[i]?.low ?? Infinity;
+          if (low < nearestSwingLow) {
+            nearestSwingLow = low;
+            swingLowIndex = i;
+          }
+        }
+      }
+
+      if (nearestSwingLow === Infinity) return null;
+
+      // Check if any candle after sweep breaks this swing low
+      for (let i = sweepIndex + 1; i <= currentIndex; i++) {
+        const candle = candles[i];
+        if (!candle) continue;
+
+        // MSS confirmed when LOW breaks below the swing low AND close is below
+        if (candle.low < nearestSwingLow && candle.close < nearestSwingLow) {
+          return {
+            confirmed: true,
+            level: nearestSwingLow,
+            index: i,
+          };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Scan for FVG formed after MSS confirmation
    *
    * For LONG (SSL sweep): Look for bullish FVG (candle[i].low > candle[i-2].high)
    * For SHORT (BSL sweep): Look for bearish FVG (candle[i].high < candle[i-2].low)
@@ -566,17 +722,91 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
 
         state.activeSweep.barsSinceSweep++;
 
-        // Check if too many bars since sweep
+        // Check if MSS is required
+        if (params.requireMSS) {
+          // Check if too many bars waiting for MSS
+          if (state.activeSweep.barsSinceSweep > params.maxBarsForMSS) {
+            console.log(
+              `[FVG-LS] MSS not confirmed after ${state.activeSweep.barsSinceSweep} bars - resetting`
+            );
+            state.phase = 'SCANNING';
+            state.activeSweep = undefined;
+            return null;
+          }
+
+          // Look for Market Structure Shift
+          const mss = this.detectMarketStructureShift(
+            candles,
+            state.activeSweep,
+            currentIndex,
+            params
+          );
+
+          if (mss && mss.confirmed) {
+            // MSS confirmed! Update sweep and move to next phase
+            state.activeSweep.mssConfirmed = true;
+            state.activeSweep.mssIndex = mss.index;
+            state.activeSweep.mssLevel = mss.level;
+            state.phase = 'MSS_CONFIRMED';
+            state.barsInState = 0;
+            console.log(
+              `[FVG-LS] MSS CONFIRMED: ${state.activeSweep.type} sweep -> ` +
+                `Break of ${mss.level.toFixed(5)} at bar ${mss.index} -> ${state.activeSweep.expectedDirection}`
+            );
+          }
+          return null;
+        } else {
+          // MSS not required - skip directly to FVG search (legacy behavior)
+          // Check if too many bars since sweep
+          if (state.activeSweep.barsSinceSweep > params.maxBarsAfterSweep) {
+            console.log(
+              `[FVG-LS] Sweep expired after ${state.activeSweep.barsSinceSweep} bars`
+            );
+            state.phase = 'SCANNING';
+            state.activeSweep = undefined;
+            return null;
+          }
+
+          // Look for FVG formed after sweep
+          const fvg = this.scanForPostSweepFVG(
+            candles,
+            state.activeSweep,
+            currentIndex,
+            params
+          );
+
+          if (fvg) {
+            state.phase = 'WAITING_ENTRY';
+            state.activeFVG = fvg;
+            state.barsInState = 0;
+            console.log(
+              `[FVG-LS] FVG FOUND: ${fvg.type} [${fvg.bottom.toFixed(2)} - ${fvg.top.toFixed(2)}] ` +
+                `midpoint: ${fvg.midpoint.toFixed(2)}`
+            );
+          }
+          return null;
+        }
+      }
+
+      case 'MSS_CONFIRMED': {
+        if (!state.activeSweep) {
+          state.phase = 'SCANNING';
+          return null;
+        }
+
+        state.activeSweep.barsSinceSweep++;
+
+        // Check if too many bars since MSS for FVG
         if (state.activeSweep.barsSinceSweep > params.maxBarsAfterSweep) {
           console.log(
-            `[FVG-LS] Sweep expired after ${state.activeSweep.barsSinceSweep} bars`
+            `[FVG-LS] FVG not found after MSS - expired after ${state.activeSweep.barsSinceSweep} bars`
           );
           state.phase = 'SCANNING';
           state.activeSweep = undefined;
           return null;
         }
 
-        // Look for FVG formed after sweep
+        // Look for FVG formed after MSS
         const fvg = this.scanForPostSweepFVG(
           candles,
           state.activeSweep,
@@ -589,8 +819,8 @@ export class FVGLiquiditySweepStrategy extends BaseStrategy {
           state.activeFVG = fvg;
           state.barsInState = 0;
           console.log(
-            `[FVG-LS] FVG FOUND: ${fvg.type} [${fvg.bottom.toFixed(2)} - ${fvg.top.toFixed(2)}] ` +
-              `midpoint: ${fvg.midpoint.toFixed(2)}`
+            `[FVG-LS] FVG FOUND (post-MSS): ${fvg.type} [${fvg.bottom.toFixed(5)} - ${fvg.top.toFixed(5)}] ` +
+              `midpoint: ${fvg.midpoint.toFixed(5)}`
           );
         }
         return null;

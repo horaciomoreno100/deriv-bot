@@ -103,7 +103,7 @@ export function resampleCandles(
   targetTF: Timeframe,
   options: ResampleOptions = {}
 ): Candle[] {
-  const { fillGaps = true, includePartial = false, validateTimestamps = true } = options;
+  const { fillGaps: _fillGaps = true, includePartial = false, validateTimestamps = true } = options;
 
   if (candles.length === 0) {
     return [];
@@ -136,7 +136,6 @@ export function resampleCandles(
     for (let i = 1; i < candles.length; i++) {
       const prev = candles[i - 1]!;
       const curr = candles[i]!;
-      const expectedGap = sourceSeconds;
       const actualGap = curr.timestamp - prev.timestamp;
 
       // Allow small variations (up to 2x expected gap for missing candles)

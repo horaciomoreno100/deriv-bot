@@ -1,0 +1,24 @@
+{
+  "name": "@deriv-bot/binance-client",
+  "version": "0.1.0",
+  "description": "Binance API client for crypto with REAL volume data",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "test:connection": "tsx src/test-connection.ts",
+    "analyze": "tsx src/scripts/analyze-btc.ts",
+    "analyze:structure": "tsx src/scripts/analyze-structure.ts",
+    "analyze:mtf": "tsx src/scripts/analyze-mtf.ts"
+  },
+  "dependencies": {
+    "binance": "^2.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

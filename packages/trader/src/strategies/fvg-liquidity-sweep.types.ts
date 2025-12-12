@@ -91,14 +91,26 @@ export interface ActiveSweep {
   expectedDirection: 'CALL' | 'PUT';
   /** Candles since sweep occurred */
   barsSinceSweep: number;
+  /** Market Structure Shift confirmed */
+  mssConfirmed?: boolean;
+  /** Index where MSS was confirmed */
+  mssIndex?: number;
+  /** Price level of MSS (break of structure) */
+  mssLevel?: number;
 }
 
 /**
  * Strategy State Machine
+ *
+ * ICT Flow: SCANNING -> SWEEP_DETECTED -> MSS_CONFIRMED -> WAITING_ENTRY
+ *
+ * The critical addition is MSS_CONFIRMED - we MUST wait for Market Structure Shift
+ * (break of recent swing high/low in the reversal direction) before looking for FVG entry.
  */
 export type StrategyPhase =
   | 'SCANNING'        // Looking for liquidity zones and sweeps
-  | 'SWEEP_DETECTED'  // Sweep detected, waiting for FVG formation
+  | 'SWEEP_DETECTED'  // Sweep detected, waiting for MSS confirmation
+  | 'MSS_CONFIRMED'   // MSS confirmed, now looking for FVG formation
   | 'WAITING_ENTRY';  // FVG found, waiting for price to enter
 
 /**
@@ -177,11 +189,79 @@ export interface FVGLiquiditySweepParams {
   /** Cooldown after 4+ consecutive losses */
   cooldownAfter4PlusLosses: number;
 
-  // Hour Filter
+  // Hour Filter (legacy - use session filter instead)
   /** Enable hour-based trade filtering */
   hourFilterEnabled: boolean;
   /** Hours to avoid trading (UTC, 0-23) */
   badHoursUTC: number[];
+
+  // Session Filter (Killzones)
+  /** Enable session-based trading (London/NY opens) */
+  useSessionFilter: boolean;
+  /** Session start hour (UTC, 0-23) */
+  sessionStartHour: number;
+  /** Session end hour (UTC, 0-23) */
+  sessionEndHour: number;
+
+  // RSI Divergence Filter
+  /** Require RSI divergence for confirmation */
+  useRsiDivergence: boolean;
+  /** RSI period for divergence calculation */
+  rsiPeriod: number;
+  /** Minimum RSI difference to confirm divergence */
+  minRsiDivergence: number;
+
+  // Sweep Quality Filters
+  /** Minimum sweep depth as % beyond zone level */
+  minSweepDepthPct: number;
+  /** Require strong rejection (close in opposite half of candle) */
+  requireStrongRejection: boolean;
+
+  // Market Structure Shift (MSS) - CRITICAL ICT ELEMENT
+  /** Require MSS confirmation before looking for FVG */
+  requireMSS: boolean;
+  /** Bars to look back for swing to break (MSS detection) */
+  mssLookbackBars: number;
+  /** Max bars after sweep to wait for MSS */
+  maxBarsForMSS: number;
+
+  // Entry Confirmation Filters
+  /** Require rejection wick or engulfing candle at FVG entry */
+  requireEntryConfirmation: boolean;
+  /** Minimum wick ratio for rejection (wick / body) */
+  minRejectionWickRatio: number;
+
+  // Momentum/Impulse Filters
+  /** Require impulsive candle creating the FVG (large body) */
+  requireImpulsiveFVG: boolean;
+  /** Minimum body size relative to ATR for impulsive candle */
+  minImpulseBodyAtrMultiple: number;
+  /** ATR period for momentum calculations */
+  atrPeriod: number;
+
+  // Dynamic TP/SL based on Support/Resistance
+  /** Use nearby liquidity zones for dynamic TP instead of fixed R:R */
+  useDynamicTPSL: boolean;
+  /** Minimum R:R when using dynamic TP (fallback if zone too close) */
+  minDynamicRR: number;
+  /** Maximum R:R when using dynamic TP (cap if zone too far) */
+  maxDynamicRR: number;
+  /** Buffer before the target zone (% of price) to avoid hitting exact level */
+  targetZoneBufferPct: number;
+
+  // Multi-Timeframe (MTF) Analysis
+  /** Enable MTF confluence filter (require HTF zone alignment) */
+  useMTF: boolean;
+  /** Higher timeframe multiplier (e.g., 60 = H1 from M1 data) */
+  htfMultiplier: number;
+  /** Swing length for HTF zone detection */
+  htfSwingLength: number;
+  /** Max distance from LTF zone to HTF zone for confluence (as % of price) */
+  htfConfluenceDistancePct: number;
+  /** Minimum swings to form HTF zone */
+  htfMinSwingsForZone: number;
+  /** Boost confidence when HTF zone aligns */
+  htfConfluenceConfidenceBoost: number;
 }
 
 /**

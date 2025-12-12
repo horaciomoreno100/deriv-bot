@@ -1,0 +1,24 @@
+{
+  "name": "@deriv-bot/ctrader-client",
+  "version": "0.1.0",
+  "description": "cTrader Open API client for depth of market and tick data",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "test:connection": "tsx src/test-connection.ts",
+    "download-protos": "curl -o src/proto/OpenApiCommonMessages.proto https://raw.githubusercontent.com/spotware/openapi-proto-messages/main/OpenApiCommonMessages.proto && curl -o src/proto/OpenApiMessages.proto https://raw.githubusercontent.com/spotware/openapi-proto-messages/main/OpenApiMessages.proto && curl -o src/proto/OpenApiModelMessages.proto https://raw.githubusercontent.com/spotware/openapi-proto-messages/main/OpenApiModelMessages.proto",
+    "generate-types": "pbjs -t static-module -w es6 -o src/generated/messages.js src/proto/*.proto && pbts -o src/generated/messages.d.ts src/generated/messages.js"
+  },
+  "dependencies": {
+    "protobufjs": "^7.2.6",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.5.10",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

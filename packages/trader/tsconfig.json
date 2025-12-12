@@ -19,7 +19,8 @@
     "src/services/**/*",
     "src/analysis/**/*",
     "src/trade-management/**/*",
-    "src/accounting/**/*"
+    "src/accounting/**/*",
+    "src/utils/**/*"
   ],
   "exclude": [
     "node_modules",

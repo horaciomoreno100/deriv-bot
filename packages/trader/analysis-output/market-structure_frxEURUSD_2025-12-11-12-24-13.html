@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>frxEURUSD - Market Structure (60s)</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0e0e0e;
+      color: #e0e0e0;
+      padding: 15px;
+    }
+    .container {
+      width: 100%;
+      max-width: 100%;
+    }
+    .header { margin-bottom: 15px; }
+    .panels {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .panel {
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 15px;
+      flex: 1;
+      min-width: 280px;
+    }
+    .panel h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 10px;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 16px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .stat-label {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    .levels-list {
+      font-size: 12px;
+      line-height: 1.8;
+    }
+    .level-resistance { color: #ef4444; }
+    .level-support { color: #22c55e; }
+    .trend-up { color: #22c55e; }
+    .trend-down { color: #ef4444; }
+    .trend-sideways { color: #9ca3af; }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      font-size: 11px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-color {
+      width: 16px;
+      height: 12px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .legend-line {
+      width: 16px;
+      height: 2px;
+      flex-shrink: 0;
+    }
+    .legend-marker {
+      width: 0;
+      height: 0;
+      flex-shrink: 0;
+    }
+    .triangle-up {
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 10px solid #3b82f6;
+    }
+    .triangle-down {
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 10px solid #f59e0b;
+    }
+    #chart {
+      width: 100%;
+      height: 900px;
+    }
+    .phase-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="panels">
+      
+    <div class="panel">
+      <h3>📊 Market Structure Summary</h3>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value trend-sideways">↔️ SIDEWAYS</div>
+          <div class="stat-label">Trend</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">0%</div>
+          <div class="stat-label">Strength</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">🔵 accumulation</div>
+          <div class="stat-label">Phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">8</div>
+          <div class="stat-label">Swings</div>
+        </div>
+      </div>
+      <div style="margin-top: 15px;">
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Resistance Zones</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Support Zones</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Descending Lines</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Ascending Lines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+      
+    <div class="panel">
+      <h3>🎨 Legend</h3>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="legend-color" style="background: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444;"></div>
+          <span>Resistance Zone</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: rgba(34, 197, 94, 0.3); border: 1px solid #22c55e;"></div>
+          <span>Support Zone</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background: #ef4444;"></div>
+          <span>Descending Line</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background: #22c55e;"></div>
+          <span>Ascending Line</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-marker triangle-down"></div>
+          <span>Swing High</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-marker triangle-up"></div>
+          <span>Swing Low</span>
+        </div>
+      </div>
+      <div style="margin-top: 12px; border-top: 1px solid #2a2a2a; padding-top: 10px;">
+        <div style="font-size: 11px; margin-bottom: 6px;">Market Phases:</div>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgba(34, 197, 94, 0.08);"></div>
+            <span class="phase-label">Markup</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgba(239, 68, 68, 0.08);"></div>
+            <span class="phase-label">Markdown</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgba(59, 130, 246, 0.08);"></div>
+            <span class="phase-label">Accumulation</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgba(249, 115, 22, 0.08);"></div>
+            <span class="phase-label">Distribution</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    </div>
+    <div id="chart"></div>
+  </div>
+  <script>
+    const traces = [{"type":"candlestick","name":"Price","x":["2025-12-08T19:01:00.000Z","2025-12-08T19:02:00.000Z","2025-12-08T19:03:00.000Z","2025-12-08T19:04:00.000Z","2025-12-08T19:05:00.000Z","2025-12-08T19:06:00.000Z","2025-12-08T19:07:00.000Z","2025-12-08T19:08:00.000Z","2025-12-08T19:09:00.000Z","2025-12-08T19:10:00.000Z","2025-12-08T19:11:00.000Z","2025-12-08T19:12:00.000Z","2025-12-08T19:13:00.000Z","2025-12-08T19:14:00.000Z","2025-12-08T19:15:00.000Z","2025-12-08T19:16:00.000Z","2025-12-08T19:17:00.000Z","2025-12-08T19:18:00.000Z","2025-12-08T19:19:00.000Z","2025-12-08T19:20:00.000Z","2025-12-08T19:21:00.000Z","2025-12-08T19:22:00.000Z","2025-12-08T19:23:00.000Z","2025-12-08T19:24:00.000Z","2025-12-08T19:25:00.000Z","2025-12-08T19:26:00.000Z","2025-12-08T19:27:00.000Z","2025-12-08T19:28:00.000Z","2025-12-08T19:29:00.000Z","2025-12-08T19:30:00.000Z","2025-12-08T19:31:00.000Z","2025-12-08T19:32:00.000Z","2025-12-08T19:33:00.000Z","2025-12-08T19:34:00.000Z","2025-12-08T19:35:00.000Z","2025-12-08T19:36:00.000Z","2025-12-08T19:37:00.000Z","2025-12-08T19:38:00.000Z","2025-12-08T19:39:00.000Z","2025-12-08T19:40:00.000Z","2025-12-08T19:41:00.000Z","2025-12-08T19:42:00.000Z","2025-12-08T19:43:00.000Z","2025-12-08T19:44:00.000Z","2025-12-08T19:45:00.000Z","2025-12-08T19:46:00.000Z","2025-12-08T19:47:00.000Z","2025-12-08T19:48:00.000Z","2025-12-08T19:49:00.000Z","2025-12-08T19:50:00.000Z","2025-12-08T19:51:00.000Z","2025-12-08T19:52:00.000Z","2025-12-08T19:53:00.000Z","2025-12-08T19:54:00.000Z","2025-12-08T19:55:00.000Z","2025-12-08T19:56:00.000Z","2025-12-08T19:57:00.000Z","2025-12-08T19:58:00.000Z","2025-12-08T19:59:00.000Z","2025-12-08T20:00:00.000Z"],"open":[1.16376,1.16377,1.16367,1.16368,1.16379,1.16388,1.16387,1.16397,1.16397,1.16396,1.16384,1.16382,1.16383,1.16379,1.16382,1.16387,1.16397,1.16394,1.16392,1.16397,1.16394,1.16397,1.16402,1.16392,1.16382,1.16382,1.16381,1.16382,1.16377,1.16386,1.16383,1.16382,1.16371,1.16376,1.16382,1.16382,1.1638,1.16386,1.16395,1.16413,1.16411,1.16407,1.16417,1.16411,1.16411,1.164,1.16401,1.16387,1.16391,1.16386,1.16381,1.16395,1.16398,1.16397,1.16394,1.16385,1.16388,1.16384,1.16395,1.16394],"high":[1.16388,1.16377,1.16369,1.16379,1.16388,1.1639,1.16397,1.16402,1.16402,1.16396,1.16391,1.16386,1.16387,1.16382,1.16387,1.16397,1.16397,1.16397,1.16399,1.16398,1.16398,1.16408,1.16404,1.16392,1.16386,1.16383,1.16383,1.16382,1.16386,1.16387,1.16389,1.16382,1.16377,1.16384,1.16385,1.16383,1.16385,1.16397,1.16413,1.16413,1.16411,1.16418,1.16417,1.16412,1.16411,1.16401,1.16401,1.16392,1.16391,1.16386,1.16394,1.16399,1.16401,1.16397,1.16394,1.16391,1.1639,1.16397,1.164,1.164],"low":[1.16376,1.16367,1.16365,1.16367,1.16375,1.16386,1.16387,1.16396,1.16397,1.16382,1.16382,1.16381,1.16379,1.16379,1.16382,1.16386,1.16391,1.16392,1.16391,1.16393,1.16394,1.16397,1.16391,1.16382,1.16381,1.16381,1.1638,1.16375,1.16376,1.16383,1.16381,1.1637,1.16371,1.16375,1.16376,1.16379,1.16377,1.16386,1.16395,1.16408,1.16407,1.16407,1.16411,1.16408,1.164,1.164,1.16386,1.16385,1.16384,1.1638,1.16381,1.16392,1.16395,1.16389,1.16385,1.16381,1.16379,1.16382,1.16394,1.16394],"close":[1.16377,1.16367,1.16368,1.16379,1.16388,1.16387,1.16397,1.16397,1.16398,1.16383,1.16382,1.16383,1.16379,1.16382,1.16386,1.16397,1.16393,1.16393,1.16397,1.16393,1.16397,1.16402,1.16391,1.16382,1.16382,1.16381,1.16382,1.16377,1.16386,1.16384,1.16387,1.16371,1.16376,1.16381,1.16383,1.1638,1.16385,1.16394,1.16413,1.16411,1.16407,1.16417,1.16411,1.16411,1.16401,1.16401,1.16386,1.16391,1.16386,1.16381,1.16394,1.16396,1.16397,1.16393,1.16385,1.1639,1.16385,1.16395,1.16394,1.164],"increasing":{"line":{"color":"#22c55e"}},"decreasing":{"line":{"color":"#ef4444"}}},{"type":"scatter","mode":"markers","name":"Swing Highs","x":["2025-12-08T19:22:00.000Z","2025-12-08T19:31:00.000Z","2025-12-08T19:42:00.000Z","2025-12-08T19:53:00.000Z"],"y":[1.16408,1.16389,1.16418,1.16401],"marker":{"symbol":"triangle-down","size":[14,14,14,14],"color":["rgba(245, 158, 11, 0.4)","rgba(245, 158, 11, 0.4)","#f59e0b","#f59e0b"],"line":{"width":1,"color":"#e0e0e0"}},"text":["<b>Swing High</b><br>Price: 1.1641<br>Strength: 3/5<br>❌ Broken","<b>Swing High</b><br>Price: 1.1639<br>Strength: 3/5<br>❌ Broken","<b>Swing High</b><br>Price: 1.1642<br>Strength: 3/5<br>✅ Active","<b>Swing High</b><br>Price: 1.1640<br>Strength: 3/5<br>✅ Active"],"hoverinfo":"text"},{"type":"scatter","mode":"markers","name":"Swing Lows","x":["2025-12-08T19:28:00.000Z","2025-12-08T19:32:00.000Z","2025-12-08T19:50:00.000Z","2025-12-08T19:57:00.000Z"],"y":[1.16375,1.1637,1.1638,1.16379],"marker":{"symbol":"triangle-up","size":[14,14,14,14],"color":["rgba(59, 130, 246, 0.4)","#3b82f6","#3b82f6","#3b82f6"],"line":{"width":1,"color":"#e0e0e0"}},"text":["<b>Swing Low</b><br>Price: 1.1638<br>Strength: 3/5<br>❌ Broken","<b>Swing Low</b><br>Price: 1.1637<br>Strength: 3/5<br>✅ Active","<b>Swing Low</b><br>Price: 1.1638<br>Strength: 3/5<br>✅ Active","<b>Swing Low</b><br>Price: 1.1638<br>Strength: 3/5<br>✅ Active"],"hoverinfo":"text"}];
+    const layout = {"title":{"text":"frxEURUSD - Market Structure (60s)","font":{"color":"#e0e0e0","size":18}},"autosize":true,"height":900,"paper_bgcolor":"#1a1a1a","plot_bgcolor":"#0e0e0e","font":{"color":"#e0e0e0"},"showlegend":true,"legend":{"orientation":"h","y":1.02,"x":0.5,"xanchor":"center","font":{"size":11}},"xaxis":{"type":"date","rangeslider":{"visible":false},"gridcolor":"#2a2a2a","showgrid":true},"yaxis":{"title":"Price","side":"right","gridcolor":"#2a2a2a","showgrid":true},"shapes":[{"type":"rect","x0":"2025-12-08T19:01:00.000Z","x1":"2025-12-08T19:20:00.000Z","y0":0,"y1":1,"xref":"x","yref":"paper","fillcolor":"rgba(156, 163, 175, 0.05)","opacity":0.08,"line":{"width":0}},{"type":"rect","x0":"2025-12-08T19:21:00.000Z","x1":"2025-12-08T19:40:00.000Z","y0":0,"y1":1,"xref":"x","yref":"paper","fillcolor":"rgba(59, 130, 246, 0.08)","opacity":0.08,"line":{"width":0}},{"type":"rect","x0":"2025-12-08T19:42:00.000Z","x1":"2025-12-08T20:00:00.000Z","y0":1.1634280506666665,"y1":1.1647619493333334,"fillcolor":"rgba(239, 68, 68, 0.3)","opacity":0.25,"line":{"color":"#ef4444","width":2,"dash":"solid"},"label":{"text":"RESISTANCE (3x)","textposition":"top left","font":{"size":10,"color":"#e0e0e0"}}},{"type":"rect","x0":"2025-12-08T19:32:00.000Z","x1":"2025-12-08T20:00:00.000Z","y0":1.1631180506666665,"y1":1.1643819493333334,"fillcolor":"rgba(34, 197, 94, 0.3)","opacity":0.25,"line":{"color":"#22c55e","width":2,"dash":"solid"},"label":{"text":"SUPPORT (3x)","textposition":"top left","font":{"size":10,"color":"#e0e0e0"}}},{"type":"line","x0":"2025-12-08T19:28:00.000Z","x1":"2025-12-08T20:00:00.000Z","y0":1.16375,"y1":1.1637941379310346,"line":{"color":"#22c55e","width":2,"dash":"solid"}},{"type":"line","x0":"2025-12-08T19:22:00.000Z","x1":"2025-12-08T20:00:00.000Z","y0":1.16408,"y1":1.163994193548387,"line":{"color":"#ef4444","width":2,"dash":"solid"}}],"hovermode":"x unified","dragmode":"zoom"};
+    const config = {"responsive":true,"scrollZoom":true,"displayModeBar":true,"modeBarButtonsToRemove":["lasso2d","select2d"]};
+    Plotly.newPlot('chart', traces, layout, config);
+  </script>
+</body>
+</html>

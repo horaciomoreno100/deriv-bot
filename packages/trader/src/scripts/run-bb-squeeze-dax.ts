@@ -213,7 +213,7 @@ async function main() {
   console.log('✅ Connected to gateway\n');
 
   // Initialize Trade Adapter
-  const tradeAdapter = new UnifiedTradeAdapter(TRADE_MODE, gatewayClient);
+  const tradeAdapter = new UnifiedTradeAdapter(gatewayClient, TRADE_MODE);
 
   // Initialize Trade Manager
   tradeManager = new TradeManager(gatewayClient, tradeAdapter, SYMBOLS, {

@@ -9,3 +9,4 @@ export * from './ai-analysis.js';
 export * from './protocol.js';
 export * from './economic-event.js';
 export * from './visualization.js';
+export * from './market-structure.js';

@@ -64,3 +64,20 @@ export {
   HybridMTFBacktestMLStrategy,
   createHybridMTFMLStrategy,
 } from './hybrid-mtf-backtest-ml.strategy.js';
+
+export {
+  ReturnToBaseBacktestStrategy,
+  createReturnToBaseStrategy,
+  createReturnToBaseForAsset,
+  DEFAULT_RTB_PARAMS,
+  RTB_AGGRESSIVE_PRESET,
+  RTB_CONSERVATIVE_PRESET,
+  RTB_CRYPTO_PRESET,
+  RTB_FOREX_PRESET,
+} from './return-to-base.strategy.js';
+
+export {
+  SMCOpportunityBacktestStrategy,
+  createSMCBacktestStrategy,
+  type SMCBacktestParams,
+} from './smc-opportunity-backtest.strategy.js';
