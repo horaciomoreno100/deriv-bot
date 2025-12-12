@@ -79,6 +79,10 @@ export interface FreshSweepDetectorConfig {
   // Trend filter
   useTrendFilter: boolean; // Only trade in direction of trend
   trendEMAPeriod: number; // EMA period for trend detection
+
+  // Displacement filter (momentum confirmation)
+  requireDisplacement: boolean; // Require strong momentum after sweep
+  minDisplacementPct: number; // Min body size as % of recent range
 }
 
 const DEFAULT_CONFIG: FreshSweepDetectorConfig = {
@@ -92,6 +96,8 @@ const DEFAULT_CONFIG: FreshSweepDetectorConfig = {
   minRR: 2.0, // Minimum 2:1 R:R
   useTrendFilter: false, // Disabled - doesn't work well with synthetic indices
   trendEMAPeriod: 50, // 50-period EMA for trend
+  requireDisplacement: true, // Require strong momentum after sweep
+  minDisplacementPct: 0.5, // Body must be at least 50% of confirmation candle range
 };
 
 // ============================================================================
@@ -457,7 +463,7 @@ export class FreshSweepDetector {
 
   /**
    * Check for bullish confirmation (for long entries after sellside sweep)
-   * STRICT: Only engulfing patterns with strong bodies
+   * STRICT: Only engulfing patterns with strong bodies + displacement
    */
   private checkBullishConfirmation(
     sweepCandle: Candle,
@@ -474,6 +480,12 @@ export class FreshSweepDetector {
     const lowerWick = Math.min(sweepCandle.open, sweepCandle.close) - sweepCandle.low;
     const totalRange = sweepCandle.high - sweepCandle.low;
 
+    // Calculate recent range for displacement check (last 10 candles)
+    const recentCandles = candles.slice(Math.max(0, sweepIndex - 10), sweepIndex);
+    const recentHigh = Math.max(...recentCandles.map((c) => c.high));
+    const recentLow = Math.min(...recentCandles.map((c) => c.low));
+    const recentRange = recentHigh - recentLow;
+
     // Only accept VERY strong pin bars (wick must be 3x body and 60% of range)
     if (
       sweepCandle.close > sweepCandle.open && // Bullish close
@@ -481,6 +493,11 @@ export class FreshSweepDetector {
       lowerWick > totalRange * 0.6 && // Wick dominates
       body > totalRange * 0.1 // But still has a decent body
     ) {
+      // Displacement check: the sweep candle range should be significant
+      if (this.config.requireDisplacement && totalRange < recentRange * 0.3) {
+        return null; // Not enough momentum/displacement
+      }
+
       return {
         type: 'pin_bar',
         candle: sweepCandle,
@@ -490,7 +507,7 @@ export class FreshSweepDetector {
       };
     }
 
-    // Check next candle for STRONG engulfing
+    // Check next candle for STRONG engulfing with displacement
     const nextCandle = candles[sweepIndex + 1];
     if (nextCandle) {
       const nextBody = Math.abs(nextCandle.close - nextCandle.open);
@@ -502,7 +519,7 @@ export class FreshSweepDetector {
         nextCandle.close > sweepCandle.high && // Closes ABOVE sweep high (strong)
         nextCandle.open <= sweepCandle.low && // Opens at or below sweep low
         nextBody > body * 1.5 && // Next body is 1.5x bigger
-        nextBody > nextRange * 0.5 // Body is at least half of next candle range
+        nextBody > nextRange * this.config.minDisplacementPct // Strong body (displacement)
       ) {
         return {
           type: 'engulfing',
@@ -519,7 +536,7 @@ export class FreshSweepDetector {
 
   /**
    * Check for bearish confirmation (for short entries after buyside sweep)
-   * STRICT: Only strong pin bars and engulfing patterns
+   * STRICT: Only strong pin bars and engulfing patterns + displacement
    */
   private checkBearishConfirmation(
     sweepCandle: Candle,
@@ -536,6 +553,12 @@ export class FreshSweepDetector {
     const upperWick = sweepCandle.high - Math.max(sweepCandle.open, sweepCandle.close);
     const totalRange = sweepCandle.high - sweepCandle.low;
 
+    // Calculate recent range for displacement check (last 10 candles)
+    const recentCandles = candles.slice(Math.max(0, sweepIndex - 10), sweepIndex);
+    const recentHigh = Math.max(...recentCandles.map((c) => c.high));
+    const recentLow = Math.min(...recentCandles.map((c) => c.low));
+    const recentRange = recentHigh - recentLow;
+
     // Only accept VERY strong pin bars (wick must be 3x body and 60% of range)
     if (
       sweepCandle.close < sweepCandle.open && // Bearish close
@@ -543,6 +566,11 @@ export class FreshSweepDetector {
       upperWick > totalRange * 0.6 && // Wick dominates
       body > totalRange * 0.1 // But still has a decent body
     ) {
+      // Displacement check: the sweep candle range should be significant
+      if (this.config.requireDisplacement && totalRange < recentRange * 0.3) {
+        return null; // Not enough momentum/displacement
+      }
+
       return {
         type: 'pin_bar',
         candle: sweepCandle,
@@ -552,7 +580,7 @@ export class FreshSweepDetector {
       };
     }
 
-    // Check next candle for STRONG engulfing
+    // Check next candle for STRONG engulfing with displacement
     const nextCandle = candles[sweepIndex + 1];
     if (nextCandle) {
       const nextBody = Math.abs(nextCandle.close - nextCandle.open);
@@ -564,7 +592,7 @@ export class FreshSweepDetector {
         nextCandle.close < sweepCandle.low && // Closes BELOW sweep low (strong)
         nextCandle.open >= sweepCandle.high && // Opens at or above sweep high
         nextBody > body * 1.5 && // Next body is 1.5x bigger
-        nextBody > nextRange * 0.5 // Body is at least half of next candle range
+        nextBody > nextRange * this.config.minDisplacementPct // Strong body (displacement)
       ) {
         return {
           type: 'engulfing',

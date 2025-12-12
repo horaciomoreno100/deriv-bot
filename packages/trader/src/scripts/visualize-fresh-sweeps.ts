@@ -490,15 +490,17 @@ async function main() {
   console.log('\n🔍 Detecting fresh sweeps...');
   const startTime = Date.now();
 
-  // Use strict parameters for high quality signals
+  // Best performing parameters so far: 35.6% win rate, $214 profit
   const detector = new FreshSweepDetector({
-    swingLookback: 20, // Strong swing points (20 candles lookback)
-    minSwingStrength: 10, // Must be highest/lowest of 10 candles on each side
-    maxSweepAge: 1, // Must be VERY fresh - within last candle only
-    minSweepSize: 0.0015, // 0.15% minimum sweep past level
-    minWickRatio: 3.0, // Wick must be 3x the body for pin bars
-    minRejectionPct: 0.7, // Must reject 70%+ of the sweep
-    minRR: 2.5, // Minimum 2.5:1 R:R
+    swingLookback: 15, // Standard swing lookback
+    minSwingStrength: 6, // Relaxed swing strength
+    maxSweepAge: 2, // Within last 2 candles
+    minSweepSize: 0.001, // 0.1% minimum sweep past level
+    minWickRatio: 2.5, // Wick must be 2.5x the body for pin bars
+    minRejectionPct: 0.6, // Must reject 60%+ of the sweep
+    minRR: 2.0, // 2:1 R:R is optimal for this strategy
+    requireDisplacement: true, // Require displacement for momentum
+    minDisplacementPct: 0.4, // Body must be 40% of confirmation candle range
   });
 
   // Scan through all candles to find sweeps
@@ -596,6 +598,81 @@ async function main() {
   console.log(`Trades: ${trades.length} (${wins}W / ${losses}L)`);
   console.log(`Win Rate: ${winRate}%`);
   console.log(`Net P&L: $${netPnl.toFixed(2)}`);
+
+  // Detailed analysis of winning vs losing trades
+  console.log('\n' + '─'.repeat(50));
+  console.log('TRADE ANALYSIS');
+  console.log('─'.repeat(50));
+
+  const winningTrades = trades.filter((t) => t.result === 'WIN');
+  const losingTrades = trades.filter((t) => t.result === 'LOSS');
+
+  // Analyze by confirmation type
+  const byConfirmation: Record<string, { wins: number; losses: number }> = {};
+  for (const trade of trades) {
+    const type = trade.sweep.confirmationType;
+    if (!byConfirmation[type]) byConfirmation[type] = { wins: 0, losses: 0 };
+    if (trade.result === 'WIN') byConfirmation[type]!.wins++;
+    else byConfirmation[type]!.losses++;
+  }
+  console.log('\nBy Confirmation Type:');
+  for (const [type, stats] of Object.entries(byConfirmation)) {
+    const total = stats.wins + stats.losses;
+    const wr = ((stats.wins / total) * 100).toFixed(1);
+    console.log(`  ${type}: ${stats.wins}W/${stats.losses}L (${wr}% WR)`);
+  }
+
+  // Analyze by direction
+  const byDirection: Record<string, { wins: number; losses: number }> = {};
+  for (const trade of trades) {
+    const dir = trade.sweep.direction;
+    if (!byDirection[dir]) byDirection[dir] = { wins: 0, losses: 0 };
+    if (trade.result === 'WIN') byDirection[dir]!.wins++;
+    else byDirection[dir]!.losses++;
+  }
+  console.log('\nBy Direction:');
+  for (const [dir, stats] of Object.entries(byDirection)) {
+    const total = stats.wins + stats.losses;
+    const wr = ((stats.wins / total) * 100).toFixed(1);
+    console.log(`  ${dir}: ${stats.wins}W/${stats.losses}L (${wr}% WR)`);
+  }
+
+  // Analyze by sweep size (small vs large)
+  const avgSweepSize = trades.reduce((s, t) => s + t.sweep.sweepSize, 0) / trades.length;
+  const largeSweeps = trades.filter((t) => t.sweep.sweepSize >= avgSweepSize);
+  const smallSweeps = trades.filter((t) => t.sweep.sweepSize < avgSweepSize);
+  const largeWins = largeSweeps.filter((t) => t.result === 'WIN').length;
+  const smallWins = smallSweeps.filter((t) => t.result === 'WIN').length;
+  console.log('\nBy Sweep Size:');
+  console.log(`  Large (>=${avgSweepSize.toFixed(3)}%): ${largeWins}W/${largeSweeps.length - largeWins}L (${((largeWins / largeSweeps.length) * 100).toFixed(1)}% WR)`);
+  console.log(`  Small (<${avgSweepSize.toFixed(3)}%): ${smallWins}W/${smallSweeps.length - smallWins}L (${((smallWins / smallSweeps.length) * 100).toFixed(1)}% WR)`);
+
+  // Analyze by R:R ratio
+  const avgRR = trades.reduce((s, t) => s + t.sweep.riskRewardRatio, 0) / trades.length;
+  const highRR = trades.filter((t) => t.sweep.riskRewardRatio >= avgRR);
+  const lowRR = trades.filter((t) => t.sweep.riskRewardRatio < avgRR);
+  const highRRWins = highRR.filter((t) => t.result === 'WIN').length;
+  const lowRRWins = lowRR.filter((t) => t.result === 'WIN').length;
+  console.log('\nBy R:R Ratio:');
+  console.log(`  High (>=${avgRR.toFixed(2)}): ${highRRWins}W/${highRR.length - highRRWins}L (${((highRRWins / highRR.length) * 100).toFixed(1)}% WR)`);
+  console.log(`  Low (<${avgRR.toFixed(2)}): ${lowRRWins}W/${lowRR.length - lowRRWins}L (${((lowRRWins / lowRR.length) * 100).toFixed(1)}% WR)`);
+
+  // Analyze by swing strength
+  const avgStrength = trades.reduce((s, t) => s + t.sweep.sweptSwing.strength, 0) / trades.length;
+  const strongSwings = trades.filter((t) => t.sweep.sweptSwing.strength >= avgStrength);
+  const weakSwings = trades.filter((t) => t.sweep.sweptSwing.strength < avgStrength);
+  const strongWins = strongSwings.filter((t) => t.result === 'WIN').length;
+  const weakWins = weakSwings.filter((t) => t.result === 'WIN').length;
+  console.log('\nBy Swing Strength:');
+  console.log(`  Strong (>=${avgStrength.toFixed(1)}): ${strongWins}W/${strongSwings.length - strongWins}L (${strongSwings.length > 0 ? ((strongWins / strongSwings.length) * 100).toFixed(1) : 0}% WR)`);
+  console.log(`  Weak (<${avgStrength.toFixed(1)}): ${weakWins}W/${weakSwings.length - weakWins}L (${weakSwings.length > 0 ? ((weakWins / weakSwings.length) * 100).toFixed(1) : 0}% WR)`);
+
+  // Analyze bars held
+  const avgBarsWin = winningTrades.length > 0 ? winningTrades.reduce((s, t) => s + t.barsHeld, 0) / winningTrades.length : 0;
+  const avgBarsLoss = losingTrades.length > 0 ? losingTrades.reduce((s, t) => s + t.barsHeld, 0) / losingTrades.length : 0;
+  console.log('\nTrade Duration:');
+  console.log(`  Avg bars to WIN: ${avgBarsWin.toFixed(1)}`);
+  console.log(`  Avg bars to LOSS: ${avgBarsLoss.toFixed(1)}`);
 
   // Open chart
   console.log('\n🌐 Opening chart...');
