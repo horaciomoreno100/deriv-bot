@@ -291,10 +291,18 @@ class Gateway {
         reason,
         pid: process.pid,
       };
+      // Use console.log for immediate output (logger might be buffered)
+      console.log(`[Gateway] Writing crash marker to ${CRASH_MARKER_FILE}...`);
       fs.writeFileSync(CRASH_MARKER_FILE, JSON.stringify(marker));
-      this.logger.info(`Written crash marker to ${CRASH_MARKER_FILE}`);
+
+      // Verify the file was written
+      if (fs.existsSync(CRASH_MARKER_FILE)) {
+        console.log(`[Gateway] ✅ Crash marker written successfully`);
+      } else {
+        console.error(`[Gateway] ❌ Crash marker file not found after write!`);
+      }
     } catch (error) {
-      this.logger.warn(`Failed to write crash marker: ${error}`);
+      console.error(`[Gateway] ❌ Failed to write crash marker: ${error}`);
     }
   }
 
@@ -303,17 +311,20 @@ class Gateway {
    * If found, send recovery alert and delete the marker
    */
   private checkAndSendRecoveryAlert(): void {
+    console.log(`[Gateway] Checking for crash marker at ${CRASH_MARKER_FILE}...`);
     try {
       if (fs.existsSync(CRASH_MARKER_FILE)) {
+        console.log(`[Gateway] Found crash marker, reading...`);
         const markerContent = fs.readFileSync(CRASH_MARKER_FILE, 'utf-8');
         const marker = JSON.parse(markerContent);
+        console.log(`[Gateway] Crash marker content:`, marker);
 
         // Calculate downtime
         const crashTime = new Date(marker.crashTime);
         const now = new Date();
         const downtimeSeconds = Math.round((now.getTime() - crashTime.getTime()) / 1000);
 
-        // Send recovery alert
+        // Send recovery alert (using error level to trigger Telegram)
         this.logger.error(
           `✅ GATEWAY RECOVERED after crash!\n` +
           `Previous crash: ${marker.reason}\n` +
@@ -324,10 +335,12 @@ class Gateway {
 
         // Delete the marker file
         fs.unlinkSync(CRASH_MARKER_FILE);
-        this.logger.info('Crash marker file deleted');
+        console.log(`[Gateway] Crash marker file deleted`);
+      } else {
+        console.log(`[Gateway] No crash marker found (normal startup)`);
       }
     } catch (error) {
-      this.logger.warn(`Error checking crash marker: ${error}`);
+      console.error(`[Gateway] Error checking crash marker: ${error}`);
     }
   }
 
