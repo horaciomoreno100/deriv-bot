@@ -13,7 +13,11 @@
 // PrismaClient is loaded dynamically to avoid ESM/CJS conflicts
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let PrismaClient: any;
+import * as fs from 'fs';
 import { createLogger, type Logger, initSlackAlerts, type SlackAlerter, loadEnvFromRoot } from '@deriv-bot/shared';
+
+// Crash marker file path - used to detect PM2 restarts after unhealthy exit
+const CRASH_MARKER_FILE = '/tmp/gateway-crash-marker.json';
 import { DerivClient } from './api/deriv-client.js';
 import { GatewayServer } from './ws/gateway-server.js';
 import { MarketDataCache } from './cache/market-data-cache.js';
@@ -214,6 +218,9 @@ class Gateway {
     // 5. Start connection health monitor
     this.startHealthMonitor();
 
+    // 6. Check if this is a restart after a crash and send recovery alert
+    this.checkAndSendRecoveryAlert();
+
     this.logger.info('✨ Gateway is ready!');
   }
 
@@ -254,6 +261,9 @@ class Gateway {
             health,
           });
 
+          // Write crash marker so the new process can send recovery alert
+          this.writeCrashMarker(reason);
+
           // Force exit - PM2 will restart automatically
           process.exit(1);
         }
@@ -268,6 +278,57 @@ class Gateway {
     }, HEALTH_CHECK_INTERVAL);
 
     this.logger.info('✅ Health monitor started (30s interval, auto-restart after 1 min unhealthy)');
+  }
+
+  /**
+   * Write crash marker file before exiting
+   * This allows the new process to detect it was a restart after crash
+   */
+  private writeCrashMarker(reason: string): void {
+    try {
+      const marker = {
+        crashTime: new Date().toISOString(),
+        reason,
+        pid: process.pid,
+      };
+      fs.writeFileSync(CRASH_MARKER_FILE, JSON.stringify(marker));
+      this.logger.info(`Written crash marker to ${CRASH_MARKER_FILE}`);
+    } catch (error) {
+      this.logger.warn(`Failed to write crash marker: ${error}`);
+    }
+  }
+
+  /**
+   * Check if there's a crash marker from a previous unhealthy exit
+   * If found, send recovery alert and delete the marker
+   */
+  private checkAndSendRecoveryAlert(): void {
+    try {
+      if (fs.existsSync(CRASH_MARKER_FILE)) {
+        const markerContent = fs.readFileSync(CRASH_MARKER_FILE, 'utf-8');
+        const marker = JSON.parse(markerContent);
+
+        // Calculate downtime
+        const crashTime = new Date(marker.crashTime);
+        const now = new Date();
+        const downtimeSeconds = Math.round((now.getTime() - crashTime.getTime()) / 1000);
+
+        // Send recovery alert
+        this.logger.error(
+          `✅ GATEWAY RECOVERED after crash!\n` +
+          `Previous crash: ${marker.reason}\n` +
+          `Crash time: ${marker.crashTime}\n` +
+          `Downtime: ~${downtimeSeconds}s\n` +
+          `New PID: ${process.pid}`
+        );
+
+        // Delete the marker file
+        fs.unlinkSync(CRASH_MARKER_FILE);
+        this.logger.info('Crash marker file deleted');
+      }
+    } catch (error) {
+      this.logger.warn(`Error checking crash marker: ${error}`);
+    }
   }
 
   /**

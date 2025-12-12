@@ -535,9 +535,40 @@ async function main() {
   const qualityOrder: Record<string, number> = { 'A+': 0, A: 1, B: 2 };
   const minQualityLevel = qualityOrder[MIN_QUALITY] ?? 2;
 
-  const filteredSweeps = allSweeps.filter(
-    (s) => qualityOrder[s.quality] <= minQualityLevel
-  );
+  // Apply additional filters based on analysis:
+  // R_100: SHORT works better (47.6% vs 28.9%), pin bar better, low R:R better
+  // ETH: LONG works better (44.4% vs 25%), engulfing better, large sweeps 70% WR
+  const USE_DIRECTION_FILTER = process.env.FILTER_DIRECTION !== 'false';
+  const PREFER_SHORT = process.env.PREFER_SHORT !== 'false'; // false = prefer long
+  const USE_CONFIRMATION_FILTER = process.env.FILTER_CONFIRMATION !== 'false';
+  const MAX_RR = parseFloat(process.env.MAX_RR ?? '6.0');
+  const MIN_SWEEP_SIZE = parseFloat(process.env.MIN_SWEEP_SIZE ?? '0'); // % sweep size filter
+
+  const filteredSweeps = allSweeps.filter((s) => {
+    // Quality filter
+    if (qualityOrder[s.quality] > minQualityLevel) return false;
+
+    // Direction filter
+    if (USE_DIRECTION_FILTER) {
+      if (PREFER_SHORT && s.direction === 'long') return false;
+      if (!PREFER_SHORT && s.direction === 'short') return false;
+    }
+
+    // Confirmation filter
+    const PREFER_ENGULFING = process.env.PREFER_ENGULFING === 'true';
+    if (USE_CONFIRMATION_FILTER) {
+      if (PREFER_ENGULFING && s.confirmationType !== 'engulfing') return false;
+      if (!PREFER_ENGULFING && s.confirmationType !== 'pin_bar') return false;
+    }
+
+    // R:R filter
+    if (s.riskRewardRatio > MAX_RR) return false;
+
+    // Sweep size filter (for crypto, larger sweeps work better)
+    if (s.sweepSize < MIN_SWEEP_SIZE) return false;
+
+    return true;
+  });
 
   console.log(`   After quality filter (>= ${MIN_QUALITY}): ${filteredSweeps.length}`);
 
